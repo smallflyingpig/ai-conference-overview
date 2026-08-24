@@ -4,6 +4,7 @@ from importlib.resources import files
 from pathlib import Path
 from typing import Any
 
+import idna
 import yaml
 
 from conference_overview.models import VenueRequest
@@ -21,8 +22,13 @@ def canonicalize_official_host(host: str) -> str:
     if not candidate:
         raise ValueError("official award host must not be blank")
     try:
-        canonical = candidate.encode("idna").decode("ascii").lower()
-    except UnicodeError as exc:
+        canonical = idna.encode(
+            candidate,
+            uts46=True,
+            transitional=False,
+            std3_rules=True,
+        ).decode("ascii").lower()
+    except idna.IDNAError as exc:
         raise ValueError("official award host must be valid IDNA") from exc
     labels = canonical.split(".")
     if len(canonical) > 253 or any(_HOST_LABEL.fullmatch(label) is None for label in labels):

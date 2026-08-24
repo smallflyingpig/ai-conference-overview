@@ -169,6 +169,32 @@ def test_official_award_source_is_verified() -> None:
     assert result.status is AwardStatus.VERIFIED
 
 
+@pytest.mark.parametrize(
+    ("evidence_url", "allowed_host"),
+    [
+        ("https://faß.de/awards", "xn--fa-hia.de"),
+        ("https://xn--fa-hia.de/awards", "faß.de"),
+    ],
+)
+def test_uts46_unicode_and_punycode_hosts_authorize_the_same_domain(
+    evidence_url: str, allowed_host: str
+) -> None:
+    result = validate_award(
+        award_record(evidence_url=evidence_url), allowed_hosts={allowed_host}
+    )
+
+    assert result.status is AwardStatus.VERIFIED
+
+
+def test_uts46_sharp_s_domain_does_not_authorize_ascii_ss_lookalike() -> None:
+    result = validate_award(
+        award_record(evidence_url="https://fass.de/awards"),
+        allowed_hosts={"faß.de"},
+    )
+
+    assert result.status is AwardStatus.NOT_VERIFIED
+
+
 def test_verified_award_requires_evidence_at_construction() -> None:
     with pytest.raises(ValidationError, match="evidence"):
         AwardRecord(

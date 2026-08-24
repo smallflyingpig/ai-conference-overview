@@ -20,3 +20,10 @@ def test_official_hosts_are_canonicalized_and_deduplicated_once() -> None:
     assert canonicalize_official_hosts(
         [" Example.COM. ", "example.com", "BÜCHER.example.", "xn--bcher-kva.example"]
     ) == ("example.com", "xn--bcher-kva.example")
+
+
+def test_official_hosts_use_nontransitional_uts46_idna2008() -> None:
+    assert canonicalize_official_hosts(["faß.de", "xn--fa-hia.de"]) == (
+        "xn--fa-hia.de",
+    )
+    assert canonicalize_official_hosts(["faß.de"]) != ("fass.de",)

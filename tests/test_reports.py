@@ -315,6 +315,30 @@ def test_release_rejects_unofficial_verified_award_before_serializing_deep_read(
         )
 
 
+def test_release_canonicalizes_official_evidence_host_with_trailing_dot(
+    tmp_path: Path,
+) -> None:
+    bundle = publishable_bundle()
+    trailing_dot = bundle.awards[0].model_copy(
+        update={"evidence_url": "https://2026.aclweb.org./awards/"}
+    )
+
+    write_release(
+        replace(bundle, awards=(trailing_dot,)),
+        tmp_path / "trailing-dot-award",
+    )
+
+    overview = json.loads(
+        (
+            resolve_current_release(tmp_path / "trailing-dot-award")
+            / "overview.json"
+        ).read_text()
+    )
+    assert overview["awards"][0]["verification"]["evidence_host"] == (
+        "2026.aclweb.org"
+    )
+
+
 @pytest.mark.parametrize(
     "updates",
     [

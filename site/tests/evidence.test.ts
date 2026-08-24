@@ -13,7 +13,7 @@ import AwardResultClaim from "../src/components/AwardResultClaim";
 import AwardEvidenceSections from "../src/components/AwardEvidenceSections";
 import { loadOverview, type LoadedOverview } from "../src/lib/data";
 import awardHostPolicy from "../../config/award-host-policy.json";
-import { configuredAwardHostPolicy } from "../src/lib/schema";
+import { canonicalUrlHostname, configuredAwardHostPolicy } from "../src/lib/schema";
 import {
   advanceCategories,
   awardDetailRoutes,
@@ -132,6 +132,10 @@ describe("evidence labels", () => {
     expect(configuredAwardHostPolicy("ACL", 2026, "long")).toEqual(
       awardHostPolicy.scopes["ACL/2026/long"],
     );
+  });
+
+  it("uses WHATWG hostname canonicalization for case, trailing dots, and IDN", () => {
+    expect(canonicalUrlHostname("https://FAß.DE./awards")).toBe("xn--fa-hia.de");
   });
 });
 

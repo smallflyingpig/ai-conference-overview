@@ -194,6 +194,10 @@ function hostCoveredByPolicy(host: string, allowedHosts: string[]): boolean {
   });
 }
 
+export function canonicalUrlHostname(url: string): string {
+  return new URL(url).hostname.toLowerCase().replace(/\.$/, "");
+}
+
 const awardSchema = z.object({
   paper_id: nonBlankSchema,
   award_type: nonBlankSchema,
@@ -218,7 +222,7 @@ const awardSchema = z.object({
   if (award.route_key !== expectedRoute) {
     context.addIssue({ code: z.ZodIssueCode.custom, path: ["route_key"], message: "award route key does not match producer identity" });
   }
-  const actualHost = award.evidence_url == null ? null : new URL(award.evidence_url).hostname;
+  const actualHost = award.evidence_url == null ? null : canonicalUrlHostname(award.evidence_url);
   if (actualHost !== award.verification.evidence_host) {
     context.addIssue({ code: z.ZodIssueCode.custom, path: ["verification", "evidence_host"], message: "award evidence host does not match its URL" });
   }
@@ -235,7 +239,7 @@ const awardStateSchema = z.object({
   evidence_claim: evidenceClaimSchema.nullable(),
   verification: awardVerificationSchema,
 }).superRefine((state, context) => {
-  const actualHost = state.evidence_url == null ? null : new URL(state.evidence_url).hostname;
+  const actualHost = state.evidence_url == null ? null : canonicalUrlHostname(state.evidence_url);
   if (actualHost !== state.verification.evidence_host) {
     context.addIssue({ code: z.ZodIssueCode.custom, path: ["verification", "evidence_host"], message: "award state host does not match its URL" });
   }

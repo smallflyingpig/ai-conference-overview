@@ -339,6 +339,25 @@ describe("parseOverview", () => {
     await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/configured award host policy/i);
   });
 
+  it("loads producer-valid official evidence URLs with a trailing hostname dot", async () => {
+    const root = await mutatedTask9Release((artifact) => {
+      artifact.awards[0].evidence_url = "https://2026.aclweb.org./awards/";
+      artifact.award_state.evidence_url = "https://2026.aclweb.org./awards/";
+    });
+
+    await expect(loadOverview("ACL", 2026, root)).resolves.toMatchObject({
+      overview: { award_state: { status: "verified" } },
+    });
+  });
+
+  it("rejects a noncanonical producer evidence_host even for a valid URL", async () => {
+    const root = await mutatedTask9Release((artifact) => {
+      artifact.awards[0].verification.evidence_host = "2026.aclweb.org.";
+    });
+
+    await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/host.*match/i);
+  });
+
   it("consumes Python casefold identity for Straße/STRASSE without JS normalization", async () => {
     const root = await mutatedTask9Release((artifact) => {
       const identity = { paper_id: artifact.awards[0].paper_id, award_type: "strasse" };
