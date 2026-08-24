@@ -285,13 +285,13 @@ describe("typed trend filters", () => {
 });
 
 describe("distribution presentation", () => {
-  it("labels confidence-ranked papers as preliminary examples", async () => {
+  it("labels papers as audit-bounded evidence examples", async () => {
     const page = await readFile(
       fileURLToPath(new URL("../src/pages/conferences/[venue]/[year].astro", import.meta.url)),
       "utf8",
     );
-    expect(page).toContain("Preliminary examples");
-    expect(page).toContain("Confidence-ranked semantic assignments");
+    expect(page).toContain("Evidence examples");
+    expect(page).toContain("Audit-labeled semantic assignments");
     expect(page).not.toContain("Representative papers");
   });
 

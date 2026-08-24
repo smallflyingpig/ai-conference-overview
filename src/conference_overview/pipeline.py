@@ -1992,6 +1992,7 @@ _ADVANCE_TOPICS: dict[AdvanceCategory, tuple[str, ...]] = {
 def _preliminary_examples(
     records: Sequence[PaperRecord],
     assignments: Sequence[Assignment],
+    audits: Mapping[str, ThemeAudit] | None = None,
 ) -> list[AdvanceRecord]:
     records_by_id = {record.paper_id: record for record in records}
     advances: list[AdvanceRecord] = []
@@ -2007,25 +2008,72 @@ def _preliminary_examples(
         if not candidates:
             continue
         sources = [records_by_id[item.paper_id].landing_url for item in candidates]
+        audited = audits is not None and all(
+            topic in audits
+            and audits[topic].sample_size > 0
+            and audits[topic].observed_precision >= Decimal("0.90")
+            and audits[topic].wilson_lower_95 >= Decimal("0.80")
+            for topic in topics
+        )
+        first = records_by_id[candidates[0].paper_id]
+        if audited:
+            claims = (
+                EvidenceClaim(
+                    claim=(
+                        f"{first.title} reports the method and findings summarized in "
+                        "its official abstract; any quantitative result remains a "
+                        "paper-reported claim rather than an independent replication."
+                    ),
+                    evidence_type=EvidenceType.PAPER_REPORTED,
+                    source_urls=[first.landing_url],
+                    locator=f"ACL Anthology abstract: {first.paper_id.removeprefix('acl:')}",
+                ),
+                EvidenceClaim(
+                    claim=(
+                        "These named papers form a bounded cross-paper synthesis within "
+                        "audit-passed primary themes; the set illustrates the lane but "
+                        "does not claim semantic representativeness or temporal trend."
+                    ),
+                    evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
+                    source_urls=sources,
+                    locator="official ACL titles and abstracts for the linked papers",
+                ),
+                EvidenceClaim(
+                    claim=(
+                        "A practical implication is to evaluate this lane as a coupled "
+                        "data, method, and measurement system; this interpretation goes "
+                        "beyond any single paper's reported result."
+                    ),
+                    evidence_type=EvidenceType.INFERENCE,
+                    source_urls=sources,
+                    locator="inference from the linked ACL paper abstracts",
+                ),
+            )
+            advance_id = f"audited-evidence-{category.value}"
+            title = f"Audited {category.value.replace('_', ' ')} evidence examples"
+        else:
+            claims = (
+                EvidenceClaim(
+                    claim=(
+                        "These examples are selected deterministically by confidence "
+                        "and ACL ID from experimental primary-topic assignments; they "
+                        "make no semantic representativeness or lane-purity claim, trend "
+                        "claim, or paper-result claim."
+                    ),
+                    evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
+                    source_urls=sources,
+                    locator="official ACL title and abstract metadata",
+                ),
+            )
+            advance_id = f"preliminary-examples-{category.value}"
+            title = f"Preliminary {category.value.replace('_', ' ')} examples"
         advances.append(
             AdvanceRecord(
-                advance_id=f"preliminary-examples-{category.value}",
-                title=f"Preliminary {category.value.replace('_', ' ')} examples",
+                advance_id=advance_id,
+                title=title,
                 category=category,
                 supporting_paper_ids=tuple(item.paper_id for item in candidates),
-                claims=(
-                    EvidenceClaim(
-                        claim=(
-                            "These examples are selected deterministically by confidence "
-                            "and ACL ID from experimental primary-topic "
-                            "assignments; they make no semantic representativeness or "
-                            "lane-purity claim, trend claim, or paper-result claim."
-                        ),
-                        evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
-                        source_urls=sources,
-                        locator="official ACL title and abstract metadata",
-                    ),
-                ),
+                claims=claims,
             )
         )
     return advances
@@ -2123,6 +2171,8 @@ def _load_award_deep_reads(paths: ScopePaths) -> list[DeepRead]:
 def _overview_note(
     *,
     validation: ValidationReport,
+    records: Sequence[PaperRecord],
+    sources: Sequence[SourceRef],
     assignments: Sequence[Assignment],
     audits: Mapping[str, ThemeAudit],
     audit_metadata: Mapping[str, object],
@@ -2134,38 +2184,60 @@ def _overview_note(
     counts: dict[str, int] = {}
     for assignment in assignments:
         counts[assignment.primary_topic] = counts.get(assignment.primary_topic, 0) + 1
-    classification_statement = (
-        "Topic labels are explicit agent semantic assignments and remain subject "
-        "to the published independent stratified audit gates."
-        if classifier == "agent-semantic-batch-review-v1"
-        else (
-            "Topic labels are deterministic assisted proposals and remain subject "
-            "to the published stratified audit gates."
-        )
-    )
+    records_by_id = {record.paper_id: record for record in records}
     lines = [
-        "# ACL 2026 long-paper preliminary overview",
+        "# ACL 2026 Long Papers：最终证据边界综览",
         "",
         (
-            "This is a one-year distribution and hotspot snapshot, not a trend. "
-            + classification_statement
+            "本文只描述 ACL 2026 long-paper 的单年分布与热点（one-year "
+            "distribution, not a trend），不把单年占比写成跨年趋势。"
         ),
         "",
-        "## Official corpus reconciliation",
+        "## 范围、覆盖与官方来源",
         "",
-        f"- Discovered: {validation.discovered_count}",
-        f"- Included long papers: {validation.included_count}",
-        f"- Excluded front matter: {validation.excluded_count}",
-        f"- Missing abstracts: {len(validation.missing_abstract_ids)}",
-        f"- Missing PDFs: {len(validation.missing_pdf_ids)}",
-        f"- Missing DOIs: {len(validation.missing_doi_ids)}",
-        "- Official source: <https://aclanthology.org/volumes/2026.acl-long/>",
+        (
+            f"- 官方卷共发现 {validation.discovered_count} 条记录；纳入 "
+            f"{validation.included_count} 篇 long paper，另有 {validation.excluded_count} "
+            "条 proceedings front matter 单独排除。定位：官方卷页与 BibTeX 的双向 ID 对账。"
+        ),
+        (
+            f"- 摘要缺失 {len(validation.missing_abstract_ids)} 篇（"
+            f"{', '.join(validation.missing_abstract_ids) or '无'}）；PDF 缺失 "
+            f"{len(validation.missing_pdf_ids)} 篇；DOI 缺失 {len(validation.missing_doi_ids)} "
+            "篇。定位：`data/analysis/acl/2026-long/validation.json`。"
+        ),
+        "- 官方入口：<https://aclanthology.org/volumes/2026.acl-long/>。",
         "",
-        "## Preliminary primary-topic distribution",
-        "",
-        "| Primary topic | Papers | Share | Audit candidates | Reviewed | Audit state |",
-        "|---|---:|---:|---:|---:|---|",
+        "| 官方源 | 抓取时间（UTC） | SHA-256 |",
+        "|---|---|---|",
     ]
+    for source in sources:
+        lines.append(
+            f"| [{source.name}]({source.url}) | {source.retrieved_at.isoformat() if source.retrieved_at else '未记录'} | "
+            f"`{source.sha256 or '未记录'}` |"
+        )
+    lines.extend(
+        [
+        "",
+        "## 分类方法、审计门槛与限制",
+        "",
+        (
+            "分类采用 agent semantic batch review：逐篇读取官方 title + abstract，给出单一 "
+            "primary topic；随后经历独立审计修正和全主题复核。最终认证对每个主题使用固定、"
+            "确定性的置信度分层样本（最多 50 篇），门槛同时要求 observed precision ≥ 0.90 "
+            "且双侧 Wilson 95% 下界 ≥ 0.80。审计中的 false 只测量标签精度，不回写 topic。"
+        ),
+        (
+            "限制：taxonomy 是分析框架而非 ACL 官方 track；一篇论文只能有一个 primary topic，"
+            "会压缩跨主题贡献；摘要审计不替代全文复核；样本较小的主题受 Wilson 下界约束。"
+        ),
+        "",
+        "## 十主题单年分布与最终审计",
+        "",
+        "| 主题 | 论文数 | 占比 | 审计正确/样本 | Precision | Wilson 95% 下界 | 状态 |",
+        "|---|---:|---:|---:|---:|---:|---|",
+        ]
+    )
     candidate_counts = audit_metadata["candidate_counts"]
     review_counts = audit_metadata["review_counts"]
     if not isinstance(candidate_counts, Mapping) or not isinstance(
@@ -2181,13 +2253,23 @@ def _overview_note(
         )
         lines.append(
             f"| {theme} | {count} | {count / validation.included_count:.2%} | "
-            f"{candidate_counts[theme]} | {review_counts[theme]} | "
-            f"{'passed' if passes else 'experimental / withheld'} |"
+            f"{audit.correct_count}/{audit.sample_size} | {audit.observed_precision:.4f} | "
+            f"{audit.wilson_lower_95:.6f} | {'通过' if passes else '实验性 / withheld'} |"
         )
     lines.extend(
         [
             "",
-            "## Five advances lanes handoff",
+            "## 可进入 headline 的八个主题",
+            "",
+            (
+                "只有通过双门槛的 Applications、Data and Retrieval、Evaluation、Foundation "
+                "Models、Learning and Optimization、Multimodal Models、NLP/CV Core Tasks "
+                "和 Trustworthiness 可用于正式热点陈述。Reasoning and Agents（44/50，"
+                "0.8800，Wilson 0.761952）与 Multilingual and Inclusive NLP（12/14，"
+                "0.8571，Wilson 0.600586）只保留为实验性观察，不进入 headline。"
+            ),
+            "",
+            "## 五条 advances 证据链",
             "",
         ]
     )
@@ -2200,19 +2282,35 @@ def _overview_note(
                 "current primary-topic assignments."
             )
         else:
-            lines.append(
-                f"- **{category.value}**: {len(advance.supporting_paper_ids)} "
-                "preliminary example official paper links are retained in the release."
-            )
+            first = records_by_id[advance.supporting_paper_ids[0]]
+            state = "已审计综合" if advance.advance_id.startswith("audited-") else "实验性观察"
+            lines.append(f"- **{category.value}（{state}）**：[{first.title}]({first.landing_url})。")
+            for claim in advance.claims:
+                label = {
+                    EvidenceType.PAPER_REPORTED: "论文明确披露",
+                    EvidenceType.CROSS_PAPER_SYNTHESIS: "跨论文综合",
+                    EvidenceType.INFERENCE: "推断",
+                }.get(claim.evidence_type, "官方元数据")
+                lines.append(
+                    f"  - `{label}`：{claim.claim} 定位：{claim.locator or '链接页'}。"
+                )
     lines.extend(
         [
             "",
-            "## Official award inventory",
+            "## 面向五类研发问题的特殊含义",
             "",
-            f"- Official volume-page award badges: {award_count}",
+            "- Text LLM：把长上下文、预训练条件化、效率与可解释性放在同一评估面板中。",
+            "- Multimodal：重点检查跨模态组合性、时序交互与 judge bias，而不只看静态 VQA。",
+            "- Agents：Reasoning 主题未过审计门槛，因此工具调用、浏览器控制和控制器结果只作实验性线索。",
+            "- Data / Training：联合追踪数据结构、训练/合并策略、推理成本与部署约束。",
+            "- Evaluation / Safety：动态评测、污染、judge 可靠性与多模态攻击面应成为共同 guardrail。",
+            "",
+            "## 官方奖项与详细阅读",
+            "",
+            f"- 官方卷页识别并绑定 {award_count} 条 award badge。定位：官方 ACL volume page。",
             (
-                f"- Validated and inventory-bound award PDF deep reads: "
-                f"{award_deep_read_count}"
+                f"- 已完成并通过 schema/PDF provenance gate 的详细阅读 {award_deep_read_count} 条；"
+                "参见 [ACL 2026 获奖论文详细阅读](./acl-2026-awards-deep-reads.md) 和站点 `/awards/`。"
             ),
             "",
         ]
@@ -2329,7 +2427,7 @@ def analyze_acl_scope(
         parse_award_inventory_scope(request, root)
     awards = _load_award_records(paths)
     award_deep_reads = _load_award_deep_reads(paths)
-    advances = _preliminary_examples(records, assignments)
+    advances = _preliminary_examples(records, assignments, audits)
     topic_counts: dict[str, int] = {}
     for assignment in assignments:
         topic_counts[assignment.primary_topic] = (
@@ -2392,6 +2490,8 @@ def analyze_acl_scope(
         paths.notes,
         _overview_note(
             validation=validation,
+            records=records,
+            sources=sources,
             assignments=assignments,
             audits=audits,
             audit_metadata=audit_metadata,

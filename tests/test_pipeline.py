@@ -950,9 +950,9 @@ def test_preliminary_release_keeps_unaudited_themes_explicitly_experimental(
     note = (tmp_path / "notes/acl-2026-long-overview.md").read_text()
     assert "one-year distribution" in note
     assert "not a trend" in note
-    assert "Audit candidates | Reviewed" in note
-    assert "preliminary example" in note
-    assert "representative" not in note
+    assert "审计正确/样本" in note
+    assert "实验性观察" in note
+    assert "代表性论文" not in note
 
 
 def test_build_site_resolves_relative_release_root_before_changing_cwd(
