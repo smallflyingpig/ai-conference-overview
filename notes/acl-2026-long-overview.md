@@ -16,16 +16,16 @@ This is a one-year distribution and hotspot snapshot, not a trend. Topic labels 
 
 | Primary topic | Papers | Share | Audit candidates | Reviewed | Audit state |
 |---|---:|---:|---:|---:|---|
-| Evaluation | 500 | 22.50% | 50 | 0 | experimental / withheld |
-| Trustworthiness | 348 | 15.66% | 50 | 0 | experimental / withheld |
-| Learning and Optimization | 341 | 15.35% | 50 | 0 | experimental / withheld |
-| Reasoning and Agents | 247 | 11.12% | 50 | 0 | experimental / withheld |
-| Applications | 199 | 8.96% | 50 | 0 | experimental / withheld |
-| Data and Retrieval | 168 | 7.56% | 50 | 0 | experimental / withheld |
-| Multimodal Models | 146 | 6.57% | 50 | 0 | experimental / withheld |
-| Multilingual and Inclusive NLP | 117 | 5.27% | 50 | 0 | experimental / withheld |
-| NLP/CV Core Tasks | 103 | 4.64% | 50 | 0 | experimental / withheld |
-| Foundation Models | 53 | 2.39% | 50 | 0 | experimental / withheld |
+| Evaluation | 501 | 22.55% | 50 | 0 | experimental / withheld |
+| Trustworthiness | 351 | 15.80% | 50 | 0 | experimental / withheld |
+| Learning and Optimization | 343 | 15.44% | 50 | 0 | experimental / withheld |
+| Reasoning and Agents | 241 | 10.85% | 50 | 0 | experimental / withheld |
+| Applications | 196 | 8.82% | 50 | 0 | experimental / withheld |
+| Data and Retrieval | 170 | 7.65% | 50 | 0 | experimental / withheld |
+| Multimodal Models | 148 | 6.66% | 50 | 0 | experimental / withheld |
+| Multilingual and Inclusive NLP | 114 | 5.13% | 50 | 0 | experimental / withheld |
+| NLP/CV Core Tasks | 104 | 4.68% | 50 | 0 | experimental / withheld |
+| Foundation Models | 54 | 2.43% | 50 | 0 | experimental / withheld |
 
 ## Five advances lanes handoff
 
@@ -38,4 +38,4 @@ This is a one-year distribution and hotspot snapshot, not a trend. Topic labels 
 ## Official award inventory
 
 - Official volume-page award badges: 30
-- Award PDF deep reads: pending controller handoff; no PDF-derived claim is included.
+- Validated and inventory-bound award PDF deep reads: 30
