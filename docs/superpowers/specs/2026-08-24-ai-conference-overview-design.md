@@ -1,7 +1,7 @@
 # AI Conference Overview: Design Specification
 
 Date: 2026-08-24
-Status: Approved in chat; pending written-spec review
+Status: Approved in writing
 Project slug: `ai-conference-overview`
 Repository: `git@github.com:smallflyingpig/ai-conference-overview.git`
 License: MIT
