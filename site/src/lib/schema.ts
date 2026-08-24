@@ -111,13 +111,15 @@ export const evidenceTypeSchema = z.enum([
 
 const numericClaimPattern = /(?<![\w.])[+-]?(?:\d+(?:[.,]\d+)*|\.\d+)(?:e[+-]?\d+)?(?:\s?(?:%|％|pp|x))?(?!\w)/i;
 
-export const evidenceClaimSchema = z
-  .object({
+const evidenceClaimFields = {
     claim: nonBlankSchema,
     evidence_type: evidenceTypeSchema,
     source_urls: z.array(urlSchema).min(1),
     locator: nonBlankSchema.nullable().optional(),
-  })
+  } as const;
+
+export const evidenceClaimSchema = z
+  .object(evidenceClaimFields)
   .superRefine((value, context) => {
     if (
       (value.evidence_type === "paper_reported" || numericClaimPattern.test(value.claim)) &&
@@ -168,12 +170,130 @@ const themeAuditSchema = z
     }
   });
 
+const awardVerificationSchema = z.object({
+  allowed_hosts: z.array(nonBlankSchema).refine((hosts) => new Set(hosts).size === hosts.length),
+  evidence_host: nonBlankSchema.nullable(),
+  validator: z.literal("validate_award-v1"),
+});
+
+const configuredAwardHostPolicies: Record<string, string[]> = {
+  "ACL/2026/long": ["2026.aclweb.org", "aclanthology.org"],
+};
+
+export function configuredAwardHostPolicy(
+  venue: string,
+  year: number,
+  track: string,
+): string[] | null {
+  return configuredAwardHostPolicies[`${venue}/${year}/${track}`] ?? null;
+}
+
+function hostCoveredByPolicy(host: string, allowedHosts: string[]): boolean {
+  const normalized = host.toLocaleLowerCase().replace(/\.$/, "");
+  return allowedHosts.some((allowed) => {
+    const policyHost = allowed.toLocaleLowerCase().replace(/\.$/, "");
+    return normalized === policyHost || normalized.endsWith(`.${policyHost}`);
+  });
+}
+
 const awardSchema = z.object({
   paper_id: nonBlankSchema,
   award_type: nonBlankSchema,
   status: z.enum(["verified", "not_announced", "not_verified"]),
   evidence_url: urlSchema.nullable().optional(),
   official_citation: z.string().nullable().optional(),
+  verification: awardVerificationSchema,
+}).superRefine((award, context) => {
+  const actualHost = award.evidence_url == null ? null : new URL(award.evidence_url).hostname;
+  if (actualHost !== award.verification.evidence_host) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ["verification", "evidence_host"], message: "award evidence host does not match its URL" });
+  }
+  if (award.status === "verified") {
+    if (actualHost == null || !hostCoveredByPolicy(actualHost, award.verification.allowed_hosts)) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ["status"], message: "verified award evidence is outside its official host policy" });
+    }
+  }
+});
+
+const awardStateSchema = z.object({
+  status: z.enum(["verified", "not_announced", "not_verified"]),
+  evidence_url: urlSchema.nullable(),
+  evidence_claim: evidenceClaimSchema.nullable(),
+  verification: awardVerificationSchema,
+}).superRefine((state, context) => {
+  const actualHost = state.evidence_url == null ? null : new URL(state.evidence_url).hostname;
+  if (actualHost !== state.verification.evidence_host) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ["verification", "evidence_host"], message: "award state host does not match its URL" });
+  }
+  if (state.status === "verified" || state.status === "not_announced") {
+    if (actualHost == null || !hostCoveredByPolicy(actualHost, state.verification.allowed_hosts)) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ["status"], message: "award state requires official host evidence" });
+    }
+  }
+  if (state.status === "not_announced") {
+    if (
+      state.evidence_claim == null ||
+      state.evidence_claim.evidence_type !== "official_metadata" ||
+      state.evidence_url == null ||
+      !state.evidence_claim.source_urls.includes(state.evidence_url)
+    ) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ["evidence_claim"], message: "not_announced requires retained official metadata evidence" });
+    }
+  }
+});
+
+const resultClaimSchema = z.object({
+  ...evidenceClaimFields,
+  evidence_type: z.literal("paper_reported"),
+  metric: nonBlankSchema,
+  value: decimalSchema,
+  evaluation_setting: z.string().trim().min(1, "evaluation setting is required"),
+  locator: z.string().trim().min(1, "paper locator is required"),
+});
+const methodNodeSchema = z.object({ identifier: nonBlankSchema, label: nonBlankSchema, paper_section: nonBlankSchema });
+const methodEdgeSchema = z.object({ source: nonBlankSchema, target: nonBlankSchema, data_flow_rationale: nonBlankSchema });
+export const methodDiagramArtifactSchema = z.object({
+  nodes: z.array(methodNodeSchema).min(1),
+  edges: z.array(methodEdgeSchema),
+}).superRefine((diagram, context) => {
+  const nodeIds = diagram.nodes.map((node) => node.identifier);
+  const nodes = new Set(nodeIds);
+  if (nodes.size !== nodeIds.length) context.addIssue({ code: z.ZodIssueCode.custom, path: ["nodes"], message: "diagram nodes must be unique" });
+  const pairs = new Set<string>();
+  diagram.edges.forEach((edge, index) => {
+    if (!nodes.has(edge.source) || !nodes.has(edge.target)) context.addIssue({ code: z.ZodIssueCode.custom, path: ["edges", index], message: "diagram edge must connect disclosed nodes" });
+    const pair = `${edge.source}\0${edge.target}`;
+    if (pairs.has(pair)) context.addIssue({ code: z.ZodIssueCode.custom, path: ["edges", index], message: "diagram edges must be unique" });
+    pairs.add(pair);
+  });
+});
+const interpretiveClaimSchema = evidenceClaimSchema.refine((claim) => claim.evidence_type !== "official_metadata", "interpretive sections cannot use official metadata");
+export const deepReadArtifactSchema = z.object({
+  paper_id: nonBlankSchema,
+  research_problem: evidenceClaimSchema,
+  contribution: evidenceClaimSchema,
+  method_summary: evidenceClaimSchema,
+  result_claims: z.array(resultClaimSchema).min(1),
+  why_it_matters: z.array(interpretiveClaimSchema).min(1),
+  limitations: z.array(evidenceClaimSchema).min(1),
+  data_training_setup: z.array(evidenceClaimSchema),
+  prior_work_differences: z.array(evidenceClaimSchema),
+  reproducibility_assessment: z.array(evidenceClaimSchema),
+  transferable_implications: z.array(interpretiveClaimSchema),
+  method_diagram: methodDiagramArtifactSchema.nullable(),
+});
+
+const advanceArtifactSchema = z.object({
+  advance_id: nonBlankSchema,
+  title: nonBlankSchema,
+  category: z.enum(["text_llms", "multimodal_models", "reasoning_agents", "data_training", "evaluation_trust"]),
+  supporting_paper_ids: z.array(nonBlankSchema).min(1).refine((ids) => new Set(ids).size === ids.length),
+  claims: z.array(evidenceClaimSchema).min(1),
+});
+const themeDisclosureSchema = z.object({
+  theme: nonBlankSchema,
+  status: z.enum(["withheld", "experimental"]),
+  reason: evidenceClaimSchema,
 });
 
 const emergingScoreSchema = z.object({
@@ -348,14 +468,18 @@ const comparisonContractSchema = z
 
 export const overviewArtifactSchema = z
   .object({
+    advances: z.array(advanceArtifactSchema),
     assignments: z.array(assignmentSchema),
     audits: z.record(themeAuditSchema),
     awards: z.array(awardSchema),
+    award_state: awardStateSchema,
+    award_deep_reads: z.array(deepReadArtifactSchema),
     comparison_contract: comparisonContractSchema,
     evidence_claims: z.array(evidenceClaimSchema),
     metrics: z.record(metricSchema),
     paper_count: z.number().int().nonnegative(),
     taxonomy_version: nonBlankSchema,
+    theme_disclosures: z.array(themeDisclosureSchema),
   })
   .superRefine((value, context) => {
     const emittedMetrics = value.comparison_contract.metric_contract.emitted_metrics;
@@ -683,9 +807,59 @@ export const fullReleaseSchema = releaseOverviewSchema
         message: `unknown assignment paper IDs: ${unknown.join(", ")}`,
       });
     }
+    const officialPolicy = value.overview.award_state.verification.allowed_hosts;
+    const firstPaperForPolicy = value.papers[0];
+    const expectedAwardPolicy = firstPaperForPolicy == null
+      ? []
+      : configuredAwardHostPolicies[
+          `${firstPaperForPolicy.venue}/${firstPaperForPolicy.year}/${firstPaperForPolicy.track}`
+        ];
+    if (firstPaperForPolicy != null && (
+      expectedAwardPolicy == null || JSON.stringify(officialPolicy) !== JSON.stringify(expectedAwardPolicy)
+    )) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ["overview", "award_state", "verification", "allowed_hosts"], message: "release differs from the configured award host policy" });
+    }
+    for (const [index, award] of value.overview.awards.entries()) {
+      if (JSON.stringify(award.verification.allowed_hosts) !== JSON.stringify(officialPolicy)) {
+        context.addIssue({ code: z.ZodIssueCode.custom, path: ["overview", "awards", index, "verification"], message: "award host policy differs from the release award-state policy" });
+      }
+      if (!paperIdSet.has(award.paper_id)) {
+        context.addIssue({ code: z.ZodIssueCode.custom, path: ["overview", "awards", index, "paper_id"], message: "award refers to an unknown paper" });
+      }
+    }
+    const verifiedAwardIds = new Set(
+      value.overview.awards.filter((award) => award.status === "verified").map((award) => award.paper_id),
+    );
+    if ((verifiedAwardIds.size > 0) !== (value.overview.award_state.status === "verified")) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ["overview", "award_state", "status"], message: "award state contradicts verified award records" });
+    }
+    const deepReadIds = value.overview.award_deep_reads.map((deepRead) => deepRead.paper_id);
+    if (new Set(deepReadIds).size !== deepReadIds.length) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ["overview", "award_deep_reads"], message: "duplicate award deep-read paper IDs" });
+    }
+    deepReadIds.forEach((paperId, index) => {
+      if (!paperIdSet.has(paperId) || !verifiedAwardIds.has(paperId)) {
+        context.addIssue({ code: z.ZodIssueCode.custom, path: ["overview", "award_deep_reads", index, "paper_id"], message: "deep read requires an included, officially verified award paper" });
+      }
+    });
+    const advanceIds = value.overview.advances.map((advance) => advance.advance_id);
+    if (new Set(advanceIds).size !== advanceIds.length) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ["overview", "advances"], message: "duplicate advance IDs" });
+    }
+    value.overview.advances.forEach((advance, index) => {
+      if (advance.supporting_paper_ids.some((paperId) => !paperIdSet.has(paperId))) {
+        context.addIssue({ code: z.ZodIssueCode.custom, path: ["overview", "advances", index, "supporting_paper_ids"], message: "advance refers to an unknown paper" });
+      }
+    });
+    const disclosureThemes = value.overview.theme_disclosures.map((item) => item.theme);
+    if (new Set(disclosureThemes).size !== disclosureThemes.length) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ["overview", "theme_disclosures"], message: "duplicate theme disclosures" });
+    }
   });
 
 export type FullRelease = z.infer<typeof fullReleaseSchema>;
+export type DeepReadArtifact = z.infer<typeof deepReadArtifactSchema>;
+export type MethodDiagramArtifact = z.infer<typeof methodDiagramArtifactSchema>;
 
 /**
  * Validate the overview, validation, and provenance artifacts together.

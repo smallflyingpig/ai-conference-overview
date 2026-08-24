@@ -66,6 +66,9 @@ def method_diagram(*, node: MethodNode | None = None) -> MethodDiagram:
 def deep_read_with_claim(*, value: str, locator: str | None) -> DeepRead:
     return DeepRead(
         paper_id="acl:2026.acl-long.1",
+        research_problem=evidence_claim("The paper studies a disclosed research problem."),
+        contribution=evidence_claim("The paper contributes a disclosed method."),
+        method_summary=evidence_claim("The disclosed method connects inputs to outputs."),
         result_claims=[result_claim(value=value, locator=locator)],
         why_it_matters=[
             EvidenceClaim(
@@ -75,12 +78,16 @@ def deep_read_with_claim(*, value: str, locator: str | None) -> DeepRead:
                 locator="Section 5",
             )
         ],
+        limitations=[evidence_claim("The paper reports a bounded limitation.")],
     )
 
 
 def deep_read_with_diagram(diagram: MethodDiagram) -> DeepRead:
     return DeepRead(
         paper_id="acl:2026.acl-long.1",
+        research_problem=evidence_claim("The paper studies a disclosed research problem."),
+        contribution=evidence_claim("The paper contributes a disclosed method."),
+        method_summary=evidence_claim("The disclosed method connects inputs to outputs."),
         result_claims=[result_claim()],
         why_it_matters=[
             EvidenceClaim(
@@ -90,7 +97,17 @@ def deep_read_with_diagram(diagram: MethodDiagram) -> DeepRead:
                 locator="Section 3",
             )
         ],
+        limitations=[evidence_claim("The paper reports a bounded limitation.")],
         method_diagram=diagram,
+    )
+
+
+def evidence_claim(claim: str) -> EvidenceClaim:
+    return EvidenceClaim(
+        claim=claim,
+        evidence_type=EvidenceType.PAPER_REPORTED,
+        source_urls=["https://aclanthology.org/2026.acl-long.1.pdf"],
+        locator="Section 3",
     )
 
 
@@ -223,6 +240,10 @@ def test_diagram_edge_requires_disclosed_data_flow_rationale() -> None:
 def test_why_it_matters_rejects_official_metadata_evidence() -> None:
     deep_read = DeepRead(
         paper_id="acl:2026.acl-long.1",
+        research_problem=evidence_claim("The paper studies a disclosed research problem."),
+        contribution=evidence_claim("The paper contributes a disclosed method."),
+        method_summary=evidence_claim("The disclosed method connects inputs to outputs."),
+        result_claims=[result_claim()],
         why_it_matters=[
             EvidenceClaim(
                 claim="This should not be allowed for a synthesis claim.",
@@ -231,6 +252,7 @@ def test_why_it_matters_rejects_official_metadata_evidence() -> None:
                 locator="Section 1",
             )
         ],
+        limitations=[evidence_claim("The paper reports a bounded limitation.")],
     )
 
     with pytest.raises(ValueError, match="why_it_matters"):
@@ -299,3 +321,15 @@ def test_synthetic_not_announced_fixture_is_not_an_award_claim() -> None:
     assert fixture["synthetic_contract_fixture"] is True
     assert fixture["awards"] == []
     assert fixture["status"] == AwardStatus.NOT_ANNOUNCED.value
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["research_problem", "contribution", "method_summary", "result_claims", "why_it_matters", "limitations"],
+)
+def test_award_deep_read_rejects_missing_required_sections(field: str) -> None:
+    valid = deep_read_with_claim(value="52.0", locator="Table 2").model_dump()
+    valid[field] = [] if field in {"result_claims", "why_it_matters", "limitations"} else None
+
+    with pytest.raises(ValidationError):
+        DeepRead.model_validate(valid)

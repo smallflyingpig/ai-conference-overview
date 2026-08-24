@@ -69,14 +69,27 @@ function comparisonContract(emittedMetrics: string[] = []) {
 }
 
 const overview = {
+  advances: [],
   assignments: [],
   audits: {},
+  award_deep_reads: [],
+  award_state: {
+    status: "not_verified",
+    evidence_url: null,
+    evidence_claim: null,
+    verification: {
+      allowed_hosts: ["2026.aclweb.org", "aclanthology.org"],
+      evidence_host: null,
+      validator: "validate_award-v1",
+    },
+  },
   awards: [],
   comparison_contract: comparisonContract(),
   evidence_claims: [],
   metrics: {},
   paper_count: 0,
   taxonomy_version: "2026-08-24-v1",
+  theme_disclosures: [],
 };
 
 const validation = {
@@ -294,6 +307,43 @@ describe("parseOverview", () => {
     expect(() => parseOverview({ overview: withoutContract, validation, provenance })).toThrow(
       /comparison|contract/i,
     );
+  });
+
+  it("fails closed on an old overview without extended evidence fields", () => {
+    const { advances: _advances, award_deep_reads: _reads, award_state: _state, theme_disclosures: _themes, ...oldOverview } = overview;
+    expect(() => parseOverview({ overview: oldOverview, validation, provenance })).toThrow();
+  });
+
+  it("rejects a bare verified award with arbitrary example.com evidence", async () => {
+    const root = await mutatedTask9Release((artifact) => {
+      artifact.awards[0].evidence_url = "https://example.com/award";
+      artifact.awards[0].verification.evidence_host = "example.com";
+    });
+    await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/official host policy/i);
+  });
+
+  it("rejects a forged release-local host policy that promotes example.com", async () => {
+    const root = await mutatedTask9Release((artifact) => {
+      artifact.awards[0].evidence_url = "https://example.com/award";
+      artifact.awards[0].verification.allowed_hosts = ["example.com"];
+      artifact.awards[0].verification.evidence_host = "example.com";
+      artifact.award_state.evidence_url = "https://example.com/award";
+      artifact.award_state.verification.allowed_hosts = ["example.com"];
+      artifact.award_state.verification.evidence_host = "example.com";
+    });
+    await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/configured award host policy/i);
+  });
+
+  it("requires official metadata before asserting not_announced", async () => {
+    const root = await mutatedTask9Release((artifact) => {
+      artifact.awards = [];
+      artifact.award_deep_reads = [];
+      artifact.award_state.status = "not_announced";
+      artifact.award_state.evidence_url = null;
+      artifact.award_state.evidence_claim = null;
+      artifact.award_state.verification.evidence_host = null;
+    });
+    await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/not_announced|official/i);
   });
 
   it("rejects a comparison contract whose deterministic identity is stale", () => {

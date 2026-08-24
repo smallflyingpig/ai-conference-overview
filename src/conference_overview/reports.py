@@ -16,10 +16,18 @@ from dataclasses import asdict, dataclass, field, fields, is_dataclass
 from decimal import Decimal
 from pathlib import Path
 from typing import TypeAlias
+from urllib.parse import urlparse
 
 from pydantic import BaseModel
 
-from conference_overview.awards import AwardRecord
+from conference_overview.awards import (
+    AwardAnnouncement,
+    AwardRecord,
+    AwardStatus,
+    DeepRead,
+    validate_award,
+    validate_deep_read,
+)
 from conference_overview.classification import (
     Assignment,
     ThemeAudit,
@@ -33,11 +41,14 @@ from conference_overview.metrics import (
     emerging_score as calculate_emerging_score,
 )
 from conference_overview.models import (
+    AdvanceRecord,
     EvidenceClaim,
     EvidenceType,
     PaperRecord,
     SourceRef,
+    ThemeDisclosure,
 )
+from conference_overview.registry import official_award_hosts
 from conference_overview.validate import (
     PublicationBlocked,
     ValidationReport,
@@ -87,6 +98,10 @@ class ReleaseBundle:
     audits: Mapping[str, ThemeAudit] = field(default_factory=dict)
     metrics: Mapping[str, MetricValue] = field(default_factory=dict)
     awards: Sequence[AwardRecord] = field(default_factory=tuple)
+    award_announcement: AwardAnnouncement = field(default_factory=AwardAnnouncement)
+    award_deep_reads: Sequence[DeepRead] = field(default_factory=tuple)
+    advances: Sequence[AdvanceRecord] = field(default_factory=tuple)
+    theme_disclosures: Sequence[ThemeDisclosure] = field(default_factory=tuple)
     claims: Sequence[EvidenceClaim] = field(default_factory=tuple)
     sources: Sequence[SourceRef] = field(default_factory=tuple)
     excluded_records: Sequence[PaperRecord] = field(default_factory=tuple)
@@ -275,6 +290,7 @@ def _provenance_payload(bundle: ReleaseBundle) -> dict[str, object]:
 
 
 def _overview_payload(bundle: ReleaseBundle) -> dict[str, object]:
+    validated_awards, award_policy = _validated_award_payload(bundle)
     assignments = [
         {
             "confidence": str(assignment.confidence),
@@ -302,12 +318,19 @@ def _overview_payload(bundle: ReleaseBundle) -> dict[str, object]:
     return {
         "assignments": assignments,
         "audits": audits,
-        "awards": [
-            award.model_dump(mode="json")
-            for award in sorted(
-                bundle.awards,
-                key=lambda item: (item.paper_id, item.award_type),
-            )
+        "award_state": award_policy,
+        "awards": validated_awards,
+        "award_deep_reads": [
+            deep_read.model_dump(mode="json")
+            for deep_read in sorted(bundle.award_deep_reads, key=lambda item: item.paper_id)
+        ],
+        "advances": [
+            advance.model_dump(mode="json")
+            for advance in sorted(bundle.advances, key=lambda item: item.advance_id)
+        ],
+        "theme_disclosures": [
+            disclosure.model_dump(mode="json")
+            for disclosure in sorted(bundle.theme_disclosures, key=lambda item: item.theme)
         ],
         "comparison_contract": _comparison_contract(bundle),
         "evidence_claims": [
@@ -323,6 +346,74 @@ def _overview_payload(bundle: ReleaseBundle) -> dict[str, object]:
         },
         "paper_count": len(bundle.records),
         "taxonomy_version": bundle.taxonomy_version,
+    }
+
+
+def _validated_award_payload(
+    bundle: ReleaseBundle,
+) -> tuple[list[dict[str, object]], dict[str, object]]:
+    if not bundle.records:
+        return [], {
+            "status": AwardStatus.NOT_VERIFIED.value,
+            "evidence_url": None,
+            "evidence_claim": None,
+            "verification": {
+                "allowed_hosts": [],
+                "evidence_host": None,
+                "validator": "validate_award-v1",
+            },
+        }
+    first = bundle.records[0]
+    allowed_hosts = official_award_hosts(first.venue, first.year, first.track)
+    allowed = set(allowed_hosts)
+    def verification(evidence_url: str | None) -> dict[str, object]:
+        return {
+            "allowed_hosts": sorted(allowed_hosts),
+            "evidence_host": urlparse(evidence_url).hostname if evidence_url else None,
+            "validator": "validate_award-v1",
+        }
+    payloads: list[dict[str, object]] = []
+    for award in sorted(bundle.awards, key=lambda item: (item.paper_id, item.award_type)):
+        validated = validate_award(award, allowed_hosts=allowed)
+        if award.status is AwardStatus.VERIFIED and validated.status is not AwardStatus.VERIFIED:
+            raise PublicationBlocked("publication blocked: official award evidence failed configured host policy")
+        evidence_url = str(validated.evidence_url) if validated.evidence_url is not None else None
+        payload = validated.model_dump(mode="json")
+        payload["verification"] = verification(evidence_url)
+        payloads.append(payload)
+
+    verified = [payload for payload in payloads if payload["status"] == AwardStatus.VERIFIED.value]
+    if verified:
+        return payloads, {
+            "status": AwardStatus.VERIFIED.value,
+            "evidence_url": verified[0]["evidence_url"],
+            "evidence_claim": None,
+            "verification": verification(str(verified[0]["evidence_url"])),
+        }
+
+    announcement = bundle.award_announcement
+    if announcement.status is AwardStatus.NOT_ANNOUNCED:
+        probe = AwardRecord(
+            paper_id="award-announcement-state",
+            award_type="Award announcement status",
+            status=AwardStatus.VERIFIED,
+            evidence_url=announcement.evidence_url,
+        )
+        if validate_award(probe, allowed_hosts=allowed).status is not AwardStatus.VERIFIED:
+            raise PublicationBlocked("publication blocked: award announcement is not official")
+    return payloads, {
+        "status": announcement.status.value,
+        "evidence_url": (
+            str(announcement.evidence_url) if announcement.evidence_url is not None else None
+        ),
+        "evidence_claim": (
+            announcement.claim.model_dump(mode="json") if announcement.claim is not None else None
+        ),
+        "verification": verification(
+            str(announcement.evidence_url)
+            if announcement.evidence_url is not None
+            else None
+        ),
     }
 
 
@@ -452,7 +543,18 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
         raise ValueError("technical prose entries must be typed EvidenceClaim objects")
     if any(not isinstance(award, AwardRecord) for award in bundle.awards):
         raise ValueError("awards must be typed AwardRecord objects")
+    if any(not isinstance(deep_read, DeepRead) for deep_read in bundle.award_deep_reads):
+        raise ValueError("award deep reads must be typed DeepRead objects")
+    if any(not isinstance(advance, AdvanceRecord) for advance in bundle.advances):
+        raise ValueError("advances must be typed AdvanceRecord objects")
+    if any(
+        not isinstance(disclosure, ThemeDisclosure)
+        for disclosure in bundle.theme_disclosures
+    ):
+        raise ValueError("theme disclosures must be typed ThemeDisclosure objects")
     _validate_claims(bundle.claims)
+    if bundle.award_announcement.claim is not None:
+        _validate_claims((bundle.award_announcement.claim,))
     _validate_provenance(_bundle_sources(bundle))
 
     published_emerging_score = bundle.metrics.get("emerging_score")
@@ -523,6 +625,54 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
             )
 
     record_ids = [record.paper_id for record in bundle.records]
+    record_id_set = set(record_ids)
+    validated_awards, _award_state = _validated_award_payload(bundle)
+    verified_award_ids = {
+        str(award["paper_id"])
+        for award in validated_awards
+        if award["status"] == AwardStatus.VERIFIED.value
+    }
+    if any(str(award["paper_id"]) not in record_id_set for award in validated_awards):
+        raise PublicationBlocked("publication blocked: award refers to an unknown paper")
+    deep_read_ids: list[str] = []
+    for deep_read in bundle.award_deep_reads:
+        validate_deep_read(deep_read)
+        deep_read_ids.append(deep_read.paper_id)
+        if deep_read.paper_id not in verified_award_ids:
+            raise PublicationBlocked(
+                "publication blocked: award deep read requires a verified official award"
+            )
+        _validate_claims(
+            (
+                deep_read.research_problem,
+                deep_read.contribution,
+                deep_read.method_summary,
+                *deep_read.result_claims,
+                *deep_read.why_it_matters,
+                *deep_read.limitations,
+                *deep_read.data_training_setup,
+                *deep_read.prior_work_differences,
+                *deep_read.reproducibility_assessment,
+                *deep_read.transferable_implications,
+            )
+        )
+    if len(deep_read_ids) != len(set(deep_read_ids)):
+        raise PublicationBlocked("publication blocked: duplicate award deep-read paper IDs")
+
+    advance_ids: list[str] = []
+    for advance in bundle.advances:
+        advance_ids.append(advance.advance_id)
+        if not set(advance.supporting_paper_ids).issubset(record_id_set):
+            raise PublicationBlocked("publication blocked: advance refers to an unknown paper")
+        _validate_claims(advance.claims)
+    if len(advance_ids) != len(set(advance_ids)):
+        raise PublicationBlocked("publication blocked: duplicate advance IDs")
+
+    disclosure_themes = [disclosure.theme for disclosure in bundle.theme_disclosures]
+    if len(disclosure_themes) != len(set(disclosure_themes)):
+        raise PublicationBlocked("publication blocked: duplicate theme disclosures")
+    _validate_claims(tuple(disclosure.reason for disclosure in bundle.theme_disclosures))
+
     assignment_ids = [assignment.paper_id for assignment in bundle.assignments]
     if len(assignment_ids) != len(set(assignment_ids)):
         raise PublicationBlocked("publication blocked: duplicate assignment paper IDs")

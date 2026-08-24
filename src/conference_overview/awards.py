@@ -40,6 +40,27 @@ class AwardRecord(BaseModel):
         return self
 
 
+class AwardAnnouncement(BaseModel):
+    """Explicit official metadata about an unavailable award announcement."""
+
+    status: AwardStatus = AwardStatus.NOT_VERIFIED
+    evidence_url: HttpUrl | None = None
+    claim: EvidenceClaim | None = None
+
+    @model_validator(mode="after")
+    def validate_announcement_state(self) -> AwardAnnouncement:
+        if self.status is AwardStatus.VERIFIED:
+            raise ValueError("verified status belongs to an AwardRecord")
+        if self.status is AwardStatus.NOT_ANNOUNCED:
+            if self.evidence_url is None or self.claim is None:
+                raise ValueError("not_announced requires explicit official metadata")
+            if self.claim.evidence_type is not EvidenceType.OFFICIAL_METADATA:
+                raise ValueError("not_announced requires official_metadata evidence")
+            if str(self.evidence_url) not in {str(url) for url in self.claim.source_urls}:
+                raise ValueError("announcement evidence URL must be retained in its claim")
+        return self
+
+
 class ResultClaim(EvidenceClaim):
     """A paper-reported numerical result with its experimental context."""
 
@@ -109,8 +130,16 @@ class DeepRead(BaseModel):
     """Evidence-bearing, publication-ready details for an award paper."""
 
     paper_id: str = Field(min_length=1)
-    result_claims: list[ResultClaim] = Field(default_factory=list)
-    why_it_matters: list[EvidenceClaim] = Field(default_factory=list)
+    research_problem: EvidenceClaim
+    contribution: EvidenceClaim
+    method_summary: EvidenceClaim
+    result_claims: list[ResultClaim] = Field(min_length=1)
+    why_it_matters: list[EvidenceClaim] = Field(min_length=1)
+    limitations: list[EvidenceClaim] = Field(min_length=1)
+    data_training_setup: list[EvidenceClaim] = Field(default_factory=list)
+    prior_work_differences: list[EvidenceClaim] = Field(default_factory=list)
+    reproducibility_assessment: list[EvidenceClaim] = Field(default_factory=list)
+    transferable_implications: list[EvidenceClaim] = Field(default_factory=list)
     method_diagram: MethodDiagram | None = None
 
     @field_validator("paper_id")
@@ -218,6 +247,25 @@ def validate_deep_read(deep_read: DeepRead) -> DeepRead:
                 "why_it_matters evidence type must be paper_reported, "
                 "cross_paper_synthesis, or inference"
             )
+
+    evidence_sections = (
+        deep_read.research_problem,
+        deep_read.contribution,
+        deep_read.method_summary,
+        *deep_read.why_it_matters,
+        *deep_read.limitations,
+        *deep_read.data_training_setup,
+        *deep_read.prior_work_differences,
+        *deep_read.reproducibility_assessment,
+        *deep_read.transferable_implications,
+    )
+    for claim in evidence_sections:
+        if not claim.source_urls:
+            raise ValueError("deep-read evidence section requires a source URL")
+        if claim.evidence_type is EvidenceType.PAPER_REPORTED and not _has_text(
+            claim.locator
+        ):
+            raise ValueError("paper-reported deep-read section requires a paper locator")
 
     if deep_read.method_diagram is not None:
         _validate_method_diagram(deep_read.method_diagram)

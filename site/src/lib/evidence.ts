@@ -1,7 +1,12 @@
-import { z } from "zod";
+import { createHash } from "node:crypto";
 
 import type { LoadedOverview } from "./data";
-import type { FullRelease } from "./schema";
+import {
+  deepReadArtifactSchema,
+  type DeepReadArtifact,
+  type FullRelease,
+  type MethodDiagramArtifact,
+} from "./schema";
 
 export const evidenceTypes = [
   "official_metadata",
@@ -31,67 +36,9 @@ export function evidenceTone(type: EvidenceType): string {
   }[type];
 }
 
-const httpUrl = z.string().url().refine((value) => ["http:", "https:"].includes(new URL(value).protocol));
-const nonBlank = z.string().trim().min(1);
-const evaluationSetting = z.string().trim().min(1, "evaluation setting is required");
-const paperLocator = z.string().trim().min(1, "paper locator is required");
-const evidenceClaim = z.object({
-  claim: nonBlank,
-  evidence_type: z.enum(evidenceTypes),
-  source_urls: z.array(httpUrl).min(1),
-  locator: nonBlank.nullable().optional(),
-});
-const resultClaim = evidenceClaim.extend({
-  evidence_type: z.literal("paper_reported"),
-  metric: nonBlank,
-  value: z.string().regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[Ee][+-]?\d+)?$/, "finite numeric value required"),
-  evaluation_setting: evaluationSetting,
-  locator: paperLocator,
-});
-const methodNode = z.object({
-  identifier: nonBlank,
-  label: nonBlank,
-  paper_section: nonBlank,
-});
-const methodEdge = z.object({
-  source: nonBlank,
-  target: nonBlank,
-  data_flow_rationale: nonBlank,
-});
-const methodDiagram = z.object({
-  nodes: z.array(methodNode).min(1),
-  edges: z.array(methodEdge),
-}).superRefine((diagram, context) => {
-  const identifiers = diagram.nodes.map((node) => node.identifier);
-  const identifierSet = new Set(identifiers);
-  if (identifierSet.size !== identifiers.length) {
-    context.addIssue({ code: z.ZodIssueCode.custom, path: ["nodes"], message: "method diagram node identifiers must be unique" });
-  }
-  const pairs = new Set<string>();
-  diagram.edges.forEach((edge, index) => {
-    if (!identifierSet.has(edge.source) || !identifierSet.has(edge.target)) {
-      context.addIssue({ code: z.ZodIssueCode.custom, path: ["edges", index], message: "method diagram edges must connect disclosed nodes" });
-    }
-    const pair = `${edge.source}\0${edge.target}`;
-    if (pairs.has(pair)) {
-      context.addIssue({ code: z.ZodIssueCode.custom, path: ["edges", index], message: "method diagram directed edges must be unique" });
-    }
-    pairs.add(pair);
-  });
-});
-
-export const deepReadSchema = z.object({
-  paper_id: nonBlank,
-  result_claims: z.array(resultClaim),
-  why_it_matters: z.array(evidenceClaim.refine(
-    (claim) => claim.evidence_type !== "official_metadata",
-    "why-it-matters cannot use official metadata as interpretation",
-  )),
-  method_diagram: methodDiagram.nullable(),
-});
-
-export type DeepRead = z.infer<typeof deepReadSchema>;
-export type MethodDiagram = NonNullable<DeepRead["method_diagram"]>;
+export const deepReadSchema = deepReadArtifactSchema;
+export type DeepRead = DeepReadArtifact;
+export type MethodDiagram = MethodDiagramArtifact;
 export type ResultClaim = DeepRead["result_claims"][number];
 
 export function validateDeepRead(input: unknown): DeepRead {
@@ -112,13 +59,16 @@ export interface AwardRoute {
   props: { detail: AwardDetailView };
 }
 
+export function awardRouteKey(paperId: string): string {
+  return `paper-${createHash("sha256").update(paperId, "utf8").digest("hex")}`;
+}
+
 export function awardDetailRoutes(
   release: LoadedOverview | null,
-  deepReads: readonly unknown[],
 ): AwardRoute[] {
   if (release == null) return [];
   const validDeepReads = new Map<string, DeepRead>();
-  for (const candidate of deepReads) {
+  for (const candidate of release.overview.award_deep_reads) {
     const parsed = deepReadSchema.safeParse(candidate);
     if (parsed.success) validDeepReads.set(parsed.data.paper_id, parsed.data);
   }
@@ -129,7 +79,7 @@ export function awardDetailRoutes(
     const deepRead = validDeepReads.get(award.paper_id);
     if (paper == null || deepRead == null) return [];
     return [{
-      params: { paperId: award.paper_id },
+      params: { paperId: awardRouteKey(award.paper_id) },
       props: { detail: { award, paper, deepRead } },
     }];
   });
@@ -143,21 +93,26 @@ export interface AwardIndexItem {
 
 export function buildAwardIndex(
   release: LoadedOverview | null,
-  deepReads: readonly unknown[],
-): { stateLabel: "Not announced" | "Not verified" | "Verified"; items: AwardIndexItem[] } {
-  if (release == null || release.overview.awards.length === 0) {
-    return { stateLabel: "Not announced", items: [] };
+): { stateLabel: "Unavailable" | "Not announced" | "Not verified" | "Verified"; items: AwardIndexItem[] } {
+  if (release == null) {
+    return { stateLabel: "Unavailable", items: [] };
   }
-  const detailIds = new Set(awardDetailRoutes(release, deepReads).map((route) => route.params.paperId));
+  const detailIds = new Set(awardDetailRoutes(release).map((route) => route.params.paperId));
   const paperById = new Map(release.papers.map((paper) => [paper.paper_id, paper]));
   const items = release.overview.awards.map((award) => ({
     award,
     paper: paperById.get(award.paper_id) ?? null,
-    hasDetail: detailIds.has(award.paper_id),
+    hasDetail: detailIds.has(awardRouteKey(award.paper_id)),
   }));
-  if (items.some(({ award }) => award.status === "verified")) return { stateLabel: "Verified", items };
-  if (items.some(({ award }) => award.status === "not_verified")) return { stateLabel: "Not verified", items };
-  return { stateLabel: "Not announced", items };
+  const stateLabels = {
+      verified: "Verified",
+      not_verified: "Not verified",
+      not_announced: "Not announced",
+    } as const;
+  return {
+    stateLabel: stateLabels[release.overview.award_state.status],
+    items,
+  };
 }
 
 export interface PaperIndexRow {
@@ -199,21 +154,47 @@ export function filterPapers(release: LoadedOverview, filters: PaperFilters): Pa
 }
 
 export const advanceCategories = [
-  { id: "text-llms", label: "Text LLMs" },
-  { id: "multimodal-models", label: "Multimodal Models" },
-  { id: "reasoning-agents", label: "Reasoning and Agents" },
-  { id: "data-training", label: "Data / Pretraining / Post-training" },
-  { id: "evaluation-trust", label: "Evaluation / Safety / Interpretability" },
+  { id: "text-llms", artifactKey: "text_llms", label: "Text LLMs" },
+  { id: "multimodal-models", artifactKey: "multimodal_models", label: "Multimodal Models" },
+  { id: "reasoning-agents", artifactKey: "reasoning_agents", label: "Reasoning and Agents" },
+  { id: "data-training", artifactKey: "data_training", label: "Data / Pretraining / Post-training" },
+  { id: "evaluation-trust", artifactKey: "evaluation_trust", label: "Evaluation / Safety / Interpretability" },
 ] as const;
+
+export function buildAdvances(release: LoadedOverview) {
+  const paperById = new Map(release.papers.map((paper) => [paper.paper_id, paper]));
+  return advanceCategories.map((category) => ({
+    ...category,
+    advances: release.overview.advances
+      .filter((advance) => advance.category === category.artifactKey)
+      .map((advance) => ({
+        title: advance.title,
+        supportingPaperIds: advance.supporting_paper_ids,
+        supportingPapers: advance.supporting_paper_ids.map((paperId) => ({
+          paperId,
+          title: paperById.get(paperId)!.title,
+          officialUrl: paperById.get(paperId)!.landing_url,
+        })),
+        claims: advance.claims,
+      })),
+  }));
+}
 
 export interface MethodologyView {
   sources: Array<{ name: string; url: string; sha256: string; retrievedAt: string }>;
   taxonomyVersion: string;
-  scope: { venue: string; track: string; denominator: string; exclusions: string };
-  formulas: Array<{ name: string; formula: string; numerator?: string; denominator?: string; version: string }>;
+  scope: { venue: string; year: number; track: string; inclusionStatuses: string[]; denominator: string; denominatorUnit: string; denominatorValue: number; exclusions: string };
+  contractIds: { comparison: string; formula: string; configuredVenuePopulation: string };
+  configuredVenues: string[];
+  emergingScoreWeights: { novelty: string; share_growth: string; spread_growth: string };
+  formulas: Array<{ name: string; formula: string; numerator: string; denominator?: string; version: string }>;
   missingness: { abstracts: number; pdfs: number; dois: number };
   audits: Array<{ theme: string; sampleSize: number; observedPrecision: string; wilsonLower95: string; correctCount: number }>;
-  withheldThemes: { themes: string[]; note: string };
+  withheldThemes: {
+    themes: string[];
+    note: string;
+    items: Array<{ theme: string; status: "withheld" | "experimental"; claim: string; evidenceType: EvidenceType; sourceUrls: string[]; locator: string | null }>;
+  };
   knownLimitations: string[];
 }
 
@@ -230,14 +211,25 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
     taxonomyVersion: release.overview.taxonomy_version,
     scope: {
       venue: comparison.comparison_scope.venue,
+      year: release.scope.year,
       track: comparison.comparison_scope.track,
+      inclusionStatuses: comparison.comparison_scope.inclusion_statuses,
       denominator: `${comparison.comparison_scope.denominator.artifact_field}: ${comparison.comparison_scope.denominator.description}`,
+      denominatorUnit: comparison.comparison_scope.denominator.unit,
+      denominatorValue: release.validation.included_count,
       exclusions: comparison.comparison_scope.excluded_records,
     },
+    contractIds: {
+      comparison: comparison.contract_id,
+      formula: metric.formula_version,
+      configuredVenuePopulation: metric.cross_venue_spread.configured_venue_id,
+    },
+    configuredVenues: metric.cross_venue_spread.configured_venues,
+    emergingScoreWeights: metric.emerging_score.weights,
     formulas: [
       { name: "Topic share", ...metric.topic_share },
       { name: "Cross-venue spread", ...metric.cross_venue_spread },
-      { name: "Emerging Score", formula: metric.emerging_score.formula, version: metric.emerging_score.version },
+      { name: "Emerging Score", formula: metric.emerging_score.formula, numerator: "weighted share growth, spread growth, and novelty components", version: metric.emerging_score.version },
     ],
     missingness: {
       abstracts: release.validation.missing_abstract_count,
@@ -252,8 +244,18 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
       correctCount: audit.correct_count,
     })),
     withheldThemes: {
-      themes: [],
-      note: "A withheld or experimental theme registry is not published in this validated release.",
+      themes: release.overview.theme_disclosures.map((item) => `${item.theme} (${item.status})`),
+      note: release.overview.theme_disclosures.length === 0
+        ? "A withheld or experimental theme registry is not published in this validated release."
+        : `${release.overview.theme_disclosures.length} withheld or experimental theme disclosures are published with evidence.`,
+      items: release.overview.theme_disclosures.map((item) => ({
+        theme: item.theme,
+        status: item.status,
+        claim: item.reason.claim,
+        evidenceType: item.reason.evidence_type,
+        sourceUrls: item.reason.source_urls,
+        locator: item.reason.locator ?? null,
+      })),
     },
     knownLimitations: [
       "A one-year snapshot supports distribution and hotspot language, not a trend claim.",
@@ -261,22 +263,4 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
       "Advance lanes remain evidence-limited until claims include paper-level support and category assignments.",
     ],
   };
-}
-
-export function methodSequence(diagram: MethodDiagram): string[] {
-  const labelById = new Map(diagram.nodes.map((node) => [node.identifier, node.label]));
-  const incoming = new Map(diagram.nodes.map((node) => [node.identifier, 0]));
-  for (const edge of diagram.edges) incoming.set(edge.target, (incoming.get(edge.target) ?? 0) + 1);
-  const queue = diagram.nodes.filter((node) => incoming.get(node.identifier) === 0).map((node) => node.identifier);
-  const ordered: string[] = [];
-  while (queue.length > 0) {
-    const identifier = queue.shift()!;
-    ordered.push(labelById.get(identifier)!);
-    for (const edge of diagram.edges.filter((candidate) => candidate.source === identifier)) {
-      const remaining = (incoming.get(edge.target) ?? 1) - 1;
-      incoming.set(edge.target, remaining);
-      if (remaining === 0) queue.push(edge.target);
-    }
-  }
-  return ordered.length === diagram.nodes.length ? ordered : diagram.nodes.map((node) => node.label);
 }

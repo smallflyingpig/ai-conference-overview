@@ -8,12 +8,16 @@ import { awardDetailRoutes, type AwardDetailView } from "../../lib/evidence";
 
 export async function getStaticPaths() {
   const release = await loadOverview("ACL", 2026);
-  const deepReads: unknown[] = [];
-  return awardDetailRoutes(release, deepReads);
+  return awardDetailRoutes(release);
 }
 
 interface Props { detail: AwardDetailView }
 const { detail } = Astro.props;
+const coreSections = [
+  { label: "Research problem", claim: detail.deepRead.research_problem },
+  { label: "Contribution", claim: detail.deepRead.contribution },
+  { label: "Method", claim: detail.deepRead.method_summary },
+];
 ---
 
 <BaseLayout title={`${detail.paper.title} — Award reading`} description={`Evidence-grounded reading of ${detail.paper.title}.`} conferenceAvailable={true}>
@@ -27,6 +31,11 @@ const { detail } = Astro.props;
 
     {detail.deepRead.method_diagram && <AwardMethodDiagram diagram={detail.deepRead.method_diagram} />}
 
+    <section class="deep-read-core" aria-labelledby="core-title">
+      <h2 id="core-title">Paper account</h2>
+      {coreSections.map(({ label, claim }) => <article><EvidenceBadge type={claim.evidence_type} /><div><h3>{label}</h3><p>{claim.claim}</p><small>{claim.locator}</small></div></article>)}
+    </section>
+
     <section class="result-ledger" aria-labelledby="results-title">
       <h2 id="results-title">Paper-reported results</h2>
       {detail.deepRead.result_claims.map((claim) => <AwardResultClaim claim={claim} />)}
@@ -37,6 +46,10 @@ const { detail } = Astro.props;
       {detail.deepRead.why_it_matters.map((claim) => (
         <article><EvidenceBadge type={claim.evidence_type} /><p>{claim.claim}</p><div>{claim.locator && <small>{claim.locator}</small>}{claim.source_urls.map((url, index) => <a href={url}>Source {index + 1}</a>)}</div></article>
       ))}
+    </section>
+    <section class="why-ledger" aria-labelledby="limitations-title">
+      <h2 id="limitations-title">Limitations</h2>
+      {detail.deepRead.limitations.map((claim) => <article><EvidenceBadge type={claim.evidence_type} /><p>{claim.claim}</p><div><small>{claim.locator}</small>{claim.source_urls.map((url, index) => <a href={url}>Source {index + 1}</a>)}</div></article>)}
     </section>
   </article>
 </BaseLayout>

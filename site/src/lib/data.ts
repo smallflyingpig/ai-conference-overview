@@ -5,7 +5,7 @@ import { isAbsolute, join, relative, sep } from "node:path";
 
 import { z } from "zod";
 
-import { parseRelease, type FullRelease } from "./schema";
+import { configuredAwardHostPolicy, parseRelease, type FullRelease } from "./schema";
 
 const artifactNames = [
   "papers.json",
@@ -150,6 +150,14 @@ export async function loadOverview(
     validation: parseJsonArtifact("validation.json"),
     provenance: parseJsonArtifact("provenance.json"),
   });
+  const expectedAwardPolicy = configuredAwardHostPolicy(venue, year, track);
+  if (
+    expectedAwardPolicy == null ||
+    JSON.stringify(parsed.overview.award_state.verification.allowed_hosts) !==
+      JSON.stringify(expectedAwardPolicy)
+  ) {
+    throw new Error("Release differs from the configured award host policy");
+  }
   const mismatchedPaper = parsed.papers.find(
     (paper) => paper.venue !== venue || paper.year !== year || paper.track !== track,
   );

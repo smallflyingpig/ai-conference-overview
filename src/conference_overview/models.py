@@ -18,6 +18,19 @@ class EvidenceType(str, Enum):
     INFERENCE = "inference"
 
 
+class AdvanceCategory(str, Enum):
+    TEXT_LLMS = "text_llms"
+    MULTIMODAL_MODELS = "multimodal_models"
+    REASONING_AGENTS = "reasoning_agents"
+    DATA_TRAINING = "data_training"
+    EVALUATION_TRUST = "evaluation_trust"
+
+
+class ThemeDisclosureStatus(str, Enum):
+    WITHHELD = "withheld"
+    EXPERIMENTAL = "experimental"
+
+
 class SourceRef(BaseModel):
     name: str
     url: HttpUrl
@@ -50,6 +63,43 @@ class EvidenceClaim(BaseModel):
         return normalized
 
 
+class AdvanceRecord(BaseModel):
+    advance_id: str
+    title: str
+    category: AdvanceCategory
+    supporting_paper_ids: tuple[str, ...] = Field(min_length=1)
+    claims: tuple[EvidenceClaim, ...] = Field(min_length=1)
+
+    @field_validator("advance_id", "title")
+    @classmethod
+    def normalize_advance_text(cls, value: str) -> str:
+        normalized = value.strip()
+        if not normalized:
+            raise ValueError("advance identifier and title must not be blank")
+        return normalized
+
+    @field_validator("supporting_paper_ids")
+    @classmethod
+    def normalize_supporting_ids(cls, values: tuple[str, ...]) -> tuple[str, ...]:
+        normalized = tuple(value.strip() for value in values)
+        if any(not value for value in normalized) or len(set(normalized)) != len(normalized):
+            raise ValueError("supporting paper IDs must be nonblank and unique")
+        return normalized
+
+
+class ThemeDisclosure(BaseModel):
+    theme: str
+    status: ThemeDisclosureStatus
+    reason: EvidenceClaim
+
+    @field_validator("theme")
+    @classmethod
+    def normalize_theme(cls, value: str) -> str:
+        normalized = value.strip()
+        if not normalized:
+            raise ValueError("theme must not be blank")
+        return normalized
+
 class PaperRecord(BaseModel):
     paper_id: str
     title: str
@@ -78,3 +128,4 @@ class VenueRequest(BaseModel):
     source_key: str | None = None
     bibtex_url: HttpUrl | None = None
     volume_url: HttpUrl | None = None
+    official_award_hosts: tuple[str, ...] = Field(default_factory=tuple)

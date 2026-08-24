@@ -1,6 +1,6 @@
 import React from "react";
 
-import { methodSequence, type MethodDiagram } from "../lib/evidence";
+import { type MethodDiagram } from "../lib/evidence";
 
 interface Props { diagram: MethodDiagram }
 
@@ -40,9 +40,20 @@ export default function AwardMethodDiagram({ diagram }: Props) {
           );
         })}
       </svg>
-      <figcaption>
-        <strong>Text sequence</strong>
-        <span>{methodSequence(diagram).join(" → ")}</span>
+      <figcaption className="graph-fallback">
+        <strong>Graph text equivalent</strong>
+        <div>
+          <p>Disclosed nodes</p>
+          <ul>{diagram.nodes.map((node) => <li key={node.identifier}>{node.label} — {node.paper_section}</li>)}</ul>
+          <p>Disclosed directed edges</p>
+          {diagram.edges.length === 0 ? <p>None disclosed.</p> : (
+            <ul>{diagram.edges.map((edge) => (
+              <li key={`${edge.source}-${edge.target}`}>
+                {diagram.nodes.find((node) => node.identifier === edge.source)!.label} → {diagram.nodes.find((node) => node.identifier === edge.target)!.label} — {edge.data_flow_rationale}
+              </li>
+            ))}</ul>
+          )}
+        </div>
       </figcaption>
     </figure>
   );

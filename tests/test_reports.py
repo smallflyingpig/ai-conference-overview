@@ -10,7 +10,16 @@ from pathlib import Path
 import pytest
 
 from conference_overview import reports
-from conference_overview.awards import AwardRecord, AwardStatus
+from conference_overview.awards import (
+    AwardAnnouncement,
+    AwardRecord,
+    AwardStatus,
+    DeepRead,
+    MethodDiagram,
+    MethodEdge,
+    MethodNode,
+    ResultClaim,
+)
 from conference_overview.classification import Assignment, ThemeAudit, audit_theme
 from conference_overview.metrics import (
     CrossVenueSpread,
@@ -19,11 +28,15 @@ from conference_overview.metrics import (
     emerging_score,
 )
 from conference_overview.models import (
+    AdvanceCategory,
+    AdvanceRecord,
     EvidenceClaim,
     EvidenceType,
     PaperRecord,
     RecordStatus,
     SourceRef,
+    ThemeDisclosure,
+    ThemeDisclosureStatus,
 )
 from conference_overview.reports import (
     ArtifactValidationError,
@@ -68,6 +81,55 @@ def assignment(paper_id: str) -> Assignment:
     )
 
 
+def paper_claim(text: str, *, evidence_type: EvidenceType = EvidenceType.PAPER_REPORTED) -> EvidenceClaim:
+    return EvidenceClaim(
+        claim=text,
+        evidence_type=evidence_type,
+        source_urls=["https://aclanthology.org/paper-a.pdf"],
+        locator="Section 3",
+    )
+
+
+def award_deep_read() -> DeepRead:
+    return DeepRead(
+        paper_id="paper-a",
+        research_problem=paper_claim("The paper studies a disclosed problem."),
+        contribution=paper_claim("The paper contributes a disclosed method."),
+        method_summary=paper_claim("The method transforms records into predictions."),
+        result_claims=[
+            ResultClaim(
+                claim="Accuracy reaches 81.4%.",
+                evidence_type=EvidenceType.PAPER_REPORTED,
+                source_urls=["https://aclanthology.org/paper-a.pdf"],
+                locator="Table 2, p. 7",
+                metric="Accuracy",
+                value="81.4",
+                evaluation_setting="Held-out test split",
+            )
+        ],
+        why_it_matters=[
+            paper_claim(
+                "The result supports a cross-paper interpretation.",
+                evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
+            )
+        ],
+        limitations=[paper_claim("The paper evaluates one bounded setting.")],
+        method_diagram=MethodDiagram(
+            nodes=[
+                MethodNode(identifier="input", label="Input", paper_section="3.1"),
+                MethodNode(identifier="model", label="Model", paper_section="3.2"),
+            ],
+            edges=[
+                MethodEdge(
+                    source="input",
+                    target="model",
+                    data_flow_rationale="The disclosed input enters the model.",
+                )
+            ],
+        ),
+    )
+
+
 def publishable_bundle() -> ReleaseBundle:
     records = (paper("paper-z"), paper("paper-a"))
     return ReleaseBundle(
@@ -92,6 +154,32 @@ def publishable_bundle() -> ReleaseBundle:
                 award_type="Best Paper",
                 status=AwardStatus.VERIFIED,
                 evidence_url="https://2026.aclweb.org/awards/",
+            ),
+        ),
+        award_announcement=AwardAnnouncement(status=AwardStatus.NOT_VERIFIED),
+        award_deep_reads=(award_deep_read(),),
+        advances=(
+            AdvanceRecord(
+                advance_id="data-quality",
+                title="Evidence-backed data quality",
+                category=AdvanceCategory.DATA_TRAINING,
+                supporting_paper_ids=("paper-a",),
+                claims=(
+                    paper_claim(
+                        "The accepted work supports a data-quality advance.",
+                        evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
+                    ),
+                ),
+            ),
+        ),
+        theme_disclosures=(
+            ThemeDisclosure(
+                theme="Sparse expert routing",
+                status=ThemeDisclosureStatus.EXPERIMENTAL,
+                reason=paper_claim(
+                    "This theme remains experimental pending audit.",
+                    evidence_type=EvidenceType.INFERENCE,
+                ),
             ),
         ),
         claims=(
@@ -177,11 +265,52 @@ def test_valid_release_contains_complete_provenance_and_diagnostics(
         "minimum_wilson_lower_95": "0.80",
     }
     assert overview["awards"][0]["status"] == "verified"
+    assert overview["awards"][0]["verification"] == {
+        "allowed_hosts": ["2026.aclweb.org", "aclanthology.org"],
+        "evidence_host": "2026.aclweb.org",
+        "validator": "validate_award-v1",
+    }
+    assert overview["award_deep_reads"][0]["contribution"]["claim"].startswith(
+        "The paper contributes"
+    )
+    assert overview["advances"][0]["category"] == "data_training"
+    assert overview["theme_disclosures"][0]["status"] == "experimental"
     assert overview["metrics"]["emerging_score"]["components"] == {
         "novelty": "0.25",
         "share_growth": "0.8",
         "spread_growth": "0.5",
     }
+
+
+def test_release_rejects_unofficial_verified_award_before_serializing_deep_read(
+    tmp_path: Path,
+) -> None:
+    bundle = publishable_bundle()
+    unofficial = AwardRecord(
+        paper_id=bundle.awards[0].paper_id,
+        award_type=bundle.awards[0].award_type,
+        status=AwardStatus.VERIFIED,
+        evidence_url="https://example.com/awards/",
+    )
+
+    with pytest.raises(PublicationBlocked, match="official award"):
+        write_release(
+            replace(bundle, awards=(unofficial,)),
+            tmp_path / "unofficial-award",
+        )
+
+
+def test_release_keeps_exact_six_artifacts_with_extended_overview(tmp_path: Path) -> None:
+    write_release(publishable_bundle(), tmp_path)
+
+    assert sorted(path.name for path in resolve_current_release(tmp_path).iterdir()) == [
+        "overview.json",
+        "overview.md",
+        "papers.csv",
+        "papers.json",
+        "provenance.json",
+        "validation.json",
+    ]
 
 
 def test_release_exposes_auditable_comparison_contract(tmp_path: Path) -> None:

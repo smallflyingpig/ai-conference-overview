@@ -44,4 +44,10 @@ def normalize_request(venue: str, year: int, track: str | None) -> VenueRequest:
         source_key=route.get("source_key"),
         bibtex_url=route.get("bibtex_url"),
         volume_url=route.get("volume_url"),
+        official_award_hosts=tuple(route.get("official_award_hosts", ())),
     )
+
+
+def official_award_hosts(venue: str, year: int, track: str) -> tuple[str, ...]:
+    """Return the configured, canonical official award host policy for a scope."""
+    return normalize_request(venue, year, track).official_award_hosts
