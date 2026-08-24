@@ -1,12 +1,22 @@
 from datetime import UTC, datetime
 from pathlib import Path
 
-from conference_overview.adapters.acl import enrich_acl_abstracts, parse_acl_bibtex
+import pytest
+
+from conference_overview.adapters.acl import (
+    AclSourceFormatError,
+    enrich_acl_abstracts,
+    parse_acl_bibtex,
+)
 from conference_overview.models import RecordStatus, SourceRef, VenueRequest
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "acl"
 BIB_FIXTURE = FIXTURE_DIR / "2026-long-sample.bib"
 HTML_FIXTURE = FIXTURE_DIR / "2026-long-sample.html"
+DIV_SIBLINGS_FIXTURE = FIXTURE_DIR / "2026-long-div-siblings.html"
+UNRECOGNIZED_HTML_FIXTURE = FIXTURE_DIR / "2026-long-unrecognized.html"
+MISSING_PAPER_URL_FIXTURE = FIXTURE_DIR / "2026-long-missing-url-inproceedings.bib"
+MISSING_PROCEEDINGS_URL_FIXTURE = FIXTURE_DIR / "2026-long-missing-url-proceedings.bib"
 
 
 def acl_request() -> VenueRequest:
@@ -70,3 +80,31 @@ def test_acl_volume_html_does_not_join_abstracts_by_title() -> None:
     enriched = enrich_acl_abstracts(included, HTML_FIXTURE.read_bytes(), html_source())
 
     assert enriched[1].abstract is None
+
+
+def test_acl_volume_html_keeps_div_card_abstracts_in_their_own_cards() -> None:
+    included, _ = parse_acl_bibtex(BIB_FIXTURE.read_bytes(), acl_request(), bib_source())
+
+    enriched = enrich_acl_abstracts(included, DIV_SIBLINGS_FIXTURE.read_bytes(), html_source())
+
+    assert [paper.abstract for paper in enriched] == [
+        "The first trusted abstract.",
+        "The second trusted abstract.",
+    ]
+
+
+def test_acl_volume_html_rejects_nonempty_markup_without_trusted_pairs() -> None:
+    included, _ = parse_acl_bibtex(BIB_FIXTURE.read_bytes(), acl_request(), bib_source())
+
+    with pytest.raises(AclSourceFormatError, match="zero trusted ACL ID/abstract pairs"):
+        enrich_acl_abstracts(included, UNRECOGNIZED_HTML_FIXTURE.read_bytes(), html_source())
+
+
+def test_acl_bibtex_rejects_inproceedings_without_canonical_acl_url() -> None:
+    with pytest.raises(AclSourceFormatError, match="inproceedings entry broken-paper"):
+        parse_acl_bibtex(MISSING_PAPER_URL_FIXTURE.read_bytes(), acl_request(), bib_source())
+
+
+def test_acl_bibtex_rejects_proceedings_without_canonical_acl_url() -> None:
+    with pytest.raises(AclSourceFormatError, match="proceedings entry broken-proceedings"):
+        parse_acl_bibtex(MISSING_PROCEEDINGS_URL_FIXTURE.read_bytes(), acl_request(), bib_source())
