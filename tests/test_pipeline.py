@@ -1,5 +1,6 @@
 import hashlib
 import json
+import subprocess
 from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
@@ -178,33 +179,35 @@ def test_validate_export_and_assisted_classification_preserve_every_id(
     assignment_path = tmp_path / "data/classification/acl/2026-long/assignments.jsonl"
     assert len(assignment_path.read_text().splitlines()) == 2
     manifest = json.loads(
-        (tmp_path / "data/classification/acl/2026-long/classification-manifest.json").read_text()
+        (
+            tmp_path / "data/classification/acl/2026-long/classification-manifest.json"
+        ).read_text()
     )
-    assert manifest["assignments_sha256"] == hashlib.sha256(
-        assignment_path.read_bytes()
-    ).hexdigest()
+    assert (
+        manifest["assignments_sha256"]
+        == hashlib.sha256(assignment_path.read_bytes()).hexdigest()
+    )
     assert manifest["reviewed_low_confidence_ids"] == []
     assert manifest["low_confidence_review_state"] == "pending_semantic_review"
     queue_path = (
-        tmp_path
-        / "data/classification/acl/2026-long/low-confidence-review-queue.json"
+        tmp_path / "data/classification/acl/2026-long/low-confidence-review-queue.json"
     )
     queue = json.loads(queue_path.read_text())
-    assert [item["paper_id"] for item in queue["papers"]] == [
-        "acl:2026.acl-long.2"
-    ]
-    assert manifest["low_confidence_review_queue_sha256"] == hashlib.sha256(
-        queue_path.read_bytes()
-    ).hexdigest()
+    assert [item["paper_id"] for item in queue["papers"]] == ["acl:2026.acl-long.2"]
+    assert (
+        manifest["low_confidence_review_queue_sha256"]
+        == hashlib.sha256(queue_path.read_bytes()).hexdigest()
+    )
     low_confidence_decisions = json.loads(
         (
-            tmp_path
-            / "data/classification/acl/2026-long/low-confidence-decisions.json"
+            tmp_path / "data/classification/acl/2026-long/low-confidence-decisions.json"
         ).read_text()
     )
     assert low_confidence_decisions["reviews"] == []
     decisions = json.loads(
-        (tmp_path / "data/classification/acl/2026-long/audit-decisions.json").read_text()
+        (
+            tmp_path / "data/classification/acl/2026-long/audit-decisions.json"
+        ).read_text()
     )
     assert decisions["themes"] == {
         "Evaluation": [],
@@ -213,7 +216,9 @@ def test_validate_export_and_assisted_classification_preserve_every_id(
     assert decisions["status"] == "pending_semantic_review"
 
 
-def _semantic_partitions(root: Path, assignments: list[dict[str, object]]) -> list[Path]:
+def _semantic_partitions(
+    root: Path, assignments: list[dict[str, object]]
+) -> list[Path]:
     paths: list[Path] = []
     for partition in range(8):
         path = root / f"acl2026-reclass-mod{partition}.jsonl"
@@ -284,13 +289,21 @@ def test_import_semantic_assignments_merges_exact_partitions_and_resets_reviews(
     manifest = json.loads((classification / "classification-manifest.json").read_text())
     assert manifest["classifier"] == "agent-semantic-batch-review-v1"
     assert manifest["semantic_labeling"]["method"] == "explicit_agent_semantic_labeling"
-    assert [source["partition"] for source in manifest["semantic_labeling"]["source_batches"]] == list(range(8))
-    assert [source["paper_count"] for source in manifest["semantic_labeling"]["source_batches"]] == [0, 1, 1, 0, 0, 0, 0, 0]
-    assert [source["sha256"] for source in manifest["semantic_labeling"]["source_batches"]] == [
-        hashlib.sha256(path.read_bytes()).hexdigest() for path in parts
-    ]
+    assert [
+        source["partition"]
+        for source in manifest["semantic_labeling"]["source_batches"]
+    ] == list(range(8))
+    assert [
+        source["paper_count"]
+        for source in manifest["semantic_labeling"]["source_batches"]
+    ] == [0, 1, 1, 0, 0, 0, 0, 0]
+    assert [
+        source["sha256"] for source in manifest["semantic_labeling"]["source_batches"]
+    ] == [hashlib.sha256(path.read_bytes()).hexdigest() for path in parts]
     audit_decisions = json.loads((classification / "audit-decisions.json").read_text())
-    low_decisions = json.loads((classification / "low-confidence-decisions.json").read_text())
+    low_decisions = json.loads(
+        (classification / "low-confidence-decisions.json").read_text()
+    )
     assert audit_decisions["status"] == "pending_semantic_review"
     assert audit_decisions["themes"] == {
         "Evaluation": [],
@@ -306,9 +319,10 @@ def test_import_semantic_assignments_merges_exact_partitions_and_resets_reviews(
     assert analyzed_manifest["classifier"] == "agent-semantic-batch-review-v1"
     assert analyzed_manifest["semantic_labeling"] == manifest["semantic_labeling"]
     assert summary["classification"]["classifier"] == "agent-semantic-batch-review-v1"
-    assert "explicit agent semantic assignments" in (
-        tmp_path / "notes/acl-2026-long-overview.md"
-    ).read_text()
+    assert (
+        "explicit agent semantic assignments"
+        in (tmp_path / "notes/acl-2026-long-overview.md").read_text()
+    )
 
 
 def test_import_semantic_assignments_rejects_incomplete_normalized_membership(
@@ -318,14 +332,16 @@ def test_import_semantic_assignments_rejects_incomplete_normalized_membership(
     collected_scope(tmp_path)
     parts = _semantic_partitions(
         tmp_path,
-        [{
-            "paper_id": "acl:2026.acl-long.1",
-            "primary_topic": "Reasoning and Agents",
-            "secondary_topics": [],
-            "confidence": 0.96,
-            "rationale": "Agent semantic review identifies agent tool use.",
-            "taxonomy_version": "2026-08-24-v1",
-        }],
+        [
+            {
+                "paper_id": "acl:2026.acl-long.1",
+                "primary_topic": "Reasoning and Agents",
+                "secondary_topics": [],
+                "confidence": 0.96,
+                "rationale": "Agent semantic review identifies agent tool use.",
+                "taxonomy_version": "2026-08-24-v1",
+            }
+        ],
     )
 
     assert hasattr(pipeline_module, "import_semantic_assignments_scope")
@@ -359,12 +375,12 @@ def test_import_full_theme_reviews_is_base_guarded_and_preserves_keep_assignment
                 "rationale": "Original application rationale.",
                 "taxonomy_version": "2026-08-24-v1",
             },
-                {
-                    "paper_id": "acl:2026.acl-long.2",
-                    "primary_topic": "Reasoning and Agents",
-                    "secondary_topics": [],
-                    "confidence": 0.68,
-                    "rationale": "Original keep rationale.",
+            {
+                "paper_id": "acl:2026.acl-long.2",
+                "primary_topic": "Reasoning and Agents",
+                "secondary_topics": [],
+                "confidence": 0.68,
+                "rationale": "Original keep rationale.",
                 "taxonomy_version": "2026-08-24-v1",
             },
         ],
@@ -376,34 +392,40 @@ def test_import_full_theme_reviews_is_base_guarded_and_preserves_keep_assignment
     ).hexdigest()
     application = tmp_path / "applications.json"
     application.write_text(
-        json.dumps([{
-            "paper_id": "acl:2026.acl-long.1",
-            "old_primary_topic": "Applications",
-            "decision": "change",
-            "corrected_primary_topic": "Evaluation",
-            "confidence": 0.98,
-            "rationale": "Reviewed as an evaluation contribution.",
-        }]),
+        json.dumps(
+            [
+                {
+                    "paper_id": "acl:2026.acl-long.1",
+                    "old_primary_topic": "Applications",
+                    "decision": "change",
+                    "corrected_primary_topic": "Evaluation",
+                    "confidence": 0.98,
+                    "rationale": "Reviewed as an evaluation contribution.",
+                }
+            ]
+        ),
         encoding="utf-8",
     )
     reasoning = tmp_path / "reasoning.json"
     reasoning.write_text(
-        json.dumps({
-            "schema_version": "full-theme-review-v1",
-            "taxonomy_version": "2026-08-24-v1",
-            "source_assignments_sha256": base_sha256,
-            "source_primary_topic": "Reasoning and Agents",
-            "reviews": [
-                {
-                    "paper_id": "acl:2026.acl-long.2",
-                    "old_primary_topic": "Reasoning and Agents",
-                    "decision": "keep",
-                    "corrected_primary_topic": "Reasoning and Agents",
-                    "confidence": 0.99,
-                    "rationale": "A new review rationale that must not erase the original.",
-                },
-            ],
-        }),
+        json.dumps(
+            {
+                "schema_version": "full-theme-review-v1",
+                "taxonomy_version": "2026-08-24-v1",
+                "source_assignments_sha256": base_sha256,
+                "source_primary_topic": "Reasoning and Agents",
+                "reviews": [
+                    {
+                        "paper_id": "acl:2026.acl-long.2",
+                        "old_primary_topic": "Reasoning and Agents",
+                        "decision": "keep",
+                        "corrected_primary_topic": "Reasoning and Agents",
+                        "confidence": 0.99,
+                        "rationale": "A new review rationale that must not erase the original.",
+                    },
+                ],
+            }
+        ),
         encoding="utf-8",
     )
     duplicate = tmp_path / "duplicate-applications.json"
@@ -448,18 +470,83 @@ def test_import_full_theme_reviews_is_base_guarded_and_preserves_keep_assignment
     low_queue = json.loads(
         (classification / "low-confidence-review-queue.json").read_text()
     )
-    assert [item["paper_id"] for item in low_queue["papers"]] == [
-        "acl:2026.acl-long.2"
-    ]
-    assert json.loads(
-        (classification / "low-confidence-decisions.json").read_text()
-    )["reviews"] == []
+    assert [item["paper_id"] for item in low_queue["papers"]] == ["acl:2026.acl-long.2"]
+    assert (
+        json.loads((classification / "low-confidence-decisions.json").read_text())[
+            "reviews"
+        ]
+        == []
+    )
 
     analyze_acl_scope(request, tmp_path)
     rewritten_manifest = json.loads(
         (classification / "classification-manifest.json").read_text()
     )
     assert rewritten_manifest["full_theme_reviews"] == ledger
+
+    current_bytes = (classification / "assignments.jsonl").read_bytes()
+    current_sha256 = hashlib.sha256(current_bytes).hexdigest()
+    final_reasoning = tmp_path / "reasoning-final.json"
+    final_reasoning.write_text(
+        json.dumps(
+            {
+                "source_commit": "943b0fac246e9133f7f805bf24e1c87fb9f1b7d1",
+                "source_file": "data/classification/acl/2026-long/assignments.jsonl",
+                "record_count": 1,
+                "reviewed_primary_topic": "Reasoning and Agents",
+                "records": [
+                    {
+                        "paper_id": "acl:2026.acl-long.2",
+                        "old": "Reasoning and Agents",
+                        "decision": "corrected",
+                        "corrected": "Trustworthiness",
+                        "confidence": 0.99,
+                        "rationale": "Final exhaustive review correction.",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    def fake_git_run(
+        *args: object, **kwargs: object
+    ) -> subprocess.CompletedProcess[bytes]:
+        return subprocess.CompletedProcess(
+            args=args, returncode=0, stdout=current_bytes
+        )
+
+    monkeypatch = pytest.MonkeyPatch()
+    monkeypatch.setattr(
+        pipeline_module.subprocess,
+        "run",
+        lambda *args, **kwargs: subprocess.CompletedProcess(
+            args=args, returncode=0, stdout=b"different assignment bytes"
+        ),
+    )
+    with pytest.raises(ValueError, match="base hash mismatch"):
+        pipeline_module.import_full_theme_reviews_scope(
+            request, tmp_path, [final_reasoning]
+        )
+    monkeypatch.setattr(pipeline_module.subprocess, "run", fake_git_run)
+    try:
+        final_assignments = pipeline_module.import_full_theme_reviews_scope(
+            request, tmp_path, [final_reasoning]
+        )
+    finally:
+        monkeypatch.undo()
+    final_by_id = {item.paper_id: item for item in final_assignments}
+    assert final_by_id["acl:2026.acl-long.2"].primary_topic == "Trustworthiness"
+    final_manifest = json.loads(
+        (classification / "classification-manifest.json").read_text()
+    )
+    final_ledger = final_manifest["full_theme_reviews"]
+    assert final_ledger["base_assignments_sha256"] == current_sha256
+    assert final_ledger["stage_index"] == 2
+    assert final_ledger["reviewed_count"] == 1
+    assert final_ledger["correction_count"] == 1
+    assert final_ledger["keep_count"] == 0
+    assert final_ledger["prior_stages"] == [ledger]
 
 
 def test_apply_audit_corrections_guards_old_topics_and_resets_audits(
@@ -525,11 +612,13 @@ def test_apply_audit_corrections_guards_old_topics_and_resets_audits(
         json.dumps(
             {
                 "queue_sha256": hashlib.sha256(queue_path.read_bytes()).hexdigest(),
-                "reviews": [{
-                    "paper_id": "acl:2026.acl-long.2",
-                    "decision": "accept",
-                    "review_note": "Accepted after explicit independent review.",
-                }],
+                "reviews": [
+                    {
+                        "paper_id": "acl:2026.acl-long.2",
+                        "decision": "accept",
+                        "review_note": "Accepted after explicit independent review.",
+                    }
+                ],
                 "schema_version": "low-confidence-review-decisions-v1",
                 "status": "completed_semantic_review",
                 "taxonomy_version": "2026-08-24-v1",
@@ -560,16 +649,19 @@ def test_apply_audit_corrections_guards_old_topics_and_resets_audits(
         "paper_id": "acl:2026.acl-long.1",
         "source_file": "fresh-audit-a.json",
     }
-    assert [source["sha256"] for source in manifest["audit_corrections"]["sources"]] == [
-        hashlib.sha256(path.read_bytes()).hexdigest() for path in (audit_a, audit_b)
-    ]
+    assert [
+        source["sha256"] for source in manifest["audit_corrections"]["sources"]
+    ] == [hashlib.sha256(path.read_bytes()).hexdigest() for path in (audit_a, audit_b)]
     audit_decisions = json.loads((classification / "audit-decisions.json").read_text())
-    low_decisions = json.loads((classification / "low-confidence-decisions.json").read_text())
+    low_decisions = json.loads(
+        (classification / "low-confidence-decisions.json").read_text()
+    )
     assert audit_decisions["themes"] == {"Evaluation": []}
     assert low_decisions["reviews"][0]["paper_id"] == "acl:2026.acl-long.2"
-    assert low_decisions["queue_sha256"] == hashlib.sha256(
-        queue_path.read_bytes()
-    ).hexdigest()
+    assert (
+        low_decisions["queue_sha256"]
+        == hashlib.sha256(queue_path.read_bytes()).hexdigest()
+    )
     assert manifest["reviewed_low_confidence_ids"] == ["acl:2026.acl-long.2"]
 
 
@@ -586,35 +678,42 @@ def _minimal_deep_read(paper_id: str) -> dict[str, object]:
         "research_problem": reported,
         "contribution": reported,
         "method_summary": reported,
-        "result_claims": [{
-            **reported,
-            "metric": "accuracy",
-            "value": "1",
-            "evaluation_setting": "bounded fixture",
-        }],
+        "result_claims": [
+            {
+                **reported,
+                "metric": "accuracy",
+                "value": "1",
+                "evaluation_setting": "bounded fixture",
+            }
+        ],
         "why_it_matters": [reported],
         "limitations": [reported],
         "data_training_setup": [reported],
         "prior_work_differences": [reported],
         "reproducibility_assessment": [reported],
-        "transferable_implications": [{
-            **reported,
-            "claim": "The disclosed design may transfer to another bounded setting.",
-            "evidence_type": "inference",
-        }],
+        "transferable_implications": [
+            {
+                **reported,
+                "claim": "The disclosed design may transfer to another bounded setting.",
+                "evidence_type": "inference",
+            }
+        ],
         "method_diagram": {
-            "nodes": [{
-                "identifier": "input",
-                "label": "Input",
-                "paper_section": "Section 1",
-            }],
+            "nodes": [
+                {
+                    "identifier": "input",
+                    "label": "Input",
+                    "paper_section": "Section 1",
+                }
+            ],
             "edges": [],
         },
     }
 
 
 def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     request = normalize_request("ACL", 2026, "long")
     collected_scope(tmp_path)
@@ -628,13 +727,15 @@ def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
     patch_source.write_text(
         yaml.safe_dump(
             {
-                "patches": [{
-                    "paper_id": "acl:2026.acl-long.1",
-                    "operation": "replace",
-                    "path": "method_summary.claim",
-                    "old": "The paper reports a bounded contribution.",
-                    "new": "The corrected paper-grounded method summary.",
-                }]
+                "patches": [
+                    {
+                        "paper_id": "acl:2026.acl-long.1",
+                        "operation": "replace",
+                        "path": "method_summary.claim",
+                        "old": "The paper reports a bounded contribution.",
+                        "new": "The corrected paper-grounded method summary.",
+                    }
+                ]
             }
         ),
         encoding="utf-8",
@@ -650,7 +751,9 @@ def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
     )
     review_source = tmp_path / "review.md"
     review_source.write_text("# Independent evidence QA\n\nPASS after correction.\n")
-    monkeypatch.setattr(pipeline_module, "fetch_bytes", lambda _url, _client: official_pdf)
+    monkeypatch.setattr(
+        pipeline_module, "fetch_bytes", lambda _url, _client: official_pdf
+    )
 
     assert hasattr(pipeline_module, "import_award_deep_reads_scope")
     deep_reads = pipeline_module.import_award_deep_reads_scope(
@@ -663,7 +766,10 @@ def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
     )
 
     assert len(deep_reads) == 1
-    assert deep_reads[0].method_summary.claim == "The corrected paper-grounded method summary."
+    assert (
+        deep_reads[0].method_summary.claim
+        == "The corrected paper-grounded method summary."
+    )
     output = yaml.safe_load(
         (tmp_path / "data/awards/acl/2026-long-deep-reads.yaml").read_text()
     )
@@ -673,14 +779,16 @@ def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
     )
     assert provenance["deep_read_count"] == 1
     assert provenance["patch_count"] == 1
-    assert provenance["pdfs"] == [{
-        "byte_size": len(official_pdf),
-        "pages": 3,
-        "paper_id": "acl:2026.acl-long.1",
-        "sha256": official_sha256,
-        "source_url": "https://aclanthology.org/2026.acl-long.1.pdf",
-        "verification_method": "downloaded_official_pdf_bytes",
-    }]
+    assert provenance["pdfs"] == [
+        {
+            "byte_size": len(official_pdf),
+            "pages": 3,
+            "paper_id": "acl:2026.acl-long.1",
+            "sha256": official_sha256,
+            "source_url": "https://aclanthology.org/2026.acl-long.1.pdf",
+            "verification_method": "downloaded_official_pdf_bytes",
+        }
+    ]
     assert {source["source_file"] for source in provenance["sources"]} == {
         "deep-reads.yaml",
         "corrections.yaml",
@@ -704,7 +812,8 @@ def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
         encoding="utf-8",
     )
     with pytest.raises(
-        ValueError, match="claimed PDF provenance does not match verified official bytes"
+        ValueError,
+        match="claimed PDF provenance does not match verified official bytes",
     ):
         pipeline_module.import_award_deep_reads_scope(
             request,
@@ -716,9 +825,7 @@ def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
         )
 
 
-@pytest.mark.parametrize(
-    ("decision", "rejected_count"), [("accept", 0), ("reject", 1)]
-)
+@pytest.mark.parametrize(("decision", "rejected_count"), [("accept", 0), ("reject", 1)])
 def test_low_confidence_registry_accepts_an_unsampled_review_decision(
     tmp_path: Path, decision: str, rejected_count: int
 ) -> None:
@@ -819,9 +926,7 @@ def test_preliminary_release_keeps_unaudited_themes_explicitly_experimental(
     }
     assert overview["awards"][0]["status"] == "verified"
     assert overview["award_deep_reads"] == []
-    assert datetime.fromisoformat(
-        overview["build_metadata"]["generated_at"]
-    ) > max(
+    assert datetime.fromisoformat(overview["build_metadata"]["generated_at"]) > max(
         datetime.fromisoformat(source["retrieved_at"])
         for source in provenance["sources"]
     )
@@ -830,7 +935,8 @@ def test_preliminary_release_keeps_unaudited_themes_explicitly_experimental(
         for advance in overview["advances"]
     )
     assert all(
-        "no semantic representativeness or lane-purity claim" in advance["claims"][0]["claim"]
+        "no semantic representativeness or lane-purity claim"
+        in advance["claims"][0]["claim"]
         for advance in overview["advances"]
     )
     assert sorted(path.name for path in release.iterdir()) == [

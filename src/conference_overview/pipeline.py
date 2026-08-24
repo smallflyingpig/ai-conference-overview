@@ -368,10 +368,9 @@ def rebuild_acl_scope_from_snapshots(
             raise ValueError(f"collection manifest {kind} URL differs from registry")
         snapshot = paths.root / str(raw_source.get("snapshot_path"))
         data = snapshot.read_bytes()
-        if (
-            len(data) != raw_source.get("byte_size")
-            or hashlib.sha256(data).hexdigest() != raw_source.get("sha256")
-        ):
+        if len(data) != raw_source.get("byte_size") or hashlib.sha256(
+            data
+        ).hexdigest() != raw_source.get("sha256"):
             raise ValueError(f"immutable {kind} snapshot disagrees with its manifest")
         return data, SourceRef(
             name=str(raw_source.get("name")),
@@ -711,7 +710,9 @@ def import_semantic_assignments_scope(
             raise ValueError(f"duplicate semantic assignment partition: {partition}")
         partition_paths[partition] = path
     if set(partition_paths) != set(range(8)):
-        raise ValueError("semantic assignment import requires exact partitions 0 through 7")
+        raise ValueError(
+            "semantic assignment import requires exact partitions 0 through 7"
+        )
 
     assignments_by_id: dict[str, Assignment] = {}
     source_batches: list[dict[str, object]] = []
@@ -805,7 +806,7 @@ def _assignment_payloads(assignments: Sequence[Assignment]) -> list[dict[str, ob
 
 
 def _full_theme_review_rows(
-    path: Path, payload: object, base_sha256: str
+    path: Path, payload: object, base_sha256: str, root: Path, base_bytes: bytes
 ) -> tuple[str, list[Mapping[str, object]]]:
     if isinstance(payload, list):
         rows = payload
@@ -822,6 +823,28 @@ def _full_theme_review_rows(
         declared_theme = (
             scope.get("old_primary_topic") if isinstance(scope, Mapping) else None
         )
+    elif isinstance(payload, Mapping) and isinstance(payload.get("records"), list):
+        rows = payload["records"]
+        declared_theme = payload.get("reviewed_primary_topic")
+        source_commit = payload.get("source_commit")
+        source_file = payload.get("source_file")
+        if (
+            not isinstance(source_commit, str)
+            or not re.fullmatch(r"[0-9a-f]{40}", source_commit)
+            or not isinstance(source_file, str)
+            or Path(source_file).is_absolute()
+            or ".." in Path(source_file).parts
+            or payload.get("record_count") != len(rows)
+        ):
+            raise ValueError(f"invalid full-theme review source binding: {path.name}")
+        result = subprocess.run(
+            ["git", "show", f"{source_commit}:{source_file}"],
+            cwd=root,
+            check=False,
+            capture_output=True,
+        )
+        if result.returncode != 0 or result.stdout != base_bytes:
+            raise ValueError(f"full-theme review base hash mismatch: {path.name}")
     else:
         raise TypeError(f"invalid full-theme review artifact: {path.name}")
     if not rows or not all(isinstance(row, Mapping) for row in rows):
@@ -866,11 +889,16 @@ def import_full_theme_reviews_scope(
         or manifest.get("assignments_sha256") != base_sha256
     ):
         raise ValueError("full-theme review base assignment hash is not manifest-bound")
-    classifier, semantic_labeling, audit_corrections, low_provenance, _old_full_reviews = (
-        _load_classification_provenance(paths, base_sha256)
-    )
+    (
+        classifier,
+        semantic_labeling,
+        audit_corrections,
+        low_provenance,
+        _old_full_reviews,
+    ) = _load_classification_provenance(paths, base_sha256)
     taxonomy_topics = {
-        str(topic["name"]) for topic in load_taxonomy()["topics"]  # type: ignore[index]
+        str(topic["name"])
+        for topic in load_taxonomy()["topics"]  # type: ignore[index]
     }
     theme_ids: dict[str, set[str]] = {}
     for assignment in assignments:
@@ -879,10 +907,14 @@ def import_full_theme_reviews_scope(
     reviewed: dict[str, dict[str, object]] = {}
     source_ledger: list[dict[str, object]] = []
     movement_matrix: dict[str, dict[str, int]] = {}
-    for raw_path in sorted((Path(path) for path in input_paths), key=lambda path: path.name):
+    for raw_path in sorted(
+        (Path(path) for path in input_paths), key=lambda path: path.name
+    ):
         raw_bytes = raw_path.read_bytes()
         payload = json.loads(raw_bytes)
-        source_theme, rows = _full_theme_review_rows(raw_path, payload, base_sha256)
+        source_theme, rows = _full_theme_review_rows(
+            raw_path, payload, base_sha256, paths.root, base_bytes
+        )
         if source_theme not in taxonomy_topics:
             raise ValueError(f"unknown full-theme review source: {source_theme}")
         file_ids: set[str] = set()
@@ -890,10 +922,13 @@ def import_full_theme_reviews_scope(
         keep_count = 0
         for row in rows:
             paper_id = row.get("paper_id")
-            old_topic = row.get("old_primary_topic", row.get("old_topic", row.get("old")))
+            old_topic = row.get(
+                "old_primary_topic", row.get("old_topic", row.get("old"))
+            )
             decision = row.get("decision", row.get("action"))
             corrected_topic = row.get(
-                "corrected_primary_topic", row.get("corrected_topic", row.get("corrected"))
+                "corrected_primary_topic",
+                row.get("corrected_topic", row.get("corrected")),
             )
             rationale = row.get("rationale")
             try:
@@ -909,15 +944,19 @@ def import_full_theme_reviews_scope(
             ):
                 raise ValueError(f"full-theme old primary mismatch: {paper_id}")
             normalized_decision = (
-                "keep" if decision == "keep" else "correct"
-                if decision in {"change", "correct", "move"}
+                "keep"
+                if decision in {"keep", "keep-correct"}
+                else "correct"
+                if decision in {"change", "correct", "move", "corrected"}
                 else None
             )
             if (
                 normalized_decision is None
                 or corrected_topic not in taxonomy_topics
                 or (normalized_decision == "keep" and corrected_topic != source_theme)
-                or (normalized_decision == "correct" and corrected_topic == source_theme)
+                or (
+                    normalized_decision == "correct" and corrected_topic == source_theme
+                )
                 or not isinstance(rationale, str)
                 or not rationale.strip()
                 or confidence < 0
@@ -945,16 +984,23 @@ def import_full_theme_reviews_scope(
                 f"full-theme review does not cover exact source-theme ID set: "
                 f"{source_theme}"
             )
-        source_ledger.append(
-            {
-                "correction_count": correction_count,
-                "keep_count": keep_count,
-                "paper_count": len(rows),
-                "sha256": hashlib.sha256(raw_bytes).hexdigest(),
-                "source_file": raw_path.name,
-                "source_theme": source_theme,
-            }
-        )
+        source_entry: dict[str, object] = {
+            "correction_count": correction_count,
+            "keep_count": keep_count,
+            "paper_count": len(rows),
+            "sha256": hashlib.sha256(raw_bytes).hexdigest(),
+            "source_file": raw_path.name,
+            "source_theme": source_theme,
+        }
+        if isinstance(payload, Mapping) and "source_commit" in payload:
+            source_entry.update(
+                {
+                    "assignment_blob_sha256": base_sha256,
+                    "source_assignment_file": payload["source_file"],
+                    "source_commit": payload["source_commit"],
+                }
+            )
+        source_ledger.append(source_entry)
 
     corrected_by_id = dict(base_by_id)
     corrections: list[dict[str, str]] = []
@@ -996,10 +1042,12 @@ def import_full_theme_reviews_scope(
     if not isinstance(old_reviews, list):
         raise TypeError("invalid low-confidence decisions before full-theme review")
     for low_review in old_reviews:
-        paper_id = low_review.get("paper_id") if isinstance(low_review, Mapping) else None
-        if not isinstance(paper_id, str) or corrected_by_id.get(paper_id) != base_by_id.get(
+        paper_id = (
+            low_review.get("paper_id") if isinstance(low_review, Mapping) else None
+        )
+        if not isinstance(paper_id, str) or corrected_by_id.get(
             paper_id
-        ):
+        ) != base_by_id.get(paper_id):
             raise ValueError(
                 f"low-confidence review cannot survive full-theme change: {paper_id}"
             )
@@ -1032,6 +1080,17 @@ def import_full_theme_reviews_scope(
         "reviewed_count": len(reviewed),
         "sources": source_ledger,
     }
+    if isinstance(_old_full_reviews, Mapping):
+        prior_stages = list(_old_full_reviews.get("prior_stages", []))
+        prior_stages.append(
+            {
+                key: deepcopy(value)
+                for key, value in _old_full_reviews.items()
+                if key not in {"prior_stages", "stage_index"}
+            }
+        )
+        full_theme_reviews["prior_stages"] = prior_stages
+        full_theme_reviews["stage_index"] = len(prior_stages) + 1
     _write_classification_manifest(
         paths,
         assignments=corrected,
@@ -1072,9 +1131,7 @@ def apply_audit_corrections_scope(
         _old_corrections,
         _old_low_provenance,
         full_theme_reviews,
-    ) = (
-        _load_classification_provenance(paths, original_sha256)
-    )
+    ) = _load_classification_provenance(paths, original_sha256)
     sample_registry = json.loads(
         (paths.classification / "audit-samples.json").read_text(encoding="utf-8")
     )
@@ -1094,7 +1151,8 @@ def apply_audit_corrections_scope(
             expected_review_ids[paper_id] = theme
 
     taxonomy_topics = {
-        str(topic["name"]) for topic in load_taxonomy()["topics"]  # type: ignore[index]
+        str(topic["name"])
+        for topic in load_taxonomy()["topics"]  # type: ignore[index]
     }
     reviewed: dict[str, tuple[str, Mapping[str, object]]] = {}
     audit_sources: list[dict[str, object]] = []
@@ -1119,27 +1177,35 @@ def apply_audit_corrections_scope(
                     raise TypeError("audit correction decision must be an object")
                 paper_id = decision.get("paper_id")
                 if not isinstance(paper_id, str) or paper_id in reviewed:
-                    raise ValueError("conflicting or duplicate audit correction decision")
+                    raise ValueError(
+                        "conflicting or duplicate audit correction decision"
+                    )
                 if expected_review_ids.get(paper_id) != theme:
                     raise ValueError(
                         f"audit decision old primary mismatch for {paper_id}"
                     )
                 assignment = original_by_id.get(paper_id)
                 if assignment is None or assignment.primary_topic != theme:
-                    raise ValueError(
-                        f"assignment old primary mismatch for {paper_id}"
-                    )
+                    raise ValueError(f"assignment old primary mismatch for {paper_id}")
                 correct = decision.get("correct")
                 note = decision.get("review_note")
-                if not isinstance(correct, bool) or not isinstance(note, str) or not note.strip():
+                if (
+                    not isinstance(correct, bool)
+                    or not isinstance(note, str)
+                    or not note.strip()
+                ):
                     raise ValueError("audit correction decision is incomplete")
                 corrected_topic = decision.get("corrected_primary_topic")
                 if not correct and (
                     corrected_topic not in taxonomy_topics or corrected_topic == theme
                 ):
-                    raise ValueError("incorrect audit decision requires a new valid topic")
+                    raise ValueError(
+                        "incorrect audit decision requires a new valid topic"
+                    )
                 if correct and corrected_topic is not None:
-                    raise ValueError("correct audit decision cannot change the primary topic")
+                    raise ValueError(
+                        "correct audit decision cannot change the primary topic"
+                    )
                 reviewed[paper_id] = (path.name, decision)
         audit_sources.append(
             {
@@ -1189,7 +1255,9 @@ def apply_audit_corrections_scope(
     low_review_path = Path(low_review_path)
     low_review_bytes = low_review_path.read_bytes()
     low_review = json.loads(low_review_bytes)
-    current_queue_sha256 = hashlib.sha256(paths.low_confidence_queue.read_bytes()).hexdigest()
+    current_queue_sha256 = hashlib.sha256(
+        paths.low_confidence_queue.read_bytes()
+    ).hexdigest()
     if (
         not isinstance(low_review, Mapping)
         or low_review.get("schema_version") != "low-confidence-review-decisions-v1"
@@ -1199,7 +1267,9 @@ def apply_audit_corrections_scope(
     ):
         raise ValueError("low-confidence review source contract mismatch")
     for review in low_review["reviews"]:  # type: ignore[index]
-        if not isinstance(review, Mapping) or not isinstance(review.get("paper_id"), str):
+        if not isinstance(review, Mapping) or not isinstance(
+            review.get("paper_id"), str
+        ):
             raise TypeError("invalid low-confidence review")
         paper_id = str(review["paper_id"])
         if corrected_by_id.get(paper_id) != original_by_id.get(paper_id):
@@ -1339,10 +1409,7 @@ def import_award_deep_reads_scope(
     if not isinstance(awards, list):
         raise TypeError("official award inventory has no awards list")
     award_ids = {str(award["paper_id"]) for award in awards}
-    award_pdf_urls = {
-        str(award["paper_id"]): str(award["pdf_url"])
-        for award in awards
-    }
+    award_pdf_urls = {str(award["paper_id"]): str(award["pdf_url"]) for award in awards}
 
     raw_by_id: dict[str, dict[str, object]] = {}
     sources: list[dict[str, object]] = []
@@ -1672,8 +1739,12 @@ def _load_low_confidence_reviews(
         ):
             raise ValueError("invalid or duplicate low-confidence review decision")
         reviewed[paper_id] = str(decision)
-    accepted_ids = tuple(sorted(key for key, value in reviewed.items() if value == "accept"))
-    rejected_ids = tuple(sorted(key for key, value in reviewed.items() if value == "reject"))
+    accepted_ids = tuple(
+        sorted(key for key, value in reviewed.items() if value == "accept")
+    )
+    rejected_ids = tuple(
+        sorted(key for key, value in reviewed.items() if value == "reject")
+    )
     pending_ids = tuple(sorted(set(expected_ids) - set(reviewed)))
     return (
         LowConfidenceReviewStatus(
@@ -1765,9 +1836,7 @@ def _load_theme_audits(
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise ValueError("invalid audit sample registry") from exc
     sample_themes = (
-        sample_registry.get("themes")
-        if isinstance(sample_registry, Mapping)
-        else None
+        sample_registry.get("themes") if isinstance(sample_registry, Mapping) else None
     )
     if not isinstance(sample_themes, Mapping):
         raise TypeError("audit sample registry must contain theme candidates")
@@ -1814,9 +1883,9 @@ def _load_theme_audits(
             assignment.paper_id
         )
         if assignment.paper_id in low_confidence_review.queued_ids:
-            low_confidence_ids_by_theme.setdefault(
-                assignment.primary_topic, set()
-            ).add(assignment.paper_id)
+            low_confidence_ids_by_theme.setdefault(assignment.primary_topic, set()).add(
+                assignment.paper_id
+            )
     audits: dict[str, ThemeAudit] = {}
     review_counts: dict[str, int] = {}
     disclosures: list[ThemeDisclosure] = []
@@ -1999,11 +2068,11 @@ def _load_award_deep_reads(paths: ScopePaths) -> list[DeepRead]:
             paths.award_deep_read_provenance.read_text(encoding="utf-8")
         )
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-        raise ValueError("award deep reads require verified official PDF provenance") from exc
+        raise ValueError(
+            "award deep reads require verified official PDF provenance"
+        ) from exc
     verification = (
-        provenance.get("pdf_verification")
-        if isinstance(provenance, Mapping)
-        else None
+        provenance.get("pdf_verification") if isinstance(provenance, Mapping) else None
     )
     pdfs = provenance.get("pdfs") if isinstance(provenance, Mapping) else None
     if (
@@ -2042,7 +2111,9 @@ def _load_award_deep_reads(paths: ScopePaths) -> list[DeepRead]:
             or not isinstance(pdf.get("sha256"), str)
             or re.fullmatch(r"[0-9a-f]{64}", str(pdf["sha256"])) is None
         ):
-            raise ValueError("award deep reads require verified official PDF provenance")
+            raise ValueError(
+                "award deep reads require verified official PDF provenance"
+            )
         verified_ids.add(paper_id)
     if verified_ids != expected_ids:
         raise ValueError("award deep reads require verified official PDF provenance")
