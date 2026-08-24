@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { loadOverview } from "../../lib/data";
+import { buildAwardIndex } from "../../lib/evidence";
+import { projectPath } from "../../lib/paths";
+
+const release = await loadOverview("ACL", 2026);
+const deepReads: unknown[] = [];
+const view = buildAwardIndex(release, deepReads);
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Awards — AI Conference Overview" description="Officially verified award-paper readings with traceable results and original method diagrams." conferenceAvailable={release != null}>
+  <div class="evidence-shell awards-shell">
+    <header class="page-thesis award-thesis">
+      <p class="eyebrow">Official verification desk</p>
+      <h1>Award status,<br />before acclaim.</h1>
+      <p>Only official conference or proceedings evidence can verify an award. A detail page also requires a deep read that passes result, locator, and method-diagram checks.</p>
+      <strong class="award-state">{view.stateLabel}</strong>
+    </header>
+    <section class="award-plates" aria-labelledby="award-records-title">
+      <h2 id="award-records-title">Award records</h2>
+      {view.items.length === 0 ? (
+        <div class="empty-atlas" role="status"><span class="status-mark" aria-hidden="true"></span><div><h3>{view.stateLabel}</h3><p>No official award record is present in the validated current release. Candidate winners are not substituted.</p></div></div>
+      ) : (
+        <ol>
+          {view.items.map(({ award, paper, hasDetail }) => (
+            <li class="award-plate">
+              <span class="data-label">{award.award_type}</span>
+              <h3>{paper?.title ?? award.paper_id}</h3>
+              <p class="award-status-line">{award.status.replaceAll("_", " ")}</p>
+              {award.official_citation && <blockquote>{award.official_citation}</blockquote>}
+              <div class="plate-links">
+                {award.evidence_url && <a href={award.evidence_url}>Official award evidence</a>}
+                {paper && <a href={paper.landing_url}>Official paper page</a>}
+                {hasDetail ? <a href={projectPath(base, `awards/${award.paper_id}`)}>Read evidence plate</a> : <span>Deep read not published</span>}
+              </div>
+            </li>
+          ))}
+        </ol>
+      )}
+    </section>
+  </div>
+</BaseLayout>

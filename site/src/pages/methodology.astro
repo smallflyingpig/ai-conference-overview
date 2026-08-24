@@ -1,0 +1,31 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { loadOverview } from "../lib/data";
+import { buildMethodologyView } from "../lib/evidence";
+
+const release = await loadOverview("ACL", 2026);
+const view = release == null ? null : buildMethodologyView(release);
+---
+
+<BaseLayout title="Methodology — AI Conference Overview" description="Sources, scope contracts, formulas, audits, missingness, and known limitations." conferenceAvailable={release != null}>
+  <div class="evidence-shell methodology-shell">
+    <header class="page-thesis methodology-thesis">
+      <p class="eyebrow">Audit ledger</p>
+      <h1>Every number<br />leaves a trace.</h1>
+      <p>The publication contract is shown as operating evidence: source identity, retrieval time, scope, denominator, formula, audit, and known limit.</p>
+    </header>
+    {view == null ? (
+      <div class="empty-atlas" role="status"><span class="status-mark" aria-hidden="true"></span><div><h3>No methodology ledger published</h3><p>The ledger appears only with a validated current release.</p></div></div>
+    ) : (
+      <div class="audit-ledger">
+        <section><h2>Provenance</h2>{view.sources.map((source) => <dl class="audit-grid"><div><dt>Source</dt><dd><a href={source.url}>{source.name}</a></dd></div><div><dt>SHA-256</dt><dd><code>{source.sha256}</code></dd></div><div><dt>Retrieved</dt><dd><time datetime={source.retrievedAt}>{source.retrievedAt}</time></dd></div></dl>)}</section>
+        <section><h2>Scope contract</h2><dl class="audit-grid"><div><dt>Venue / track</dt><dd>{view.scope.venue} / {view.scope.track}</dd></div><div><dt>Denominator</dt><dd>{view.scope.denominator}</dd></div><div><dt>Exclusions</dt><dd>{view.scope.exclusions}</dd></div><div><dt>Taxonomy</dt><dd>{view.taxonomyVersion}</dd></div></dl></section>
+        <section><h2>Metric formulas</h2>{view.formulas.map((formula) => <article class="formula-entry"><strong>{formula.name}</strong><code>{formula.formula}</code><small>{formula.version}{formula.denominator ? ` · denominator: ${formula.denominator}` : ""}</small></article>)}</section>
+        <section><h2>Missingness</h2><dl class="audit-grid"><div><dt>Abstracts</dt><dd>{view.missingness.abstracts}</dd></div><div><dt>PDFs</dt><dd>{view.missingness.pdfs}</dd></div><div><dt>DOIs</dt><dd>{view.missingness.dois}</dd></div></dl></section>
+        <section><h2>Theme audits</h2><div class="topic-table-wrap"><table><thead><tr><th>Theme</th><th>Sample</th><th>Correct</th><th>Observed precision</th><th>Wilson lower 95%</th></tr></thead><tbody>{view.audits.map((audit) => <tr><th scope="row">{audit.theme}</th><td>{audit.sampleSize}</td><td>{audit.correctCount}</td><td>{audit.observedPrecision}</td><td>{audit.wilsonLower95}</td></tr>)}</tbody></table></div></section>
+        <section><h2>Withheld / experimental themes</h2><p>{view.withheldThemes.note}</p></section>
+        <section><h2>Known limitations</h2><ul>{view.knownLimitations.map((limitation) => <li>{limitation}</li>)}</ul></section>
+      </div>
+    )}
+  </div>
+</BaseLayout>

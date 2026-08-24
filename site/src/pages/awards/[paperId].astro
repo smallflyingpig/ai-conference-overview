@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AwardMethodDiagram from "../../components/AwardMethodDiagram";
+import AwardResultClaim from "../../components/AwardResultClaim";
+import EvidenceBadge from "../../components/EvidenceBadge.astro";
+import { loadOverview } from "../../lib/data";
+import { awardDetailRoutes, type AwardDetailView } from "../../lib/evidence";
+
+export async function getStaticPaths() {
+  const release = await loadOverview("ACL", 2026);
+  const deepReads: unknown[] = [];
+  return awardDetailRoutes(release, deepReads);
+}
+
+interface Props { detail: AwardDetailView }
+const { detail } = Astro.props;
+---
+
+<BaseLayout title={`${detail.paper.title} — Award reading`} description={`Evidence-grounded reading of ${detail.paper.title}.`} conferenceAvailable={true}>
+  <article class="evidence-shell award-reading">
+    <header class="page-thesis award-thesis">
+      <p class="eyebrow">{detail.award.award_type} · officially verified</p>
+      <h1>{detail.paper.title}</h1>
+      <p>{detail.paper.authors.join(", ")}</p>
+      <div class="plate-links"><a href={detail.award.evidence_url!}>Official award evidence</a><a href={detail.paper.landing_url}>Paper landing page</a>{detail.paper.pdf_url && <a href={detail.paper.pdf_url}>PDF</a>}</div>
+    </header>
+
+    {detail.deepRead.method_diagram && <AwardMethodDiagram diagram={detail.deepRead.method_diagram} />}
+
+    <section class="result-ledger" aria-labelledby="results-title">
+      <h2 id="results-title">Paper-reported results</h2>
+      {detail.deepRead.result_claims.map((claim) => <AwardResultClaim claim={claim} />)}
+    </section>
+
+    <section class="why-ledger" aria-labelledby="why-title">
+      <h2 id="why-title">Why it matters</h2>
+      {detail.deepRead.why_it_matters.map((claim) => (
+        <article><EvidenceBadge type={claim.evidence_type} /><p>{claim.claim}</p><div>{claim.locator && <small>{claim.locator}</small>}{claim.source_urls.map((url, index) => <a href={url}>Source {index + 1}</a>)}</div></article>
+      ))}
+    </section>
+  </article>
+</BaseLayout>

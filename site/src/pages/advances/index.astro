@@ -1,0 +1,26 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { loadOverview } from "../../lib/data";
+import { advanceCategories } from "../../lib/evidence";
+
+const release = await loadOverview("ACL", 2026);
+---
+
+<BaseLayout title="Advances — AI Conference Overview" description="Evidence-labeled advances across major AI research lanes." conferenceAvailable={release != null}>
+  <div class="evidence-shell advances-shell">
+    <header class="page-thesis">
+      <p class="eyebrow">Synthesis lanes</p>
+      <h1>Advance only<br />what evidence carries.</h1>
+      <p>Each lane requires paper-level support and a declared evidence type. Empty lanes are kept visible so missing synthesis cannot masquerade as a negative result.</p>
+    </header>
+    <div class="advance-ledger" aria-label="Advance categories">
+      {advanceCategories.map((category) => (
+        <section id={category.id} class="advance-lane">
+          <p class="data-label">Evidence-limited</p>
+          <h2>{category.label}</h2>
+          <p>{release == null ? "No validated release is available." : "No categorized paper-level synthesis is published for this lane."}</p>
+        </section>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

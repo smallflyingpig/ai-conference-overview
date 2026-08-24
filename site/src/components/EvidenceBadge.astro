@@ -1,0 +1,11 @@
+---
+import { evidenceLabel, evidenceTone, type EvidenceType } from "../lib/evidence";
+
+interface Props { type: EvidenceType }
+const { type } = Astro.props;
+---
+
+<span class={`evidence-badge evidence-badge--${evidenceTone(type)}`}>
+  <span class="evidence-badge__mark" aria-hidden="true"></span>
+  {evidenceLabel(type)}
+</span>
