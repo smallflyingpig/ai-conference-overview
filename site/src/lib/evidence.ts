@@ -262,8 +262,7 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
         sourceThemes: stage.sources.map((source) => source.source_theme),
         method: stage.method,
         baseAssignmentsSha256: stage.base_assignments_sha256,
-        resultAssignmentsSha256:
-          rawStages[index + 1]?.base_assignments_sha256 ?? lineage.assignments_sha256,
+        resultAssignmentsSha256: stage.result_assignments_sha256,
         reviewedCount: stage.reviewed_count,
         keepCount: stage.keep_count,
         correctionCount: stage.correction_count,

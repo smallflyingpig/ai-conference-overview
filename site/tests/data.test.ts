@@ -414,6 +414,19 @@ describe("parseOverview", () => {
       delete lineage.full_theme_review_stages.sources[0].source_assignment_file;
       delete lineage.full_theme_review_stages.sources[0].source_commit;
     }],
+    ["forged final-stage base and source binding", (lineage: Record<string, any>) => {
+      lineage.full_theme_review_stages.base_assignments_sha256 = "f".repeat(64);
+      for (const source of lineage.full_theme_review_stages.sources) {
+        source.assignment_blob_sha256 = "f".repeat(64);
+      }
+    }],
+    ["broken prior-stage result chain", (lineage: Record<string, any>) => {
+      lineage.full_theme_review_stages.prior_stages[0].result_assignments_sha256 =
+        "f".repeat(64);
+    }],
+    ["final-stage result differs from assignments", (lineage: Record<string, any>) => {
+      lineage.full_theme_review_stages.result_assignments_sha256 = "f".repeat(64);
+    }],
   ])("rejects classification lineage with %s", async (_label, mutate) => {
     const artifacts = await currentReleaseArtifacts();
     const lineage = structuredClone(artifacts.overview.classification_lineage);

@@ -219,6 +219,7 @@ const movementMatrixSchema = z.record(
 
 const fullThemeReviewStageFields = {
   base_assignments_sha256: sha256Schema,
+  result_assignments_sha256: sha256Schema,
   correction_count: z.number().int().nonnegative(),
   corrections: z.array(fullThemeReviewCorrectionSchema),
   keep_count: z.number().int().nonnegative(),
@@ -436,6 +437,32 @@ const classificationLineageSchema = z.object({
       code: z.ZodIssueCode.custom,
       path: ["audit", "certification_sources"],
       message: "certification sources must uniquely reconcile to every audit sample",
+    });
+  }
+  const reviewLedger = value.full_theme_review_stages;
+  const reviewStages = "prior_stages" in reviewLedger
+    ? [...reviewLedger.prior_stages, reviewLedger]
+    : [reviewLedger];
+  for (let index = 0; index + 1 < reviewStages.length; index += 1) {
+    if (
+      reviewStages[index].result_assignments_sha256 !==
+      reviewStages[index + 1].base_assignments_sha256
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["full_theme_review_stages", "prior_stages", index],
+        message: "full-theme review result chain does not bind the next stage base",
+      });
+    }
+  }
+  if (
+    reviewStages[reviewStages.length - 1].result_assignments_sha256 !==
+    value.assignments_sha256
+  ) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["full_theme_review_stages", "result_assignments_sha256"],
+      message: "full-theme review final result does not match published assignments",
     });
   }
 });

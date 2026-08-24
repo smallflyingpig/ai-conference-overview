@@ -613,6 +613,67 @@ def _validate_claims(claims: Sequence[EvidenceClaim]) -> None:
             )
 
 
+def _validate_classification_review_chain(lineage: Mapping[str, object]) -> None:
+    if not lineage:
+        return
+    ledger = lineage.get("full_theme_review_stages")
+    assignments_sha256 = lineage.get("assignments_sha256")
+    if ledger is None:
+        return
+    if not isinstance(ledger, Mapping) or not isinstance(assignments_sha256, str):
+        raise PublicationBlocked(
+            "publication blocked: full-theme review result chain is invalid"
+        )
+    prior = ledger.get("prior_stages", [])
+    if not isinstance(prior, list) or not all(
+        isinstance(stage, Mapping) for stage in prior
+    ):
+        raise PublicationBlocked(
+            "publication blocked: full-theme review result chain is invalid"
+        )
+    stages = [*prior, ledger]
+    if prior and ledger.get("stage_index") != len(stages):
+        raise PublicationBlocked(
+            "publication blocked: full-theme review result chain is invalid"
+        )
+    for index, stage in enumerate(stages):
+        base_sha256 = stage.get("base_assignments_sha256")
+        result_sha256 = stage.get("result_assignments_sha256")
+        if (
+            not isinstance(base_sha256, str)
+            or _SHA256_PATTERN.fullmatch(base_sha256) is None
+            or not isinstance(result_sha256, str)
+            or _SHA256_PATTERN.fullmatch(result_sha256) is None
+        ):
+            raise PublicationBlocked(
+                "publication blocked: full-theme review result chain is invalid"
+            )
+        sources = stage.get("sources")
+        if not isinstance(sources, list) or any(
+            not isinstance(source, Mapping)
+            or (
+                source.get("assignment_blob_sha256") is not None
+                and source.get("assignment_blob_sha256") != base_sha256
+            )
+            for source in sources
+        ):
+            raise PublicationBlocked(
+                "publication blocked: full-theme review result chain is invalid"
+            )
+        if (
+            index + 1 < len(stages)
+            and result_sha256
+            != stages[index + 1].get("base_assignments_sha256")
+        ):
+            raise PublicationBlocked(
+                "publication blocked: full-theme review result chain is broken"
+            )
+    if stages[-1].get("result_assignments_sha256") != assignments_sha256:
+        raise PublicationBlocked(
+            "publication blocked: full-theme review final result chain is broken"
+        )
+
+
 def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
     _reject_non_finite(bundle)
     authoritative_validation = _authoritative_validation(bundle)
@@ -641,6 +702,7 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
     if bundle.award_announcement.claim is not None:
         _validate_claims((bundle.award_announcement.claim,))
     _validate_provenance(_bundle_sources(bundle))
+    _validate_classification_review_chain(bundle.classification_lineage)
 
     published_emerging_score = bundle.metrics.get("emerging_score")
     if published_emerging_score is not None:

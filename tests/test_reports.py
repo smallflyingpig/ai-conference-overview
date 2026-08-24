@@ -772,6 +772,46 @@ def test_release_reapplies_assignment_and_audit_publication_gates(
         )
 
 
+def test_release_rejects_unbound_full_theme_review_result_chain(
+    tmp_path: Path,
+) -> None:
+    first_result = "b" * 64
+    final_result = "c" * 64
+    first_stage = {
+        "base_assignments_sha256": "a" * 64,
+        "result_assignments_sha256": first_result,
+        "sources": [],
+    }
+    final_stage = {
+        "base_assignments_sha256": first_result,
+        "result_assignments_sha256": final_result,
+        "sources": [],
+        "prior_stages": [first_stage],
+        "stage_index": 2,
+    }
+    lineage = {
+        "assignments_sha256": final_result,
+        "full_theme_review_stages": final_stage,
+    }
+
+    broken_middle = json.loads(json.dumps(lineage))
+    broken_middle["full_theme_review_stages"]["prior_stages"][0][
+        "result_assignments_sha256"
+    ] = "f" * 64
+    with pytest.raises(PublicationBlocked, match="full-theme review.*chain"):
+        write_release(
+            replace(publishable_bundle(), classification_lineage=broken_middle),
+            tmp_path / "broken-middle",
+        )
+
+    broken_final = json.loads(json.dumps(lineage))
+    broken_final["full_theme_review_stages"]["result_assignments_sha256"] = "f" * 64
+    with pytest.raises(PublicationBlocked, match="full-theme review.*chain"):
+        write_release(
+            replace(publishable_bundle(), classification_lineage=broken_final),
+            tmp_path / "broken-final",
+        )
+
 def test_release_retains_a_failed_primary_theme_audit_when_explicitly_withheld(
     tmp_path: Path,
 ) -> None:

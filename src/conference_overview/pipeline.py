@@ -1092,6 +1092,7 @@ def import_full_theme_reviews_scope(
             for source, destinations in sorted(movement_matrix.items())
         },
         "reviewed_count": len(reviewed),
+        "result_assignments_sha256": assignments_sha256,
         "sources": source_ledger,
     }
     if isinstance(_old_full_reviews, Mapping):
@@ -2591,6 +2592,8 @@ def _load_classification_provenance(
         raise TypeError("low-confidence review provenance must be an object")
     if full_theme_reviews is not None and not isinstance(full_theme_reviews, Mapping):
         raise TypeError("full-theme review provenance must be an object")
+    if isinstance(full_theme_reviews, Mapping):
+        _validate_full_theme_review_chain(full_theme_reviews, assignments_sha256)
     return (
         classifier,
         semantic_labeling,
@@ -2598,6 +2601,46 @@ def _load_classification_provenance(
         low_review_provenance,
         full_theme_reviews,
     )
+
+
+def _validate_full_theme_review_chain(
+    ledger: Mapping[str, object], assignments_sha256: str
+) -> None:
+    """Fail closed unless every recorded review result binds the next stage."""
+    prior = ledger.get("prior_stages", [])
+    if not isinstance(prior, list) or not all(
+        isinstance(stage, Mapping) for stage in prior
+    ):
+        raise ValueError("full-theme review stage chain is invalid")
+    stages = [*prior, ledger]
+    if prior and ledger.get("stage_index") != len(stages):
+        raise ValueError("full-theme review stage chain index is invalid")
+    sha256_pattern = re.compile(r"[0-9a-f]{64}")
+    for index, stage in enumerate(stages):
+        base_sha256 = stage.get("base_assignments_sha256")
+        result_sha256 = stage.get("result_assignments_sha256")
+        if (
+            not isinstance(base_sha256, str)
+            or sha256_pattern.fullmatch(base_sha256) is None
+            or not isinstance(result_sha256, str)
+            or sha256_pattern.fullmatch(result_sha256) is None
+        ):
+            raise ValueError("full-theme review stage chain has invalid hashes")
+        sources = stage.get("sources")
+        if not isinstance(sources, list):
+            raise TypeError("full-theme review stage chain has invalid sources")
+        for source in sources:
+            if not isinstance(source, Mapping):
+                raise TypeError("full-theme review stage chain has invalid sources")
+            source_binding = source.get("assignment_blob_sha256")
+            if source_binding is not None and source_binding != base_sha256:
+                raise ValueError("full-theme review source binding breaks stage chain")
+        if index + 1 < len(stages):
+            next_base = stages[index + 1].get("base_assignments_sha256")
+            if result_sha256 != next_base:
+                raise ValueError("full-theme review result chain is broken")
+    if stages[-1].get("result_assignments_sha256") != assignments_sha256:
+        raise ValueError("full-theme review final result chain is broken")
 
 
 def analyze_acl_scope(

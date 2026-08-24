@@ -1,6 +1,7 @@
 import hashlib
 import json
 import subprocess
+from copy import deepcopy
 from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
@@ -450,6 +451,10 @@ def test_import_full_theme_reviews_is_base_guarded_and_preserves_keep_assignment
     manifest = json.loads((classification / "classification-manifest.json").read_text())
     ledger = manifest["full_theme_reviews"]
     assert ledger["base_assignments_sha256"] == base_sha256
+    first_result_sha256 = hashlib.sha256(
+        (classification / "assignments.jsonl").read_bytes()
+    ).hexdigest()
+    assert ledger["result_assignments_sha256"] == first_result_sha256
     assert ledger["reviewed_count"] == 2
     assert ledger["correction_count"] == 1
     assert ledger["keep_count"] == 1
@@ -542,11 +547,43 @@ def test_import_full_theme_reviews_is_base_guarded_and_preserves_keep_assignment
     )
     final_ledger = final_manifest["full_theme_reviews"]
     assert final_ledger["base_assignments_sha256"] == current_sha256
+    final_result_sha256 = hashlib.sha256(
+        (classification / "assignments.jsonl").read_bytes()
+    ).hexdigest()
+    assert final_ledger["result_assignments_sha256"] == final_result_sha256
     assert final_ledger["stage_index"] == 2
     assert final_ledger["reviewed_count"] == 1
     assert final_ledger["correction_count"] == 1
     assert final_ledger["keep_count"] == 0
     assert final_ledger["prior_stages"] == [ledger]
+
+    forged_base = deepcopy(final_manifest)
+    forged_base["full_theme_reviews"]["base_assignments_sha256"] = "f" * 64
+    for source in forged_base["full_theme_reviews"]["sources"]:
+        source["assignment_blob_sha256"] = "f" * 64
+    (classification / "classification-manifest.json").write_text(
+        json.dumps(forged_base), encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="full-theme review.*chain"):
+        analyze_acl_scope(request, tmp_path)
+
+    broken_middle = deepcopy(final_manifest)
+    broken_middle["full_theme_reviews"]["prior_stages"][0][
+        "result_assignments_sha256"
+    ] = "f" * 64
+    (classification / "classification-manifest.json").write_text(
+        json.dumps(broken_middle), encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="full-theme review.*chain"):
+        analyze_acl_scope(request, tmp_path)
+
+    broken_final = deepcopy(final_manifest)
+    broken_final["full_theme_reviews"]["result_assignments_sha256"] = "f" * 64
+    (classification / "classification-manifest.json").write_text(
+        json.dumps(broken_final), encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="full-theme review.*chain"):
+        analyze_acl_scope(request, tmp_path)
 
 
 def test_apply_audit_corrections_guards_old_topics_and_resets_audits(
