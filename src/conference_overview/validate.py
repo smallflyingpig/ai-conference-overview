@@ -7,7 +7,11 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from itertools import combinations
 
-from conference_overview.models import PaperRecord
+from conference_overview.models import PaperRecord, RecordStatus
+
+_INCLUDED_STATUSES = frozenset(
+    {RecordStatus.COMPLETE, RecordStatus.PARTIAL, RecordStatus.UNRESOLVED}
+)
 
 
 class PublicationBlocked(RuntimeError):
@@ -30,6 +34,8 @@ class ValidationReport:
     duplicate_dois: list[str]
     definite_duplicate_pairs: list[tuple[str, str]]
     duplicate_candidates: list[tuple[str, str]]
+    status_mismatch_ids: list[str]
+    unresolved_record_ids: list[str]
     previous_snapshot_additions: list[str]
     previous_snapshot_removals: list[str]
     publishable: bool
@@ -99,9 +105,31 @@ def validate_records(
         lambda record: record.normalized_title,
     )
 
-    current_ids = {record.paper_id for record in included_records}
+    status_mismatch_ids = [
+        record.paper_id
+        for record in included_records
+        if record.status is RecordStatus.EXCLUDED
+    ] + [
+        record.paper_id
+        for record in excluded_records
+        if record.status is not RecordStatus.EXCLUDED
+    ]
+    unresolved_record_ids = [
+        record.paper_id
+        for record in discovered_records
+        if record.status is RecordStatus.UNRESOLVED
+    ]
+    current_ids = {
+        record.paper_id
+        for record in included_records
+        if record.status in _INCLUDED_STATUSES
+    }
     previous_ids = (
-        {record.paper_id for record in previous_snapshot}
+        {
+            record.paper_id
+            for record in previous_snapshot
+            if record.status in _INCLUDED_STATUSES
+        }
         if previous_snapshot is not None
         else None
     )
@@ -112,6 +140,8 @@ def validate_records(
         expected_count_matches
         and not definite_duplicate_pairs
         and not duplicate_candidates
+        and not status_mismatch_ids
+        and not unresolved_record_ids
     )
 
     return ValidationReport(
@@ -133,6 +163,8 @@ def validate_records(
         duplicate_dois=duplicate_dois,
         definite_duplicate_pairs=definite_duplicate_pairs,
         duplicate_candidates=duplicate_candidates,
+        status_mismatch_ids=status_mismatch_ids,
+        unresolved_record_ids=unresolved_record_ids,
         previous_snapshot_additions=(
             sorted(current_ids - previous_ids) if previous_ids is not None else []
         ),
@@ -155,5 +187,9 @@ def assert_publishable(report: ValidationReport) -> None:
         reasons.append("definite duplicates require resolution")
     if report.duplicate_candidates:
         reasons.append("duplicate candidates require review")
+    if report.status_mismatch_ids:
+        reasons.append("status/list mismatch requires correction")
+    if report.unresolved_record_ids:
+        reasons.append("unresolved records require resolution")
     if reasons:
         raise PublicationBlocked("publication blocked: " + "; ".join(reasons))
