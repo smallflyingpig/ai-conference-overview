@@ -68,6 +68,40 @@ function compareExactDecimals(left: string, right: string): -1 | 0 | 1 {
   return first.sign === 1 ? magnitude : magnitude === 0 ? 0 : magnitude === 1 ? -1 : 1;
 }
 
+function pythonDecimalRatio(
+  numeratorValue: number,
+  denominatorValue: number,
+): string {
+  const numerator = BigInt(numeratorValue);
+  const denominator = BigInt(denominatorValue);
+  if (numerator === 0n) return "0";
+
+  let exponent = 0;
+  let scaledNumerator = numerator;
+  while (scaledNumerator < denominator) {
+    scaledNumerator *= 10n;
+    exponent -= 1;
+  }
+
+  const precision = 28;
+  const scale = precision - 1 - exponent;
+  const dividend = numerator * 10n ** BigInt(scale);
+  let coefficient = dividend / denominator;
+  const remainder = dividend % denominator;
+  const doubledRemainder = remainder * 2n;
+  if (
+    doubledRemainder > denominator ||
+    (doubledRemainder === denominator && coefficient % 2n === 1n)
+  ) {
+    coefficient += 1n;
+  }
+  if (coefficient.toString().length > precision) {
+    coefficient /= 10n;
+    exponent += 1;
+  }
+  return `${coefficient}E${exponent - (precision - 1)}`;
+}
+
 export const evidenceTypeSchema = z.enum([
   "official_metadata",
   "paper_reported",
@@ -175,7 +209,7 @@ const nonEmptyCanonicalVenueListSchema = z
 const crossVenueSpreadSchema = z
   .object({
     configured_venues: nonEmptyCanonicalVenueListSchema,
-    present_venue_count: z.number().int().nonnegative(),
+    present_venue_count: z.number().int().safe().nonnegative(),
     present_venue_fraction: decimalSchema,
     present_venues: canonicalVenueListSchema,
   })
@@ -195,8 +229,11 @@ const crossVenueSpreadSchema = z
         message: "present venues must belong to the configured venue population",
       });
     }
-    const expectedFraction = value.present_venue_count / value.configured_venues.length;
-    if (Number(value.present_venue_fraction) !== expectedFraction) {
+    const expectedFraction = pythonDecimalRatio(
+      value.present_venue_count,
+      value.configured_venues.length,
+    );
+    if (compareExactDecimals(value.present_venue_fraction, expectedFraction) !== 0) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["present_venue_fraction"],
@@ -250,7 +287,7 @@ const comparisonContractSchema = z
     }),
     metric_contract: z.object({
       cross_venue_spread: formulaSchema.extend({
-        configured_venue_count: z.number().int().nonnegative(),
+        configured_venue_count: z.number().int().safe().nonnegative(),
         configured_venue_id: sha256Schema,
         configured_venues: canonicalVenueListSchema,
       }),
@@ -324,6 +361,18 @@ export const overviewArtifactSchema = z
         path: ["comparison_contract", "metric_contract", "emitted_metrics"],
         message: "comparison metric contract does not match emitted metrics",
       });
+    }
+    if (Object.prototype.hasOwnProperty.call(value.metrics, "cross_venue_spread")) {
+      const spreadResult = crossVenueSpreadSchema.safeParse(
+        value.metrics.cross_venue_spread,
+      );
+      if (!spreadResult.success) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["metrics", "cross_venue_spread"],
+          message: "cross_venue_spread must use the named cross-venue metric contract",
+        });
+      }
     }
     const crossVenueMetric = value.metrics.cross_venue_spread;
     const spreadContract = value.comparison_contract.metric_contract.cross_venue_spread;

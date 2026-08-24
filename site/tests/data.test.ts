@@ -189,6 +189,27 @@ function rehashComparisonContract(overviewArtifact: Record<string, any>): void {
     .digest("hex");
 }
 
+function setCrossVenuePopulation(
+  artifact: Record<string, any>,
+  configuredVenues: string[],
+  presentVenues: string[],
+  fraction: string,
+): void {
+  artifact.metrics.cross_venue_spread = {
+    configured_venues: configuredVenues,
+    present_venue_count: presentVenues.length,
+    present_venue_fraction: fraction,
+    present_venues: presentVenues,
+  };
+  const contract = artifact.comparison_contract.metric_contract.cross_venue_spread;
+  contract.configured_venues = configuredVenues;
+  contract.configured_venue_count = configuredVenues.length;
+  contract.configured_venue_id = createHash("sha256")
+    .update(JSON.stringify(configuredVenues))
+    .digest("hex");
+  rehashComparisonContract(artifact);
+}
+
 describe("parseOverview", () => {
   it("rejects a release without provenance", () => {
     expect(() => parseOverview({ overview, validation })).toThrow(/provenance/i);
@@ -307,6 +328,74 @@ describe("parseOverview", () => {
     });
 
     await expect(loadOverview("ACL", 2026, root)).resolves.toBeTruthy();
+  });
+
+  it("accepts the exact Python Decimal result for a non-terminating ratio", async () => {
+    const root = await mutatedTask9Release((artifact) => {
+      setCrossVenuePopulation(
+        artifact,
+        ["ACL", "EMNLP", "NAACL"],
+        ["ACL"],
+        "0.3333333333333333333333333333",
+      );
+    });
+
+    await expect(loadOverview("ACL", 2026, root)).resolves.toBeTruthy();
+  });
+
+  it("rejects a differently rounded Decimal for a non-terminating ratio", async () => {
+    const root = await mutatedTask9Release((artifact) => {
+      setCrossVenuePopulation(
+        artifact,
+        ["ACL", "EMNLP", "NAACL"],
+        ["ACL"],
+        "0.3333333333333333333333333334",
+      );
+    });
+
+    await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/fraction|population/i);
+  });
+
+  it("accepts exact terminating and non-terminating fractions in scientific notation", async () => {
+    const terminating = await mutatedTask9Release((artifact) => {
+      artifact.metrics.cross_venue_spread.present_venue_fraction = "5E-1";
+    });
+    const repeating = await mutatedTask9Release((artifact) => {
+      setCrossVenuePopulation(
+        artifact,
+        ["ACL", "EMNLP", "NAACL"],
+        ["ACL"],
+        "3.333333333333333333333333333E-1",
+      );
+    });
+
+    await expect(loadOverview("ACL", 2026, terminating)).resolves.toBeTruthy();
+    await expect(loadOverview("ACL", 2026, repeating)).resolves.toBeTruthy();
+  });
+
+  it.each([
+    ["decimal string", "0.5"],
+    [
+      "different metric object",
+      {
+        score: "0.5",
+        components: { novelty: "0.5", share_growth: "0.5", spread_growth: "0.5" },
+        weights: { novelty: "0.20", share_growth: "0.45", spread_growth: "0.35" },
+      },
+    ],
+  ])("rejects cross_venue_spread encoded as a %s", async (_name, forgedMetric) => {
+    const root = await mutatedTask9Release((artifact) => {
+      artifact.metrics.cross_venue_spread = forgedMetric;
+      const contract = artifact.comparison_contract.metric_contract.cross_venue_spread;
+      contract.configured_venues = [];
+      contract.configured_venue_count = 0;
+      contract.configured_venue_id = createHash("sha256")
+        .update("[]")
+        .digest("hex");
+      rehashComparisonContract(artifact);
+    });
+
+    await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/cross.venue|metric/i);
   });
 
   it("rejects a stale configured venue population identity", async () => {
