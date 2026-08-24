@@ -185,3 +185,83 @@ emitted because there are no deep-read artifacts.
    diagrams through the existing release gates.
 3. Rerun analysis and select a new immutable generation after either audit or
    deep-read evidence changes. Do not mutate this generation.
+
+## Round 1 remediation — 2026-08-25
+
+This section supersedes the affected counts and artifact identities above. The
+round-1 code/test commit is `f1d3039` (`fix: close ACL analysis review gaps`).
+
+### Source completeness and normalization
+
+- Collection now reconciles the exact ACL IDs in the HTML volume listing in
+  both directions against every BibTeX paper ID plus the separately excluded
+  proceedings/front-matter ID. A syntactically complete but shortened BibTeX
+  response is rejected even when its self-declared `Content-Length` matches.
+- The HTML parser now handles the HTML void-element set without corrupting its
+  nesting stack. In the unchanged official HTML snapshot this restores the
+  1,293-character abstract for `acl:2026.acl-long.1657`.
+- Rebuilt strictly from the two existing, hash-verified immutable snapshots;
+  no network retrieval occurred and the four existing retrieval-event
+  manifests were unchanged. Source bytes and SHA-256 remain 1,939,185 /
+  `94ad985a1a34d59ffe2f42e44354f966d012137e010948fd0c5d62ad15e5c12e`
+  for BibTeX and 6,869,443 /
+  `ff98541fd3ca2d68e150f41f4be20e2da89618ac18fca3c0b4fe7661cdfc6632`
+  for HTML.
+- Reconciliation remains 2,223 discovered = 2,222 included + one excluded
+  front-matter record. Abstract coverage is now 2,221 / 2,222 (99.95%);
+  only `acl:2026.acl-long.1232` is missing. PDF coverage remains 2,222 /
+  2,222 and DOI coverage remains 2,220 / 2,222.
+- Regenerated normalized JSONL SHA-256:
+  `a2f7cd695465e4880044a721f53396d3cf5fc05548237a01f4d1c6257e81ee51`;
+  canonical record-set SHA-256:
+  `c3aebf3d53e99f9f97efa26d18c6ca90897c4b9c5002700be9635fea4cfb4873`.
+
+### Track inference and exhaustive classification review
+
+- `conference-trends awards --venue ACL --year 2026` now infers the sole
+  configured `long` track and emits 30 official inventory rows with zero deep
+  reads. An explicit `--track short` still returns structured `unsupported`
+  with exit 2.
+- The 500-item stratified audit sample remains a separate measurement sample.
+  A deterministic exhaustive review queue now covers all 761 assignments below
+  confidence `0.70`, including IDs not selected into an audit sample. Its
+  SHA-256 is
+  `4a57a51eb42f3cdc73be718c8fbf6068465c52158bfcd3d25ee3c253bdff57e3`.
+  The decision registry SHA-256 is
+  `96e83b7c3ae6baeca20d606b1bb6da6196673ace99635c26c8809cc23052ed42`.
+- Current honest state is 761 total, zero reviewed, 761 pending, and zero
+  rejected. Each theme is gated on both its stratified audit and all of its
+  low-confidence decisions; therefore all ten remain experimental/withheld.
+  The release and rendered methodology expose these completeness counts.
+- Release generation time is now the actual timezone-aware generation time
+  (`2026-08-24T17:42:11.511428Z`), distinct from the retained source retrieval
+  timestamps. Confidence/ID-ranked lane picks are labeled `preliminary_examples`
+  and explicitly make no representativeness or lane-purity claim.
+
+### Regenerated release identity
+
+The previous immutable generation remains present. `current.json` now selects
+the new six-artifact generation
+`c80b2ea7012315adf73a29e77e1ea453a536e6746f9baa543e10a6eb2e5ddb8f`:
+
+| Artifact | SHA-256 |
+|---|---|
+| `overview.json` | `873e725a15b4fb7642e3ca9bb9480b5a70ee73f624e34e42ec368cd00666f8a3` |
+| `overview.md` | `1e380d99594c72fb480694ebffe4fa294f20c3c669cf31f6862bd4caccc19468` |
+| `papers.csv` | `192ed6e93ee76a52d90419bd0b205e9698bf8abbe5e9a17fdfd4d252137077d5` |
+| `papers.json` | `1eeda7a7cd3891bd7048bf3b20c0b3bee317fa5ca1912cb08f3defb5a8d11343` |
+| `provenance.json` | `34820d4e5c2c96ae0e780bbd5f322c9328362a6fe0787129b2a43cb0c794be66` |
+| `validation.json` | `843799a1dd45ff8bcc5440de5d72a8c378bd5e47dd93e7ccecda695e974016aa` |
+
+### Round 1 verification
+
+- `.venv/bin/pytest -q` — 233 passed.
+- `.venv/bin/ruff check .` — clean.
+- `cd site && npm test` — 109 passed across five files.
+- `cd site && npm run build` — Astro check reported zero diagnostics and built
+  seven static pages, including `/conferences/acl/2026/` and `/methodology/`.
+- `.venv/bin/conference-trends validate --venues ACL --years 2026 --tracks long`
+  — validated 2,223 / 2,222 / one; publishable source corpus.
+- Rendered methodology contains `761 assignments`, `761` pending, and `final
+  publication remains gated`; the awards directory still contains no paper
+  detail route because deep reads remain intentionally out of scope.

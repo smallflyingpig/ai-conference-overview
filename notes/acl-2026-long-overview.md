@@ -7,7 +7,7 @@ This is a one-year distribution and hotspot snapshot, not a trend. Topic labels 
 - Discovered: 2223
 - Included long papers: 2222
 - Excluded front matter: 1
-- Missing abstracts: 2
+- Missing abstracts: 1
 - Missing PDFs: 0
 - Missing DOIs: 2
 - Official source: <https://aclanthology.org/volumes/2026.acl-long/>
@@ -29,11 +29,11 @@ This is a one-year distribution and hotspot snapshot, not a trend. Topic labels 
 
 ## Five advances lanes handoff
 
-- **text_llms**: 5 representative official paper links are retained in the release.
-- **multimodal_models**: 5 representative official paper links are retained in the release.
-- **reasoning_agents**: 5 representative official paper links are retained in the release.
-- **data_training**: 5 representative official paper links are retained in the release.
-- **evaluation_trust**: 5 representative official paper links are retained in the release.
+- **text_llms**: 5 preliminary example official paper links are retained in the release.
+- **multimodal_models**: 5 preliminary example official paper links are retained in the release.
+- **reasoning_agents**: 5 preliminary example official paper links are retained in the release.
+- **data_training**: 5 preliminary example official paper links are retained in the release.
+- **evaluation_trust**: 5 preliminary example official paper links are retained in the release.
 
 ## Official award inventory
 
