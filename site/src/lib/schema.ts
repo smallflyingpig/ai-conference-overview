@@ -194,20 +194,30 @@ function hostCoveredByPolicy(host: string, allowedHosts: string[]): boolean {
   });
 }
 
-function normalizedAwardIdentity(paperId: string, awardType: string): string {
-  const normalizedType = awardType.normalize("NFKC").trim().replace(/\s+/g, " ")
-    .toLocaleLowerCase("en-US");
-  return JSON.stringify([paperId, normalizedType]);
-}
-
 const awardSchema = z.object({
   paper_id: nonBlankSchema,
   award_type: nonBlankSchema,
   status: z.enum(["verified", "not_announced", "not_verified"]),
   evidence_url: urlSchema.nullable().optional(),
   official_citation: z.string().nullable().optional(),
+  canonical_identity: z.object({
+    paper_id: nonBlankSchema,
+    award_type: nonBlankSchema,
+  }),
+  route_key: z.string().regex(/^award-[0-9a-f]{64}$/),
   verification: awardVerificationSchema,
 }).superRefine((award, context) => {
+  if (award.canonical_identity.paper_id !== award.paper_id) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ["canonical_identity", "paper_id"], message: "canonical award identity paper does not match" });
+  }
+  const identity = JSON.stringify([
+    award.canonical_identity.paper_id,
+    award.canonical_identity.award_type,
+  ]);
+  const expectedRoute = `award-${createHash("sha256").update(identity).digest("hex")}`;
+  if (award.route_key !== expectedRoute) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ["route_key"], message: "award route key does not match producer identity" });
+  }
   const actualHost = award.evidence_url == null ? null : new URL(award.evidence_url).hostname;
   if (actualHost !== award.verification.evidence_host) {
     context.addIssue({ code: z.ZodIssueCode.custom, path: ["verification", "evidence_host"], message: "award evidence host does not match its URL" });
@@ -499,12 +509,23 @@ export const overviewArtifactSchema = z
   })
   .superRefine((value, context) => {
     const awardIdentities = value.awards.map((award) =>
-      normalizedAwardIdentity(award.paper_id, award.award_type));
+      JSON.stringify([
+        award.canonical_identity.paper_id,
+        award.canonical_identity.award_type,
+      ]));
     if (new Set(awardIdentities).size !== awardIdentities.length) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["awards"],
         message: "duplicate normalized award identities",
+      });
+    }
+    const awardRoutes = value.awards.map((award) => award.route_key);
+    if (new Set(awardRoutes).size !== awardRoutes.length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["awards"],
+        message: "duplicate award route keys",
       });
     }
     const emittedMetrics = value.comparison_contract.metric_contract.emitted_metrics;

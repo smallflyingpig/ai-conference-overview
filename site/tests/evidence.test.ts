@@ -1,4 +1,5 @@
 import { execFile } from "node:child_process";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -29,6 +30,16 @@ import {
 const fixtureRoot = fileURLToPath(new URL("./fixtures/task9-release", import.meta.url));
 let release: LoadedOverview;
 const execFileAsync = promisify(execFile);
+
+function producerAwardFields(paperId: string, normalizedAwardType: string) {
+  const canonicalIdentity = { paper_id: paperId, award_type: normalizedAwardType };
+  return {
+    canonical_identity: canonicalIdentity,
+    route_key: `award-${createHash("sha256")
+      .update(JSON.stringify([paperId, normalizedAwardType]))
+      .digest("hex")}`,
+  };
+}
 
 beforeAll(async () => {
   const loaded = await loadOverview("ACL", 2026, fixtureRoot, "long");
@@ -228,6 +239,7 @@ describe("award publication gate", () => {
     multiple.overview.awards.push({
       ...structuredClone(multiple.overview.awards[0]),
       award_type: "Outstanding Paper",
+      ...producerAwardFields("paper-a", "outstanding paper"),
     });
     const routes = awardDetailRoutes(multiple);
     expect(routes).toHaveLength(2);
@@ -235,13 +247,9 @@ describe("award publication gate", () => {
     expect(routes.map((route) => route.props.detail.award.award_type).sort()).toEqual([
       "Best Paper", "Outstanding Paper",
     ]);
-    expect(awardRouteKey("../paper", " Best   Paper ")).toBe(
-      awardRouteKey("../paper", "best paper"),
-    );
-    expect(awardRouteKey("../paper", "Best Paper")).not.toBe(
-      awardRouteKey("../paper", "Outstanding/../Paper"),
-    );
-    expect(awardRouteKey("../paper", "Outstanding/../Paper")).not.toMatch(/[/%]/);
+    expect(routes.every((route) => awardRouteKey(route.props.detail.award) === route.params.paperId))
+      .toBe(true);
+    expect(routes.every((route) => !/[/%]/.test(route.params.paperId))).toBe(true);
   });
 
   it("rejects a blank minimal deep read", () => {
@@ -321,7 +329,7 @@ describe("complete award evidence rendering", () => {
       },
     });
     const award = release.overview.awards[0];
-    const route = awardRouteKey(award.paper_id, award.award_type);
+    const route = awardRouteKey(award);
     const awardHtml = await readFile(
       join(siteRoot, "dist/awards", route, "index.html"), "utf8",
     );

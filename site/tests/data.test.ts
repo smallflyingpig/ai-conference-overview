@@ -339,11 +339,18 @@ describe("parseOverview", () => {
     await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/configured award host policy/i);
   });
 
-  it("rejects duplicate normalized award identities before route generation", async () => {
+  it("consumes Python casefold identity for Straße/STRASSE without JS normalization", async () => {
     const root = await mutatedTask9Release((artifact) => {
+      const identity = { paper_id: artifact.awards[0].paper_id, award_type: "strasse" };
+      const routeKey = `award-${createHash("sha256")
+        .update(JSON.stringify([identity.paper_id, identity.award_type]))
+        .digest("hex")}`;
+      artifact.awards[0].award_type = "Straße";
+      artifact.awards[0].canonical_identity = identity;
+      artifact.awards[0].route_key = routeKey;
       artifact.awards.push({
         ...structuredClone(artifact.awards[0]),
-        award_type: " best   paper ",
+        award_type: "STRASSE",
       });
     });
     await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/award identities/i);

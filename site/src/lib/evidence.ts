@@ -1,5 +1,3 @@
-import { createHash } from "node:crypto";
-
 import type { LoadedOverview } from "./data";
 import {
   deepReadArtifactSchema,
@@ -59,13 +57,8 @@ export interface AwardRoute {
   props: { detail: AwardDetailView };
 }
 
-function normalizedAwardType(awardType: string): string {
-  return awardType.normalize("NFKC").trim().replace(/\s+/g, " ").toLocaleLowerCase("en-US");
-}
-
-export function awardRouteKey(paperId: string, awardType: string): string {
-  const identity = JSON.stringify([paperId, normalizedAwardType(awardType)]);
-  return `award-${createHash("sha256").update(identity, "utf8").digest("hex")}`;
+export function awardRouteKey(award: Award): string {
+  return award.route_key;
 }
 
 export function awardDetailRoutes(
@@ -84,7 +77,7 @@ export function awardDetailRoutes(
     const deepRead = validDeepReads.get(award.paper_id);
     if (paper == null || deepRead == null) return [];
     return [{
-      params: { paperId: awardRouteKey(award.paper_id, award.award_type) },
+      params: { paperId: awardRouteKey(award) },
       props: { detail: { award, paper, deepRead } },
     }];
   });
@@ -107,7 +100,7 @@ export function buildAwardIndex(
   const items = release.overview.awards.map((award) => ({
     award,
     paper: paperById.get(award.paper_id) ?? null,
-    hasDetail: detailIds.has(awardRouteKey(award.paper_id, award.award_type)),
+    hasDetail: detailIds.has(awardRouteKey(award)),
   }));
   const stateLabels = {
       verified: "Verified",

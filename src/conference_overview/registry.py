@@ -1,3 +1,5 @@
+import re
+from collections.abc import Sequence
 from importlib.resources import files
 from pathlib import Path
 from typing import Any
@@ -8,6 +10,29 @@ from conference_overview.models import VenueRequest
 
 _VENUES_RESOURCE = files("conference_overview").joinpath("venues.yaml")
 _SOURCE_VENUES_PATH = Path(__file__).resolve().parents[2] / "config" / "venues.yaml"
+_HOST_LABEL = re.compile(r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\Z")
+
+
+def canonicalize_official_host(host: str) -> str:
+    """Canonicalize one configured DNS host for policy comparison."""
+    if not isinstance(host, str):
+        raise TypeError("official award host must be text")
+    candidate = host.strip().rstrip(".")
+    if not candidate:
+        raise ValueError("official award host must not be blank")
+    try:
+        canonical = candidate.encode("idna").decode("ascii").lower()
+    except UnicodeError as exc:
+        raise ValueError("official award host must be valid IDNA") from exc
+    labels = canonical.split(".")
+    if len(canonical) > 253 or any(_HOST_LABEL.fullmatch(label) is None for label in labels):
+        raise ValueError("official award host must be a valid DNS hostname")
+    return canonical
+
+
+def canonicalize_official_hosts(hosts: Sequence[str]) -> tuple[str, ...]:
+    """Return the deterministic de-duplicated policy host population."""
+    return tuple(sorted({canonicalize_official_host(host) for host in hosts}))
 
 
 def _load_venues() -> dict[str, Any]:
@@ -44,7 +69,9 @@ def normalize_request(venue: str, year: int, track: str | None) -> VenueRequest:
         source_key=route.get("source_key"),
         bibtex_url=route.get("bibtex_url"),
         volume_url=route.get("volume_url"),
-        official_award_hosts=tuple(route.get("official_award_hosts", ())),
+        official_award_hosts=canonicalize_official_hosts(
+            route.get("official_award_hosts", ())
+        ),
     )
 
 

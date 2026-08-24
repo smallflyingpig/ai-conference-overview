@@ -315,6 +315,30 @@ def test_release_rejects_unofficial_verified_award_before_serializing_deep_read(
         )
 
 
+@pytest.mark.parametrize(
+    "updates",
+    [
+        {"paper_id": " "},
+        {"award_type": "\t"},
+        {"evidence_url": "not-a-url"},
+        {"evidence_url": None},
+    ],
+)
+def test_release_reparses_awards_before_sorting_or_serializing(
+    tmp_path: Path, updates: dict[str, object]
+) -> None:
+    bundle = publishable_bundle()
+    bypassed = bundle.awards[0].model_copy(update=updates)
+
+    with pytest.raises((ValueError, PublicationBlocked)):
+        write_release(
+            replace(bundle, awards=(bypassed,)),
+            tmp_path / "bypassed-award",
+        )
+
+    assert not (tmp_path / "bypassed-award").exists()
+
+
 def test_release_keeps_exact_six_artifacts_with_extended_overview(tmp_path: Path) -> None:
     write_release(publishable_bundle(), tmp_path)
 
@@ -354,13 +378,19 @@ def test_release_revalidates_deep_read_before_writing(
     assert not (tmp_path / f"invalid-deep-read-{invalid_kind}").exists()
 
 
-def test_release_rejects_duplicate_normalized_award_identity(tmp_path: Path) -> None:
+@pytest.mark.parametrize("duplicate_type", [" best   paper ", "STRASSE"])
+def test_release_rejects_duplicate_normalized_award_identity(
+    tmp_path: Path, duplicate_type: str
+) -> None:
     bundle = publishable_bundle()
-    duplicate = bundle.awards[0].model_copy(update={"award_type": " best   paper "})
+    original = bundle.awards[0].model_copy(
+        update={"award_type": "Straße" if duplicate_type == "STRASSE" else "Best Paper"}
+    )
+    duplicate = bundle.awards[0].model_copy(update={"award_type": duplicate_type})
 
     with pytest.raises(PublicationBlocked, match="award identities"):
         write_release(
-            replace(bundle, awards=(*bundle.awards, duplicate)),
+            replace(bundle, awards=(original, duplicate)),
             tmp_path / "duplicate-award",
         )
 
@@ -381,6 +411,12 @@ def test_release_allows_distinct_awards_for_the_same_paper(tmp_path: Path) -> No
         "Best Paper",
         "Outstanding Paper",
     ]
+    assert all(award["route_key"].startswith("award-") for award in overview["awards"])
+    assert len({award["route_key"] for award in overview["awards"]}) == 2
+    assert overview["awards"][0]["canonical_identity"] == {
+        "award_type": "best paper",
+        "paper_id": "paper-a",
+    }
 
 
 def test_release_exposes_auditable_comparison_contract(tmp_path: Path) -> None:

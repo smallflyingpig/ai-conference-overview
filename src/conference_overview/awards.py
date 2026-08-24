@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
+import unicodedata
 from decimal import Decimal, InvalidOperation
 from enum import Enum
 from typing import Literal
@@ -10,6 +13,7 @@ from urllib.parse import urlparse
 from pydantic import BaseModel, Field, HttpUrl, field_validator, model_validator
 
 from conference_overview.models import EvidenceClaim, EvidenceType
+from conference_overview.registry import canonicalize_official_host
 
 
 class AwardStatus(str, Enum):
@@ -173,15 +177,38 @@ def _normalized_required_text(value: str) -> str:
     return normalized
 
 
+def canonical_award_identity(paper_id: str, award_type: str) -> dict[str, str]:
+    """Return Python's authoritative normalized award identity."""
+    return {
+        "paper_id": paper_id,
+        "award_type": " ".join(
+            unicodedata.normalize("NFKC", award_type).casefold().split()
+        ),
+    }
+
+
+def award_route_key(identity: dict[str, str]) -> str:
+    """Hash a canonical identity into one path-safe route segment."""
+    canonical = json.dumps(
+        [identity["paper_id"], identity["award_type"]],
+        ensure_ascii=False,
+        separators=(",", ":"),
+    ).encode()
+    return f"award-{hashlib.sha256(canonical).hexdigest()}"
+
+
 def _is_official_host(url: HttpUrl, allowed_hosts: set[str]) -> bool:
     """Return whether *url* belongs to a configured host or its true subdomain."""
     hostname = urlparse(str(url)).hostname
     if hostname is None:
         return False
-    normalized_host = hostname.rstrip(".").lower()
-    normalized_allowed_hosts = {
-        host.rstrip(".").lower() for host in allowed_hosts if host.strip()
-    }
+    try:
+        normalized_host = canonicalize_official_host(hostname)
+        normalized_allowed_hosts = {
+            canonicalize_official_host(host) for host in allowed_hosts
+        }
+    except ValueError:
+        return False
     return any(
         normalized_host == allowed_host
         or normalized_host.endswith(f".{allowed_host}")

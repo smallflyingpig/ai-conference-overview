@@ -8,6 +8,8 @@ from pathlib import Path
 
 import yaml
 
+from conference_overview.registry import canonicalize_official_hosts
+
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "config" / "venues.yaml"
 OUTPUT = ROOT / "config" / "award-host-policy.json"
@@ -19,12 +21,10 @@ def render_policy(registry_path: Path = REGISTRY) -> bytes:
     for venue, definition in registry.items():
         for year, year_definition in definition.get("years", {}).items():
             for track, route in year_definition.get("tracks", {}).items():
-                hosts = sorted(
-                    {
-                        host.strip().lower().rstrip(".")
-                        for host in route.get("official_award_hosts", [])
-                        if host.strip()
-                    }
+                hosts = list(
+                    canonicalize_official_hosts(
+                        route.get("official_award_hosts", [])
+                    )
                 )
                 if hosts:
                     scopes[f"{venue}/{year}/{track}"] = hosts

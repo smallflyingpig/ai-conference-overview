@@ -11,7 +11,6 @@ import os
 import re
 import shutil
 import tempfile
-import unicodedata
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass, field, fields, is_dataclass
 from datetime import datetime
@@ -27,6 +26,8 @@ from conference_overview.awards import (
     AwardRecord,
     AwardStatus,
     DeepRead,
+    award_route_key,
+    canonical_award_identity,
     validate_award,
     validate_deep_read,
 )
@@ -50,7 +51,10 @@ from conference_overview.models import (
     SourceRef,
     ThemeDisclosure,
 )
-from conference_overview.registry import official_award_hosts
+from conference_overview.registry import (
+    canonicalize_official_host,
+    official_award_hosts,
+)
 from conference_overview.validate import (
     PublicationBlocked,
     ValidationReport,
@@ -377,16 +381,29 @@ def _validated_award_payload(
     def verification(evidence_url: str | None) -> dict[str, object]:
         return {
             "allowed_hosts": sorted(allowed_hosts),
-            "evidence_host": urlparse(evidence_url).hostname if evidence_url else None,
+            "evidence_host": (
+                canonicalize_official_host(urlparse(evidence_url).hostname or "")
+                if evidence_url
+                else None
+            ),
             "validator": "validate_award-v1",
         }
+    reparsed_awards = [
+        AwardRecord.model_validate(award.model_dump(warnings=False))
+        for award in bundle.awards
+    ]
     payloads: list[dict[str, object]] = []
-    for award in sorted(bundle.awards, key=lambda item: (item.paper_id, item.award_type)):
+    for award in sorted(
+        reparsed_awards, key=lambda item: (item.paper_id, item.award_type)
+    ):
         validated = validate_award(award, allowed_hosts=allowed)
         if award.status is AwardStatus.VERIFIED and validated.status is not AwardStatus.VERIFIED:
             raise PublicationBlocked("publication blocked: official award evidence failed configured host policy")
         evidence_url = str(validated.evidence_url) if validated.evidence_url is not None else None
         payload = validated.model_dump(mode="json")
+        identity = canonical_award_identity(validated.paper_id, validated.award_type)
+        payload["canonical_identity"] = identity
+        payload["route_key"] = award_route_key(identity)
         payload["verification"] = verification(evidence_url)
         payloads.append(payload)
 
@@ -478,7 +495,7 @@ def _reject_non_finite(value: object, *, path: str = "bundle") -> None:
             raise ArtifactValidationError(f"{path} contains a non-finite float")
         return
     if isinstance(value, BaseModel):
-        _reject_non_finite(value.model_dump(mode="python"), path=path)
+        _reject_non_finite(value.model_dump(mode="python", warnings=False), path=path)
         return
     if is_dataclass(value) and not isinstance(value, type):
         for item in fields(value):
@@ -640,14 +657,7 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
     record_id_set = set(record_ids)
     validated_awards, _award_state = _validated_award_payload(bundle)
     award_identities = [
-        (
-            str(award["paper_id"]),
-            " ".join(
-                unicodedata.normalize("NFKC", str(award["award_type"]))
-                .casefold()
-                .split()
-            ),
-        )
+        json.dumps(award["canonical_identity"], sort_keys=True)
         for award in validated_awards
     ]
     if len(award_identities) != len(set(award_identities)):
