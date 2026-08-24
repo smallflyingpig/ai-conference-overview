@@ -17,6 +17,55 @@ const urlSchema = z.string().url().refine(
 );
 const stringPairSchema = z.tuple([z.string(), z.string()]);
 
+interface ExactDecimal {
+  sign: -1 | 0 | 1;
+  digits: string;
+  decimalPoint: bigint;
+}
+
+function exactDecimal(value: string): ExactDecimal {
+  const match = value.match(
+    /^(?<negative>-?)(?<integer>\d+)(?:\.(?<fraction>\d+))?(?:[Ee](?<exponent>[+-]?\d+))?$/,
+  );
+  if (match?.groups == null) {
+    throw new Error("invalid finite decimal string");
+  }
+  const fraction = match.groups.fraction ?? "";
+  const digits = `${match.groups.integer}${fraction}`.replace(/^0+/, "");
+  if (digits.length === 0) {
+    return { sign: 0, digits: "0", decimalPoint: 0n };
+  }
+  return {
+    sign: match.groups.negative === "-" ? -1 : 1,
+    digits,
+    decimalPoint:
+      BigInt(digits.length) - BigInt(fraction.length) + BigInt(match.groups.exponent ?? "0"),
+  };
+}
+
+function compareExactDecimals(left: string, right: string): -1 | 0 | 1 {
+  const first = exactDecimal(left);
+  const second = exactDecimal(right);
+  if (first.sign !== second.sign) return first.sign < second.sign ? -1 : 1;
+  if (first.sign === 0) return 0;
+
+  let magnitude: -1 | 0 | 1 = 0;
+  if (first.decimalPoint !== second.decimalPoint) {
+    magnitude = first.decimalPoint < second.decimalPoint ? -1 : 1;
+  } else {
+    const length = Math.max(first.digits.length, second.digits.length);
+    for (let index = 0; index < length; index += 1) {
+      const firstDigit = first.digits[index] ?? "0";
+      const secondDigit = second.digits[index] ?? "0";
+      if (firstDigit !== secondDigit) {
+        magnitude = firstDigit < secondDigit ? -1 : 1;
+        break;
+      }
+    }
+  }
+  return first.sign === 1 ? magnitude : magnitude === 0 ? 0 : magnitude === 1 ? -1 : 1;
+}
+
 export const evidenceTypeSchema = z.enum([
   "official_metadata",
   "paper_reported",
@@ -67,14 +116,14 @@ const themeAuditSchema = z
     wilson_lower_95: decimalSchema,
   })
   .superRefine((value, context) => {
-    if (Number(value.observed_precision) < 0.9) {
+    if (compareExactDecimals(value.observed_precision, "0.90") < 0) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["observed_precision"],
         message: "audit observed precision is below 0.90",
       });
     }
-    if (Number(value.wilson_lower_95) < 0.8) {
+    if (compareExactDecimals(value.wilson_lower_95, "0.80") < 0) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["wilson_lower_95"],
@@ -151,7 +200,7 @@ export const overviewArtifactSchema = z
           message: "assignment taxonomy version does not match overview",
         });
       }
-      if (!(assignment.primary_topic in value.audits)) {
+      if (!Object.prototype.hasOwnProperty.call(value.audits, assignment.primary_topic)) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["audits", assignment.primary_topic],

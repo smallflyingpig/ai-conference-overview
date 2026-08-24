@@ -277,16 +277,33 @@ describe("loadOverview", () => {
     ],
     ["missing primary-theme audit", (value: any) => { value.audits = {}; }, /audit/i],
     [
+      "observed precision below gate",
+      (value: any) => { value.audits["Foundation Models"].observed_precision = "0.89"; },
+      /precision|audit/i,
+    ],
+    [
       "audit below Wilson gate",
       (value: any) => { value.audits["Foundation Models"].wilson_lower_95 = "0.79"; },
       /wilson|audit/i,
     ],
     [
-      "paper-reported numeric claim without locator",
+      "qualitative paper-reported claim without locator",
       (value: any) => {
         value.evidence_claims = [{
-          claim: "The paper reports a 12% improvement.",
+          claim: "The paper reports a qualitative improvement.",
           evidence_type: "paper_reported",
+          source_urls: ["https://aclanthology.org/paper-a.pdf"],
+          locator: null,
+        }];
+      },
+      /locator/i,
+    ],
+    [
+      "numeric inference claim without locator",
+      (value: any) => {
+        value.evidence_claims = [{
+          claim: "The inferred improvement is 12%.",
+          evidence_type: "inference",
           source_urls: ["https://aclanthology.org/paper-a.pdf"],
           locator: null,
         }];
@@ -306,5 +323,41 @@ describe("loadOverview", () => {
   ])("rejects a coherently hashed Task 9 release with %s", async (_name, mutate, error) => {
     const root = await mutatedTask9Release(mutate);
     await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(error);
+  });
+
+  it.each(["toString", "__proto__"])(
+    "does not treat prototype property %s as a theme audit",
+    async (prototypeTopic) => {
+      const root = await mutatedTask9Release((value) => {
+        value.assignments.forEach((assignment: any) => {
+          assignment.primary_topic = prototypeTopic;
+        });
+        value.audits = {};
+      });
+
+      await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/audit/i);
+    },
+  );
+
+  it.each([
+    ["observed precision", "observed_precision", "0.899999999999999999999999999999999999"],
+    ["Wilson lower bound", "wilson_lower_95", "0.799999999999999999999999999999999999"],
+  ])("compares %s below its gate without Number rounding", async (_name, field, decimal) => {
+    const root = await mutatedTask9Release((value) => {
+      value.audits["Foundation Models"][field] = decimal;
+    });
+
+    await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/precision|wilson|audit/i);
+  });
+
+  it("accepts exact Decimal audit boundaries in scientific notation", async () => {
+    const root = await mutatedTask9Release((value) => {
+      value.audits["Foundation Models"].observed_precision = "9E-1";
+      value.audits["Foundation Models"].wilson_lower_95 = "8E-1";
+    });
+
+    await expect(loadOverview("ACL", 2026, root)).resolves.toMatchObject({
+      overview: { paper_count: 2 },
+    });
   });
 });
