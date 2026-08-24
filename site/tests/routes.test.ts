@@ -23,6 +23,17 @@ const task9FixtureRoot = fileURLToPath(
 );
 let validatedRelease: LoadedOverview;
 
+function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  if (value != null && typeof value === "object") {
+    return `{${Object.entries(value as Record<string, unknown>)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([key, item]) => `${JSON.stringify(key)}:${canonicalJson(item)}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
 beforeAll(async () => {
   const loaded = await loadOverview("ACL", 2026, task9FixtureRoot, "long");
   if (loaded == null) throw new Error("Task 9 validated fixture was not loaded");
@@ -48,7 +59,7 @@ function changeComparisonContract(
   mutate(contract);
   const { contract_id: _oldId, ...identity } = contract;
   contract.contract_id = createHash("sha256")
-    .update(JSON.stringify(identity))
+    .update(canonicalJson(identity))
     .digest("hex");
 }
 
@@ -160,6 +171,19 @@ describe("trend comparability gate", () => {
     changeComparisonContract(releases[0], (contract) => {
       contract.comparison_scope.excluded_records =
         "excluded records are retained in the denominator";
+    });
+    expect(buildTrendView(releases).mode).toBe("snapshot");
+  });
+
+  it("rejects same-size configured venue population drift across three years", () => {
+    const releases = threeYears();
+    changeComparisonContract(releases[0], (contract) => {
+      const spread = contract.metric_contract.cross_venue_spread;
+      spread.configured_venues = ["ACL", "CVPR", "NAACL", "NeurIPS"];
+      spread.configured_venue_count = spread.configured_venues.length;
+      spread.configured_venue_id = createHash("sha256")
+        .update(JSON.stringify(spread.configured_venues))
+        .digest("hex");
     });
     expect(buildTrendView(releases).mode).toBe("snapshot");
   });

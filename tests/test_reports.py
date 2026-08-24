@@ -12,7 +12,12 @@ import pytest
 from conference_overview import reports
 from conference_overview.awards import AwardRecord, AwardStatus
 from conference_overview.classification import Assignment, ThemeAudit, audit_theme
-from conference_overview.metrics import CrossVenueSpread, EmergingScore, emerging_score
+from conference_overview.metrics import (
+    CrossVenueSpread,
+    EmergingScore,
+    cross_venue_spread,
+    emerging_score,
+)
 from conference_overview.models import (
     EvidenceClaim,
     EvidenceType,
@@ -77,6 +82,8 @@ def publishable_bundle() -> ReleaseBundle:
             "cross_venue_spread": CrossVenueSpread(
                 present_venue_count=2,
                 present_venue_fraction=Decimal("0.5"),
+                configured_venues=("ACL", "EMNLP", "NAACL", "NeurIPS"),
+                present_venues=("ACL", "EMNLP"),
             ),
         },
         awards=(
@@ -206,6 +213,22 @@ def test_release_exposes_auditable_comparison_contract(tmp_path: Path) -> None:
         "share_growth": "0.45",
         "spread_growth": "0.35",
     }
+    spread_contract = contract["metric_contract"]["cross_venue_spread"]
+    assert spread_contract["configured_venues"] == [
+        "ACL",
+        "EMNLP",
+        "NAACL",
+        "NeurIPS",
+    ]
+    assert spread_contract["configured_venue_count"] == 4
+    expected_population_id = hashlib.sha256(
+        json.dumps(
+            ["ACL", "EMNLP", "NAACL", "NeurIPS"],
+            ensure_ascii=False,
+            separators=(",", ":"),
+        ).encode()
+    ).hexdigest()
+    assert spread_contract["configured_venue_id"] == expected_population_id
     identity_payload = {key: value for key, value in contract.items() if key != "contract_id"}
     expected_id = hashlib.sha256(
         json.dumps(
@@ -262,6 +285,136 @@ def test_release_rejects_metric_values_outside_declared_formula_contract(
             ),
             tmp_path / "forged-metric",
         )
+
+
+def test_release_rejects_cross_venue_fraction_contradicting_configured_population(
+    tmp_path: Path,
+) -> None:
+    bundle = publishable_bundle()
+    spread = bundle.metrics["cross_venue_spread"]
+    assert isinstance(spread, CrossVenueSpread)
+
+    with pytest.raises(PublicationBlocked, match="cross_venue_spread"):
+        write_release(
+            replace(
+                bundle,
+                metrics={
+                    **bundle.metrics,
+                    "cross_venue_spread": replace(
+                        spread,
+                        present_venue_fraction=Decimal("0.9"),
+                    ),
+                },
+            ),
+            tmp_path / "contradictory-spread",
+        )
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"present_venue_count": 3},
+        {
+            "present_venue_count": True,
+            "present_venue_fraction": Decimal("0.25"),
+            "present_venues": ("ACL",),
+        },
+        {"present_venues": ("ACL", "CVPR")},
+        {"configured_venues": ("ACL", "EMNLP", "EMNLP", "NeurIPS")},
+    ],
+    ids=["count", "boolean-count", "topic-presence", "configured-population"],
+)
+def test_release_rejects_cross_venue_population_semantic_contradictions(
+    tmp_path: Path,
+    change: dict[str, object],
+) -> None:
+    bundle = publishable_bundle()
+    spread = bundle.metrics["cross_venue_spread"]
+    assert isinstance(spread, CrossVenueSpread)
+
+    with pytest.raises(PublicationBlocked, match="cross_venue_spread"):
+        write_release(
+            replace(
+                bundle,
+                metrics={
+                    **bundle.metrics,
+                    "cross_venue_spread": replace(spread, **change),
+                },
+            ),
+            tmp_path / "contradictory-population",
+        )
+
+
+def test_release_accepts_exact_cross_venue_fraction(tmp_path: Path) -> None:
+    bundle = publishable_bundle()
+    exact_spread = cross_venue_spread(
+        topic_counts={"ACL": 1, "EMNLP": 0, "NAACL": 1, "NeurIPS": 0},
+        configured_venues=["NeurIPS", "ACL", "NAACL", "EMNLP"],
+    )
+
+    write_release(
+        replace(
+            bundle,
+            metrics={**bundle.metrics, "cross_venue_spread": exact_spread},
+        ),
+        tmp_path / "exact-spread",
+    )
+
+    overview = json.loads(
+        (resolve_current_release(tmp_path / "exact-spread") / "overview.json").read_text()
+    )
+    assert overview["metrics"]["cross_venue_spread"] == {
+        "configured_venues": ["ACL", "EMNLP", "NAACL", "NeurIPS"],
+        "present_venue_count": 2,
+        "present_venue_fraction": "0.5",
+        "present_venues": ["ACL", "NAACL"],
+    }
+
+
+def test_configured_venue_population_changes_contract_identity(tmp_path: Path) -> None:
+    bundle = publishable_bundle()
+    acl_emnlp = cross_venue_spread(
+        topic_counts={"ACL": 1, "EMNLP": 1},
+        configured_venues=["ACL", "EMNLP"],
+    )
+    acl_naacl = cross_venue_spread(
+        topic_counts={"ACL": 1, "NAACL": 1},
+        configured_venues=["NAACL", "ACL"],
+    )
+    emnlp_acl = cross_venue_spread(
+        topic_counts={"EMNLP": 1, "ACL": 1},
+        configured_venues=["EMNLP", "ACL"],
+    )
+
+    write_release(
+        replace(bundle, metrics={**bundle.metrics, "cross_venue_spread": acl_emnlp}),
+        tmp_path / "acl-emnlp",
+    )
+    write_release(
+        replace(bundle, metrics={**bundle.metrics, "cross_venue_spread": acl_naacl}),
+        tmp_path / "acl-naacl",
+    )
+    write_release(
+        replace(bundle, metrics={**bundle.metrics, "cross_venue_spread": emnlp_acl}),
+        tmp_path / "emnlp-acl",
+    )
+    first = json.loads(
+        (resolve_current_release(tmp_path / "acl-emnlp") / "overview.json").read_text()
+    )["comparison_contract"]
+    second = json.loads(
+        (resolve_current_release(tmp_path / "acl-naacl") / "overview.json").read_text()
+    )["comparison_contract"]
+    reordered = json.loads(
+        (resolve_current_release(tmp_path / "emnlp-acl") / "overview.json").read_text()
+    )["comparison_contract"]
+
+    assert first["metric_contract"]["cross_venue_spread"]["configured_venue_count"] == 2
+    assert second["metric_contract"]["cross_venue_spread"]["configured_venue_count"] == 2
+    assert first["metric_contract"]["cross_venue_spread"]["configured_venue_id"] != second[
+        "metric_contract"
+    ]["cross_venue_spread"]["configured_venue_id"]
+    assert first["contract_id"] != second["contract_id"]
+    assert first == reordered
 
 
 def test_release_orders_paper_outputs_and_derives_csv_from_the_same_payload(

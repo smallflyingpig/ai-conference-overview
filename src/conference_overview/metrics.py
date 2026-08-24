@@ -62,6 +62,8 @@ class CrossVenueSpread:
 
     present_venue_count: int
     present_venue_fraction: Decimal
+    configured_venues: tuple[str, ...]
+    present_venues: tuple[str, ...]
 
 
 def _as_decimal(
@@ -119,12 +121,18 @@ def cross_venue_spread(
         raise InvalidVenueConfiguration(
             f"topic counts include unconfigured venues: {sorted(unknown_venues)}"
         )
-    present_venue_count = sum(
-        _as_decimal(topic_counts.get(venue, 0)) > 0 for venue in configured_venue_set
+    ordered_configured_venues = tuple(sorted(configured_venue_set))
+    present_venues = tuple(
+        venue
+        for venue in ordered_configured_venues
+        if _as_decimal(topic_counts.get(venue, 0)) > 0
     )
+    present_venue_count = len(present_venues)
     return CrossVenueSpread(
         present_venue_count=present_venue_count,
         present_venue_fraction=Decimal(present_venue_count) / Decimal(len(configured_venue_set)),
+        configured_venues=ordered_configured_venues,
+        present_venues=present_venues,
     )
 
 

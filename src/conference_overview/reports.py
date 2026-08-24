@@ -139,6 +139,19 @@ def _comparison_contract(bundle: ReleaseBundle) -> dict[str, object]:
             "publication blocked: comparison scope requires at least one included record"
         )
     first = bundle.records[0]
+    published_spread = bundle.metrics.get("cross_venue_spread")
+    configured_venues = (
+        list(published_spread.configured_venues)
+        if isinstance(published_spread, CrossVenueSpread)
+        else []
+    )
+    configured_venue_id = hashlib.sha256(
+        json.dumps(
+            configured_venues,
+            ensure_ascii=False,
+            separators=(",", ":"),
+        ).encode()
+    ).hexdigest()
     identity: dict[str, object] = {
         "comparison_scope": {
             "denominator": {
@@ -153,6 +166,9 @@ def _comparison_contract(bundle: ReleaseBundle) -> dict[str, object]:
         },
         "metric_contract": {
             "cross_venue_spread": {
+                "configured_venue_count": len(configured_venues),
+                "configured_venue_id": configured_venue_id,
+                "configured_venues": configured_venues,
                 "denominator": "configured venue population",
                 "formula": "venues_with_topic / configured_venue_count",
                 "numerator": "configured venues with a positive topic count",
@@ -456,12 +472,41 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
                 "publication blocked: emerging_score violates metric formula contract"
             )
     published_spread = bundle.metrics.get("cross_venue_spread")
-    if published_spread is not None and not isinstance(
-        published_spread, CrossVenueSpread
-    ):
-        raise PublicationBlocked(
-            "publication blocked: cross_venue_spread violates metric formula contract"
-        )
+    if published_spread is not None:
+        if not isinstance(published_spread, CrossVenueSpread):
+            raise PublicationBlocked(
+                "publication blocked: cross_venue_spread violates metric formula contract"
+            )
+        configured_venues = published_spread.configured_venues
+        present_venues = published_spread.present_venues
+        if (
+            not isinstance(configured_venues, tuple)
+            or not isinstance(present_venues, tuple)
+            or any(not isinstance(venue, str) for venue in configured_venues)
+            or any(not isinstance(venue, str) for venue in present_venues)
+            or type(published_spread.present_venue_count) is not int
+            or not isinstance(published_spread.present_venue_fraction, Decimal)
+        ):
+            raise PublicationBlocked(
+                "publication blocked: cross_venue_spread contradicts its configured venue population"
+            )
+        canonical_configured = tuple(sorted(set(configured_venues)))
+        canonical_present = tuple(sorted(set(present_venues)))
+        configured_count = len(configured_venues)
+        if (
+            not configured_venues
+            or any(not venue.strip() for venue in configured_venues)
+            or configured_venues != canonical_configured
+            or present_venues != canonical_present
+            or not set(present_venues).issubset(configured_venues)
+            or published_spread.present_venue_count != len(present_venues)
+            or not 0 <= published_spread.present_venue_count <= configured_count
+            or published_spread.present_venue_fraction
+            != Decimal(published_spread.present_venue_count) / Decimal(configured_count)
+        ):
+            raise PublicationBlocked(
+                "publication blocked: cross_venue_spread contradicts its configured venue population"
+            )
 
     if bundle.records:
         first_scope = (

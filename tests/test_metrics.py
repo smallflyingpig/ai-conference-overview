@@ -55,7 +55,24 @@ def test_cross_venue_spread_reports_topic_presence_across_configured_venues() ->
     assert result == CrossVenueSpread(
         present_venue_count=2,
         present_venue_fraction=Decimal("0.5"),
+        configured_venues=("ACL", "COLING", "EMNLP", "NAACL"),
+        present_venues=("ACL", "NAACL"),
     )
+
+
+def test_cross_venue_spread_canonicalizes_configured_and_present_venue_order() -> None:
+    forward = cross_venue_spread(
+        topic_counts={"NAACL": 1, "ACL": 4, "EMNLP": 0},
+        configured_venues=["NAACL", "EMNLP", "ACL"],
+    )
+    reverse = cross_venue_spread(
+        topic_counts={"EMNLP": 0, "ACL": 4, "NAACL": 1},
+        configured_venues=["ACL", "EMNLP", "NAACL"],
+    )
+
+    assert forward == reverse
+    assert forward.configured_venues == ("ACL", "EMNLP", "NAACL")
+    assert forward.present_venues == ("ACL", "NAACL")
 
 
 def test_cross_venue_spread_reports_zero_present_venues() -> None:

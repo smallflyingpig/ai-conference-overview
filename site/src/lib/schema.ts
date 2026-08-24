@@ -156,10 +156,54 @@ const emergingScoreSchema = z.object({
   }),
 });
 
-const crossVenueSpreadSchema = z.object({
-  present_venue_count: z.number().int().nonnegative(),
-  present_venue_fraction: decimalSchema,
-});
+const canonicalVenueListSchema = z
+  .array(nonBlankSchema)
+  .refine((values) => new Set(values).size === values.length, "venues must be unique")
+  .refine(
+    (values) => JSON.stringify(values) === JSON.stringify([...values].sort()),
+    "venues must be sorted",
+  );
+const nonEmptyCanonicalVenueListSchema = z
+  .array(nonBlankSchema)
+  .min(1)
+  .refine((values) => new Set(values).size === values.length, "venues must be unique")
+  .refine(
+    (values) => JSON.stringify(values) === JSON.stringify([...values].sort()),
+    "venues must be sorted",
+  );
+
+const crossVenueSpreadSchema = z
+  .object({
+    configured_venues: nonEmptyCanonicalVenueListSchema,
+    present_venue_count: z.number().int().nonnegative(),
+    present_venue_fraction: decimalSchema,
+    present_venues: canonicalVenueListSchema,
+  })
+  .superRefine((value, context) => {
+    const configured = new Set(value.configured_venues);
+    if (value.present_venue_count !== value.present_venues.length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["present_venue_count"],
+        message: "present venue count does not match topic-presence venues",
+      });
+    }
+    if (value.present_venues.some((venue) => !configured.has(venue))) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["present_venues"],
+        message: "present venues must belong to the configured venue population",
+      });
+    }
+    const expectedFraction = value.present_venue_count / value.configured_venues.length;
+    if (Number(value.present_venue_fraction) !== expectedFraction) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["present_venue_fraction"],
+        message: "present venue fraction contradicts the configured venue population",
+      });
+    }
+  });
 
 const metricSchema = z.union([
   decimalSchema,
@@ -205,7 +249,11 @@ const comparisonContractSchema = z
       venue: nonBlankSchema,
     }),
     metric_contract: z.object({
-      cross_venue_spread: formulaSchema,
+      cross_venue_spread: formulaSchema.extend({
+        configured_venue_count: z.number().int().nonnegative(),
+        configured_venue_id: sha256Schema,
+        configured_venues: canonicalVenueListSchema,
+      }),
       emerging_score: z.object({
         formula: nonBlankSchema,
         version: nonBlankSchema,
@@ -227,6 +275,24 @@ const comparisonContractSchema = z
     }),
   })
   .superRefine((value, context) => {
+    const population = value.metric_contract.cross_venue_spread;
+    if (population.configured_venue_count !== population.configured_venues.length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["metric_contract", "cross_venue_spread", "configured_venue_count"],
+        message: "configured venue count does not match its population",
+      });
+    }
+    const expectedPopulationId = createHash("sha256")
+      .update(canonicalJson(population.configured_venues))
+      .digest("hex");
+    if (population.configured_venue_id !== expectedPopulationId) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["metric_contract", "cross_venue_spread", "configured_venue_id"],
+        message: "configured venue population identity does not match its canonical payload",
+      });
+    }
     const { contract_id: _contractId, ...identity } = value;
     const expected = createHash("sha256").update(canonicalJson(identity)).digest("hex");
     if (value.contract_id !== expected) {
@@ -257,6 +323,31 @@ export const overviewArtifactSchema = z
         code: z.ZodIssueCode.custom,
         path: ["comparison_contract", "metric_contract", "emitted_metrics"],
         message: "comparison metric contract does not match emitted metrics",
+      });
+    }
+    const crossVenueMetric = value.metrics.cross_venue_spread;
+    const spreadContract = value.comparison_contract.metric_contract.cross_venue_spread;
+    if (
+      crossVenueMetric != null &&
+      typeof crossVenueMetric === "object" &&
+      "configured_venues" in crossVenueMetric
+    ) {
+      if (
+        JSON.stringify(crossVenueMetric.configured_venues) !==
+          JSON.stringify(spreadContract.configured_venues) ||
+        crossVenueMetric.configured_venues.length !== spreadContract.configured_venue_count
+      ) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["comparison_contract", "metric_contract", "cross_venue_spread"],
+          message: "cross-venue metric population does not match its comparison contract",
+        });
+      }
+    } else if (spreadContract.configured_venue_count !== 0) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["comparison_contract", "metric_contract", "cross_venue_spread"],
+        message: "configured venue population requires an emitted cross-venue metric",
       });
     }
     const assignmentIds = value.assignments.map((assignment) => assignment.paper_id);

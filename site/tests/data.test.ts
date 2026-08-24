@@ -9,7 +9,19 @@ import { describe, expect, it } from "vitest";
 import { loadOverview } from "../src/lib/data";
 import { parseOverview } from "../src/lib/schema";
 
+function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  if (value != null && typeof value === "object") {
+    return `{${Object.entries(value as Record<string, unknown>)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([key, item]) => `${JSON.stringify(key)}:${canonicalJson(item)}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
 function comparisonContract(emittedMetrics: string[] = []) {
+  const configuredVenues: string[] = [];
   const identity = {
     comparison_scope: {
       denominator: {
@@ -24,6 +36,11 @@ function comparisonContract(emittedMetrics: string[] = []) {
     },
     metric_contract: {
       cross_venue_spread: {
+        configured_venue_count: configuredVenues.length,
+        configured_venue_id: createHash("sha256")
+          .update(JSON.stringify(configuredVenues))
+          .digest("hex"),
+        configured_venues: configuredVenues,
         denominator: "configured venue population",
         formula: "venues_with_topic / configured_venue_count",
         numerator: "configured venues with a positive topic count",
@@ -46,7 +63,7 @@ function comparisonContract(emittedMetrics: string[] = []) {
     schema_version: "conference-comparison-v1",
   };
   return {
-    contract_id: createHash("sha256").update(JSON.stringify(identity)).digest("hex"),
+    contract_id: createHash("sha256").update(canonicalJson(identity)).digest("hex"),
     ...identity,
   };
 }
@@ -168,7 +185,7 @@ function rehashComparisonContract(overviewArtifact: Record<string, any>): void {
   const contract = overviewArtifact.comparison_contract;
   const { contract_id: _oldId, ...identity } = contract;
   contract.contract_id = createHash("sha256")
-    .update(JSON.stringify(identity))
+    .update(canonicalJson(identity))
     .digest("hex");
 }
 
@@ -272,6 +289,40 @@ describe("parseOverview", () => {
         provenance,
       }),
     ).toThrow(/contract|identity|hash/i);
+  });
+
+  it("rejects a contradictory cross-venue fraction from a Python release", async () => {
+    const root = await mutatedTask9Release((artifact) => {
+      artifact.metrics.cross_venue_spread.present_venue_fraction = "0.9";
+    });
+
+    await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(
+      /cross.venue|fraction|population/i,
+    );
+  });
+
+  it("accepts an exactly equivalent cross-venue Decimal fraction", async () => {
+    const root = await mutatedTask9Release((artifact) => {
+      artifact.metrics.cross_venue_spread.present_venue_fraction = "0.50";
+    });
+
+    await expect(loadOverview("ACL", 2026, root)).resolves.toBeTruthy();
+  });
+
+  it("rejects a stale configured venue population identity", async () => {
+    const root = await mutatedTask9Release((artifact) => {
+      artifact.comparison_contract.metric_contract.cross_venue_spread.configured_venues = [
+        "ACL",
+        "CVPR",
+        "NAACL",
+        "NeurIPS",
+      ];
+      rehashComparisonContract(artifact);
+    });
+
+    await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(
+      /configured venue|population|identity/i,
+    );
   });
 });
 
