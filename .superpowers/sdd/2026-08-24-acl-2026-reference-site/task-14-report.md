@@ -502,3 +502,78 @@ decision registry is empty.
 
 Remaining gate: obtain fresh post-correction decisions for the regenerated 50
 per-theme audit samples. Until then no theme distribution is a final headline.
+
+## Round 2 provenance remediation — 2026-08-25
+
+This round fixes a single award-PDF provenance boundary. The prior importer
+copied PDF size and SHA-256 from the independently authored Markdown notes; it
+did not recompute them from official bytes. That allowed the stale
+`acl:2026.acl-long.1340` claim (29,172,258 bytes,
+`6ed9ae4a8ab652317ecb12513d79c1aae6741ef3acd7fdc80664802d64af6622`)
+to enter the manifest.
+
+### Boundary and regression
+
+- The importer now downloads every inventory-bound PDF from its exact ACL
+  Anthology URL. Existing `fetch_bytes` enforcement rejects Content-Length
+  mismatches; an additional PDF boundary requires `%PDF-` plus a terminal
+  `%%EOF`. SHA-256 and byte size are computed only from those verified bytes.
+- Markdown PDF rows are treated as assertions, not authority. A claimed size or
+  SHA mismatch raises before either DeepReads or provenance is written. The
+  regression was observed RED against the old importer and GREEN after this
+  change.
+- Each output row records `source_url` and
+  `verification_method=downloaded_official_pdf_bytes`; the manifest records a
+  timezone-aware verification time. The release loader independently requires
+  this method, valid time, safe official URL, positive byte size, valid SHA-256,
+  unique IDs, and exact equality with the DeepRead ID set. A note-only legacy
+  provenance file is now publication-blocking.
+- PDFs were streamed only for verification and were not added to Git. The
+  committed manifest is the immutable evidence record; no copyrighted PDF is
+  included.
+
+### Corrected official record
+
+The official `https://aclanthology.org/2026.acl-long.1340.pdf` response was
+re-fetched to its declared full Content-Length and independently checked with
+`pdfinfo`:
+
+- byte size: 27,185,425;
+- SHA-256:
+  `fb7f9235a9fd89aa4e0526d4b5201b1ec9209d6e3c67e83079180d54f9339a9d`;
+- pages: 37.
+
+The corrected 11–20 note input SHA-256 is
+`92cf9d62f67368fa7edd62a17c6f5523dd258e147d37828985e337f449a7b91f`.
+All 30 PDF rows were revalidated from official bytes. The DeepRead semantic
+artifact is unchanged at
+`43c6afba10011fd34015c8edfb97f854159184f5d0f101801885c11d0ab0df5d`;
+the corrected provenance SHA-256 is
+`33f3a49df32ccbb43d694da88f102b656061a84d464afcddbfe932a8b25eadd4`.
+
+### Regenerated release and verification
+
+`current.json` selects generation
+`c3263d433e3eebffd30863015664792d1838e5127f1c94bf4661be0cae660973`.
+Its directory contains exactly six artifacts and every pointer hash was
+recomputed successfully:
+
+| Artifact | SHA-256 |
+|---|---|
+| `overview.json` | `cd1c8553972387c20beb242af6d6bac92f8411e8b8fcf55340dfb56fca2341a6` |
+| `overview.md` | `1e380d99594c72fb480694ebffe4fa294f20c3c669cf31f6862bd4caccc19468` |
+| `papers.csv` | `192ed6e93ee76a52d90419bd0b205e9698bf8abbe5e9a17fdfd4d252137077d5` |
+| `papers.json` | `1eeda7a7cd3891bd7048bf3b20c0b3bee317fa5ca1912cb08f3defb5a8d11343` |
+| `provenance.json` | `34820d4e5c2c96ae0e780bbd5f322c9328362a6fe0787129b2a43cb0c794be66` |
+| `validation.json` | `843799a1dd45ff8bcc5440de5d72a8c378bd5e47dd93e7ccecda695e974016aa` |
+
+- focused RED/GREEN regression — passed after observing the intended failure;
+- `.venv/bin/pytest -q` — 237 passed;
+- `.venv/bin/ruff check .` — clean;
+- `cd site && npm test -- --run` — 109 passed across five files;
+- `cd site && npm run build` — zero diagnostics, 37 pages;
+- exact-six pointer — six names and six hashes match;
+- award routes — 30 total, 30 unique, all `award-<64 lowercase hex>`.
+
+The classification state is unchanged: fresh topic audits remain empty and all
+ten themes remain withheld.
