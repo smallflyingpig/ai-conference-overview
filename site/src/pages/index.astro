@@ -1,0 +1,89 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { loadOverview } from "../lib/data";
+
+const release = await loadOverview("ACL", 2026);
+const source = release?.provenance.sources[0];
+const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV"];
+---
+
+<BaseLayout
+  title="AI Conference Overview — an evidence-backed research atlas"
+  description="Validated conference distributions, trends, advances, and award-paper deep reads."
+>
+  <div class="atlas-shell">
+    <aside class="trace-panel" aria-labelledby="trace-title">
+      <p class="eyebrow">Evidence trace</p>
+      <h2 id="trace-title">Know what each claim rests on.</h2>
+      <ol class="evidence-trace">
+        <li class="official"><span>Official metadata</span><small>Proceedings and programs</small></li>
+        <li class="reported"><span>Paper-reported</span><small>Results with locators</small></li>
+        <li class="synthesis"><span>Cross-paper synthesis</span><small>Patterns across the set</small></li>
+        <li class="inference"><span>Inference</span><small>Clearly marked interpretation</small></li>
+      </ol>
+      <section class="ledger" aria-label="Publication status">
+        <p class="data-label">CURRENT RELEASE</p>
+        {release ? (
+          <>
+            <strong>ACL 2026 · Long papers</strong>
+            <span>{release.validation.included_count} validated records</span>
+            <span>Retrieved <time datetime={source?.retrieved_at}>{source?.retrieved_at.slice(0, 10)}</time></span>
+            <code>{release.generation.split("/")[1].slice(0, 12)}</code>
+          </>
+        ) : (
+          <>
+            <strong>Not yet published</strong>
+            <span>The first ACL 2026 release is still moving through validation.</span>
+            <code>NO CURRENT POINTER</code>
+          </>
+        )}
+      </section>
+    </aside>
+
+    <div class="atlas-main">
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Research intelligence / 2026 onward</p>
+        <h1 id="page-title">Read the field as a map,<br />not a leaderboard.</h1>
+        <p class="lede">
+          A source-backed index of what major AI conferences are studying, how attention moves,
+          and which advances survive an evidence audit.
+        </p>
+        <div class="hero-note">
+          <span class="data-label">SCOPE</span>
+          <p>Distributions use validated venue-year denominators. “Trend” is reserved for comparable multi-year evidence.</p>
+        </div>
+      </section>
+
+      <section class="release-state" aria-labelledby="release-title">
+        <div>
+          <p class="eyebrow">First reference run</p>
+          <h2 id="release-title">ACL 2026 · Long papers</h2>
+        </div>
+        {release ? (
+          <p>The validated overview is available. Follow the conference index to inspect its coverage and provenance.</p>
+        ) : (
+          <div class="empty-state" role="status">
+            <span class="status-mark" aria-hidden="true"></span>
+            <p><strong>Analysis withheld until publication gates pass.</strong><br />No provisional counts or fabricated metrics are shown.</p>
+          </div>
+        )}
+      </section>
+
+      <section class="scope-index" aria-labelledby="scope-title">
+        <div class="section-heading">
+          <p class="eyebrow">Venue registry</p>
+          <h2 id="scope-title">One taxonomy,<br />native tracks intact.</h2>
+        </div>
+        <ul>
+          {scopes.map((venue, index) => (
+            <li>
+              <span class="index-number">{String(index + 1).padStart(2, "0")}</span>
+              <strong>{venue}</strong>
+              <span>{venue === "ACL" ? "Reference run" : "Adapter roadmap"}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  </div>
+</BaseLayout>

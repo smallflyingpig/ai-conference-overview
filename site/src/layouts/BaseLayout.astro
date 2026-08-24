@@ -1,0 +1,42 @@
+---
+import "../styles/global.css";
+import { projectPath } from "../lib/paths";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to research index</a>
+    <header class="site-header">
+      <a class="wordmark" href={projectPath(base, "")} aria-label="AI Conference Overview home">
+        <span aria-hidden="true">A/CO</span>
+        <span>AI Conference Overview</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href={projectPath(base, "conferences/acl/2026")}>Conferences</a>
+        <a href={projectPath(base, "trends")}>Trends</a>
+        <a href={projectPath(base, "methodology")}>Methodology</a>
+      </nav>
+    </header>
+    <main id="main"><slot /></main>
+    <footer>
+      <span>Evidence before interpretation.</span>
+      <span class="data-label">MIT · STATIC RESEARCH ATLAS</span>
+    </footer>
+  </body>
+</html>
