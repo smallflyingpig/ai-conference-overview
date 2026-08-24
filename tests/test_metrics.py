@@ -3,10 +3,13 @@ from decimal import Decimal
 import pytest
 
 from conference_overview.metrics import (
+    CrossVenueSpread,
     EmergingScore,
     InsufficientTrendWindow,
     InvalidDenominator,
+    InvalidMetricInput,
     InvalidScoreComponent,
+    InvalidVenueConfiguration,
     cross_venue_spread,
     emerging_score,
     quantize_for_display,
@@ -43,10 +46,39 @@ def test_venue_enrichment_rejects_non_positive_baseline(
         venue_enrichment(Decimal("0.30"), baseline_share)
 
 
-def test_cross_venue_spread_is_maximum_minus_minimum_share() -> None:
-    assert cross_venue_spread([Decimal("0.15"), Decimal("0.40"), Decimal("0.20")]) == Decimal(
-        "0.25"
+def test_cross_venue_spread_reports_topic_presence_across_configured_venues() -> None:
+    result = cross_venue_spread(
+        topic_counts={"ACL": 4, "EMNLP": 0, "NAACL": 1, "COLING": 0},
+        configured_venues={"ACL", "EMNLP", "NAACL", "COLING"},
     )
+
+    assert result == CrossVenueSpread(
+        present_venue_count=2,
+        present_venue_fraction=Decimal("0.5"),
+    )
+
+
+def test_cross_venue_spread_reports_zero_present_venues() -> None:
+    result = cross_venue_spread(
+        topic_counts={"ACL": 0, "EMNLP": 0},
+        configured_venues={"ACL", "EMNLP", "NAACL", "COLING"},
+    )
+
+    assert result.present_venue_count == 0
+    assert result.present_venue_fraction == Decimal(0)
+
+
+def test_cross_venue_spread_rejects_empty_configured_venues() -> None:
+    with pytest.raises(InvalidVenueConfiguration):
+        cross_venue_spread(topic_counts={}, configured_venues=set())
+
+
+def test_cross_venue_spread_rejects_unconfigured_venue_input() -> None:
+    with pytest.raises(InvalidVenueConfiguration):
+        cross_venue_spread(
+            topic_counts={"ACL": 1, "ICLR": 1},
+            configured_venues={"ACL", "EMNLP"},
+        )
 
 
 @pytest.mark.parametrize("years", [[2026], [2024, 2026], [2024, 2025, 2025]])
@@ -96,3 +128,27 @@ def test_emerging_score_rejects_out_of_range_components(component: Decimal) -> N
             spread_growth=Decimal("0.5"),
             novelty=Decimal("0.25"),
         )
+
+
+@pytest.mark.parametrize("denominator", [Decimal("NaN"), Decimal("Infinity"), Decimal("-Infinity")])
+def test_topic_share_rejects_non_finite_denominator(denominator: Decimal) -> None:
+    with pytest.raises(InvalidDenominator):
+        topic_share(topic_count=1, included_count=denominator)
+
+
+@pytest.mark.parametrize("component", [Decimal("NaN"), Decimal("Infinity"), Decimal("-Infinity")])
+def test_emerging_score_rejects_non_finite_components(component: Decimal) -> None:
+    with pytest.raises(InvalidScoreComponent):
+        emerging_score(
+            share_growth=component,
+            spread_growth=Decimal("0.5"),
+            novelty=Decimal("0.25"),
+        )
+
+
+def test_metric_functions_reject_runtime_floats() -> None:
+    with pytest.raises(InvalidMetricInput):
+        topic_share(topic_count=0.5, included_count=1)
+
+    with pytest.raises(InvalidScoreComponent):
+        emerging_score(share_growth=0.5, spread_growth=Decimal("0.5"), novelty=Decimal("0.25"))

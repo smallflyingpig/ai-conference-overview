@@ -2,16 +2,20 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from itertools import pairwise
 from types import MappingProxyType
 from typing import Final
 
 
 class InvalidDenominator(ValueError):
-    """Raised when a ratio's denominator is zero or negative."""
+    """Raised when a ratio's denominator is non-finite, zero, or negative."""
+
+
+class InvalidMetricInput(ValueError):
+    """Raised when a metric input cannot be represented as a finite Decimal."""
 
 
 class InsufficientTrendWindow(ValueError):
@@ -19,7 +23,11 @@ class InsufficientTrendWindow(ValueError):
 
 
 class InvalidScoreComponent(ValueError):
-    """Raised when an Emerging Score component is outside the unit interval."""
+    """Raised when an Emerging Score component is non-finite or outside [0, 1]."""
+
+
+class InvalidVenueConfiguration(ValueError):
+    """Raised when venue diffusion inputs do not match the configured venues."""
 
 
 _EMERGING_WEIGHTS: Final[Mapping[str, Decimal]] = MappingProxyType(
@@ -48,15 +56,33 @@ class EmergingScore:
         }
 
 
-def _as_decimal(value: Decimal | int | str) -> Decimal:
-    """Convert supported exact numeric inputs without introducing floats."""
-    if isinstance(value, Decimal):
-        return value
-    return Decimal(value)
+@dataclass(frozen=True)
+class CrossVenueSpread:
+    """Topic diffusion across an explicit configured venue population."""
+
+    present_venue_count: int
+    present_venue_fraction: Decimal
+
+
+def _as_decimal(
+    value: Decimal | int | str,
+    *,
+    error_type: type[ValueError] = InvalidMetricInput,
+) -> Decimal:
+    """Convert an exact finite numeric input while rejecting runtime floats."""
+    if isinstance(value, (bool, float)):
+        raise error_type("metric inputs must be int, str, or Decimal; floats are not accepted")
+    try:
+        decimal_value = value if isinstance(value, Decimal) else Decimal(value)
+    except (InvalidOperation, TypeError, ValueError) as exc:
+        raise error_type("metric inputs must be int, str, or Decimal") from exc
+    if not decimal_value.is_finite():
+        raise error_type("metric inputs must be finite")
+    return decimal_value
 
 
 def _require_positive_denominator(value: Decimal | int | str) -> Decimal:
-    denominator = _as_decimal(value)
+    denominator = _as_decimal(value, error_type=InvalidDenominator)
     if denominator <= 0:
         raise InvalidDenominator("denominator must be greater than zero")
     return denominator
@@ -79,12 +105,27 @@ def venue_enrichment(
     return _as_decimal(venue_share) / _require_positive_denominator(baseline_share)
 
 
-def cross_venue_spread(shares: Sequence[Decimal | int | str]) -> Decimal:
-    """Return the range of a topic's shares across venues."""
-    values = [_as_decimal(share) for share in shares]
-    if not values:
-        raise ValueError("at least one venue share is required")
-    return max(values) - min(values)
+def cross_venue_spread(
+    *,
+    topic_counts: Mapping[str, Decimal | int | str],
+    configured_venues: Collection[str],
+) -> CrossVenueSpread:
+    """Return topic presence count and fraction across configured venues."""
+    configured_venue_set = frozenset(configured_venues)
+    if not configured_venue_set:
+        raise InvalidVenueConfiguration("at least one configured venue is required")
+    unknown_venues = set(topic_counts) - configured_venue_set
+    if unknown_venues:
+        raise InvalidVenueConfiguration(
+            f"topic counts include unconfigured venues: {sorted(unknown_venues)}"
+        )
+    present_venue_count = sum(
+        _as_decimal(topic_counts.get(venue, 0)) > 0 for venue in configured_venue_set
+    )
+    return CrossVenueSpread(
+        present_venue_count=present_venue_count,
+        present_venue_fraction=Decimal(present_venue_count) / Decimal(len(configured_venue_set)),
+    )
 
 
 def validate_trend_window(years: Sequence[int]) -> None:
@@ -114,9 +155,9 @@ def emerging_score(
 ) -> EmergingScore:
     """Calculate the published Emerging Score and retain reproducibility inputs."""
     raw_components = {
-        "share_growth": _as_decimal(share_growth),
-        "spread_growth": _as_decimal(spread_growth),
-        "novelty": _as_decimal(novelty),
+        "share_growth": _as_decimal(share_growth, error_type=InvalidScoreComponent),
+        "spread_growth": _as_decimal(spread_growth, error_type=InvalidScoreComponent),
+        "novelty": _as_decimal(novelty, error_type=InvalidScoreComponent),
     }
     for name, value in raw_components.items():
         if not Decimal(0) <= value <= Decimal(1):
