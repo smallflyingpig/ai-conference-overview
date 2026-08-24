@@ -269,6 +269,27 @@ def test_stale_clean_validation_cannot_publish_changed_records(
     assert not (tmp_path / "release").exists()
 
 
+def test_stale_clean_validation_cannot_authorize_different_clean_record_ids(
+    tmp_path: Path,
+) -> None:
+    bundle = publishable_bundle()
+    changed_records = (paper("paper-b"), paper("paper-c"))
+
+    with pytest.raises(PublicationBlocked, match="stale validation"):
+        write_release(
+            replace(
+                bundle,
+                records=changed_records,
+                assignments=tuple(
+                    assignment(record.paper_id) for record in changed_records
+                ),
+            ),
+            tmp_path / "release",
+        )
+
+    assert not (tmp_path / "release").exists()
+
+
 def test_nonempty_release_requires_complete_assignments_and_theme_audits(
     tmp_path: Path,
 ) -> None:
@@ -404,6 +425,37 @@ def test_claims_requiring_locators_block_publication(
         write_release(replace(publishable_bundle(), claims=(claim,)), tmp_path / "release")
 
 
+@pytest.mark.parametrize("numeric_token", ["1e6", "1E-6", "-2.3e+4"])
+def test_scientific_notation_claims_require_locators(
+    tmp_path: Path, numeric_token: str
+) -> None:
+    claim = EvidenceClaim(
+        claim=f"The inferred scale is {numeric_token} parameters.",
+        evidence_type=EvidenceType.INFERENCE,
+        source_urls=["https://aclanthology.org/paper.pdf"],
+    )
+
+    with pytest.raises(PublicationBlocked, match="locator"):
+        write_release(
+            replace(publishable_bundle(), claims=(claim,)),
+            tmp_path / "release",
+        )
+
+
+def test_alphanumeric_identifier_is_not_misread_as_scientific_notation(
+    tmp_path: Path,
+) -> None:
+    claim = EvidenceClaim(
+        claim="We compare model1e6x variants without a quantitative claim.",
+        evidence_type=EvidenceType.INFERENCE,
+        source_urls=["https://aclanthology.org/paper.pdf"],
+    )
+
+    write_release(replace(publishable_bundle(), claims=(claim,)), tmp_path / "release")
+
+    assert resolve_current_release(tmp_path / "release").is_dir()
+
+
 @pytest.mark.parametrize(
     ("sha256", "retrieved_at"),
     [("abc123", datetime(2026, 8, 24, tzinfo=UTC)), ("a" * 64, None)],
@@ -427,7 +479,14 @@ def test_incomplete_provenance_blocks_publication(
     )
 
     with pytest.raises(PublicationBlocked, match="provenance"):
-        write_release(replace(bundle, records=records), tmp_path / "release")
+        write_release(
+            replace(
+                bundle,
+                records=records,
+                validation=validate_records(records, [], expected_included=2),
+            ),
+            tmp_path / "release",
+        )
 
 
 def test_non_finite_decimal_is_rejected_before_serialization(tmp_path: Path) -> None:

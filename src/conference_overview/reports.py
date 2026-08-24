@@ -51,7 +51,8 @@ _MINIMUM_OBSERVED_PRECISION = Decimal("0.90")
 _MINIMUM_WILSON_LOWER_95 = Decimal("0.80")
 _SHA256_PATTERN = re.compile(r"[0-9a-fA-F]{64}")
 _NUMERIC_TOKEN_PATTERN = re.compile(
-    r"(?<![\w.])[+-]?(?:\d+(?:[.,]\d+)*|\.\d+)(?:\s?(?:%|％|pp|x))?(?!\w)",
+    r"(?<![\w.])[+-]?(?:\d+(?:[.,]\d+)*|\.\d+)(?:e[+-]?\d+)?"
+    r"(?:\s?(?:%|％|pp|x))?(?!\w)",
     re.IGNORECASE,
 )
 

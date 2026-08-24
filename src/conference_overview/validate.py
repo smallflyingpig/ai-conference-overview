@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 from collections import defaultdict
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
@@ -22,6 +24,7 @@ class PublicationBlocked(RuntimeError):
 class ValidationReport:
     """Deterministic reconciliation and review diagnostics for a record set."""
 
+    record_set_sha256: str
     discovered_count: int
     included_count: int
     excluded_count: int
@@ -75,6 +78,38 @@ def _duplicate_pairs(
 
 def _present_text(value: str | None) -> bool:
     return value is not None and bool(value.strip())
+
+
+def record_set_sha256(
+    included: Sequence[PaperRecord], excluded: Sequence[PaperRecord]
+) -> str:
+    """Hash the exact included/excluded canonical records independent of input order."""
+
+    def ordered_payload(records: Sequence[PaperRecord]) -> list[dict[str, object]]:
+        payloads = [record.model_dump(mode="json") for record in records]
+        return sorted(
+            payloads,
+            key=lambda payload: (
+                str(payload["paper_id"]),
+                json.dumps(
+                    payload,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                    ensure_ascii=False,
+                ),
+            ),
+        )
+
+    canonical_bytes = json.dumps(
+        {
+            "excluded": ordered_payload(excluded),
+            "included": ordered_payload(included),
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode()
+    return hashlib.sha256(canonical_bytes).hexdigest()
 
 
 def validate_records(
@@ -150,6 +185,7 @@ def validate_records(
     )
 
     return ValidationReport(
+        record_set_sha256=record_set_sha256(included_records, excluded_records),
         discovered_count=len(discovered_records),
         included_count=len(status_included_records),
         excluded_count=len(status_excluded_records),
