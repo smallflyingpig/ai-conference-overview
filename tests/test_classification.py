@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
@@ -13,6 +14,7 @@ from conference_overview.classification import (
     export_batches,
     load_assignments,
     validate_assignment,
+    wilson_lower,
 )
 from conference_overview.models import PaperRecord, RecordStatus, SourceRef
 
@@ -103,25 +105,96 @@ def test_assignment_rejects_confidence_outside_closed_unit_interval(confidence: 
         validate_assignment(assignment(confidence=confidence), taxonomy())
 
 
-def test_load_assignments_rejects_missing_and_duplicate_paper_ids(tmp_path: Path) -> None:
-    missing_path = tmp_path / "missing.jsonl"
-    write_assignments(missing_path, assignment(paper_id=""))
+def test_assignment_accepts_the_same_finite_float_policy_as_json_numbers(
+    tmp_path: Path,
+) -> None:
+    direct = validate_assignment(assignment(confidence=0.5), taxonomy())
+    path = tmp_path / "assignments.jsonl"
+    write_assignments(path, assignment(confidence=0.5))
 
-    with pytest.raises(ValueError, match="missing paper_id"):
-        load_assignments(missing_path, taxonomy())
+    loaded = load_assignments(path, taxonomy())
 
-    duplicate_path = tmp_path / "duplicate.jsonl"
-    write_assignments(duplicate_path, assignment(), assignment())
+    assert direct.confidence == loaded[0].confidence == Decimal("0.5")
 
-    with pytest.raises(ValueError, match="duplicate paper_id"):
-        load_assignments(duplicate_path, taxonomy())
+
+@pytest.mark.parametrize("confidence", [float("nan"), float("inf"), Decimal("NaN")])
+def test_assignment_rejects_non_finite_confidence_values(confidence: object) -> None:
+    with pytest.raises(ValueError, match="confidence"):
+        validate_assignment(assignment(confidence=confidence), taxonomy())
+
+
+@pytest.mark.parametrize(
+    ("invalid_assignment", "reason"),
+    [
+        (assignment(paper_id=""), "missing paper_id"),
+        (assignment(primary_topic="Unknown"), "unknown topic: Unknown"),
+        (assignment(secondary_topics="Evaluation"), "secondary_topics must be a list"),
+        (assignment(confidence="1.01"), "confidence must be within [0, 1]"),
+        (
+            assignment(taxonomy_version="2025-01-01-v1"),
+            "taxonomy version mismatch (expected 2026-08-24-v1, found 2025-01-01-v1)",
+        ),
+    ],
+)
+def test_load_assignments_reports_schema_failures_with_the_correct_line(
+    tmp_path: Path,
+    invalid_assignment: dict[str, object],
+    reason: str,
+) -> None:
+    path = tmp_path / "assignments.jsonl"
+    write_assignments(path, assignment(paper_id="first"), invalid_assignment)
+
+    with pytest.raises(ValueError) as error:
+        load_assignments(path, taxonomy())
+
+    assert str(error.value) == f"assignment on line 2: {reason}"
+    assert isinstance(error.value.__cause__, ValueError)
+
+
+def test_load_assignments_reports_duplicate_paper_id_with_the_correct_line(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "duplicate.jsonl"
+    write_assignments(path, assignment(), assignment())
+
+    with pytest.raises(ValueError) as error:
+        load_assignments(path, taxonomy())
+
+    assert str(error.value) == "assignment on line 2: duplicate paper_id: acl:2026.acl-long.1"
+    assert isinstance(error.value.__cause__, ValueError)
+
+
+def test_load_assignments_reports_invalid_json_with_the_correct_line(tmp_path: Path) -> None:
+    path = tmp_path / "invalid.jsonl"
+    path.write_text(json.dumps(assignment(paper_id="first")) + "\n{" + "\n")
+
+    with pytest.raises(
+        ValueError, match=re.escape("assignment on line 2: invalid JSONL assignment")
+    ) as error:
+        load_assignments(path, taxonomy())
+
+    assert isinstance(error.value.__cause__, json.JSONDecodeError)
+
+
+def test_load_assignments_rejects_non_finite_json_confidence_with_line_context(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "non-finite.jsonl"
+    write_assignments(path, assignment(confidence=float("nan")))
+
+    with pytest.raises(
+        ValueError, match=re.escape("assignment on line 1: confidence must be a finite number")
+    ) as error:
+        load_assignments(path, taxonomy())
+
+    assert isinstance(error.value.__cause__, ValueError)
 
 
 def test_load_assignments_rejects_taxonomy_version_mismatch(tmp_path: Path) -> None:
     path = tmp_path / "assignments.jsonl"
     write_assignments(path, assignment(taxonomy_version="2025-01-01-v1"))
 
-    with pytest.raises(ValueError, match="taxonomy version"):
+    with pytest.raises(ValueError, match="assignment on line 1: taxonomy version"):
         load_assignments(path, taxonomy())
 
 
@@ -143,7 +216,7 @@ def test_load_assignments_retains_low_confidence_assignment_for_review(tmp_path:
     ]
 
 
-def test_theme_gate_requires_precision_and_lower_bound() -> None:
+def test_theme_gate_requires_precision_and_lower_bound_at_the_fifty_item_cap() -> None:
     audit = audit_theme([True] * 46 + [False] * 4)
 
     assert audit.observed_precision == Decimal("0.92")
@@ -153,10 +226,25 @@ def test_theme_gate_requires_precision_and_lower_bound() -> None:
 
 def test_theme_gate_rejects_low_precision_empty_samples_and_weak_wilson_bound() -> None:
     with pytest.raises(PublicationBlocked, match="observed precision"):
-        assert_theme_publishable(audit_theme([True] * 89 + [False] * 11))
+        assert_theme_publishable(audit_theme([True] * 44 + [False] * 6))
 
     with pytest.raises(PublicationBlocked, match="Wilson"):
         assert_theme_publishable(audit_theme([True] * 45 + [False] * 5))
 
     with pytest.raises(PublicationBlocked, match="empty"):
         assert_theme_publishable(audit_theme([]))
+
+
+def test_audit_theme_accepts_at_most_fifty_decisions_and_rejects_fifty_one() -> None:
+    assert audit_theme([True] * 50).sample_size == 50
+
+    with pytest.raises(ValueError, match="at most 50"):
+        audit_theme([True] * 51)
+
+
+def test_wilson_lower_accepts_a_finite_float_z_and_rejects_non_finite_values() -> None:
+    assert wilson_lower(46, 50, z=1.959963984540054) == wilson_lower(46, 50)
+
+    for z in (float("nan"), float("inf"), Decimal("NaN")):
+        with pytest.raises(ValueError, match="z"):
+            wilson_lower(46, 50, z=z)

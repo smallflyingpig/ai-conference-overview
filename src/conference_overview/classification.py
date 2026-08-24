@@ -16,6 +16,7 @@ from conference_overview.validate import PublicationBlocked
 _WILSON_Z_95 = Decimal("1.959963984540054")
 _MINIMUM_PRECISION = Decimal("0.90")
 _MINIMUM_WILSON_LOWER_95 = Decimal("0.80")
+_MAX_AUDIT_SAMPLE_SIZE = 50
 _PACKAGED_TAXONOMY_PATH = Path(__file__).with_name("taxonomy.yaml")
 _SOURCE_TAXONOMY_PATH = Path(__file__).resolve().parents[2] / "config" / "taxonomy.yaml"
 _DEFAULT_TAXONOMY_PATH = (
@@ -111,16 +112,21 @@ def _required_text(value: object, *, field: str) -> str:
     return value.strip()
 
 
-def _as_confidence(value: object) -> Decimal:
-    if isinstance(value, (bool, float)):
-        raise ValueError(  # noqa: TRY004
-            "confidence must be a Decimal-compatible value within [0, 1]"
-        )
+def _as_finite_decimal(value: object, *, field: str) -> Decimal:
+    if isinstance(value, bool):
+        raise ValueError(f"{field} must be a finite number")  # noqa: TRY004
     try:
         confidence = value if isinstance(value, Decimal) else Decimal(str(value))
     except (InvalidOperation, TypeError, ValueError) as exc:
-        raise ValueError("confidence must be a Decimal-compatible value within [0, 1]") from exc
-    if not confidence.is_finite() or not Decimal(0) <= confidence <= Decimal(1):
+        raise ValueError(f"{field} must be a finite number") from exc
+    if not confidence.is_finite():
+        raise ValueError(f"{field} must be a finite number")
+    return confidence
+
+
+def _as_confidence(value: object) -> Decimal:
+    confidence = _as_finite_decimal(value, field="confidence")
+    if not Decimal(0) <= confidence <= Decimal(1):
         raise ValueError("confidence must be within [0, 1]")
     return confidence
 
@@ -249,14 +255,17 @@ def load_assignments(
         try:
             raw_assignment = json.loads(line, parse_float=Decimal)
         except json.JSONDecodeError as exc:
-            raise ValueError(f"invalid JSONL assignment on line {line_number}") from exc
-        if not isinstance(raw_assignment, Mapping):
-            raise ValueError(  # noqa: TRY004
-                f"assignment on line {line_number} must be an object"
+            raise ValueError(f"assignment on line {line_number}: invalid JSONL assignment") from exc
+        try:
+            if not isinstance(raw_assignment, Mapping):
+                raise ValueError("assignment must be an object")  # noqa: TRY004
+            parsed_assignment = validate_assignment(
+                raw_assignment, normalized_taxonomy.to_payload()
             )
-        parsed_assignment = validate_assignment(raw_assignment, normalized_taxonomy.to_payload())
-        if parsed_assignment.paper_id in seen_paper_ids:
-            raise ValueError(f"duplicate paper_id: {parsed_assignment.paper_id}")
+            if parsed_assignment.paper_id in seen_paper_ids:
+                raise ValueError(f"duplicate paper_id: {parsed_assignment.paper_id}")
+        except ValueError as exc:
+            raise ValueError(f"assignment on line {line_number}: {exc}") from exc
         seen_paper_ids.add(parsed_assignment.paper_id)
         assignments.append(parsed_assignment)
 
@@ -271,7 +280,11 @@ def load_assignments(
     return assignments
 
 
-def wilson_lower(successes: int, total: int, z: Decimal = _WILSON_Z_95) -> Decimal:
+def wilson_lower(
+    successes: int,
+    total: int,
+    z: Decimal | float | str = _WILSON_Z_95,
+) -> Decimal:
     """Return the two-sided 95% Wilson lower confidence bound using Decimal math."""
     if (
         isinstance(successes, bool)
@@ -282,11 +295,14 @@ def wilson_lower(successes: int, total: int, z: Decimal = _WILSON_Z_95) -> Decim
         or not 0 <= successes <= total
     ):
         raise ValueError("successes must be between zero and a positive total")
+    decimal_z = _as_finite_decimal(z, field="z")
+    if decimal_z <= 0:
+        raise ValueError("z must be greater than zero")
     probability = Decimal(successes) / Decimal(total)
-    squared_z = z * z
+    squared_z = decimal_z * decimal_z
     denominator = Decimal(1) + squared_z / Decimal(total)
     centre = probability + squared_z / (Decimal(2) * Decimal(total))
-    margin = z * (
+    margin = decimal_z * (
         (probability * (Decimal(1) - probability) + squared_z / (Decimal(4) * total))
         / Decimal(total)
     ).sqrt()
@@ -295,6 +311,8 @@ def wilson_lower(successes: int, total: int, z: Decimal = _WILSON_Z_95) -> Decim
 
 def audit_theme(sample: Sequence[bool]) -> ThemeAudit:
     """Calculate auditable classification precision for one reviewed sample."""
+    if len(sample) > _MAX_AUDIT_SAMPLE_SIZE:
+        raise ValueError(f"audit sample must contain at most {_MAX_AUDIT_SAMPLE_SIZE} decisions")
     if any(type(decision) is not bool for decision in sample):
         raise ValueError("audit sample decisions must be booleans")
     sample_size = len(sample)
