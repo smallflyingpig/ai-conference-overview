@@ -128,9 +128,12 @@ def test_excluded_record_in_included_list_blocks_publication() -> None:
     report = validate_records(
         [paper("front-matter", "Proceedings", status=RecordStatus.EXCLUDED)],
         [],
-        expected_included=1,
+        expected_included=0,
     )
 
+    assert report.included_count == 0
+    assert report.excluded_count == 1
+    assert report.expected_count_matches is True
     assert report.status_mismatch_ids == ["front-matter"]
     assert report.publishable is False
     with pytest.raises(PublicationBlocked, match="status/list mismatch"):
@@ -139,11 +142,14 @@ def test_excluded_record_in_included_list_blocks_publication() -> None:
 
 def test_included_status_in_excluded_list_blocks_publication() -> None:
     report = validate_records(
-        [paper("p1", "Included")],
+        [],
         [paper("p2", "Wrong list", status=RecordStatus.PARTIAL)],
         expected_included=1,
     )
 
+    assert report.included_count == 1
+    assert report.excluded_count == 0
+    assert report.expected_count_matches is True
     assert report.status_mismatch_ids == ["p2"]
     assert report.publishable is False
 

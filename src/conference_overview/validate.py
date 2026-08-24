@@ -88,6 +88,12 @@ def validate_records(
     included_records = list(included)
     excluded_records = list(excluded)
     discovered_records = [*included_records, *excluded_records]
+    status_included_records = [
+        record for record in discovered_records if record.status in _INCLUDED_STATUSES
+    ]
+    status_excluded_records = [
+        record for record in discovered_records if record.status is RecordStatus.EXCLUDED
+    ]
 
     duplicate_source_ids = _duplicate_keys(discovered_records, lambda record: record.paper_id)
     duplicate_dois = _duplicate_keys(
@@ -121,8 +127,7 @@ def validate_records(
     ]
     current_ids = {
         record.paper_id
-        for record in included_records
-        if record.status in _INCLUDED_STATUSES
+        for record in status_included_records
     }
     previous_ids = (
         {
@@ -134,7 +139,7 @@ def validate_records(
         else None
     )
     expected_count_matches = (
-        expected_included is None or len(included_records) == expected_included
+        expected_included is None or len(status_included_records) == expected_included
     )
     publishable = (
         expected_count_matches
@@ -146,18 +151,22 @@ def validate_records(
 
     return ValidationReport(
         discovered_count=len(discovered_records),
-        included_count=len(included_records),
-        excluded_count=len(excluded_records),
+        included_count=len(status_included_records),
+        excluded_count=len(status_excluded_records),
         expected_included=expected_included,
         expected_count_matches=expected_count_matches,
         missing_abstract_ids=[
-            record.paper_id for record in included_records if not _present_text(record.abstract)
+            record.paper_id
+            for record in status_included_records
+            if not _present_text(record.abstract)
         ],
         missing_pdf_ids=[
-            record.paper_id for record in included_records if record.pdf_url is None
+            record.paper_id for record in status_included_records if record.pdf_url is None
         ],
         missing_doi_ids=[
-            record.paper_id for record in included_records if not _present_text(record.doi)
+            record.paper_id
+            for record in status_included_records
+            if not _present_text(record.doi)
         ],
         duplicate_source_ids=duplicate_source_ids,
         duplicate_dois=duplicate_dois,
