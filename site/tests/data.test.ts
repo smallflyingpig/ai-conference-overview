@@ -350,6 +350,26 @@ describe("parseOverview", () => {
     });
   });
 
+  it("loads the Unicode root-separator equivalent of producer-valid evidence", async () => {
+    const root = await mutatedTask9Release((artifact) => {
+      artifact.awards[0].evidence_url = "https://2026.aclweb.org。/awards/";
+      artifact.award_state.evidence_url = "https://2026.aclweb.org。/awards/";
+    });
+
+    await expect(loadOverview("ACL", 2026, root)).resolves.toMatchObject({
+      overview: { award_state: { status: "verified" } },
+    });
+  });
+
+  it("rejects producer-invalid evidence URLs with a double terminal dot", async () => {
+    const root = await mutatedTask9Release((artifact) => {
+      artifact.awards[0].evidence_url = "https://2026.aclweb.org../awards/";
+      artifact.award_state.evidence_url = "https://2026.aclweb.org../awards/";
+    });
+
+    await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/empty label|terminal dot/i);
+  });
+
   it("rejects a noncanonical producer evidence_host even for a valid URL", async () => {
     const root = await mutatedTask9Release((artifact) => {
       artifact.awards[0].verification.evidence_host = "2026.aclweb.org.";

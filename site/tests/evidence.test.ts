@@ -136,6 +136,11 @@ describe("evidence labels", () => {
 
   it("uses WHATWG hostname canonicalization for case, trailing dots, and IDN", () => {
     expect(canonicalUrlHostname("https://FAß.DE./awards")).toBe("xn--fa-hia.de");
+    expect(canonicalUrlHostname("https://example.com。/awards")).toBe("example.com");
+    expect(() => canonicalUrlHostname("https://example.com../awards"))
+      .toThrow(/empty label|terminal dot/i);
+    expect(canonicalUrlHostname("https://2026.aclweb.org。/awards"))
+      .toBe(awardHostPolicy.scopes["ACL/2026/long"][0]);
   });
 });
 

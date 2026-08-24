@@ -195,6 +195,27 @@ def test_uts46_sharp_s_domain_does_not_authorize_ascii_ss_lookalike() -> None:
     assert result.status is AwardStatus.NOT_VERIFIED
 
 
+@pytest.mark.parametrize("root_separator", [".", "。"])
+def test_single_terminal_root_separator_authorizes_official_host(
+    root_separator: str,
+) -> None:
+    result = validate_award(
+        award_record(evidence_url=f"https://example.com{root_separator}/awards"),
+        allowed_hosts={"example.com"},
+    )
+
+    assert result.status is AwardStatus.VERIFIED
+
+
+def test_double_terminal_dot_evidence_is_not_authorized() -> None:
+    result = validate_award(
+        award_record(evidence_url="https://example.com../awards"),
+        allowed_hosts={"example.com"},
+    )
+
+    assert result.status is AwardStatus.NOT_VERIFIED
+
+
 def test_verified_award_requires_evidence_at_construction() -> None:
     with pytest.raises(ValidationError, match="evidence"):
         AwardRecord(

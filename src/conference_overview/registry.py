@@ -18,7 +18,7 @@ def canonicalize_official_host(host: str) -> str:
     """Canonicalize one configured DNS host for policy comparison."""
     if not isinstance(host, str):
         raise TypeError("official award host must be text")
-    candidate = host.strip().rstrip(".")
+    candidate = host.strip()
     if not candidate:
         raise ValueError("official award host must not be blank")
     try:
@@ -30,6 +30,7 @@ def canonicalize_official_host(host: str) -> str:
         ).decode("ascii").lower()
     except idna.IDNAError as exc:
         raise ValueError("official award host must be valid IDNA") from exc
+    canonical = canonical.removesuffix(".")
     labels = canonical.split(".")
     if len(canonical) > 253 or any(_HOST_LABEL.fullmatch(label) is None for label in labels):
         raise ValueError("official award host must be a valid DNS hostname")

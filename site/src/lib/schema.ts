@@ -195,7 +195,12 @@ function hostCoveredByPolicy(host: string, allowedHosts: string[]): boolean {
 }
 
 export function canonicalUrlHostname(url: string): string {
-  return new URL(url).hostname.toLowerCase().replace(/\.$/, "");
+  const hostname = new URL(url).hostname.toLowerCase();
+  const canonical = hostname.endsWith(".") ? hostname.slice(0, -1) : hostname;
+  if (canonical.endsWith(".") || canonical.split(".").some((label) => label.length === 0)) {
+    throw new Error("hostname contains an empty label or more than one terminal dot");
+  }
+  return canonical;
 }
 
 const awardSchema = z.object({

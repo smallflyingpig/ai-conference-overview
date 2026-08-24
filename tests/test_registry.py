@@ -1,4 +1,10 @@
-from conference_overview.registry import canonicalize_official_hosts, normalize_request
+import pytest
+
+from conference_overview.registry import (
+    canonicalize_official_host,
+    canonicalize_official_hosts,
+    normalize_request,
+)
 
 
 def test_nips_alias_normalizes_to_neurips() -> None:
@@ -27,3 +33,13 @@ def test_official_hosts_use_nontransitional_uts46_idna2008() -> None:
         "xn--fa-hia.de",
     )
     assert canonicalize_official_hosts(["faß.de"]) != ("fass.de",)
+
+
+@pytest.mark.parametrize("host", ["example.com.", "example.com。"])
+def test_official_host_accepts_one_canonical_terminal_root_dot(host: str) -> None:
+    assert canonicalize_official_host(host) == "example.com"
+
+
+def test_official_host_rejects_double_terminal_dot_empty_label() -> None:
+    with pytest.raises(ValueError, match="IDNA|hostname"):
+        canonicalize_official_host("example.com..")
