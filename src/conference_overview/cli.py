@@ -168,7 +168,7 @@ def _load_validation(command: str, release_dir: Path) -> Mapping[str, object]:
     path = release_dir / "validation.json"
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         _exit(command, "invalid_input", f"invalid validation artifact: {exc}", 2)
     if not isinstance(payload, Mapping) or not isinstance(payload.get("publishable"), bool):
         _exit(

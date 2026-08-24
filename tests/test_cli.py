@@ -94,3 +94,16 @@ def test_invalid_release_document_returns_structured_exit_two(tmp_path: Path) ->
 
     assert result.exit_code == 2
     assert payload(result)["status"] == "invalid_input"
+
+
+def test_malformed_utf8_release_document_returns_structured_exit_two(
+    tmp_path: Path,
+) -> None:
+    release = tmp_path / "invalid-utf8"
+    release.mkdir()
+    (release / "validation.json").write_bytes(b"\xff\xfe")
+
+    result = runner.invoke(app, ["build-site", "--release-dir", str(release)])
+
+    assert result.exit_code == 2
+    assert payload(result)["status"] == "invalid_input"
