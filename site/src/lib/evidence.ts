@@ -167,6 +167,7 @@ export function buildAdvances(release: LoadedOverview) {
       .filter((advance) => advance.category === category.artifactKey)
       .map((advance) => ({
         title: advance.title,
+        audited: advance.advance_id.startsWith("audited-evidence-"),
         supportingPaperIds: advance.supporting_paper_ids,
         supportingPapers: advance.supporting_paper_ids.map((paperId) => ({
           paperId,
@@ -174,6 +175,11 @@ export function buildAdvances(release: LoadedOverview) {
           officialUrl: paperById.get(paperId)!.landing_url,
         })),
         claims: advance.claims,
+        researchQuestions: advance.research_questions ?? [],
+        coreProblem: advance.core_problem ?? null,
+        technicalChange: advance.technical_change ?? null,
+        evidenceBoundary: advance.evidence_boundary ?? null,
+        implications: advance.implications ?? [],
       })),
   }));
 }
@@ -196,6 +202,20 @@ export interface MethodologyView {
     rejectedCount: number;
     reviewedCount: number;
   };
+  classificationLineage: {
+    classifier: string;
+    method: string;
+    assignmentsSha256: string;
+    semanticBatchCount: number;
+    fullThemeStageCount: number;
+    auditSampleSha256: string;
+    auditDecisionSha256: string;
+    auditSampleMethod: string;
+    certificationSources: Array<{ source_file: string; sha256: string }>;
+    lowQueueSha256: string;
+    lowDecisionSha256: string;
+    lowComplete: boolean;
+  } | null;
   withheldThemes: {
     themes: string[];
     note: string;
@@ -260,6 +280,22 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
       pendingCount: release.overview.classification_review?.pending_low_confidence_ids.length ?? 0,
       rejectedCount: release.overview.classification_review?.rejected_low_confidence_ids.length ?? 0,
       reviewedCount: release.overview.classification_review?.reviewed_low_confidence_ids.length ?? 0,
+    },
+    classificationLineage: release.overview.classification_lineage == null ? null : {
+      classifier: release.overview.classification_lineage.classifier,
+      method: release.overview.classification_lineage.method,
+      assignmentsSha256: release.overview.classification_lineage.assignments_sha256,
+      semanticBatchCount: release.overview.classification_lineage.semantic_batches.length,
+      fullThemeStageCount: 1 + (Array.isArray(release.overview.classification_lineage.full_theme_review_stages?.prior_stages)
+        ? release.overview.classification_lineage.full_theme_review_stages.prior_stages.length
+        : 0),
+      auditSampleSha256: release.overview.classification_lineage.audit.sample_registry_sha256,
+      auditDecisionSha256: release.overview.classification_lineage.audit.decision_registry_sha256,
+      auditSampleMethod: release.overview.classification_lineage.audit.sample_method,
+      certificationSources: release.overview.classification_lineage.audit.certification_sources,
+      lowQueueSha256: release.overview.classification_lineage.low_confidence_review.queue_sha256,
+      lowDecisionSha256: release.overview.classification_lineage.low_confidence_review.decision_registry_sha256,
+      lowComplete: release.overview.classification_lineage.low_confidence_review.complete,
     },
     withheldThemes: {
       themes: release.overview.theme_disclosures.map((item) => `${item.theme} (${item.status})`),

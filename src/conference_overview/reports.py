@@ -116,6 +116,7 @@ class ReleaseBundle:
     sources: Sequence[SourceRef] = field(default_factory=tuple)
     excluded_records: Sequence[PaperRecord] = field(default_factory=tuple)
     previous_snapshot: Sequence[PaperRecord] | None = None
+    classification_lineage: Mapping[str, object] = field(default_factory=dict)
 
 
 def _json_bytes(payload: object) -> bytes:
@@ -287,6 +288,10 @@ def _provenance_payload(bundle: ReleaseBundle) -> dict[str, object]:
         "sources": [_source_payload(source) for source in ordered_sources],
         "taxonomy_version": bundle.taxonomy_version,
     }
+    if bundle.classification_lineage:
+        payload["classification_lineage"] = _decimal_payload(
+            bundle.classification_lineage
+        )
     if len(ordered_sources) == 1:
         source = ordered_sources[0]
         payload.update(
@@ -331,7 +336,7 @@ def _overview_payload(bundle: ReleaseBundle) -> dict[str, object]:
     pending_low_confidence_ids = sorted(
         set(low_confidence_ids) - set(reviewed_low_confidence_ids)
     )
-    return {
+    payload = {
         "assignments": assignments,
         "audits": audits,
         "build_metadata": {
@@ -380,6 +385,11 @@ def _overview_payload(bundle: ReleaseBundle) -> dict[str, object]:
         "paper_count": len(bundle.records),
         "taxonomy_version": bundle.taxonomy_version,
     }
+    if bundle.classification_lineage:
+        payload["classification_lineage"] = _decimal_payload(
+            bundle.classification_lineage
+        )
+    return payload
 
 
 def _validated_award_payload(

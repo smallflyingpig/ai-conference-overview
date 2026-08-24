@@ -782,7 +782,8 @@ def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
     assert provenance["pdfs"] == [
         {
             "byte_size": len(official_pdf),
-            "pages": 3,
+            "claimed_page_count": 3,
+            "page_count_verification_method": "unverified_source_note",
             "paper_id": "acl:2026.acl-long.1",
             "sha256": official_sha256,
             "source_url": "https://aclanthology.org/2026.acl-long.1.pdf",
@@ -826,17 +827,13 @@ def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
 
 
 @pytest.mark.parametrize(("decision", "rejected_count"), [("accept", 0), ("reject", 1)])
-def test_low_confidence_registry_accepts_an_unsampled_review_decision(
+def test_low_confidence_registry_accepts_an_independent_review_decision(
     tmp_path: Path, decision: str, rejected_count: int
 ) -> None:
     request = normalize_request("ACL", 2026, "long")
     collected_scope(tmp_path)
     assisted_classify_scope(request, tmp_path)
     classification = tmp_path / "data/classification/acl/2026-long"
-    samples_path = classification / "audit-samples.json"
-    samples = json.loads(samples_path.read_text())
-    samples["themes"]["Evaluation"] = []
-    samples_path.write_text(json.dumps(samples))
     queue_path = classification / "low-confidence-review-queue.json"
     decisions_path = classification / "low-confidence-decisions.json"
     decisions = json.loads(decisions_path.read_text())
@@ -853,7 +850,7 @@ def test_low_confidence_registry_accepts_an_unsampled_review_decision(
     summary = analyze_acl_scope(request, tmp_path)
     manifest = json.loads((classification / "classification-manifest.json").read_text())
 
-    assert summary["audit"]["candidate_counts"]["Evaluation"] == 0
+    assert summary["audit"]["candidate_counts"]["Evaluation"] == 1
     assert summary["audit"]["low_confidence_review"]["reviewed_count"] == 1
     assert summary["audit"]["low_confidence_review"]["pending_count"] == 0
     assert summary["audit"]["low_confidence_review"]["rejected_count"] == rejected_count
@@ -953,6 +950,72 @@ def test_preliminary_release_keeps_unaudited_themes_explicitly_experimental(
     assert "审计正确/样本" in note
     assert "实验性观察" in note
     assert "代表性论文" not in note
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        ("subset", "exact audit sample ID set"),
+        ("stale_hash", "sample hash mismatch"),
+        ("wrong_schema", "schema or status"),
+        ("wrong_status", "schema or status"),
+        ("extra_id", "exact audit sample ID set"),
+    ],
+)
+def test_completed_audit_registry_is_exactly_bound_to_authoritative_samples(
+    tmp_path: Path, mutation: str, message: str
+) -> None:
+    request = normalize_request("ACL", 2026, "long")
+    collected_scope(tmp_path)
+    assisted_classify_scope(request, tmp_path)
+    classification = tmp_path / "data/classification/acl/2026-long"
+    samples_path = classification / "audit-samples.json"
+    samples = json.loads(samples_path.read_text())
+    assignments_sha256 = hashlib.sha256(
+        (classification / "assignments.jsonl").read_bytes()
+    ).hexdigest()
+    decisions = {
+        "method": "independent complete semantic certification",
+        "provenance": {
+            "assignments_sha256": assignments_sha256,
+            "audit_samples_sha256": hashlib.sha256(samples_path.read_bytes()).hexdigest(),
+            "sources": [{"source_file": "fixture.json", "sha256": "a" * 64}],
+        },
+        "schema_version": "classification-audit-v1",
+        "status": "completed_semantic_review",
+        "taxonomy_version": "2026-08-24-v1",
+        "themes": {
+            theme: [
+                {
+                    "paper_id": row["paper_id"],
+                    "correct": True,
+                    "review_note": "Substantive independent title-and-abstract review note.",
+                }
+                for row in rows
+            ]
+            for theme, rows in samples["themes"].items()
+        },
+    }
+    if mutation == "subset":
+        decisions["themes"]["Evaluation"] = []
+    elif mutation == "stale_hash":
+        decisions["provenance"]["audit_samples_sha256"] = "b" * 64
+    elif mutation == "wrong_schema":
+        decisions["schema_version"] = "classification-audit-v0"
+    elif mutation == "wrong_status":
+        decisions["status"] = "completed_semantic_review_fragment"
+    elif mutation == "extra_id":
+        decisions["themes"]["Evaluation"].append(
+            {
+                "paper_id": "acl:2026.acl-long.9999",
+                "correct": True,
+                "review_note": "Substantive but non-sampled extra decision.",
+            }
+        )
+    (classification / "audit-decisions.json").write_text(json.dumps(decisions))
+
+    with pytest.raises(ValueError, match=message):
+        analyze_acl_scope(request, tmp_path)
 
 
 def test_build_site_resolves_relative_release_root_before_changing_cwd(

@@ -74,7 +74,7 @@ export function conferenceRoutes(releases: ConferenceRelease[]): ConferenceRoute
 
 function formatCoverage(available: number, denominator: number): string {
   if (denominator === 0) return "0 of 0 (not applicable)";
-  return `${available} of ${denominator} (${((available / denominator) * 100).toFixed(1)}%)`;
+  return `${available} of ${denominator} (${((available / denominator) * 100).toFixed(2)}%)`;
 }
 
 export function buildConferenceView(release: ConferenceRelease): ConferenceView {

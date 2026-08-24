@@ -680,7 +680,12 @@ def assisted_classify_scope(request: VenueRequest, root: Path) -> list[Assignmen
         review_status=review_status,
         queue_sha256=queue_sha256,
     )
-    _write_audit_samples(paths, included, assignments)
+    _write_audit_samples(
+        paths,
+        included,
+        assignments,
+        assignments_sha256=hashlib.sha256(assignment_bytes).hexdigest(),
+    )
     return assignments
 
 
@@ -787,7 +792,13 @@ def import_semantic_assignments_scope(
             "source_batches": source_batches,
         },
     )
-    _write_audit_samples(paths, included, assignments, reset_decisions=True)
+    _write_audit_samples(
+        paths,
+        included,
+        assignments,
+        assignments_sha256=assignments_sha256,
+        reset_decisions=True,
+    )
     return assignments
 
 
@@ -1103,7 +1114,13 @@ def import_full_theme_reviews_scope(
         low_confidence_review_provenance=low_provenance,
         full_theme_reviews=full_theme_reviews,
     )
-    _write_audit_samples(paths, records, corrected, reset_decisions=True)
+    _write_audit_samples(
+        paths,
+        records,
+        corrected,
+        assignments_sha256=assignments_sha256,
+        reset_decisions=True,
+    )
     return corrected
 
 
@@ -1319,7 +1336,13 @@ def apply_audit_corrections_scope(
         low_confidence_review_provenance=low_provenance,
         full_theme_reviews=full_theme_reviews,
     )
-    _write_audit_samples(paths, records, corrected, reset_decisions=True)
+    _write_audit_samples(
+        paths,
+        records,
+        corrected,
+        assignments_sha256=assignments_sha256,
+        reset_decisions=True,
+    )
     return corrected
 
 
@@ -1521,7 +1544,8 @@ def import_award_deep_reads_scope(
                 )
             verified_pdfs[paper_id] = {
                 "byte_size": len(pdf_bytes),
-                "pages": claimed["pages"],
+                "claimed_page_count": claimed["pages"],
+                "page_count_verification_method": "unverified_source_note",
                 "paper_id": paper_id,
                 "sha256": actual_sha256,
                 "source_url": source_url,
@@ -1762,6 +1786,7 @@ def _write_audit_samples(
     records: Sequence[PaperRecord],
     assignments: Sequence[Assignment],
     *,
+    assignments_sha256: str,
     reset_decisions: bool = False,
 ) -> None:
     records_by_id = {record.paper_id: record for record in records}
@@ -1792,13 +1817,16 @@ def _write_audit_samples(
             }
             for item in selected
         ]
+    sample_path = paths.classification / "audit-samples.json"
     _atomic_write(
-        paths.classification / "audit-samples.json",
+        sample_path,
         _json_bytes(
             {
+                "assignments_sha256": assignments_sha256,
                 "sampling": (
                     "deterministic confidence-stratified sample of up to 50 per primary theme"
                 ),
+                "schema_version": "classification-audit-samples-v1",
                 "taxonomy_version": _TAXONOMY_VERSION,
                 "themes": samples,
             }
@@ -1814,6 +1842,13 @@ def _write_audit_samples(
                         "no completed semantic reviews; candidate labels remain "
                         "experimental"
                     ),
+                    "provenance": {
+                        "assignments_sha256": assignments_sha256,
+                        "audit_samples_sha256": hashlib.sha256(
+                            sample_path.read_bytes()
+                        ).hexdigest(),
+                        "sources": [],
+                    },
                     "schema_version": "classification-audit-v1",
                     "status": "pending_semantic_review",
                     "taxonomy_version": _TAXONOMY_VERSION,
@@ -1829,17 +1864,31 @@ def _load_theme_audits(
     low_confidence_review: LowConfidenceReviewStatus,
 ) -> tuple[dict[str, ThemeAudit], list[ThemeDisclosure], dict[str, object]]:
     themes = sorted({assignment.primary_topic for assignment in assignments})
+    sample_path = paths.classification / "audit-samples.json"
+    assignment_path = paths.classification / "assignments.jsonl"
+    sample_bytes = sample_path.read_bytes()
+    assignments_sha256 = hashlib.sha256(assignment_path.read_bytes()).hexdigest()
+    sample_sha256 = hashlib.sha256(sample_bytes).hexdigest()
     try:
-        sample_registry = json.loads(
-            (paths.classification / "audit-samples.json").read_text(encoding="utf-8")
-        )
+        sample_registry = json.loads(sample_bytes)
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise ValueError("invalid audit sample registry") from exc
     sample_themes = (
         sample_registry.get("themes") if isinstance(sample_registry, Mapping) else None
     )
-    if not isinstance(sample_themes, Mapping):
+    if (
+        not isinstance(sample_registry, Mapping)
+        or sample_registry.get("schema_version") != "classification-audit-samples-v1"
+        or sample_registry.get("taxonomy_version") != _TAXONOMY_VERSION
+        or sample_registry.get("assignments_sha256") != assignments_sha256
+        or not isinstance(sample_themes, Mapping)
+    ):
         raise TypeError("audit sample registry must contain theme candidates")
+    population_counts: dict[str, int] = {}
+    for assignment in assignments:
+        population_counts[assignment.primary_topic] = (
+            population_counts.get(assignment.primary_topic, 0) + 1
+        )
     candidate_ids: dict[str, set[str]] = {}
     candidate_counts: dict[str, int] = {}
     for theme in themes:
@@ -1851,7 +1900,10 @@ def _load_theme_audits(
             for item in candidates
             if isinstance(item, Mapping) and isinstance(item.get("paper_id"), str)
         }
-        if len(ids) != len(candidates) or len(candidates) > 50:
+        if (
+            len(ids) != len(candidates)
+            or len(candidates) != min(50, population_counts[theme])
+        ):
             raise ValueError(f"invalid audit sample candidates for {theme}")
         candidate_ids[theme] = ids
         candidate_counts[theme] = len(ids)
@@ -1863,11 +1915,23 @@ def _load_theme_audits(
             decisions = json.loads(decisions_path.read_text(encoding="utf-8"))
         except (OSError, UnicodeError, json.JSONDecodeError) as exc:
             raise ValueError("invalid audit decision registry") from exc
+        if not isinstance(decisions, Mapping):
+            raise ValueError("audit decision registry must be an object")
+        status = decisions.get("status")
         if (
-            not isinstance(decisions, Mapping)
-            or decisions.get("taxonomy_version") != _TAXONOMY_VERSION
+            decisions.get("schema_version") != "classification-audit-v1"
+            or status not in {"pending_semantic_review", "completed_semantic_review"}
         ):
+            raise ValueError("audit decision schema or status mismatch")
+        if decisions.get("taxonomy_version") != _TAXONOMY_VERSION:
             raise ValueError("audit decision taxonomy version mismatch")
+        provenance = decisions.get("provenance")
+        if not isinstance(provenance, Mapping):
+            raise ValueError("audit decision provenance is required")
+        if provenance.get("audit_samples_sha256") != sample_sha256:
+            raise ValueError("audit decision sample hash mismatch")
+        if provenance.get("assignments_sha256") != assignments_sha256:
+            raise ValueError("audit decision assignment hash mismatch")
         candidate_themes = decisions.get("themes")
         if not isinstance(candidate_themes, Mapping):
             raise ValueError("audit decision registry must contain theme reviews")
@@ -1875,6 +1939,25 @@ def _load_theme_audits(
         audit_method = str(
             decisions.get("method") or "explicit semantic review of title and abstract"
         )
+        if set(raw_themes) != set(themes):
+            raise ValueError("audit decisions must cover the exact theme set")
+        for theme in themes:
+            raw_reviews = raw_themes.get(theme)
+            if not isinstance(raw_reviews, list):
+                raise TypeError(f"audit reviews for {theme} must be a list")
+            decision_ids = {
+                review.get("paper_id")
+                for review in raw_reviews
+                if isinstance(review, Mapping)
+                and isinstance(review.get("paper_id"), str)
+            }
+            if status == "completed_semantic_review":
+                if len(decision_ids) != len(raw_reviews) or decision_ids != candidate_ids[theme]:
+                    raise ValueError(
+                        f"completed audit must match exact audit sample ID set for {theme}"
+                    )
+            elif raw_reviews:
+                raise ValueError("pending audit registry must not contain decisions")
 
     ids_by_theme: dict[str, set[str]] = {}
     low_confidence_ids_by_theme: dict[str, set[str]] = {}
@@ -1953,6 +2036,11 @@ def _load_theme_audits(
         disclosures,
         {
             "candidate_counts": candidate_counts,
+            "assignments_sha256": assignments_sha256,
+            "audit_decisions_sha256": hashlib.sha256(
+                decisions_path.read_bytes()
+            ).hexdigest(),
+            "audit_samples_sha256": sample_sha256,
             "method": audit_method,
             "low_confidence_review": {
                 "pending_count": len(low_confidence_review.pending_ids),
@@ -1988,6 +2076,49 @@ _ADVANCE_TOPICS: dict[AdvanceCategory, tuple[str, ...]] = {
     AdvanceCategory.EVALUATION_TRUST: ("Evaluation", "Trustworthiness"),
 }
 
+_CURATED_ADVANCES: dict[AdvanceCategory, dict[str, object]] = {
+    AdvanceCategory.TEXT_LLMS: {
+        "paper_ids": ("acl:2026.acl-long.1111", "acl:2026.acl-long.1176", "acl:2026.acl-long.1366", "acl:2026.acl-long.154"),
+        "questions": ("How should text models condition pretraining, extend context, specialize without catastrophic loss, and diagnose internal mechanisms?",),
+        "problem": "Text-model progress couples corpus conditioning, long-context efficiency, staged adaptation, and mechanism-level diagnosis.",
+        "change": "KoCo adds structured knowledge coordinates to pretraining; LCA jointly compresses KV state and sparse computation; Tower+ stages continued pretraining, supervised, preference, and reinforcement learning; multi-component causal tracing diagnoses interacting internal pathways.",
+        "boundary": "The linked abstracts report distinct model families and evaluation settings; this lane is a structured comparison, not evidence that one recipe dominates across settings.",
+        "implication": "Evaluate pretraining context, adaptation stages, serving cost, and causal diagnostics together rather than treating text-model quality as one scalar.",
+    },
+    AdvanceCategory.MULTIMODAL_MODELS: {
+        "paper_ids": ("acl:2026.acl-long.1490", "acl:2026.acl-long.1954", "acl:2026.acl-long.2042", "acl:2026.acl-long.2218", "acl:2026.acl-long.1162", "acl:2026.acl-long.1178"),
+        "questions": ("How can multimodal systems preserve composition, streaming state, retrieval structure, evaluator validity, and safety across modalities?",),
+        "problem": "Multimodal systems must align compositional concepts, streaming interaction, structured memory, evaluation reliability, and joint-modal safety.",
+        "change": "MACCO models masked compositional concepts; AV-Dialog integrates streaming audio-visual dialogue; Response-G1 uses scene graphs for proactive response; MegaRAG builds cross-modal knowledge-graph retrieval; MM-JudgeBias and CrossGuard expose judge bias and implicit joint-modal attacks.",
+        "boundary": "The papers cover different modalities, tasks, and threat models, so their reported gains cannot be pooled into a common effect size.",
+        "implication": "Multimodal evaluation should jointly test grounding, temporal state, retrieval structure, judge robustness, and cross-modal attack composition.",
+    },
+    AdvanceCategory.REASONING_AGENTS: {
+        "paper_ids": ("acl:2026.acl-long.1", "acl:2026.acl-long.1027", "acl:2026.acl-long.1039", "acl:2026.acl-long.1049"),
+        "questions": ("How should agents decompose planning, tool use, memory routing, browser state, policy choice, and termination?",),
+        "problem": "Agent systems must coordinate planner-controller decomposition with external tools, persistent state, branching strategies, and termination decisions.",
+        "change": "OctoTools standardizes tool cards and planner-executor roles; MoEC routes subgoals through expert memory; SPIO explores and selects multiple data-science plans; NestBrowse separates browser actions from higher-level information-seeking control.",
+        "boundary": "Reasoning and Agents failed the final theme precision gate, so these papers are experimental observations and cannot support a headline prevalence or trend claim.",
+        "implication": "Agent evaluation should separate plan quality, tool-state transitions, policy routing, recovery, and stopping behavior rather than report only final-task success.",
+    },
+    AdvanceCategory.DATA_TRAINING: {
+        "paper_ids": ("acl:2026.acl-long.1111", "acl:2026.acl-long.1366", "acl:2026.acl-long.1110", "acl:2026.acl-long.1321", "acl:2026.acl-long.1436", "acl:2026.acl-long.1653"),
+        "questions": ("How do data conditioning, PEFT geometry, RLVR rollout distributions, critique loops, entropy weighting, and iterative re-estimation interact?",),
+        "problem": "Training quality depends on how corpora are conditioned, parameter subspaces are selected, rollouts are induced, and evidence is re-estimated across iterations.",
+        "change": "KoCo and Tower+ alter pretraining/adaptation stages; GeoRA aligns PEFT with RLVR geometry; CURE uses critique-driven self-improvement; STEER weights policy updates through estimated entropy change; GISP repeatedly re-estimates global pruning importance.",
+        "boundary": "The accepted-paper corpus is observational metadata plus paper-reported experiments; it does not by itself establish causal gains from any general data-quality policy.",
+        "implication": "Data strategy experiments should log induced rollout distributions and iterative model-data feedback, not only static source counts or final benchmark deltas.",
+    },
+    AdvanceCategory.EVALUATION_TRUST: {
+        "paper_ids": ("acl:2026.acl-long.1034", "acl:2026.acl-long.1162", "acl:2026.acl-long.1178", "acl:2026.acl-long.1186", "acl:2026.acl-long.1218", "acl:2026.acl-long.1301", "acl:2026.acl-long.1948", "acl:2026.acl-long.1886", "acl:2026.acl-long.689"),
+        "questions": ("How can evaluation remain valid under contamination, dynamic distributions, judge bias, multimodal attacks, memory effects, and repeated trials?",),
+        "problem": "Static accuracy can conceal contamination, evaluator bias, multimodal jailbreaks, implicit memory effects, and inconsistent behavior across repeated realistic trials.",
+        "change": "Rt-LRM, MM-JudgeBias, CrossGuard, MCV SafetyBench, and DyReMe stress reasoning, judges, attacks, and dynamic diagnosis; ImplicitMemBench, VeriTaS, and CAR-bench add passive memory, refreshed fact-checking, and repeated stateful reliability evidence.",
+        "boundary": "Benchmark construction choices and model coverage differ; numeric results are available only in the linked paper or validated award DeepRead locators and are not recombined here.",
+        "implication": "Evaluation programs should refresh cases, counterbalance controls, repeat stateful trials, and measure evaluator reliability alongside model accuracy and safety.",
+    },
+}
+
 
 def _preliminary_examples(
     records: Sequence[PaperRecord],
@@ -1997,7 +2128,7 @@ def _preliminary_examples(
     records_by_id = {record.paper_id: record for record in records}
     advances: list[AdvanceRecord] = []
     for category, topics in _ADVANCE_TOPICS.items():
-        candidates = sorted(
+        fallback_candidates = sorted(
             (
                 assignment
                 for assignment in assignments
@@ -2005,6 +2136,20 @@ def _preliminary_examples(
             ),
             key=lambda item: (-item.confidence, item.paper_id),
         )[:5]
+        curated = _CURATED_ADVANCES[category]
+        curated_ids = tuple(str(item) for item in curated["paper_ids"])
+        candidates = [
+            next(
+                assignment
+                for assignment in assignments
+                if assignment.paper_id == paper_id
+            )
+            for paper_id in curated_ids
+            if paper_id in records_by_id
+            and any(item.paper_id == paper_id for item in assignments)
+        ]
+        if len(candidates) != len(curated_ids):
+            candidates = fallback_candidates
         if not candidates:
             continue
         sources = [records_by_id[item.paper_id].landing_url for item in candidates]
@@ -2015,42 +2160,32 @@ def _preliminary_examples(
             and audits[topic].wilson_lower_95 >= Decimal("0.80")
             for topic in topics
         )
-        first = records_by_id[candidates[0].paper_id]
         if audited:
+            locator = "Official ACL Anthology Abstract for every linked supporting paper"
             claims = (
                 EvidenceClaim(
                     claim=(
-                        f"{first.title} reports the method and findings summarized in "
-                        "its official abstract; any quantitative result remains a "
-                        "paper-reported claim rather than an independent replication."
+                        str(curated["change"])
                     ),
                     evidence_type=EvidenceType.PAPER_REPORTED,
-                    source_urls=[first.landing_url],
-                    locator=f"ACL Anthology abstract: {first.paper_id.removeprefix('acl:')}",
+                    source_urls=sources,
+                    locator=locator,
                 ),
                 EvidenceClaim(
-                    claim=(
-                        "These named papers form a bounded cross-paper synthesis within "
-                        "audit-passed primary themes; the set illustrates the lane but "
-                        "does not claim semantic representativeness or temporal trend."
-                    ),
+                    claim=str(curated["problem"]),
                     evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
                     source_urls=sources,
-                    locator="official ACL titles and abstracts for the linked papers",
+                    locator=locator,
                 ),
                 EvidenceClaim(
-                    claim=(
-                        "A practical implication is to evaluate this lane as a coupled "
-                        "data, method, and measurement system; this interpretation goes "
-                        "beyond any single paper's reported result."
-                    ),
+                    claim=str(curated["implication"]),
                     evidence_type=EvidenceType.INFERENCE,
                     source_urls=sources,
-                    locator="inference from the linked ACL paper abstracts",
+                    locator=locator,
                 ),
             )
             advance_id = f"audited-evidence-{category.value}"
-            title = f"Audited {category.value.replace('_', ' ')} evidence examples"
+            title = f"Evidence synthesis: {category.value.replace('_', ' ')}"
         else:
             claims = (
                 EvidenceClaim(
@@ -2066,7 +2201,7 @@ def _preliminary_examples(
                 ),
             )
             advance_id = f"preliminary-examples-{category.value}"
-            title = f"Preliminary {category.value.replace('_', ' ')} examples"
+            title = f"Experimental evidence: {category.value.replace('_', ' ')}"
         advances.append(
             AdvanceRecord(
                 advance_id=advance_id,
@@ -2074,6 +2209,33 @@ def _preliminary_examples(
                 category=category,
                 supporting_paper_ids=tuple(item.paper_id for item in candidates),
                 claims=claims,
+                research_questions=tuple(str(item) for item in curated["questions"]),
+                core_problem=EvidenceClaim(
+                    claim=str(curated["problem"]),
+                    evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
+                    source_urls=sources,
+                    locator="Official ACL Anthology Abstract for every linked supporting paper",
+                ),
+                technical_change=EvidenceClaim(
+                    claim=str(curated["change"]),
+                    evidence_type=EvidenceType.PAPER_REPORTED,
+                    source_urls=sources,
+                    locator="Official ACL Anthology Abstract for every linked supporting paper",
+                ),
+                evidence_boundary=EvidenceClaim(
+                    claim=str(curated["boundary"]),
+                    evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
+                    source_urls=sources,
+                    locator="Official ACL Anthology Abstract for every linked supporting paper",
+                ),
+                implications=(
+                    EvidenceClaim(
+                        claim=str(curated["implication"]),
+                        evidence_type=EvidenceType.INFERENCE,
+                        source_urls=sources,
+                        locator="Inference from the linked ACL paper abstracts",
+                    ),
+                ),
             )
         )
     return advances
@@ -2229,8 +2391,19 @@ def _overview_note(
         ),
         (
             "限制：taxonomy 是分析框架而非 ACL 官方 track；一篇论文只能有一个 primary topic，"
-            "会压缩跨主题贡献；摘要审计不替代全文复核；样本较小的主题受 Wilson 下界约束。"
+            "会压缩跨主题贡献，因此 primary-assignment share 不等于研究问题的真实 prevalence；"
+            "摘要审计不替代全文复核。该审计是确定性的置信度分层 precision 检查，不估计 recall，"
+            "也不是随机总体抽样置信区间；样本较小的主题仍受 Wilson 下界约束。"
         ),
+        "",
+        "## 主要研究问题",
+        "",
+        "1. 测量效度与动态可靠性：评测如何抵抗污染、分布漂移、judge bias 与重复试验不一致？",
+        "2. 高效适配与推理：如何同时控制长上下文 KV/compute、PEFT、持续训练与推理成本？",
+        "3. 真实分布下的安全与公平：如何覆盖多模态联合攻击、过度拒绝、群体差异和现实混杂？",
+        "4. Grounding、retrieval 与 memory：外部证据、结构化检索和长期状态如何共同约束生成？",
+        "5. 多模态组合与流式交互：模型如何表示组合关系、时序证据、说话人和响应时机？",
+        "6. Agent 分解：如何分别评估 tool、state、policy、planner/controller 和 termination？",
         "",
         "## 十主题单年分布与最终审计",
         "",
@@ -2256,17 +2429,28 @@ def _overview_note(
             f"{audit.correct_count}/{audit.sample_size} | {audit.observed_precision:.4f} | "
             f"{audit.wilson_lower_95:.6f} | {'通过' if passes else '实验性 / withheld'} |"
         )
+    passed_themes = [
+        theme
+        for theme, audit in audits.items()
+        if audit.sample_size > 0
+        and audit.observed_precision >= Decimal("0.90")
+        and audit.wilson_lower_95 >= Decimal("0.80")
+    ]
+    withheld_themes = [theme for theme in sorted(counts) if theme not in passed_themes]
+    withheld_summary = "；".join(
+        f"{theme}（{audits[theme].correct_count}/{audits[theme].sample_size}，"
+        f"{audits[theme].observed_precision:.4f}，Wilson {audits[theme].wilson_lower_95:.6f}）"
+        for theme in withheld_themes
+    )
     lines.extend(
         [
             "",
-            "## 可进入 headline 的八个主题",
+            f"## 可进入 headline 的 {len(passed_themes)} 个主题",
             "",
             (
-                "只有通过双门槛的 Applications、Data and Retrieval、Evaluation、Foundation "
-                "Models、Learning and Optimization、Multimodal Models、NLP/CV Core Tasks "
-                "和 Trustworthiness 可用于正式热点陈述。Reasoning and Agents（44/50，"
-                "0.8800，Wilson 0.761952）与 Multilingual and Inclusive NLP（12/14，"
-                "0.8571，Wilson 0.600586）只保留为实验性观察，不进入 headline。"
+                f"只有通过双门槛的 {'、'.join(sorted(passed_themes))} 可用于正式热点陈述。"
+                f"{withheld_summary}只保留为实验性观察，不进入 headline。定位："
+                "`data/classification/acl/2026-long/audit-decisions.json`。"
             ),
             "",
             "## 五条 advances 证据链",
@@ -2282,10 +2466,28 @@ def _overview_note(
                 "current primary-topic assignments."
             )
         else:
-            first = records_by_id[advance.supporting_paper_ids[0]]
-            state = "已审计综合" if advance.advance_id.startswith("audited-") else "实验性观察"
-            lines.append(f"- **{category.value}（{state}）**：[{first.title}]({first.landing_url})。")
-            for claim in advance.claims:
+            state = (
+                "主题门槛通过，代表论文另行语义复核"
+                if advance.advance_id.startswith("audited-")
+                else "实验性观察，不构成 headline trend"
+            )
+            lines.append(f"- **{category.value}（{state}）**")
+            for question in advance.research_questions:
+                lines.append(f"  - 研究问题：{question}")
+            for paper_id in advance.supporting_paper_ids:
+                paper = records_by_id[paper_id]
+                lines.append(f"  - 支撑论文：[{paper.title}]({paper.landing_url})（定位：Abstract）。")
+            typed_claims = [
+                claim
+                for claim in (
+                    advance.core_problem,
+                    advance.technical_change,
+                    advance.evidence_boundary,
+                    *advance.implications,
+                )
+                if claim is not None
+            ]
+            for claim in typed_claims:
                 label = {
                     EvidenceType.PAPER_REPORTED: "论文明确披露",
                     EvidenceType.CROSS_PAPER_SYNTHESIS: "跨论文综合",
@@ -2452,6 +2654,50 @@ def analyze_acl_scope(
             locator="ACL 2026 Volume 1 long-paper corpus manifest",
         ),
     )
+    audit_decisions_payload = json.loads(
+        (paths.classification / "audit-decisions.json").read_text(encoding="utf-8")
+    )
+    audit_provenance = audit_decisions_payload.get("provenance", {})
+    classification_lineage = {
+        "assignments_sha256": assignments_sha256,
+        "audit": {
+            "certification_sources": (
+                audit_provenance.get("sources", [])
+                if isinstance(audit_provenance, Mapping)
+                else []
+            ),
+            "decision_registry_sha256": audit_metadata["audit_decisions_sha256"],
+            "sample_counts": audit_metadata["candidate_counts"],
+            "sample_method": (
+                "deterministic confidence-stratified precision audit; up to 50 "
+                "per primary theme; not a recall estimate or random-population CI"
+            ),
+            "sample_registry_sha256": audit_metadata["audit_samples_sha256"],
+        },
+        "classifier": classifier,
+        "full_theme_review_stages": full_theme_reviews,
+        "low_confidence_review": {
+            "complete": not low_confidence_review.pending_ids,
+            "decision_registry_sha256": hashlib.sha256(
+                paths.low_confidence_decisions.read_bytes()
+            ).hexdigest(),
+            "queue_sha256": queue_sha256,
+            "reviewed_count": len(low_confidence_review.reviewed_ids),
+            "total_count": len(low_confidence_review.queued_ids),
+        },
+        "method": (
+            semantic_labeling.get("method")
+            if isinstance(semantic_labeling, Mapping)
+            else "deterministic_assisted_proposals"
+        ),
+        "schema_version": "classification-lineage-v1",
+        "semantic_batches": (
+            semantic_labeling.get("source_batches", [])
+            if isinstance(semantic_labeling, Mapping)
+            else []
+        ),
+        "taxonomy_version": _TAXONOMY_VERSION,
+    }
     bundle = ReleaseBundle(
         records=records,
         excluded_records=excluded,
@@ -2470,6 +2716,7 @@ def analyze_acl_scope(
         theme_disclosures=disclosures,
         claims=claims,
         sources=sources,
+        classification_lineage=classification_lineage,
     )
     summary: dict[str, object] = {
         "advance_lane_count": len(advances),

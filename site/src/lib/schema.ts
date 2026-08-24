@@ -173,6 +173,40 @@ const classificationReviewSchema = z.object({
   reviewed_low_confidence_ids: z.array(nonBlankSchema),
 });
 
+const classificationLineageSchema = z.object({
+  schema_version: z.literal("classification-lineage-v1"),
+  taxonomy_version: nonBlankSchema,
+  classifier: nonBlankSchema,
+  method: nonBlankSchema,
+  assignments_sha256: sha256Schema,
+  semantic_batches: z.array(z.object({
+    source_file: nonBlankSchema,
+    sha256: sha256Schema,
+    partition: z.number().int().min(0).max(7),
+    paper_count: z.number().int().nonnegative(),
+    partition_rule: nonBlankSchema,
+  })).length(8).refine((rows) => new Set(rows.map((row) => row.partition)).size === 8),
+  full_theme_review_stages: z.record(z.unknown()).nullable(),
+  audit: z.object({
+    sample_registry_sha256: sha256Schema,
+    decision_registry_sha256: sha256Schema,
+    sample_method: nonBlankSchema,
+    sample_counts: z.record(z.number().int().positive().max(50)),
+    certification_sources: z.array(z.object({
+      source_file: nonBlankSchema,
+      sha256: sha256Schema,
+      decision_count: z.number().int().positive().optional(),
+    }).passthrough()).min(1),
+  }),
+  low_confidence_review: z.object({
+    queue_sha256: sha256Schema,
+    decision_registry_sha256: sha256Schema,
+    complete: z.boolean(),
+    reviewed_count: z.number().int().nonnegative(),
+    total_count: z.number().int().nonnegative(),
+  }),
+});
+
 const awardVerificationSchema = z.object({
   allowed_hosts: z.array(nonBlankSchema).refine((hosts) => new Set(hosts).size === hosts.length),
   evidence_host: nonBlankSchema.nullable(),
@@ -334,6 +368,11 @@ const advanceArtifactSchema = z.object({
   category: z.enum(["text_llms", "multimodal_models", "reasoning_agents", "data_training", "evaluation_trust"]),
   supporting_paper_ids: z.array(nonBlankSchema).min(1).refine((ids) => new Set(ids).size === ids.length),
   claims: z.array(evidenceClaimSchema).min(1),
+  research_questions: z.array(nonBlankSchema).min(1).optional(),
+  core_problem: evidenceClaimSchema.nullable().optional(),
+  technical_change: evidenceClaimSchema.nullable().optional(),
+  evidence_boundary: evidenceClaimSchema.nullable().optional(),
+  implications: z.array(evidenceClaimSchema).optional(),
 });
 const themeDisclosureSchema = z.object({
   theme: nonBlankSchema,
@@ -522,6 +561,7 @@ export const overviewArtifactSchema = z
       schema_version: z.literal("release-build-v1"),
     }),
     classification_review: classificationReviewSchema.optional(),
+    classification_lineage: classificationLineageSchema.optional(),
     awards: z.array(awardSchema),
     award_state: awardStateSchema,
     award_deep_reads: z.array(deepReadArtifactSchema),
@@ -786,6 +826,7 @@ export const provenanceArtifactSchema = z
     source_url: urlSchema.optional(),
     source_sha256: sha256Schema.optional(),
     source_retrieved_at: z.string().datetime({ offset: true }).optional(),
+    classification_lineage: classificationLineageSchema.optional(),
   })
   .superRefine((value, context) => {
     const aliases = [value.source_url, value.source_sha256, value.source_retrieved_at];

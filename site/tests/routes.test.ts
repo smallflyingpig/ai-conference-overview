@@ -119,7 +119,7 @@ describe("distribution view", () => {
     expect(view.denominatorLabel).toBe("2 included long papers");
     expect(view.includedCount).toBe(2);
     expect(view.excludedCount).toBe(0);
-    expect(view.abstractCoverageLabel).toBe("2 of 2 (100.0%)");
+    expect(view.abstractCoverageLabel).toBe("2 of 2 (100.00%)");
   });
 
   it("exposes failed audit themes as experimental instead of audited", () => {

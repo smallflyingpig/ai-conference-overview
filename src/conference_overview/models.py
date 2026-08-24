@@ -69,6 +69,11 @@ class AdvanceRecord(BaseModel):
     category: AdvanceCategory
     supporting_paper_ids: tuple[str, ...] = Field(min_length=1)
     claims: tuple[EvidenceClaim, ...] = Field(min_length=1)
+    research_questions: tuple[str, ...] = ()
+    core_problem: EvidenceClaim | None = None
+    technical_change: EvidenceClaim | None = None
+    evidence_boundary: EvidenceClaim | None = None
+    implications: tuple[EvidenceClaim, ...] = ()
 
     @field_validator("advance_id", "title")
     @classmethod
