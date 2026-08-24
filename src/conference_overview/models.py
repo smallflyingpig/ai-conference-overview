@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 
 class RecordStatus(str, Enum):
@@ -30,6 +30,24 @@ class EvidenceClaim(BaseModel):
     evidence_type: EvidenceType
     source_urls: list[HttpUrl] = Field(min_length=1)
     locator: str | None = None
+
+    @field_validator("claim")
+    @classmethod
+    def normalize_claim(cls, value: str) -> str:
+        normalized = value.strip()
+        if not normalized:
+            raise ValueError("claim must not be blank")
+        return normalized
+
+    @field_validator("locator")
+    @classmethod
+    def normalize_locator(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        normalized = value.strip()
+        if not normalized:
+            raise ValueError("locator must not be blank")
+        return normalized
 
 
 class PaperRecord(BaseModel):

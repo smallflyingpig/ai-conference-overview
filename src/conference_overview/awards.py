@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from decimal import Decimal, InvalidOperation
 from enum import Enum
 from urllib.parse import urlparse
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, field_validator, model_validator
 
 from conference_overview.models import EvidenceClaim, EvidenceType
 
@@ -27,13 +28,44 @@ class AwardRecord(BaseModel):
     evidence_url: HttpUrl | None = None
     official_citation: str | None = None
 
+    @field_validator("paper_id", "award_type")
+    @classmethod
+    def normalize_required_text(cls, value: str) -> str:
+        return _normalized_required_text(value)
+
+    @model_validator(mode="after")
+    def verified_award_requires_evidence(self) -> AwardRecord:
+        if self.status is AwardStatus.VERIFIED and self.evidence_url is None:
+            raise ValueError("verified award requires official evidence")
+        return self
+
 
 class ResultClaim(EvidenceClaim):
     """A paper-reported numerical result with its experimental context."""
 
     metric: str
-    value: str | int | float
+    value: Decimal
     evaluation_setting: str
+
+    @field_validator("metric", "evaluation_setting")
+    @classmethod
+    def normalize_required_text(cls, value: str) -> str:
+        return _normalized_required_text(value)
+
+    @field_validator("value", mode="before")
+    @classmethod
+    def normalize_finite_value(cls, value: object) -> Decimal:
+        if isinstance(value, bool) or not isinstance(value, (Decimal, float, int, str)):
+            raise ValueError(  # noqa: TRY004 - Pydantic converts this to ValidationError.
+                "numeric result value must be a finite number"
+            )
+        try:
+            normalized = Decimal(value.strip() if isinstance(value, str) else str(value))
+        except (InvalidOperation, ValueError):
+            raise ValueError("numeric result value must be a finite number") from None
+        if not normalized.is_finite():
+            raise ValueError("numeric result value must be a finite number")
+        return normalized
 
 
 class MethodNode(BaseModel):
@@ -43,6 +75,13 @@ class MethodNode(BaseModel):
     label: str
     paper_section: str | None = None
 
+    @field_validator("identifier", "label", "paper_section")
+    @classmethod
+    def normalize_required_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        return _normalized_required_text(value)
+
 
 class MethodEdge(BaseModel):
     """A directed disclosed data flow between two method components."""
@@ -50,6 +89,13 @@ class MethodEdge(BaseModel):
     source: str
     target: str
     data_flow_rationale: str | None = None
+
+    @field_validator("source", "target", "data_flow_rationale")
+    @classmethod
+    def normalize_required_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        return _normalized_required_text(value)
 
 
 class MethodDiagram(BaseModel):
@@ -67,6 +113,11 @@ class DeepRead(BaseModel):
     why_it_matters: list[EvidenceClaim] = Field(default_factory=list)
     method_diagram: MethodDiagram | None = None
 
+    @field_validator("paper_id")
+    @classmethod
+    def normalize_required_text(cls, value: str) -> str:
+        return _normalized_required_text(value)
+
 
 _WHY_IT_MATTERS_EVIDENCE_TYPES = frozenset(
     {
@@ -79,6 +130,13 @@ _WHY_IT_MATTERS_EVIDENCE_TYPES = frozenset(
 
 def _has_text(value: str | None) -> bool:
     return value is not None and bool(value.strip())
+
+
+def _normalized_required_text(value: str) -> str:
+    normalized = value.strip()
+    if not normalized:
+        raise ValueError("required text must not be blank")
+    return normalized
 
 
 def _is_official_host(url: HttpUrl, allowed_hosts: set[str]) -> bool:
@@ -99,13 +157,13 @@ def _is_official_host(url: HttpUrl, allowed_hosts: set[str]) -> bool:
 
 def validate_award(record: AwardRecord, *, allowed_hosts: set[str]) -> AwardRecord:
     """Derive a safe award status using only configured official source hosts."""
+    if record.status is not AwardStatus.VERIFIED:
+        return record
     if record.evidence_url is None:
-        status = AwardStatus.NOT_ANNOUNCED
-    elif _is_official_host(record.evidence_url, allowed_hosts):
-        status = AwardStatus.VERIFIED
-    else:
-        status = AwardStatus.NOT_VERIFIED
-    return record.model_copy(update={"status": status})
+        return record.model_copy(update={"status": AwardStatus.NOT_ANNOUNCED})
+    if _is_official_host(record.evidence_url, allowed_hosts):
+        return record
+    return record.model_copy(update={"status": AwardStatus.NOT_VERIFIED})
 
 
 def _validate_result_claim(claim: ResultClaim) -> None:
@@ -130,15 +188,23 @@ def _validate_method_diagram(diagram: MethodDiagram) -> None:
             raise ValueError("method diagram node requires a label")
         if not _has_text(node.paper_section):
             raise ValueError("method diagram node requires a paper section")
-        if node.identifier in node_ids:
+        node_id = node.identifier.strip()
+        if node_id in node_ids:
             raise ValueError("method diagram node identifiers must be unique")
-        node_ids.add(node.identifier)
+        node_ids.add(node_id)
 
+    edge_pairs: set[tuple[str, str]] = set()
     for edge in diagram.edges:
-        if edge.source not in node_ids or edge.target not in node_ids:
+        source = edge.source.strip()
+        target = edge.target.strip()
+        if source not in node_ids or target not in node_ids:
             raise ValueError("method diagram edge must connect disclosed nodes")
         if not _has_text(edge.data_flow_rationale):
             raise ValueError("method diagram edge requires a disclosed data-flow rationale")
+        edge_pair = (source, target)
+        if edge_pair in edge_pairs:
+            raise ValueError("method diagram cannot contain duplicate directed edges")
+        edge_pairs.add(edge_pair)
 
 
 def validate_deep_read(deep_read: DeepRead) -> DeepRead:
