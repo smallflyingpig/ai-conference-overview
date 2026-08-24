@@ -24,12 +24,27 @@ export const evidenceTypeSchema = z.enum([
   "inference",
 ]);
 
-export const evidenceClaimSchema = z.object({
-  claim: nonBlankSchema,
-  evidence_type: evidenceTypeSchema,
-  source_urls: z.array(urlSchema).min(1),
-  locator: nonBlankSchema.nullable().optional(),
-});
+const numericClaimPattern = /(?<![\w.])[+-]?(?:\d+(?:[.,]\d+)*|\.\d+)(?:e[+-]?\d+)?(?:\s?(?:%|％|pp|x))?(?!\w)/i;
+
+export const evidenceClaimSchema = z
+  .object({
+    claim: nonBlankSchema,
+    evidence_type: evidenceTypeSchema,
+    source_urls: z.array(urlSchema).min(1),
+    locator: nonBlankSchema.nullable().optional(),
+  })
+  .superRefine((value, context) => {
+    if (
+      (value.evidence_type === "paper_reported" || numericClaimPattern.test(value.claim)) &&
+      value.locator == null
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["locator"],
+        message: "paper-reported and numeric claims require a locator",
+      });
+    }
+  });
 
 const assignmentSchema = z.object({
   confidence: decimalSchema,
@@ -40,16 +55,33 @@ const assignmentSchema = z.object({
   taxonomy_version: nonBlankSchema,
 });
 
-const themeAuditSchema = z.object({
-  correct_count: z.number().int().nonnegative(),
-  observed_precision: decimalSchema,
-  sample_size: z.number().int().positive().max(50),
-  thresholds: z.object({
-    minimum_observed_precision: decimalSchema,
-    minimum_wilson_lower_95: decimalSchema,
-  }),
-  wilson_lower_95: decimalSchema,
-});
+const themeAuditSchema = z
+  .object({
+    correct_count: z.number().int().nonnegative(),
+    observed_precision: decimalSchema,
+    sample_size: z.number().int().positive().max(50),
+    thresholds: z.object({
+      minimum_observed_precision: z.literal("0.90"),
+      minimum_wilson_lower_95: z.literal("0.80"),
+    }),
+    wilson_lower_95: decimalSchema,
+  })
+  .superRefine((value, context) => {
+    if (Number(value.observed_precision) < 0.9) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["observed_precision"],
+        message: "audit observed precision is below 0.90",
+      });
+    }
+    if (Number(value.wilson_lower_95) < 0.8) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["wilson_lower_95"],
+        message: "audit Wilson lower bound is below 0.80",
+      });
+    }
+  });
 
 const awardSchema = z.object({
   paper_id: nonBlankSchema,
@@ -85,15 +117,49 @@ const metricSchema = z.union([
   crossVenueSpreadSchema,
 ]);
 
-export const overviewArtifactSchema = z.object({
-  assignments: z.array(assignmentSchema),
-  audits: z.record(themeAuditSchema),
-  awards: z.array(awardSchema),
-  evidence_claims: z.array(evidenceClaimSchema),
-  metrics: z.record(metricSchema),
-  paper_count: z.number().int().nonnegative(),
-  taxonomy_version: nonBlankSchema,
-});
+export const overviewArtifactSchema = z
+  .object({
+    assignments: z.array(assignmentSchema),
+    audits: z.record(themeAuditSchema),
+    awards: z.array(awardSchema),
+    evidence_claims: z.array(evidenceClaimSchema),
+    metrics: z.record(metricSchema),
+    paper_count: z.number().int().nonnegative(),
+    taxonomy_version: nonBlankSchema,
+  })
+  .superRefine((value, context) => {
+    const assignmentIds = value.assignments.map((assignment) => assignment.paper_id);
+    if (assignmentIds.length !== value.paper_count) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["assignments"],
+        message: "every included paper requires exactly one assignment",
+      });
+    }
+    if (new Set(assignmentIds).size !== assignmentIds.length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["assignments"],
+        message: "duplicate assignment paper IDs",
+      });
+    }
+    for (const [index, assignment] of value.assignments.entries()) {
+      if (assignment.taxonomy_version !== value.taxonomy_version) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["assignments", index, "taxonomy_version"],
+          message: "assignment taxonomy version does not match overview",
+        });
+      }
+      if (!(assignment.primary_topic in value.audits)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["audits", assignment.primary_topic],
+          message: "missing audit for assignment primary theme",
+        });
+      }
+    }
+  });
 
 export const validationArtifactSchema = z
   .object({
@@ -166,6 +232,27 @@ export const sourceSchema = z.object({
   sha256: sha256Schema,
 });
 
+export const paperArtifactSchema = z.object({
+  paper_id: nonBlankSchema,
+  title: nonBlankSchema,
+  normalized_title: nonBlankSchema,
+  authors: z.array(nonBlankSchema),
+  venue: nonBlankSchema,
+  year: z.number().int(),
+  track: nonBlankSchema,
+  landing_url: urlSchema,
+  source: sourceSchema,
+  status: z.enum(["complete", "partial", "excluded", "unresolved"]),
+  abstract: z.string().nullable(),
+  keywords: z.array(z.string()),
+  subject_areas: z.array(z.string()),
+  affiliations: z.array(z.string()),
+  native_metadata: z.record(z.union([z.string(), z.array(z.string())])),
+  doi: z.string().nullable(),
+  pdf_url: urlSchema.nullable(),
+  code_url: urlSchema.nullable(),
+});
+
 export const provenanceArtifactSchema = z
   .object({
     sources: z.array(sourceSchema).min(1),
@@ -235,6 +322,67 @@ export const releaseOverviewSchema = z
 
 export type ReleaseOverview = z.infer<typeof releaseOverviewSchema>;
 
+export const fullReleaseSchema = releaseOverviewSchema
+  .and(z.object({ papers: z.array(paperArtifactSchema) }))
+  .superRefine((value, context) => {
+    if (value.papers.length !== value.validation.included_count) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["papers"],
+        message: "papers.json count does not match validated included_count",
+      });
+    }
+    const paperIds = value.papers.map((paper) => paper.paper_id);
+    if (new Set(paperIds).size !== paperIds.length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["papers"],
+        message: "duplicate paper IDs in papers.json",
+      });
+    }
+    for (const [index, paper] of value.papers.entries()) {
+      if (paper.status !== "complete" && paper.status !== "partial") {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["papers", index, "status"],
+          message: "published papers must have an included status",
+        });
+      }
+    }
+    const assignmentIds = new Set(
+      value.overview.assignments.map((assignment) => assignment.paper_id),
+    );
+    const paperIdSet = new Set(paperIds);
+    const missing = paperIds.filter((paperId) => !assignmentIds.has(paperId));
+    const unknown = [...assignmentIds].filter((paperId) => !paperIdSet.has(paperId));
+    if (missing.length > 0) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["overview", "assignments"],
+        message: `missing assignments for papers: ${missing.join(", ")}`,
+      });
+    }
+    if (unknown.length > 0) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["overview", "assignments"],
+        message: `unknown assignment paper IDs: ${unknown.join(", ")}`,
+      });
+    }
+  });
+
+export type FullRelease = z.infer<typeof fullReleaseSchema>;
+
+/**
+ * Validate the overview, validation, and provenance artifacts together.
+ * Paper-ID membership cannot be proven at this boundary; publication loaders
+ * must call parseRelease with papers.json as well.
+ */
 export function parseOverview(input: unknown): ReleaseOverview {
   return releaseOverviewSchema.parse(input);
+}
+
+/** Validate all JSON release artifacts, including exact paper/assignment parity. */
+export function parseRelease(input: unknown): FullRelease {
+  return fullReleaseSchema.parse(input);
 }

@@ -5,7 +5,7 @@ import { isAbsolute, join, relative, sep } from "node:path";
 
 import { z } from "zod";
 
-import { parseOverview, type ReleaseOverview } from "./schema";
+import { parseRelease, type FullRelease } from "./schema";
 
 const artifactNames = [
   "papers.json",
@@ -27,7 +27,7 @@ const pointerSchema = z.object({
   ),
 });
 
-export interface LoadedOverview extends ReleaseOverview {
+export interface LoadedOverview extends FullRelease {
   generation: string;
 }
 
@@ -123,14 +123,17 @@ export async function loadOverview(
     artifacts.set(name, bytes);
   }
 
-  const parseJsonArtifact = (name: "overview.json" | "validation.json" | "provenance.json") => {
+  const parseJsonArtifact = (
+    name: "papers.json" | "overview.json" | "validation.json" | "provenance.json",
+  ) => {
     try {
       return JSON.parse(artifacts.get(name)!.toString("utf8"));
     } catch (error) {
       throw new Error(`Release artifact contains invalid JSON: ${name}`, { cause: error });
     }
   };
-  const parsed = parseOverview({
+  const parsed = parseRelease({
+    papers: parseJsonArtifact("papers.json"),
     overview: parseJsonArtifact("overview.json"),
     validation: parseJsonArtifact("validation.json"),
     provenance: parseJsonArtifact("provenance.json"),
