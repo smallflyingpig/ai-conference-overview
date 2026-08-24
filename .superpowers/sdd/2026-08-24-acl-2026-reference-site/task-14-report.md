@@ -577,3 +577,96 @@ recomputed successfully:
 
 The classification state is unchanged: fresh topic audits remain empty and all
 ten themes remain withheld.
+
+## Full-theme repair integration — 2026-08-25
+
+Four exhaustive title-and-abstract review artifacts were applied against the
+manifest-bound base assignment SHA-256
+`c51895a7148b15c8a9756d6651ae013b85b2a17b64f8496d2fe1d17455333b6b`.
+The importer requires each file to equal the complete ID set of its declared
+old primary theme, checks every row's old primary against the base assignment,
+rejects cross-file duplicate IDs, validates taxonomy/topic/confidence/rationale,
+and writes a deterministic review ledger. Wrapper-declared base hashes are also
+required to match.
+
+### Source ledger and application semantics
+
+| Source theme | Rows | Corrections | Keeps | Input SHA-256 |
+|---|---:|---:|---:|---|
+| Applications | 196 | 122 | 74 | `a20fdfab1b691f0215a55d573d9eba22eb3f7cdbdc6f2165df81145bd38138e7` |
+| Reasoning and Agents | 241 | 138 | 103 | `f3af38d95bf862aad5dda41b2272b609debddd1f537e50899a98972631252b13` |
+| NLP/CV Core Tasks | 104 | 75 | 29 | `433ad5d01b002d5afaac05ee22e8bf5ae9f7009dea7d2daeae23ae5a9e8245dc` |
+| Multilingual and Inclusive NLP | 114 | 103 | 11 | `ac3097dd49a36b97d7a89f21ece8034db0592954c486088fa851dcead469751a` |
+| **Total** | **655** | **438** | **217** | — |
+
+Only normalized correction actions (`change`, `correct`, or `move`) alter the
+authoritative assignment. Their new rationale is prefixed as a full-theme review
+correction and retains the complete prior semantic rationale. `keep` rows are
+recorded as reviewed in the ledger but do not overwrite the original confidence
+or rationale. The ledger additionally records the complete source-to-destination
+movement matrix and each corrected paper ID.
+
+The accepted low-confidence decision for `acl:2026.acl-long.1232` survives only
+because that assignment is unchanged; its registry is rebound to the regenerated
+one-row queue. No old classification audit result is reused.
+
+### New preliminary distribution and audit state
+
+| Primary topic | Papers | Primary topic | Papers |
+|---|---:|---|---:|
+| Evaluation | 576 | Learning and Optimization | 446 |
+| Trustworthiness | 380 | Data and Retrieval | 235 |
+| Multimodal Models | 211 | Reasoning and Agents | 143 |
+| Applications | 89 | NLP/CV Core Tasks | 67 |
+| Foundation Models | 61 | Multilingual and Inclusive NLP | 14 |
+
+Fresh confidence-stratified samples contain 50 papers for Applications, Data
+and Retrieval, Evaluation, Foundation Models, Learning and Optimization,
+Multimodal Models, NLP/CV Core Tasks, Reasoning and Agents, and Trustworthiness.
+Multilingual and Inclusive NLP now contains only 14 papers, so its audit sample
+is the complete 14-paper theme. All ten fresh audit decision lists are empty;
+all themes therefore remain experimental/withheld. The former `final_audit_a/b`
+decisions are stale and were not imported.
+
+Regenerated classification identities:
+
+- assignments:
+  `0de77ca92db5c7f02286fe2084a8ca13504bc29ab5a5c15bea6528ff0094dcb6`;
+- manifest:
+  `d1fd4a362fef79905fa39875cefa1ebd5bae56b4f70212269c9f2f612328a58c`;
+- audit samples:
+  `fa31c3e16da29ca15717818d55b7cd1ce412183b02fc7f4f6190fbf22f52dd14`;
+- empty audit decisions:
+  `eab5dbbd86ab6f870a92caef38f27f317ae21e7214fce35a34efa9244e679871`;
+- low-confidence queue:
+  `b6ccae9c565c6e351e41c5d03c62e4e1f4eb68f386d904aa89bf8c7555e9484d`;
+- rebound low-confidence decisions:
+  `aa3095da689cc439020a7afae97be704295de61d59145257a0fce71a56ecc0f9`.
+
+### Release, retained award evidence, and verification
+
+The preliminary overview note and release were regenerated at
+`2026-08-24T20:43:37.930215Z`. The 30 validated DeepReads and the corrected
+official-byte PDF provenance from round 2 are unchanged. `current.json` selects
+generation `07bbaed2e24f0ed24cd1e2aa9421688881045725854eeb24ae8f874baf127a42`,
+whose exact six artifacts are:
+
+| Artifact | SHA-256 |
+|---|---|
+| `overview.json` | `5268020689a2746f54005dd3d740c3ca0c10c3aa9e7c922b38a148586ef410b1` |
+| `overview.md` | `1e380d99594c72fb480694ebffe4fa294f20c3c669cf31f6862bd4caccc19468` |
+| `papers.csv` | `192ed6e93ee76a52d90419bd0b205e9698bf8abbe5e9a17fdfd4d252137077d5` |
+| `papers.json` | `1eeda7a7cd3891bd7048bf3b20c0b3bee317fa5ca1912cb08f3defb5a8d11343` |
+| `provenance.json` | `34820d4e5c2c96ae0e780bbd5f322c9328362a6fe0787129b2a43cb0c794be66` |
+| `validation.json` | `843799a1dd45ff8bcc5440de5d72a8c378bd5e47dd93e7ccecda695e974016aa` |
+
+- focused importer RED/GREEN regression — passed;
+- `.venv/bin/pytest -q` — 238 passed;
+- `.venv/bin/ruff check .` — clean;
+- `cd site && npm test -- --run` — 109 passed;
+- `cd site && npm run build` — zero diagnostics, 37 pages;
+- exact-six pointer — six names and all hashes match;
+- award evidence — 30 verified PDF provenance rows and 30 unique safe routes.
+
+Remaining gate: obtain fresh decisions for the regenerated per-theme audit
+samples. No repaired theme distribution is final or headline-safe yet.
