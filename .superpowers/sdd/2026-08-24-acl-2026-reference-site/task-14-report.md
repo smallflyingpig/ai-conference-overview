@@ -265,3 +265,120 @@ the new six-artifact generation
 - Rendered methodology contains `761 assignments`, `761` pending, and `final
   publication remains gated`; the awards directory still contains no paper
   detail route because deep reads remain intentionally out of scope.
+
+## Semantic assignment integration — 2026-08-25
+
+The semantic-import code/test commit is `5f9b69c` (`feat: import ACL semantic
+assignments`). It adds `conference-trends import-classification`, which requires
+the exact eight modulo partitions, validates every row against taxonomy
+`2026-08-24-v1`, rejects duplicate/missing/unexpected IDs, checks each ACL
+numeric ID against its declared modulo-8 partition, and requires exact equality
+with the normalized corpus ID set. The canonical output is deterministically
+sorted by paper ID. An independent post-import comparison confirmed all 2,222
+input decisions match the authoritative JSONL field-for-field after numeric
+confidence normalization.
+
+### Explicit semantic-labeling provenance
+
+The classification manifest now identifies
+`agent-semantic-batch-review-v1` with method
+`explicit_agent_semantic_labeling`; it no longer identifies these assignments
+as deterministic title-phrase proposals. The raw input identities are:
+
+| Partition | Rows | Input file | SHA-256 |
+|---:|---:|---|---|
+| 0 | 277 | `acl2026-reclass-mod0.jsonl` | `29d678592e68b30b8be18ecc07577c9115b7bd94e36d222ec2211fa21716bc7b` |
+| 1 | 278 | `acl2026-reclass-mod1.jsonl` | `f941163c7c2017c0e2971a4903295cb51e3d9bfb8dd88b82b2c123d8f9c1e4a8` |
+| 2 | 278 | `acl2026-reclass-mod2.jsonl` | `083f76d8ca04f460c8e86e3349467168e8c9c91da2578c06c26e14ee56c339ba` |
+| 3 | 278 | `acl2026-reclass-mod3.jsonl` | `abe4201389bc7735dc8e9df43de08bff7ab177a0c70dfc95a93437f88760a84f` |
+| 4 | 278 | `acl2026-reclass-mod4.jsonl` | `c937f50d576b818c837c45b0bed56ce3fd222cea875069b5bceb3e8795e79ba6` |
+| 5 | 278 | `acl2026-reclass-mod5.jsonl` | `d10b1504392a774829d8fbc2ff4f0caef96f162756d2f487247054894098b5aa` |
+| 6 | 278 | `acl2026-reclass-mod6.jsonl` | `ac66d26011ccb34eba0b68d8bfb4892145ca31a054614a90d456051f5366a03b` |
+| 7 | 277 | `acl2026-reclass-mod7.jsonl` | `bddb8b1e57a094618d88a612cc1eb5bd6d4ebd964ff7f7ece77857c2b83246d2` |
+
+Canonical classification artifact identities:
+
+- `assignments.jsonl`:
+  `135c5463e39afaf5282504ec0f7c4f35757d8cd4de8d8258e19a0f4e5e7cc831`;
+- `classification-manifest.json`:
+  `b6a2935380be394a5590eb709a2193ad9e73cc84bfd205c4ba0657a3111e87c4`;
+- `audit-samples.json`:
+  `5a564fa69f63d614388d915142785f8fe1c34691c3a87d7048b0a58449cc0ce0`;
+- empty `audit-decisions.json`:
+  `eab5dbbd86ab6f870a92caef38f27f317ae21e7214fce35a34efa9244e679871`;
+- `low-confidence-review-queue.json`:
+  `4df66c285d95c6a746f32188393ca8236b13843d7c9d3825e3c3d693795bea07`;
+- empty low-confidence decisions:
+  `da7ed49008048a4ea4d6c6355d55fe7495f4bbfb8320bcf08d656cb39bdbdc6b`.
+
+### New semantic distribution
+
+This remains a one-year distribution, not a trend or a publication-safe theme
+claim.
+
+| Primary topic | Papers | Share of 2,222 |
+|---|---:|---:|
+| Evaluation | 500 | 22.50% |
+| Trustworthiness | 348 | 15.66% |
+| Learning and Optimization | 341 | 15.35% |
+| Reasoning and Agents | 247 | 11.12% |
+| Applications | 199 | 8.96% |
+| Data and Retrieval | 168 | 7.56% |
+| Multimodal Models | 146 | 6.57% |
+| Multilingual and Inclusive NLP | 117 | 5.27% |
+| NLP/CV Core Tasks | 103 | 4.64% |
+| Foundation Models | 53 | 2.39% |
+
+Exact numeric confidence distribution:
+
+| Confidence | Count | Confidence | Count | Confidence | Count |
+|---:|---:|---:|---:|---:|---:|
+| 1.00 | 70 | 0.99 | 933 | 0.98 | 442 |
+| 0.97 | 213 | 0.96 | 162 | 0.95 | 82 |
+| 0.94 | 84 | 0.93 | 46 | 0.92 | 33 |
+| 0.91 | 42 | 0.90 | 32 | 0.89 | 11 |
+| 0.88 | 21 | 0.87 | 12 | 0.86 | 11 |
+| 0.85 | 4 | 0.84 | 8 | 0.83 | 3 |
+| 0.82 | 7 | 0.81 | 2 | 0.79 | 1 |
+| 0.78 | 1 | 0.76 | 1 | 0.52 | 1 |
+
+Only `acl:2026.acl-long.1232` is below the `0.70` low-confidence threshold. It
+is retained in a newly bound review queue with zero decisions and one pending
+review. All previous classification-audit decisions were invalidated and reset;
+the regenerated audit registry contains exactly 50 candidates for each of the
+ten themes and zero completed decisions. Consequently all ten themes remain
+explicitly experimental/withheld until fresh independent audits pass both
+declared precision gates.
+
+### Snapshot and release regeneration
+
+The normalized corpus was rebuilt from the original hash-verified snapshots
+without a network fetch. Source bytes, source SHA-256 values, the 2,223 / 2,222
+/ one reconciliation, and the four immutable retrieval-event manifests remain
+unchanged.
+
+`current.json` now selects six-artifact generation
+`4ac7654f93f39fd4a85dfd3d3a22d941c24e767275802698d419cad7bcdb95cf`:
+
+| Artifact | SHA-256 |
+|---|---|
+| `overview.json` | `44c7c3ad631361e933fe29ae661fff331603c9995bb58b7e5e9e8cfd6b1ebad2` |
+| `overview.md` | `1e380d99594c72fb480694ebffe4fa294f20c3c669cf31f6862bd4caccc19468` |
+| `papers.csv` | `192ed6e93ee76a52d90419bd0b205e9698bf8abbe5e9a17fdfd4d252137077d5` |
+| `papers.json` | `1eeda7a7cd3891bd7048bf3b20c0b3bee317fa5ca1912cb08f3defb5a8d11343` |
+| `provenance.json` | `34820d4e5c2c96ae0e780bbd5f322c9328362a6fe0787129b2a43cb0c794be66` |
+| `validation.json` | `843799a1dd45ff8bcc5440de5d72a8c378bd5e47dd93e7ccecda695e974016aa` |
+
+The rendered site labels this as a preliminary semantic distribution, shows
+one pending low-confidence review and the final-publication gate, builds seven
+static pages, and still emits no award-paper detail route.
+
+Verification after semantic integration:
+
+- `.venv/bin/pytest -q` — 235 passed;
+- `.venv/bin/ruff check .` — clean;
+- `cd site && npm test` — 109 passed across five files;
+- `cd site && npm run build` — zero diagnostics, seven pages;
+- exact-six pointer hashes, 2,222 normalized/assignment IDs, eight input hashes,
+  500 audit candidates, empty decision registries, and all ten withheld themes
+  were checked directly.

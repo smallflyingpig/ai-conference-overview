@@ -1,6 +1,6 @@
 # ACL 2026 long-paper preliminary overview
 
-This is a one-year distribution and hotspot snapshot, not a trend. Topic labels are deterministic assisted proposals and remain subject to the published stratified audit gates.
+This is a one-year distribution and hotspot snapshot, not a trend. Topic labels are explicit agent semantic assignments and remain subject to the published independent stratified audit gates.
 
 ## Official corpus reconciliation
 
@@ -16,16 +16,16 @@ This is a one-year distribution and hotspot snapshot, not a trend. Topic labels 
 
 | Primary topic | Papers | Share | Audit candidates | Reviewed | Audit state |
 |---|---:|---:|---:|---:|---|
-| Foundation Models | 570 | 25.65% | 50 | 0 | experimental / withheld |
-| Reasoning and Agents | 419 | 18.86% | 50 | 0 | experimental / withheld |
-| Evaluation | 394 | 17.73% | 50 | 0 | experimental / withheld |
-| Data and Retrieval | 265 | 11.93% | 50 | 0 | experimental / withheld |
-| Learning and Optimization | 197 | 8.87% | 50 | 0 | experimental / withheld |
-| Trustworthiness | 105 | 4.73% | 50 | 0 | experimental / withheld |
-| NLP/CV Core Tasks | 92 | 4.14% | 50 | 0 | experimental / withheld |
-| Multimodal Models | 66 | 2.97% | 50 | 0 | experimental / withheld |
-| Multilingual and Inclusive NLP | 58 | 2.61% | 50 | 0 | experimental / withheld |
-| Applications | 56 | 2.52% | 50 | 0 | experimental / withheld |
+| Evaluation | 500 | 22.50% | 50 | 0 | experimental / withheld |
+| Trustworthiness | 348 | 15.66% | 50 | 0 | experimental / withheld |
+| Learning and Optimization | 341 | 15.35% | 50 | 0 | experimental / withheld |
+| Reasoning and Agents | 247 | 11.12% | 50 | 0 | experimental / withheld |
+| Applications | 199 | 8.96% | 50 | 0 | experimental / withheld |
+| Data and Retrieval | 168 | 7.56% | 50 | 0 | experimental / withheld |
+| Multimodal Models | 146 | 6.57% | 50 | 0 | experimental / withheld |
+| Multilingual and Inclusive NLP | 117 | 5.27% | 50 | 0 | experimental / withheld |
+| NLP/CV Core Tasks | 103 | 4.64% | 50 | 0 | experimental / withheld |
+| Foundation Models | 53 | 2.39% | 50 | 0 | experimental / withheld |
 
 ## Five advances lanes handoff
 
