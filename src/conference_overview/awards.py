@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from decimal import Decimal, InvalidOperation
 from enum import Enum
+from typing import Literal
 from urllib.parse import urlparse
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator, model_validator
@@ -64,6 +65,7 @@ class AwardAnnouncement(BaseModel):
 class ResultClaim(EvidenceClaim):
     """A paper-reported numerical result with its experimental context."""
 
+    evidence_type: Literal[EvidenceType.PAPER_REPORTED]
     metric: str
     value: Decimal
     evaluation_setting: str
@@ -122,7 +124,7 @@ class MethodEdge(BaseModel):
 class MethodDiagram(BaseModel):
     """An original explanatory diagram derived only from disclosed architecture."""
 
-    nodes: list[MethodNode] = Field(default_factory=list)
+    nodes: list[MethodNode] = Field(min_length=1)
     edges: list[MethodEdge] = Field(default_factory=list)
 
 
@@ -136,10 +138,10 @@ class DeepRead(BaseModel):
     result_claims: list[ResultClaim] = Field(min_length=1)
     why_it_matters: list[EvidenceClaim] = Field(min_length=1)
     limitations: list[EvidenceClaim] = Field(min_length=1)
-    data_training_setup: list[EvidenceClaim] = Field(default_factory=list)
-    prior_work_differences: list[EvidenceClaim] = Field(default_factory=list)
-    reproducibility_assessment: list[EvidenceClaim] = Field(default_factory=list)
-    transferable_implications: list[EvidenceClaim] = Field(default_factory=list)
+    data_training_setup: list[EvidenceClaim] = Field(min_length=1)
+    prior_work_differences: list[EvidenceClaim] = Field(min_length=1)
+    reproducibility_assessment: list[EvidenceClaim] = Field(min_length=1)
+    transferable_implications: list[EvidenceClaim] = Field(min_length=1)
     method_diagram: MethodDiagram | None = None
 
     @field_validator("paper_id")
@@ -154,6 +156,9 @@ _WHY_IT_MATTERS_EVIDENCE_TYPES = frozenset(
         EvidenceType.CROSS_PAPER_SYNTHESIS,
         EvidenceType.INFERENCE,
     }
+)
+_TRANSFERABLE_EVIDENCE_TYPES = frozenset(
+    {EvidenceType.CROSS_PAPER_SYNTHESIS, EvidenceType.INFERENCE}
 )
 
 
@@ -246,6 +251,13 @@ def validate_deep_read(deep_read: DeepRead) -> DeepRead:
             raise ValueError(
                 "why_it_matters evidence type must be paper_reported, "
                 "cross_paper_synthesis, or inference"
+            )
+
+    for claim in deep_read.transferable_implications:
+        if claim.evidence_type not in _TRANSFERABLE_EVIDENCE_TYPES:
+            raise ValueError(
+                "transferable_implications evidence type must be "
+                "cross_paper_synthesis or inference"
             )
 
     evidence_sections = (

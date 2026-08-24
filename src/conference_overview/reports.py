@@ -11,8 +11,10 @@ import os
 import re
 import shutil
 import tempfile
+import unicodedata
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass, field, fields, is_dataclass
+from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import TypeAlias
@@ -94,6 +96,7 @@ class ReleaseBundle:
     records: Sequence[PaperRecord]
     validation: ValidationReport
     taxonomy_version: str
+    generated_at: datetime
     assignments: Sequence[Assignment] = field(default_factory=tuple)
     audits: Mapping[str, ThemeAudit] = field(default_factory=dict)
     metrics: Mapping[str, MetricValue] = field(default_factory=dict)
@@ -318,6 +321,11 @@ def _overview_payload(bundle: ReleaseBundle) -> dict[str, object]:
     return {
         "assignments": assignments,
         "audits": audits,
+        "build_metadata": {
+            "generated_at": bundle.generated_at.isoformat().replace("+00:00", "Z"),
+            "producer": "conference_overview.reports.write_release",
+            "schema_version": "release-build-v1",
+        },
         "award_state": award_policy,
         "awards": validated_awards,
         "award_deep_reads": [
@@ -539,6 +547,10 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
     authoritative_validation = _authoritative_validation(bundle)
     if not bundle.taxonomy_version.strip():
         raise ValueError("taxonomy_version must not be blank")
+    if bundle.generated_at.tzinfo is None or bundle.generated_at.utcoffset() is None:
+        raise PublicationBlocked(
+            "publication blocked: build generated_at must be timezone-aware"
+        )
     if any(not isinstance(claim, EvidenceClaim) for claim in bundle.claims):
         raise ValueError("technical prose entries must be typed EvidenceClaim objects")
     if any(not isinstance(award, AwardRecord) for award in bundle.awards):
@@ -627,6 +639,21 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
     record_ids = [record.paper_id for record in bundle.records]
     record_id_set = set(record_ids)
     validated_awards, _award_state = _validated_award_payload(bundle)
+    award_identities = [
+        (
+            str(award["paper_id"]),
+            " ".join(
+                unicodedata.normalize("NFKC", str(award["award_type"]))
+                .casefold()
+                .split()
+            ),
+        )
+        for award in validated_awards
+    ]
+    if len(award_identities) != len(set(award_identities)):
+        raise PublicationBlocked(
+            "publication blocked: duplicate normalized award identities"
+        )
     verified_award_ids = {
         str(award["paper_id"])
         for award in validated_awards
@@ -636,6 +663,7 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
         raise PublicationBlocked("publication blocked: award refers to an unknown paper")
     deep_read_ids: list[str] = []
     for deep_read in bundle.award_deep_reads:
+        deep_read = DeepRead.model_validate(deep_read.model_dump())
         validate_deep_read(deep_read)
         deep_read_ids.append(deep_read.paper_id)
         if deep_read.paper_id not in verified_award_ids:

@@ -79,6 +79,7 @@ def deep_read_with_claim(*, value: str, locator: str | None) -> DeepRead:
             )
         ],
         limitations=[evidence_claim("The paper reports a bounded limitation.")],
+        **required_deep_read_sections(),
     )
 
 
@@ -98,6 +99,7 @@ def deep_read_with_diagram(diagram: MethodDiagram) -> DeepRead:
             )
         ],
         limitations=[evidence_claim("The paper reports a bounded limitation.")],
+        **required_deep_read_sections(),
         method_diagram=diagram,
     )
 
@@ -109,6 +111,22 @@ def evidence_claim(claim: str) -> EvidenceClaim:
         source_urls=["https://aclanthology.org/2026.acl-long.1.pdf"],
         locator="Section 3",
     )
+
+
+def required_deep_read_sections() -> dict[str, list[EvidenceClaim]]:
+    return {
+        "data_training_setup": [evidence_claim("The paper discloses its data and training setup.")],
+        "prior_work_differences": [evidence_claim("The paper states a difference from prior work.")],
+        "reproducibility_assessment": [evidence_claim("The paper provides reproducibility evidence.")],
+        "transferable_implications": [
+            EvidenceClaim(
+                claim="The disclosed design may transfer to another setting.",
+                evidence_type=EvidenceType.INFERENCE,
+                source_urls=["https://aclanthology.org/2026.acl-long.1.pdf"],
+                locator="Section 3",
+            )
+        ],
+    }
 
 
 def test_unofficial_award_source_is_not_verified() -> None:
@@ -253,6 +271,7 @@ def test_why_it_matters_rejects_official_metadata_evidence() -> None:
             )
         ],
         limitations=[evidence_claim("The paper reports a bounded limitation.")],
+        **required_deep_read_sections(),
     )
 
     with pytest.raises(ValueError, match="why_it_matters"):
@@ -325,11 +344,43 @@ def test_synthetic_not_announced_fixture_is_not_an_award_claim() -> None:
 
 @pytest.mark.parametrize(
     "field",
-    ["research_problem", "contribution", "method_summary", "result_claims", "why_it_matters", "limitations"],
+    [
+        "research_problem", "contribution", "method_summary", "result_claims",
+        "why_it_matters", "limitations", "data_training_setup",
+        "prior_work_differences", "reproducibility_assessment",
+        "transferable_implications",
+    ],
 )
 def test_award_deep_read_rejects_missing_required_sections(field: str) -> None:
     valid = deep_read_with_claim(value="52.0", locator="Table 2").model_dump()
-    valid[field] = [] if field in {"result_claims", "why_it_matters", "limitations"} else None
+    valid[field] = [] if isinstance(valid[field], list) else None
 
     with pytest.raises(ValidationError):
         DeepRead.model_validate(valid)
+
+
+def test_result_claim_requires_paper_reported_evidence() -> None:
+    payload = result_claim().model_dump()
+    payload["evidence_type"] = EvidenceType.INFERENCE
+
+    with pytest.raises(ValidationError, match="paper_reported"):
+        ResultClaim.model_validate(payload)
+
+
+@pytest.mark.parametrize(
+    "evidence_type",
+    [EvidenceType.OFFICIAL_METADATA, EvidenceType.PAPER_REPORTED],
+)
+def test_transferable_implications_require_interpretive_evidence(
+    evidence_type: EvidenceType,
+) -> None:
+    deep_read = deep_read_with_claim(value="52.0", locator="Table 2")
+    deep_read.transferable_implications[0].evidence_type = evidence_type
+
+    with pytest.raises(ValueError, match="transferable_implications"):
+        validate_deep_read(deep_read)
+
+
+def test_present_method_diagram_requires_at_least_one_node() -> None:
+    with pytest.raises(ValidationError, match="nodes"):
+        MethodDiagram(nodes=[], edges=[])

@@ -32,7 +32,7 @@ const base = import.meta.env.BASE_URL;
               <div class="plate-links">
                 {award.evidence_url && <a href={award.evidence_url}>Official award evidence</a>}
                 {paper && <a href={paper.landing_url}>Official paper page</a>}
-                {hasDetail ? <a href={projectPath(base, `awards/${awardRouteKey(award.paper_id)}`)}>Read evidence plate</a> : <span>Deep read not published</span>}
+                {hasDetail ? <a href={projectPath(base, `awards/${awardRouteKey(award.paper_id, award.award_type)}`)}>Read evidence plate</a> : <span>Deep read not published</span>}
               </div>
             </li>
           ))}

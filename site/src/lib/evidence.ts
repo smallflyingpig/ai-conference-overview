@@ -59,8 +59,13 @@ export interface AwardRoute {
   props: { detail: AwardDetailView };
 }
 
-export function awardRouteKey(paperId: string): string {
-  return `paper-${createHash("sha256").update(paperId, "utf8").digest("hex")}`;
+function normalizedAwardType(awardType: string): string {
+  return awardType.normalize("NFKC").trim().replace(/\s+/g, " ").toLocaleLowerCase("en-US");
+}
+
+export function awardRouteKey(paperId: string, awardType: string): string {
+  const identity = JSON.stringify([paperId, normalizedAwardType(awardType)]);
+  return `award-${createHash("sha256").update(identity, "utf8").digest("hex")}`;
 }
 
 export function awardDetailRoutes(
@@ -79,7 +84,7 @@ export function awardDetailRoutes(
     const deepRead = validDeepReads.get(award.paper_id);
     if (paper == null || deepRead == null) return [];
     return [{
-      params: { paperId: awardRouteKey(award.paper_id) },
+      params: { paperId: awardRouteKey(award.paper_id, award.award_type) },
       props: { detail: { award, paper, deepRead } },
     }];
   });
@@ -102,7 +107,7 @@ export function buildAwardIndex(
   const items = release.overview.awards.map((award) => ({
     award,
     paper: paperById.get(award.paper_id) ?? null,
-    hasDetail: detailIds.has(awardRouteKey(award.paper_id)),
+    hasDetail: detailIds.has(awardRouteKey(award.paper_id, award.award_type)),
   }));
   const stateLabels = {
       verified: "Verified",
@@ -181,6 +186,7 @@ export function buildAdvances(release: LoadedOverview) {
 }
 
 export interface MethodologyView {
+  build: { generatedAt: string; producer: string; schemaVersion: string };
   sources: Array<{ name: string; url: string; sha256: string; retrievedAt: string }>;
   taxonomyVersion: string;
   scope: { venue: string; year: number; track: string; inclusionStatuses: string[]; denominator: string; denominatorUnit: string; denominatorValue: number; exclusions: string };
@@ -202,6 +208,11 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
   const comparison = release.overview.comparison_contract;
   const metric = comparison.metric_contract;
   return {
+    build: {
+      generatedAt: release.overview.build_metadata.generated_at,
+      producer: release.overview.build_metadata.producer,
+      schemaVersion: release.overview.build_metadata.schema_version,
+    },
     sources: release.provenance.sources.map((source) => ({
       name: source.name,
       url: source.url,

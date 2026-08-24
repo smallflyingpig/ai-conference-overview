@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 
 import { z } from "zod";
+import awardHostPolicy from "../../../config/award-host-policy.json";
 
 const sha256Schema = z.string().regex(/^[0-9a-f]{64}$/i, "sha256 must be 64 hexadecimal characters");
 const nonBlankSchema = z.string().trim().min(1);
@@ -176,16 +177,13 @@ const awardVerificationSchema = z.object({
   validator: z.literal("validate_award-v1"),
 });
 
-const configuredAwardHostPolicies: Record<string, string[]> = {
-  "ACL/2026/long": ["2026.aclweb.org", "aclanthology.org"],
-};
-
 export function configuredAwardHostPolicy(
   venue: string,
   year: number,
   track: string,
 ): string[] | null {
-  return configuredAwardHostPolicies[`${venue}/${year}/${track}`] ?? null;
+  const scopes: Record<string, string[]> = awardHostPolicy.scopes;
+  return scopes[`${venue}/${year}/${track}`] ?? null;
 }
 
 function hostCoveredByPolicy(host: string, allowedHosts: string[]): boolean {
@@ -194,6 +192,12 @@ function hostCoveredByPolicy(host: string, allowedHosts: string[]): boolean {
     const policyHost = allowed.toLocaleLowerCase().replace(/\.$/, "");
     return normalized === policyHost || normalized.endsWith(`.${policyHost}`);
   });
+}
+
+function normalizedAwardIdentity(paperId: string, awardType: string): string {
+  const normalizedType = awardType.normalize("NFKC").trim().replace(/\s+/g, " ")
+    .toLocaleLowerCase("en-US");
+  return JSON.stringify([paperId, normalizedType]);
 }
 
 const awardSchema = z.object({
@@ -267,7 +271,14 @@ export const methodDiagramArtifactSchema = z.object({
     pairs.add(pair);
   });
 });
-const interpretiveClaimSchema = evidenceClaimSchema.refine((claim) => claim.evidence_type !== "official_metadata", "interpretive sections cannot use official metadata");
+const interpretiveClaimSchema = evidenceClaimSchema.refine(
+  (claim) => claim.evidence_type !== "official_metadata",
+  "interpretive sections cannot use official metadata",
+);
+const transferableClaimSchema = evidenceClaimSchema.refine(
+  (claim) => ["cross_paper_synthesis", "inference"].includes(claim.evidence_type),
+  "transferable implications require synthesis or inference evidence",
+);
 export const deepReadArtifactSchema = z.object({
   paper_id: nonBlankSchema,
   research_problem: evidenceClaimSchema,
@@ -276,10 +287,10 @@ export const deepReadArtifactSchema = z.object({
   result_claims: z.array(resultClaimSchema).min(1),
   why_it_matters: z.array(interpretiveClaimSchema).min(1),
   limitations: z.array(evidenceClaimSchema).min(1),
-  data_training_setup: z.array(evidenceClaimSchema),
-  prior_work_differences: z.array(evidenceClaimSchema),
-  reproducibility_assessment: z.array(evidenceClaimSchema),
-  transferable_implications: z.array(interpretiveClaimSchema),
+  data_training_setup: z.array(evidenceClaimSchema).min(1),
+  prior_work_differences: z.array(evidenceClaimSchema).min(1),
+  reproducibility_assessment: z.array(evidenceClaimSchema).min(1),
+  transferable_implications: z.array(transferableClaimSchema).min(1),
   method_diagram: methodDiagramArtifactSchema.nullable(),
 });
 
@@ -471,6 +482,11 @@ export const overviewArtifactSchema = z
     advances: z.array(advanceArtifactSchema),
     assignments: z.array(assignmentSchema),
     audits: z.record(themeAuditSchema),
+    build_metadata: z.object({
+      generated_at: z.string().datetime({ offset: true }),
+      producer: z.literal("conference_overview.reports.write_release"),
+      schema_version: z.literal("release-build-v1"),
+    }),
     awards: z.array(awardSchema),
     award_state: awardStateSchema,
     award_deep_reads: z.array(deepReadArtifactSchema),
@@ -482,6 +498,15 @@ export const overviewArtifactSchema = z
     theme_disclosures: z.array(themeDisclosureSchema),
   })
   .superRefine((value, context) => {
+    const awardIdentities = value.awards.map((award) =>
+      normalizedAwardIdentity(award.paper_id, award.award_type));
+    if (new Set(awardIdentities).size !== awardIdentities.length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["awards"],
+        message: "duplicate normalized award identities",
+      });
+    }
     const emittedMetrics = value.comparison_contract.metric_contract.emitted_metrics;
     const actualMetrics = Object.keys(value.metrics).sort();
     if (JSON.stringify(emittedMetrics) !== JSON.stringify(actualMetrics)) {
@@ -811,9 +836,11 @@ export const fullReleaseSchema = releaseOverviewSchema
     const firstPaperForPolicy = value.papers[0];
     const expectedAwardPolicy = firstPaperForPolicy == null
       ? []
-      : configuredAwardHostPolicies[
-          `${firstPaperForPolicy.venue}/${firstPaperForPolicy.year}/${firstPaperForPolicy.track}`
-        ];
+      : configuredAwardHostPolicy(
+          firstPaperForPolicy.venue,
+          firstPaperForPolicy.year,
+          firstPaperForPolicy.track,
+        );
     if (firstPaperForPolicy != null && (
       expectedAwardPolicy == null || JSON.stringify(officialPolicy) !== JSON.stringify(expectedAwardPolicy)
     )) {

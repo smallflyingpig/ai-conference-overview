@@ -69,7 +69,7 @@ function requireContained(parent: string, child: string, label: string): void {
 export async function loadOverview(
   venue: string,
   year: number,
-  releaseRoot = defaultReleaseRoot,
+  releaseRoot = process.env.CONFERENCE_RELEASE_ROOT ?? defaultReleaseRoot,
   track = "long",
 ): Promise<LoadedOverview | null> {
   if (

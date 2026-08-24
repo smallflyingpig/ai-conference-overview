@@ -72,6 +72,11 @@ const overview = {
   advances: [],
   assignments: [],
   audits: {},
+  build_metadata: {
+    generated_at: "2026-08-24T02:03:04Z",
+    producer: "conference_overview.reports.write_release",
+    schema_version: "release-build-v1",
+  },
   award_deep_reads: [],
   award_state: {
     status: "not_verified",
@@ -332,6 +337,16 @@ describe("parseOverview", () => {
       artifact.award_state.verification.evidence_host = "example.com";
     });
     await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/configured award host policy/i);
+  });
+
+  it("rejects duplicate normalized award identities before route generation", async () => {
+    const root = await mutatedTask9Release((artifact) => {
+      artifact.awards.push({
+        ...structuredClone(artifact.awards[0]),
+        award_type: " best   paper ",
+      });
+    });
+    await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/award identities/i);
   });
 
   it("requires official metadata before asserting not_announced", async () => {

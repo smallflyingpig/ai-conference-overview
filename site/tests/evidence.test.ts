@@ -1,15 +1,22 @@
+import { execFile } from "node:child_process";
 import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeAll, describe, expect, it } from "vitest";
 
 import AwardMethodDiagram from "../src/components/AwardMethodDiagram";
 import AwardResultClaim from "../src/components/AwardResultClaim";
+import AwardEvidenceSections from "../src/components/AwardEvidenceSections";
 import { loadOverview, type LoadedOverview } from "../src/lib/data";
+import awardHostPolicy from "../../config/award-host-policy.json";
+import { configuredAwardHostPolicy } from "../src/lib/schema";
 import {
   advanceCategories,
   awardDetailRoutes,
+  awardRouteKey,
   buildAdvances,
   buildAwardIndex,
   buildMethodologyView,
@@ -21,6 +28,7 @@ import {
 
 const fixtureRoot = fileURLToPath(new URL("./fixtures/task9-release", import.meta.url));
 let release: LoadedOverview;
+const execFileAsync = promisify(execFile);
 
 beforeAll(async () => {
   const loaded = await loadOverview("ACL", 2026, fixtureRoot, "long");
@@ -65,10 +73,22 @@ const validDeepRead: DeepRead = {
     claim: "The paper evaluates one bounded setting.", evidence_type: "paper_reported",
     source_urls: ["https://aclanthology.org/paper-a.pdf"], locator: "Limitations",
   }],
-  data_training_setup: [],
-  prior_work_differences: [],
-  reproducibility_assessment: [],
-  transferable_implications: [],
+  data_training_setup: [{
+    claim: "The paper discloses its training data.", evidence_type: "paper_reported",
+    source_urls: ["https://aclanthology.org/paper-a.pdf"], locator: "Section 4",
+  }],
+  prior_work_differences: [{
+    claim: "The paper changes the training objective.", evidence_type: "paper_reported",
+    source_urls: ["https://aclanthology.org/paper-a.pdf"], locator: "Section 2",
+  }],
+  reproducibility_assessment: [{
+    claim: "The appendix discloses reproducibility details.", evidence_type: "paper_reported",
+    source_urls: ["https://aclanthology.org/paper-a.pdf"], locator: "Appendix A",
+  }],
+  transferable_implications: [{
+    claim: "The design may transfer to data-quality pipelines.", evidence_type: "inference",
+    source_urls: ["https://aclanthology.org/paper-a.pdf"], locator: "Section 3",
+  }],
   method_diagram: {
     nodes: [
       { identifier: "input", label: "Input records", paper_section: "Section 3.1" },
@@ -96,13 +116,19 @@ describe("evidence labels", () => {
       "Inference",
     ]);
   });
+
+  it("uses the generated venue-registry host policy artifact", () => {
+    expect(configuredAwardHostPolicy("ACL", 2026, "long")).toEqual(
+      awardHostPolicy.scopes["ACL/2026/long"],
+    );
+  });
 });
 
 describe("award publication gate", () => {
   it("creates a detail route only for a verified award with a valid matching deep read", () => {
     const routes = awardDetailRoutes(release);
     expect(routes).toHaveLength(1);
-    expect(routes[0].params.paperId).toMatch(/^paper-[0-9a-f]{64}$/);
+    expect(routes[0].params.paperId).toMatch(/^award-[0-9a-f]{64}$/);
     expect(routes[0].params.paperId).not.toContain("paper-a");
   });
 
@@ -128,6 +154,24 @@ describe("award publication gate", () => {
       result_claims: [{ ...structuredClone(validDeepRead.result_claims[0]), locator: null }],
     };
     expect(() => validateDeepRead(missingLocator)).toThrow(/locator/i);
+
+    const inferredResult = structuredClone(validDeepRead);
+    (inferredResult.result_claims[0] as { evidence_type: string }).evidence_type = "inference";
+    expect(() => validateDeepRead(inferredResult)).toThrow(/paper_reported|literal/i);
+  });
+
+  it("requires every approved deep-read section and interpretive transfer evidence", () => {
+    for (const field of [
+      "data_training_setup", "prior_work_differences",
+      "reproducibility_assessment", "transferable_implications",
+    ] as const) {
+      const missing = structuredClone(validDeepRead);
+      missing[field] = [];
+      expect(() => validateDeepRead(missing)).toThrow();
+    }
+    const reportedTransfer = structuredClone(validDeepRead);
+    reportedTransfer.transferable_implications[0].evidence_type = "paper_reported";
+    expect(() => validateDeepRead(reportedTransfer)).toThrow(/transferable|synthesis|inference/i);
   });
 
   it("displays each numeric result with its setting and paper locator", () => {
@@ -175,8 +219,29 @@ describe("award publication gate", () => {
     malicious.overview.awards[0].paper_id = raw;
     malicious.overview.award_deep_reads[0].paper_id = raw;
     const route = awardDetailRoutes(malicious)[0];
-    expect(route.params.paperId).toMatch(/^paper-[0-9a-f]{64}$/);
+    expect(route.params.paperId).toMatch(/^award-[0-9a-f]{64}$/);
     expect(route.params.paperId).not.toMatch(/[/%]/);
+  });
+
+  it("uses paper and normalized award type as collision-safe route identity", () => {
+    const multiple = structuredClone(release);
+    multiple.overview.awards.push({
+      ...structuredClone(multiple.overview.awards[0]),
+      award_type: "Outstanding Paper",
+    });
+    const routes = awardDetailRoutes(multiple);
+    expect(routes).toHaveLength(2);
+    expect(new Set(routes.map((route) => route.params.paperId)).size).toBe(2);
+    expect(routes.map((route) => route.props.detail.award.award_type).sort()).toEqual([
+      "Best Paper", "Outstanding Paper",
+    ]);
+    expect(awardRouteKey("../paper", " Best   Paper ")).toBe(
+      awardRouteKey("../paper", "best paper"),
+    );
+    expect(awardRouteKey("../paper", "Best Paper")).not.toBe(
+      awardRouteKey("../paper", "Outstanding/../Paper"),
+    );
+    expect(awardRouteKey("../paper", "Outstanding/../Paper")).not.toMatch(/[/%]/);
   });
 
   it("rejects a blank minimal deep read", () => {
@@ -229,6 +294,50 @@ describe("original method diagram", () => {
   });
 });
 
+describe("complete award evidence rendering", () => {
+  it("renders every section, source URL, and locator", () => {
+    const html = renderToStaticMarkup(createElement(AwardEvidenceSections, {
+      deepRead: validateDeepRead(validDeepRead),
+    }));
+    for (const heading of [
+      "Research problem", "Contribution", "Method", "Data / training setup",
+      "Differences from prior work", "Reproducibility assessment",
+      "Transferable implications", "Why it matters", "Limitations",
+    ]) expect(html).toContain(heading);
+    expect((html.match(/https:\/\/aclanthology\.org\/paper-a\.pdf/g) ?? []).length)
+      .toBeGreaterThanOrEqual(9);
+    expect(html).toContain("Section 4");
+    expect(html).toContain("Appendix A");
+  });
+
+  it("builds release-backed award and methodology pages with every section", async () => {
+    const siteRoot = fileURLToPath(new URL("..", import.meta.url));
+    await execFileAsync(join(siteRoot, "node_modules/.bin/astro"), ["build"], {
+      cwd: siteRoot,
+      env: {
+        ...process.env,
+        ASTRO_TELEMETRY_DISABLED: "1",
+        CONFERENCE_RELEASE_ROOT: fixtureRoot,
+      },
+    });
+    const award = release.overview.awards[0];
+    const route = awardRouteKey(award.paper_id, award.award_type);
+    const awardHtml = await readFile(
+      join(siteRoot, "dist/awards", route, "index.html"), "utf8",
+    );
+    const methodologyHtml = await readFile(
+      join(siteRoot, "dist/methodology/index.html"), "utf8",
+    );
+    for (const heading of [
+      "Data / training setup", "Differences from prior work",
+      "Reproducibility assessment", "Transferable implications",
+    ]) expect(awardHtml).toContain(heading);
+    expect(awardHtml).toContain("https://aclanthology.org/paper-a.pdf");
+    expect(methodologyHtml).toContain("2026-08-24T02:03:04Z");
+    expect(methodologyHtml).toContain("2026-08-24T01:02:03Z");
+  }, 15_000);
+});
+
 describe("paper research index", () => {
   it("searches title and authors and filters by audited primary theme", () => {
     expect(filterPapers(release, { query: "author", theme: "Foundation Models" }))
@@ -252,6 +361,11 @@ describe("methodology audit ledger", () => {
       url: "https://aclanthology.org/volumes/2026.acl-long/",
       sha256: "a".repeat(64),
       retrievedAt: "2026-08-24T01:02:03Z",
+    });
+    expect(view.build).toEqual({
+      generatedAt: "2026-08-24T02:03:04Z",
+      producer: "conference_overview.reports.write_release",
+      schemaVersion: "release-build-v1",
     });
     expect(view.scope.denominator).toContain("validation.included_count");
     expect(view.scope).toMatchObject({

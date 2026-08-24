@@ -114,6 +114,15 @@ def award_deep_read() -> DeepRead:
             )
         ],
         limitations=[paper_claim("The paper evaluates one bounded setting.")],
+        data_training_setup=[paper_claim("The paper discloses the training setup.")],
+        prior_work_differences=[paper_claim("The paper differs from prior work in its objective.")],
+        reproducibility_assessment=[paper_claim("The appendix discloses reproducibility details.")],
+        transferable_implications=[
+            paper_claim(
+                "The method may transfer to data-quality pipelines.",
+                evidence_type=EvidenceType.INFERENCE,
+            )
+        ],
         method_diagram=MethodDiagram(
             nodes=[
                 MethodNode(identifier="input", label="Input", paper_section="3.1"),
@@ -191,6 +200,7 @@ def publishable_bundle() -> ReleaseBundle:
             ),
         ),
         taxonomy_version="2026-08-24-v1",
+        generated_at=datetime(2026, 8, 24, 2, 3, 4, tzinfo=UTC),
     )
 
 
@@ -275,6 +285,11 @@ def test_valid_release_contains_complete_provenance_and_diagnostics(
     )
     assert overview["advances"][0]["category"] == "data_training"
     assert overview["theme_disclosures"][0]["status"] == "experimental"
+    assert overview["build_metadata"] == {
+        "generated_at": "2026-08-24T02:03:04Z",
+        "producer": "conference_overview.reports.write_release",
+        "schema_version": "release-build-v1",
+    }
     assert overview["metrics"]["emerging_score"]["components"] == {
         "novelty": "0.25",
         "share_growth": "0.8",
@@ -310,6 +325,61 @@ def test_release_keeps_exact_six_artifacts_with_extended_overview(tmp_path: Path
         "papers.json",
         "provenance.json",
         "validation.json",
+    ]
+
+
+@pytest.mark.parametrize("invalid_kind", ["missing-section", "result-evidence", "empty-diagram"])
+def test_release_revalidates_deep_read_before_writing(
+    tmp_path: Path, invalid_kind: str
+) -> None:
+    bundle = publishable_bundle()
+    deep_read = bundle.award_deep_reads[0]
+    if invalid_kind == "missing-section":
+        invalid = deep_read.model_copy(update={"transferable_implications": []})
+    elif invalid_kind == "result-evidence":
+        result = deep_read.result_claims[0].model_copy(
+            update={"evidence_type": EvidenceType.INFERENCE}
+        )
+        invalid = deep_read.model_copy(update={"result_claims": [result]})
+    else:
+        diagram = deep_read.method_diagram.model_copy(update={"nodes": []})  # type: ignore[union-attr]
+        invalid = deep_read.model_copy(update={"method_diagram": diagram})
+
+    with pytest.raises((ValueError, PublicationBlocked)):
+        write_release(
+            replace(bundle, award_deep_reads=(invalid,)),
+            tmp_path / f"invalid-deep-read-{invalid_kind}",
+        )
+
+    assert not (tmp_path / f"invalid-deep-read-{invalid_kind}").exists()
+
+
+def test_release_rejects_duplicate_normalized_award_identity(tmp_path: Path) -> None:
+    bundle = publishable_bundle()
+    duplicate = bundle.awards[0].model_copy(update={"award_type": " best   paper "})
+
+    with pytest.raises(PublicationBlocked, match="award identities"):
+        write_release(
+            replace(bundle, awards=(*bundle.awards, duplicate)),
+            tmp_path / "duplicate-award",
+        )
+
+
+def test_release_allows_distinct_awards_for_the_same_paper(tmp_path: Path) -> None:
+    bundle = publishable_bundle()
+    outstanding = bundle.awards[0].model_copy(update={"award_type": "Outstanding Paper"})
+
+    write_release(
+        replace(bundle, awards=(*bundle.awards, outstanding)),
+        tmp_path / "multiple-awards",
+    )
+
+    overview = json.loads(
+        (resolve_current_release(tmp_path / "multiple-awards") / "overview.json").read_text()
+    )
+    assert [award["award_type"] for award in overview["awards"]] == [
+        "Best Paper",
+        "Outstanding Paper",
     ]
 
 
