@@ -9,6 +9,7 @@ import re
 import subprocess
 import tempfile
 from collections.abc import Mapping, Sequence
+from copy import deepcopy
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from decimal import Decimal
@@ -23,7 +24,12 @@ from conference_overview.adapters.acl import (
     parse_acl_award_badges,
     parse_acl_bibtex,
 )
-from conference_overview.awards import AwardRecord, AwardStatus
+from conference_overview.awards import (
+    AwardRecord,
+    AwardStatus,
+    DeepRead,
+    validate_deep_read,
+)
 from conference_overview.classification import (
     Assignment,
     ThemeAudit,
@@ -69,6 +75,9 @@ _HTML_PAPER_ID_PATTERN = re.compile(
     re.IGNORECASE,
 )
 _SEMANTIC_PARTITION_PATTERN = re.compile(r"acl2026-reclass-mod([0-7])\.jsonl")
+_DEEP_READ_FIELD_PATTERN = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)(?:\[(\d+)\])?")
+_PDF_PROVENANCE_ID_PATTERN = re.compile(r"(?:acl:)?(2026\.acl-long\.\d+)")
+_PDF_PROVENANCE_SHA_PATTERN = re.compile(r"[0-9a-f]{64}")
 
 
 class UnsupportedPipelineRoute(ValueError):
@@ -102,6 +111,14 @@ class ScopePaths:
     @property
     def awards(self) -> Path:
         return self.root / "data/awards/acl/2026-long.yaml"
+
+    @property
+    def award_deep_reads(self) -> Path:
+        return self.root / "data/awards/acl/2026-long-deep-reads.yaml"
+
+    @property
+    def award_deep_read_provenance(self) -> Path:
+        return self.root / "data/awards/acl/2026-long-deep-read-provenance.json"
 
     @property
     def low_confidence_queue(self) -> Path:
@@ -773,6 +790,423 @@ def import_semantic_assignments_scope(
     return assignments
 
 
+def _assignment_payloads(assignments: Sequence[Assignment]) -> list[dict[str, object]]:
+    return [
+        {
+            "confidence": str(assignment.confidence),
+            "paper_id": assignment.paper_id,
+            "primary_topic": assignment.primary_topic,
+            "rationale": assignment.rationale,
+            "secondary_topics": list(assignment.secondary_topics),
+            "taxonomy_version": assignment.taxonomy_version,
+        }
+        for assignment in assignments
+    ]
+
+
+def apply_audit_corrections_scope(
+    request: VenueRequest,
+    root: Path,
+    audit_paths: Sequence[Path],
+    low_review_path: Path,
+) -> list[Assignment]:
+    """Apply independently reviewed primary-topic corrections with old-value guards."""
+    _require_acl(request)
+    paths = ScopePaths(Path(root))
+    records, _excluded, _sources = load_scope_records(request, root)
+    assignment_path = paths.classification / "assignments.jsonl"
+    assignments = load_assignments(
+        assignment_path,
+        load_taxonomy(),
+        expected_paper_ids=(record.paper_id for record in records),
+    )
+    original_by_id = {assignment.paper_id: assignment for assignment in assignments}
+    original_sha256 = hashlib.sha256(assignment_path.read_bytes()).hexdigest()
+    classifier, semantic_labeling, _old_corrections, _old_low_provenance = (
+        _load_classification_provenance(paths, original_sha256)
+    )
+    sample_registry = json.loads(
+        (paths.classification / "audit-samples.json").read_text(encoding="utf-8")
+    )
+    sample_themes = sample_registry.get("themes")
+    if not isinstance(sample_themes, Mapping):
+        raise TypeError("audit sample registry must contain theme candidates")
+    expected_review_ids: dict[str, str] = {}
+    for theme, candidates in sample_themes.items():
+        if not isinstance(theme, str) or not isinstance(candidates, list):
+            raise TypeError("invalid audit sample theme")
+        for candidate in candidates:
+            if not isinstance(candidate, Mapping):
+                raise TypeError("invalid audit sample candidate")
+            paper_id = candidate.get("paper_id")
+            if not isinstance(paper_id, str) or paper_id in expected_review_ids:
+                raise ValueError("duplicate or invalid audit sample paper ID")
+            expected_review_ids[paper_id] = theme
+
+    taxonomy_topics = {
+        str(topic["name"]) for topic in load_taxonomy()["topics"]  # type: ignore[index]
+    }
+    reviewed: dict[str, tuple[str, Mapping[str, object]]] = {}
+    audit_sources: list[dict[str, object]] = []
+    for raw_path in audit_paths:
+        path = Path(raw_path)
+        raw_bytes = path.read_bytes()
+        document = json.loads(raw_bytes)
+        if (
+            not isinstance(document, Mapping)
+            or document.get("schema_version") != "classification-audit-v1"
+            or document.get("taxonomy_version") != _TAXONOMY_VERSION
+            or not isinstance(document.get("themes"), Mapping)
+        ):
+            raise ValueError("audit correction source contract mismatch")
+        source_count = 0
+        for theme, decisions in document["themes"].items():  # type: ignore[union-attr]
+            if theme not in taxonomy_topics or not isinstance(decisions, list):
+                raise ValueError("audit correction source has an invalid theme")
+            for decision in decisions:
+                source_count += 1
+                if not isinstance(decision, Mapping):
+                    raise TypeError("audit correction decision must be an object")
+                paper_id = decision.get("paper_id")
+                if not isinstance(paper_id, str) or paper_id in reviewed:
+                    raise ValueError("conflicting or duplicate audit correction decision")
+                if expected_review_ids.get(paper_id) != theme:
+                    raise ValueError(
+                        f"audit decision old primary mismatch for {paper_id}"
+                    )
+                assignment = original_by_id.get(paper_id)
+                if assignment is None or assignment.primary_topic != theme:
+                    raise ValueError(
+                        f"assignment old primary mismatch for {paper_id}"
+                    )
+                correct = decision.get("correct")
+                note = decision.get("review_note")
+                if not isinstance(correct, bool) or not isinstance(note, str) or not note.strip():
+                    raise ValueError("audit correction decision is incomplete")
+                corrected_topic = decision.get("corrected_primary_topic")
+                if not correct and (
+                    corrected_topic not in taxonomy_topics or corrected_topic == theme
+                ):
+                    raise ValueError("incorrect audit decision requires a new valid topic")
+                if correct and corrected_topic is not None:
+                    raise ValueError("correct audit decision cannot change the primary topic")
+                reviewed[paper_id] = (path.name, decision)
+        audit_sources.append(
+            {
+                "paper_count": source_count,
+                "sha256": hashlib.sha256(raw_bytes).hexdigest(),
+                "source_file": path.name,
+            }
+        )
+    if set(reviewed) != set(expected_review_ids):
+        missing = sorted(set(expected_review_ids) - set(reviewed))
+        unexpected = sorted(set(reviewed) - set(expected_review_ids))
+        raise ValueError(
+            f"audit correction sources do not match samples; missing={missing}; "
+            f"unexpected={unexpected}"
+        )
+
+    corrected_by_id = dict(original_by_id)
+    correction_provenance: list[dict[str, str]] = []
+    for paper_id, (source_file, decision) in reviewed.items():
+        if decision["correct"]:
+            continue
+        original = original_by_id[paper_id]
+        corrected_topic = str(decision["corrected_primary_topic"])
+        corrected_by_id[paper_id] = Assignment(
+            paper_id=paper_id,
+            primary_topic=corrected_topic,
+            secondary_topics=tuple(
+                topic for topic in original.secondary_topics if topic != corrected_topic
+            ),
+            confidence=Decimal("0.99"),
+            rationale=(
+                "independent audit correction: primary topic changed from "
+                f"{original.primary_topic} to {corrected_topic}; "
+                f"{str(decision['review_note']).strip()}"
+            ),
+            taxonomy_version=original.taxonomy_version,
+        )
+        correction_provenance.append(
+            {
+                "corrected_primary_topic": corrected_topic,
+                "original_primary_topic": original.primary_topic,
+                "paper_id": paper_id,
+                "source_file": source_file,
+            }
+        )
+
+    low_review_path = Path(low_review_path)
+    low_review_bytes = low_review_path.read_bytes()
+    low_review = json.loads(low_review_bytes)
+    current_queue_sha256 = hashlib.sha256(paths.low_confidence_queue.read_bytes()).hexdigest()
+    if (
+        not isinstance(low_review, Mapping)
+        or low_review.get("schema_version") != "low-confidence-review-decisions-v1"
+        or low_review.get("taxonomy_version") != _TAXONOMY_VERSION
+        or low_review.get("queue_sha256") != current_queue_sha256
+        or not isinstance(low_review.get("reviews"), list)
+    ):
+        raise ValueError("low-confidence review source contract mismatch")
+    for review in low_review["reviews"]:  # type: ignore[index]
+        if not isinstance(review, Mapping) or not isinstance(review.get("paper_id"), str):
+            raise TypeError("invalid low-confidence review")
+        paper_id = str(review["paper_id"])
+        if corrected_by_id.get(paper_id) != original_by_id.get(paper_id):
+            raise ValueError(
+                f"low-confidence review cannot be reused after assignment change: {paper_id}"
+            )
+
+    corrected = [corrected_by_id[paper_id] for paper_id in sorted(corrected_by_id)]
+    assignment_bytes = _jsonl_bytes(_assignment_payloads(corrected))
+    _atomic_write(assignment_path, assignment_bytes)
+    assignments_sha256 = hashlib.sha256(assignment_bytes).hexdigest()
+    _empty_status, queue_sha256 = _write_low_confidence_review_queue(
+        paths,
+        records,
+        corrected,
+        assignments_sha256=assignments_sha256,
+        reset_decisions=True,
+    )
+    rebound_low_review = dict(low_review)
+    rebound_low_review["queue_sha256"] = queue_sha256
+    _atomic_write(paths.low_confidence_decisions, _json_bytes(rebound_low_review))
+    review_status, queue_sha256 = _load_low_confidence_reviews(
+        paths, corrected, assignments_sha256=assignments_sha256
+    )
+    audit_corrections = {
+        "correction_count": len(correction_provenance),
+        "corrections": sorted(correction_provenance, key=lambda item: item["paper_id"]),
+        "method": "independent audit correction",
+        "reviewed_count": len(reviewed),
+        "sources": audit_sources,
+    }
+    low_provenance = {
+        "input_queue_sha256": current_queue_sha256,
+        "output_queue_sha256": queue_sha256,
+        "sha256": hashlib.sha256(low_review_bytes).hexdigest(),
+        "source_file": low_review_path.name,
+    }
+    _write_classification_manifest(
+        paths,
+        assignments=corrected,
+        assignments_sha256=assignments_sha256,
+        review_status=review_status,
+        queue_sha256=queue_sha256,
+        classifier=classifier,
+        semantic_labeling=semantic_labeling,
+        audit_corrections=audit_corrections,
+        low_confidence_review_provenance=low_provenance,
+    )
+    _write_audit_samples(paths, records, corrected, reset_decisions=True)
+    return corrected
+
+
+def _replace_deep_read_value(
+    deep_read: dict[str, object], field_path: str, old: object, new: object
+) -> None:
+    current: object = deep_read
+    segments = field_path.split(".")
+    for index, segment in enumerate(segments):
+        match = _DEEP_READ_FIELD_PATTERN.fullmatch(segment)
+        if match is None or not isinstance(current, dict):
+            raise ValueError(f"invalid deep-read patch path: {field_path}")
+        key, list_index = match.groups()
+        if key not in current:
+            raise ValueError(f"unknown deep-read patch path: {field_path}")
+        if index == len(segments) - 1 and list_index is None:
+            if current[key] != old:
+                raise ValueError(f"deep-read patch old value mismatch: {field_path}")
+            current[key] = new
+            return
+        current = current[key]
+        if list_index is not None:
+            if not isinstance(current, list) or int(list_index) >= len(current):
+                raise ValueError(f"invalid deep-read patch index: {field_path}")
+            current = current[int(list_index)]
+    raise ValueError(f"invalid terminal deep-read patch path: {field_path}")
+
+
+def _parse_pdf_provenance_tables(text: str) -> list[tuple[str, int, int, str]]:
+    """Parse the independently authored Markdown provenance-table layouts."""
+    header: dict[str, int] | None = None
+    parsed: list[tuple[str, int, int, str]] = []
+    aliases = {
+        "paper": "paper_id",
+        "paper id": "paper_id",
+        "paper_id": "paper_id",
+        "pages": "pages",
+        "pdf pages": "pages",
+        "bytes": "byte_size",
+        "sha-256": "sha256",
+    }
+    for row in (line for line in text.splitlines() if line.strip().startswith("|")):
+        cells = [cell.strip().strip("`") for cell in row.strip().strip("|").split("|")]
+        normalized = [aliases.get(cell.lower()) for cell in cells]
+        if {"paper_id", "pages", "byte_size", "sha256"}.issubset(normalized):
+            header = {name: normalized.index(name) for name in set(normalized) if name}
+            continue
+        if header is None or max(header.values()) >= len(cells):
+            continue
+        id_match = _PDF_PROVENANCE_ID_PATTERN.fullmatch(cells[header["paper_id"]])
+        sha_match = _PDF_PROVENANCE_SHA_PATTERN.fullmatch(cells[header["sha256"]])
+        if id_match is None or sha_match is None:
+            continue
+        parsed.append(
+            (
+                f"acl:{id_match.group(1)}",
+                int(cells[header["pages"]].replace(",", "")),
+                int(cells[header["byte_size"]].replace(",", "")),
+                sha_match.group(0),
+            )
+        )
+    return parsed
+
+
+def import_award_deep_reads_scope(
+    request: VenueRequest,
+    root: Path,
+    deep_read_paths: Sequence[Path],
+    patch_paths: Sequence[Path],
+    note_paths: Sequence[Path],
+    review_paths: Sequence[Path],
+) -> list[DeepRead]:
+    """Merge, guarded-patch, validate, and bind award-paper DeepReads."""
+    _require_acl(request)
+    paths = ScopePaths(Path(root))
+    if not paths.awards.exists():
+        parse_award_inventory_scope(request, root)
+    inventory = yaml.safe_load(paths.awards.read_text(encoding="utf-8"))
+    awards = inventory.get("awards") if isinstance(inventory, Mapping) else None
+    if not isinstance(awards, list):
+        raise TypeError("official award inventory has no awards list")
+    award_ids = {str(award["paper_id"]) for award in awards}
+
+    raw_by_id: dict[str, dict[str, object]] = {}
+    sources: list[dict[str, object]] = []
+    for raw_path in deep_read_paths:
+        path = Path(raw_path)
+        raw_bytes = path.read_bytes()
+        payload = yaml.safe_load(raw_bytes)
+        items = payload.get("deep_reads") if isinstance(payload, Mapping) else None
+        if not isinstance(items, list):
+            raise TypeError("deep-read source must contain a deep_reads list")
+        for item in items:
+            if not isinstance(item, dict) or not isinstance(item.get("paper_id"), str):
+                raise TypeError("deep-read item must be an object with paper_id")
+            paper_id = str(item["paper_id"])
+            if paper_id in raw_by_id:
+                raise ValueError(f"duplicate award deep-read paper ID: {paper_id}")
+            raw_by_id[paper_id] = deepcopy(item)
+        sources.append(_input_source_payload(path, raw_bytes, "deep_read_batch"))
+    if set(raw_by_id) != award_ids:
+        raise ValueError(
+            "award deep reads must bind exactly to official inventory IDs; "
+            f"missing={sorted(award_ids - set(raw_by_id))}; "
+            f"unexpected={sorted(set(raw_by_id) - award_ids)}"
+        )
+
+    applied_patches: list[dict[str, object]] = []
+    for raw_path in patch_paths:
+        path = Path(raw_path)
+        raw_bytes = path.read_bytes()
+        payload = yaml.safe_load(raw_bytes)
+        raw_patches = None
+        if isinstance(payload, Mapping):
+            raw_patches = payload.get("patches", payload.get("corrections"))
+        if not isinstance(raw_patches, list):
+            raise TypeError("deep-read patch source has no patch list")
+        for raw_patch in raw_patches:
+            if not isinstance(raw_patch, Mapping):
+                raise TypeError("deep-read patch must be an object")
+            paper_id = raw_patch.get("paper_id")
+            field_path = raw_patch.get("path", raw_patch.get("field_path"))
+            if (
+                not isinstance(paper_id, str)
+                or paper_id not in raw_by_id
+                or not isinstance(field_path, str)
+                or raw_patch.get("operation", "replace") != "replace"
+                or "old" not in raw_patch
+                or "new" not in raw_patch
+            ):
+                raise ValueError("invalid deep-read replacement patch")
+            _replace_deep_read_value(
+                raw_by_id[paper_id], field_path, raw_patch["old"], raw_patch["new"]
+            )
+            applied_patches.append(
+                {
+                    "field_path": field_path,
+                    "paper_id": paper_id,
+                    "source_file": path.name,
+                }
+            )
+        sources.append(_input_source_payload(path, raw_bytes, "qa_patch"))
+
+    deep_reads = []
+    for paper_id in sorted(raw_by_id):
+        deep_read = DeepRead.model_validate(raw_by_id[paper_id])
+        validate_deep_read(deep_read)
+        deep_reads.append(deep_read)
+
+    pdfs: dict[str, dict[str, object]] = {}
+    for raw_path in note_paths:
+        path = Path(raw_path)
+        raw_bytes = path.read_bytes()
+        text = raw_bytes.decode("utf-8")
+        for paper_id, pages, byte_size, sha256 in _parse_pdf_provenance_tables(text):
+            candidate = {
+                "byte_size": byte_size,
+                "pages": pages,
+                "paper_id": paper_id,
+                "sha256": sha256,
+            }
+            if paper_id in pdfs and pdfs[paper_id] != candidate:
+                raise ValueError(f"conflicting PDF provenance for {paper_id}")
+            pdfs[paper_id] = candidate
+        sources.append(_input_source_payload(path, raw_bytes, "chinese_source_notes"))
+    for raw_path in review_paths:
+        path = Path(raw_path)
+        raw_bytes = path.read_bytes()
+        sources.append(_input_source_payload(path, raw_bytes, "independent_qa_report"))
+    if pdfs and set(pdfs) != award_ids:
+        raise ValueError("PDF provenance does not cover the exact award inventory")
+
+    _atomic_write(
+        paths.award_deep_reads,
+        yaml.safe_dump(
+            {
+                "deep_reads": [item.model_dump(mode="json") for item in deep_reads],
+                "schema_version": "acl-award-deep-reads-v1",
+            },
+            allow_unicode=True,
+            sort_keys=True,
+        ).encode(),
+    )
+    _atomic_write(
+        paths.award_deep_read_provenance,
+        _json_bytes(
+            {
+                "deep_read_count": len(deep_reads),
+                "patch_count": len(applied_patches),
+                "patches": applied_patches,
+                "pdfs": [pdfs[paper_id] for paper_id in sorted(pdfs)],
+                "schema_version": "acl-award-deep-read-provenance-v1",
+                "sources": sources,
+            }
+        ),
+    )
+    return deep_reads
+
+
+def _input_source_payload(path: Path, raw_bytes: bytes, kind: str) -> dict[str, object]:
+    return {
+        "byte_size": len(raw_bytes),
+        "kind": kind,
+        "sha256": hashlib.sha256(raw_bytes).hexdigest(),
+        "source_file": path.name,
+    }
+
+
 def _write_classification_manifest(
     paths: ScopePaths,
     *,
@@ -782,6 +1216,8 @@ def _write_classification_manifest(
     queue_sha256: str,
     classifier: str = "deterministic-title-abstract-assisted-v1",
     semantic_labeling: Mapping[str, object] | None = None,
+    audit_corrections: Mapping[str, object] | None = None,
+    low_confidence_review_provenance: Mapping[str, object] | None = None,
 ) -> None:
     review_state = (
         "pending_semantic_review"
@@ -806,6 +1242,12 @@ def _write_classification_manifest(
     }
     if semantic_labeling is not None:
         payload["semantic_labeling"] = dict(semantic_labeling)
+    if audit_corrections is not None:
+        payload["audit_corrections"] = dict(audit_corrections)
+    if low_confidence_review_provenance is not None:
+        payload["low_confidence_review_provenance"] = dict(
+            low_confidence_review_provenance
+        )
     _atomic_write(
         paths.classification / "classification-manifest.json",
         _json_bytes(payload),
@@ -1239,6 +1681,22 @@ def _load_award_records(paths: ScopePaths) -> list[AwardRecord]:
     ]
 
 
+def _load_award_deep_reads(paths: ScopePaths) -> list[DeepRead]:
+    if not paths.award_deep_reads.exists():
+        return []
+    try:
+        payload = yaml.safe_load(paths.award_deep_reads.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, yaml.YAMLError) as exc:
+        raise ValueError("invalid award deep-read artifact") from exc
+    items = payload.get("deep_reads") if isinstance(payload, Mapping) else None
+    if not isinstance(items, list):
+        raise TypeError("award deep-read artifact has no deep_reads list")
+    deep_reads = [DeepRead.model_validate(item) for item in items]
+    for deep_read in deep_reads:
+        validate_deep_read(deep_read)
+    return deep_reads
+
+
 def _overview_note(
     *,
     validation: ValidationReport,
@@ -1247,6 +1705,7 @@ def _overview_note(
     audit_metadata: Mapping[str, object],
     advances: Sequence[AdvanceRecord],
     award_count: int,
+    award_deep_read_count: int,
     classifier: str,
 ) -> bytes:
     counts: dict[str, int] = {}
@@ -1328,7 +1787,10 @@ def _overview_note(
             "## Official award inventory",
             "",
             f"- Official volume-page award badges: {award_count}",
-            "- Award PDF deep reads: pending controller handoff; no PDF-derived claim is included.",
+            (
+                f"- Validated and inventory-bound award PDF deep reads: "
+                f"{award_deep_read_count}"
+            ),
             "",
         ]
     )
@@ -1337,7 +1799,12 @@ def _overview_note(
 
 def _load_classification_provenance(
     paths: ScopePaths, assignments_sha256: str
-) -> tuple[str, Mapping[str, object] | None]:
+) -> tuple[
+    str,
+    Mapping[str, object] | None,
+    Mapping[str, object] | None,
+    Mapping[str, object] | None,
+]:
     try:
         manifest = json.loads(
             (paths.classification / "classification-manifest.json").read_text(
@@ -1358,7 +1825,20 @@ def _load_classification_provenance(
         raise TypeError("semantic labeling provenance must be an object")
     if classifier == "agent-semantic-batch-review-v1" and semantic_labeling is None:
         raise ValueError("agent semantic classification has no source provenance")
-    return classifier, semantic_labeling
+    audit_corrections = manifest.get("audit_corrections")
+    low_review_provenance = manifest.get("low_confidence_review_provenance")
+    if audit_corrections is not None and not isinstance(audit_corrections, Mapping):
+        raise TypeError("audit correction provenance must be an object")
+    if low_review_provenance is not None and not isinstance(
+        low_review_provenance, Mapping
+    ):
+        raise TypeError("low-confidence review provenance must be an object")
+    return (
+        classifier,
+        semantic_labeling,
+        audit_corrections,
+        low_review_provenance,
+    )
 
 
 def analyze_acl_scope(
@@ -1382,9 +1862,12 @@ def analyze_acl_scope(
     )
     assignment_bytes = assignment_path.read_bytes()
     assignments_sha256 = hashlib.sha256(assignment_bytes).hexdigest()
-    classifier, semantic_labeling = _load_classification_provenance(
-        paths, assignments_sha256
-    )
+    (
+        classifier,
+        semantic_labeling,
+        audit_corrections,
+        low_review_provenance,
+    ) = _load_classification_provenance(paths, assignments_sha256)
     if not paths.low_confidence_queue.exists():
         low_confidence_review, queue_sha256 = _write_low_confidence_review_queue(
             paths,
@@ -1406,6 +1889,8 @@ def analyze_acl_scope(
         queue_sha256=queue_sha256,
         classifier=classifier,
         semantic_labeling=semantic_labeling,
+        audit_corrections=audit_corrections,
+        low_confidence_review_provenance=low_review_provenance,
     )
     audits, disclosures, audit_metadata = _load_theme_audits(
         paths, assignments, low_confidence_review
@@ -1413,6 +1898,7 @@ def analyze_acl_scope(
     if not paths.awards.exists():
         parse_award_inventory_scope(request, root)
     awards = _load_award_records(paths)
+    award_deep_reads = _load_award_deep_reads(paths)
     advances = _preliminary_examples(records, assignments)
     topic_counts: dict[str, int] = {}
     for assignment in assignments:
@@ -1451,7 +1937,7 @@ def analyze_acl_scope(
         rejected_low_confidence_ids=low_confidence_review.rejected_ids,
         metrics=metrics,
         awards=awards,
-        award_deep_reads=(),
+        award_deep_reads=award_deep_reads,
         advances=advances,
         theme_disclosures=disclosures,
         claims=claims,
@@ -1461,6 +1947,7 @@ def analyze_acl_scope(
         "advance_lane_count": len(advances),
         "audit": audit_metadata,
         "award_inventory_count": len(awards),
+        "award_deep_read_count": len(award_deep_reads),
         "classification": {
             "classifier": classifier,
             "semantic_labeling": semantic_labeling,
@@ -1480,6 +1967,7 @@ def analyze_acl_scope(
             audit_metadata=audit_metadata,
             advances=advances,
             award_count=len(awards),
+            award_deep_read_count=len(award_deep_reads),
             classifier=classifier,
         ),
     )

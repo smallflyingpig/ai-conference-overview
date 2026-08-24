@@ -1,6 +1,7 @@
 import hashlib
 import json
 from datetime import datetime
+from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -330,6 +331,238 @@ def test_import_semantic_assignments_rejects_incomplete_normalized_membership(
     assert hasattr(pipeline_module, "import_semantic_assignments_scope")
     with pytest.raises(ValueError, match="missing paper IDs.*2026.acl-long.2"):
         pipeline_module.import_semantic_assignments_scope(request, tmp_path, parts)
+
+
+def _audit_document(theme: str, decision: dict[str, object]) -> dict[str, object]:
+    return {
+        "method": "independent title-and-abstract semantic review",
+        "schema_version": "classification-audit-v1",
+        "status": "completed_semantic_review_fragment",
+        "taxonomy_version": "2026-08-24-v1",
+        "themes": {theme: [decision]},
+    }
+
+
+def test_apply_audit_corrections_guards_old_topics_and_resets_audits(
+    tmp_path: Path,
+) -> None:
+    request = normalize_request("ACL", 2026, "long")
+    collected_scope(tmp_path)
+    parts = _semantic_partitions(
+        tmp_path,
+        [
+            {
+                "paper_id": "acl:2026.acl-long.1",
+                "primary_topic": "Reasoning and Agents",
+                "secondary_topics": ["Evaluation"],
+                "confidence": 0.96,
+                "rationale": "Explicit semantic assignment for tool use.",
+                "taxonomy_version": "2026-08-24-v1",
+            },
+            {
+                "paper_id": "acl:2026.acl-long.2",
+                "primary_topic": "Evaluation",
+                "secondary_topics": [],
+                "confidence": 0.62,
+                "rationale": "Explicit low-confidence semantic assignment.",
+                "taxonomy_version": "2026-08-24-v1",
+            },
+        ],
+    )
+    pipeline_module.import_semantic_assignments_scope(request, tmp_path, parts)
+    classification = tmp_path / "data/classification/acl/2026-long"
+    audit_a = tmp_path / "fresh-audit-a.json"
+    audit_b = tmp_path / "fresh-audit-b.json"
+    audit_a.write_text(
+        json.dumps(
+            _audit_document(
+                "Reasoning and Agents",
+                {
+                    "paper_id": "acl:2026.acl-long.1",
+                    "correct": False,
+                    "corrected_primary_topic": "Evaluation",
+                    "review_note": "The paper is centrally an evaluation study.",
+                },
+            )
+        ),
+        encoding="utf-8",
+    )
+    audit_b.write_text(
+        json.dumps(
+            _audit_document(
+                "Evaluation",
+                {
+                    "paper_id": "acl:2026.acl-long.2",
+                    "correct": True,
+                    "review_note": "The original primary assignment remains supported.",
+                },
+            )
+        ),
+        encoding="utf-8",
+    )
+    queue_path = classification / "low-confidence-review-queue.json"
+    low_review = tmp_path / "low-review.json"
+    low_review.write_text(
+        json.dumps(
+            {
+                "queue_sha256": hashlib.sha256(queue_path.read_bytes()).hexdigest(),
+                "reviews": [{
+                    "paper_id": "acl:2026.acl-long.2",
+                    "decision": "accept",
+                    "review_note": "Accepted after explicit independent review.",
+                }],
+                "schema_version": "low-confidence-review-decisions-v1",
+                "status": "completed_semantic_review",
+                "taxonomy_version": "2026-08-24-v1",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert hasattr(pipeline_module, "apply_audit_corrections_scope")
+    corrected = pipeline_module.apply_audit_corrections_scope(
+        request, tmp_path, [audit_a, audit_b], low_review
+    )
+
+    by_id = {assignment.paper_id: assignment for assignment in corrected}
+    assert by_id["acl:2026.acl-long.1"].primary_topic == "Evaluation"
+    assert by_id["acl:2026.acl-long.1"].secondary_topics == ()
+    assert by_id["acl:2026.acl-long.1"].confidence == Decimal("0.99")
+    assert by_id["acl:2026.acl-long.1"].rationale.startswith(
+        "independent audit correction:"
+    )
+    assert by_id["acl:2026.acl-long.2"].confidence == Decimal("0.62")
+    manifest = json.loads((classification / "classification-manifest.json").read_text())
+    assert manifest["audit_corrections"]["correction_count"] == 1
+    assert manifest["audit_corrections"]["reviewed_count"] == 2
+    assert manifest["audit_corrections"]["corrections"][0] == {
+        "corrected_primary_topic": "Evaluation",
+        "original_primary_topic": "Reasoning and Agents",
+        "paper_id": "acl:2026.acl-long.1",
+        "source_file": "fresh-audit-a.json",
+    }
+    assert [source["sha256"] for source in manifest["audit_corrections"]["sources"]] == [
+        hashlib.sha256(path.read_bytes()).hexdigest() for path in (audit_a, audit_b)
+    ]
+    audit_decisions = json.loads((classification / "audit-decisions.json").read_text())
+    low_decisions = json.loads((classification / "low-confidence-decisions.json").read_text())
+    assert audit_decisions["themes"] == {"Evaluation": []}
+    assert low_decisions["reviews"][0]["paper_id"] == "acl:2026.acl-long.2"
+    assert low_decisions["queue_sha256"] == hashlib.sha256(
+        queue_path.read_bytes()
+    ).hexdigest()
+    assert manifest["reviewed_low_confidence_ids"] == ["acl:2026.acl-long.2"]
+
+
+def _minimal_deep_read(paper_id: str) -> dict[str, object]:
+    pdf_url = f"https://aclanthology.org/{paper_id.removeprefix('acl:')}.pdf"
+    reported = {
+        "claim": "The paper reports a bounded contribution.",
+        "evidence_type": "paper_reported",
+        "source_urls": [pdf_url],
+        "locator": "Section 1, PDF p. 1",
+    }
+    return {
+        "paper_id": paper_id,
+        "research_problem": reported,
+        "contribution": reported,
+        "method_summary": reported,
+        "result_claims": [{
+            **reported,
+            "metric": "accuracy",
+            "value": "1",
+            "evaluation_setting": "bounded fixture",
+        }],
+        "why_it_matters": [reported],
+        "limitations": [reported],
+        "data_training_setup": [reported],
+        "prior_work_differences": [reported],
+        "reproducibility_assessment": [reported],
+        "transferable_implications": [{
+            **reported,
+            "claim": "The disclosed design may transfer to another bounded setting.",
+            "evidence_type": "inference",
+        }],
+        "method_diagram": {
+            "nodes": [{
+                "identifier": "input",
+                "label": "Input",
+                "paper_section": "Section 1",
+            }],
+            "edges": [],
+        },
+    }
+
+
+def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
+    tmp_path: Path,
+) -> None:
+    request = normalize_request("ACL", 2026, "long")
+    collected_scope(tmp_path)
+    parse_award_inventory_scope(request, tmp_path)
+    deep_source = tmp_path / "deep-reads.yaml"
+    deep_source.write_text(
+        yaml.safe_dump({"deep_reads": [_minimal_deep_read("acl:2026.acl-long.1")]}),
+        encoding="utf-8",
+    )
+    patch_source = tmp_path / "corrections.yaml"
+    patch_source.write_text(
+        yaml.safe_dump(
+            {
+                "patches": [{
+                    "paper_id": "acl:2026.acl-long.1",
+                    "operation": "replace",
+                    "path": "method_summary.claim",
+                    "old": "The paper reports a bounded contribution.",
+                    "new": "The corrected paper-grounded method summary.",
+                }]
+            }
+        ),
+        encoding="utf-8",
+    )
+    note_source = tmp_path / "notes.md"
+    note_source.write_text(
+        "| Paper | SHA-256 | Bytes | PDF pages |\n"
+        "|---|---|---:|---:|\n"
+        f"| 2026.acl-long.1 | `{'a' * 64}` | 1,234 | 3 |\n",
+        encoding="utf-8",
+    )
+    review_source = tmp_path / "review.md"
+    review_source.write_text("# Independent evidence QA\n\nPASS after correction.\n")
+
+    assert hasattr(pipeline_module, "import_award_deep_reads_scope")
+    deep_reads = pipeline_module.import_award_deep_reads_scope(
+        request,
+        tmp_path,
+        [deep_source],
+        [patch_source],
+        [note_source],
+        [review_source],
+    )
+
+    assert len(deep_reads) == 1
+    assert deep_reads[0].method_summary.claim == "The corrected paper-grounded method summary."
+    output = yaml.safe_load(
+        (tmp_path / "data/awards/acl/2026-long-deep-reads.yaml").read_text()
+    )
+    assert output["deep_reads"][0]["paper_id"] == "acl:2026.acl-long.1"
+    provenance = json.loads(
+        (tmp_path / "data/awards/acl/2026-long-deep-read-provenance.json").read_text()
+    )
+    assert provenance["deep_read_count"] == 1
+    assert provenance["patch_count"] == 1
+    assert provenance["pdfs"] == [{
+        "byte_size": 1234,
+        "pages": 3,
+        "paper_id": "acl:2026.acl-long.1",
+        "sha256": "a" * 64,
+    }]
+    assert {source["source_file"] for source in provenance["sources"]} == {
+        "deep-reads.yaml",
+        "corrections.yaml",
+        "notes.md",
+        "review.md",
+    }
 
 
 @pytest.mark.parametrize(
