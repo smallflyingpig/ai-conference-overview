@@ -17,13 +17,13 @@ This is a one-year distribution and hotspot snapshot, not a trend. Topic labels 
 | Primary topic | Papers | Share | Audit candidates | Reviewed | Audit state |
 |---|---:|---:|---:|---:|---|
 | Evaluation | 576 | 25.92% | 50 | 0 | experimental / withheld |
-| Learning and Optimization | 446 | 20.07% | 50 | 0 | experimental / withheld |
-| Trustworthiness | 380 | 17.10% | 50 | 0 | experimental / withheld |
+| Learning and Optimization | 450 | 20.25% | 50 | 0 | experimental / withheld |
+| Trustworthiness | 381 | 17.15% | 50 | 0 | experimental / withheld |
 | Data and Retrieval | 235 | 10.58% | 50 | 0 | experimental / withheld |
-| Multimodal Models | 211 | 9.50% | 50 | 0 | experimental / withheld |
-| Reasoning and Agents | 143 | 6.44% | 50 | 0 | experimental / withheld |
-| Applications | 89 | 4.01% | 50 | 0 | experimental / withheld |
-| NLP/CV Core Tasks | 67 | 3.02% | 50 | 0 | experimental / withheld |
+| Multimodal Models | 213 | 9.59% | 50 | 0 | experimental / withheld |
+| Reasoning and Agents | 112 | 5.04% | 50 | 0 | experimental / withheld |
+| Applications | 101 | 4.55% | 50 | 0 | experimental / withheld |
+| NLP/CV Core Tasks | 79 | 3.56% | 50 | 0 | experimental / withheld |
 | Foundation Models | 61 | 2.75% | 50 | 0 | experimental / withheld |
 | Multilingual and Inclusive NLP | 14 | 0.63% | 14 | 0 | experimental / withheld |
 

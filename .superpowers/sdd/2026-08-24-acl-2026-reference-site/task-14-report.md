@@ -670,3 +670,71 @@ whose exact six artifacts are:
 
 Remaining gate: obtain fresh decisions for the regenerated per-theme audit
 samples. No repaired theme distribution is final or headline-safe yet.
+
+## Final Reasoning repair integration (2026-08-25)
+
+The final exhaustive Reasoning review was imported from
+`acl2026-repair-reasoning-final.json` (SHA-256
+`3cbfb9ab56518ade72c02d38f0f51c63afc49aa119bbfb82f4da7f40beeded88`).
+The importer verifies the artifact's declared source commit and path by reading
+the exact Git blob at `943b0fac246e9133f7f805bf24e1c87fb9f1b7d1`; those bytes must equal the
+current assignment bytes, whose base SHA-256 is
+`0de77ca92db5c7f02286fe2084a8ca13504bc29ab5a5c15bea6528ff0094dcb6`.
+It additionally requires the exact current 143-paper Reasoning ID set and an
+old-primary match for every row. A mismatched Git blob is covered by a failing
+regression test.
+
+The stage recorded 143 decisions: 31 corrections and 112 keeps. Its movement
+matrix is Reasoning to Applications 12, Learning and Optimization 4,
+Multimodal Models 2, NLP/CV Core Tasks 12, Trustworthiness 1, with 112 retained
+in Reasoning. The prior 655-paper full-theme ledger remains embedded as the
+immutable first provenance stage. The new assignment SHA-256 is
+`750e7de5f75221f7e451eb2ac765976c13cd1c3f8101b46f8b7f9c9a5ac50f6b`.
+
+### Regenerated preliminary distribution
+
+| Primary topic | Papers |
+|---|---:|
+| Applications | 101 |
+| Data and Retrieval | 235 |
+| Evaluation | 576 |
+| Foundation Models | 61 |
+| Learning and Optimization | 450 |
+| Multilingual and Inclusive NLP | 14 |
+| Multimodal Models | 213 |
+| NLP/CV Core Tasks | 79 |
+| Reasoning and Agents | 112 |
+| Trustworthiness | 381 |
+
+Fresh deterministic confidence-stratified audit samples contain 50 papers for
+every theme except Multilingual and Inclusive NLP, whose complete theme is 14.
+All ten audit decision lists are empty. The previous certification fragments are
+retained only as stale evidence and were not imported; all ten themes remain
+withheld. The sole low-confidence paper remains explicitly accepted and the
+one-row queue is rebound to the new assignment hash.
+
+Regenerated registry identities:
+
+- audit samples: `a5d7244b7e8d9f4b7c1d40d0f64e396db4d2bceec5983e6995c3307447936156`;
+- empty audit decisions: `eab5dbbd86ab6f870a92caef38f27f317ae21e7214fce35a34efa9244e679871`;
+- low-confidence queue: `8814a9c1ce8e3ea63b3ab41e9e3a7d7faaf7f236b26ef5c24505d1cd78b610dd`;
+- rebound low-confidence decisions: `282dfec08bf203a2d8c8358bd29f298bcc6e3b9dffc7299c0ef6691c789f04bd`;
+- classification manifest: `5db1ead5cb2d73460a7f6468790b8c861924cea79f6e4c7f473d96db6f8f7ee2`.
+
+The staging pointer selects generation
+`c0261a3668b691831f52f1c9dc6dbedfcbacc33a73b88738d7d3919a718fbf0d`.
+It contains exactly `overview.json`, `overview.md`, `papers.csv`, `papers.json`,
+`provenance.json`, and `validation.json`; every pointer hash matches. The 30
+official award inventory rows, 30 validated DeepReads, verified PDF provenance,
+and 30 collision-free award routes are preserved.
+
+Fresh acceptance evidence:
+
+- `.venv/bin/pytest -q`: 238 passed;
+- `.venv/bin/ruff check .`: clean;
+- `npm --prefix site test -- --run`: 109 passed;
+- `npm --prefix site run build`: zero diagnostics, 37 pages;
+- exact-six pointer verification: six exact names and all hashes match.
+
+Remaining gate: fresh post-revision certification decisions for the regenerated
+samples. No theme distribution is final or headline-safe before that gate.
