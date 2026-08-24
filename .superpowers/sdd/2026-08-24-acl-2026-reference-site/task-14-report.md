@@ -910,3 +910,41 @@ Fresh verification before the code commit:
 No scoped blocker remains. The durable compatibility boundary is intentional:
 any future Python lineage shape change must use a schema-version change and a
 matching TypeScript consumer update rather than passing through unknown fields.
+
+## Fix round 5: authoritative full-theme result chain (2026-08-25)
+
+Each full-theme review stage now serializes the SHA-256 of the assignment blob
+it actually produced as `result_assignments_sha256`. Python validates that each
+recorded result is the next stage's base and that the final result is the
+manifest/release `assignments_sha256`; the release writer repeats this gate so a
+forged `ReleaseBundle` cannot bypass pipeline validation. Existing per-source
+assignment-blob bindings remain checked against their stage base.
+
+The strict TypeScript/Zod contract requires the result hash on every stage and
+enforces the same adjacent-stage and final-result bindings. The Methodology view
+now renders the recorded result hashes directly; it no longer infers them from
+the next base or final lineage hash. Adversarial regressions cover the review
+finding exactly: changing the final base and all of its source bindings to the
+same forged hash is rejected, as are a broken intermediate result and a final
+result that differs from the published assignment hash.
+
+The immutable release was regenerated because the schema gained two recorded
+fields. `current.json` now selects
+`generations/88d32a65e82f8808c7c4b37d16425e928766b3c786b89ff07af6658b5783238b`,
+which contains exactly the six required artifacts. Against the prior selected
+generation, `papers.json` is byte-identical and `overview.json` differs only in
+the build timestamp and the two authoritative result hashes. All 2,222
+assignments, theme counts, audits, advances, 30 awards, and 30 deep reads are
+unchanged.
+
+Fresh verification:
+
+- `.venv/bin/python -m pytest -q` — 246 passed;
+- `.venv/bin/python -m ruff check src tests` — clean;
+- `npm test` in `site/` — 119 passed across five files;
+- `npm run build` in `site/` — Astro check reported zero diagnostics and built
+  37 pages;
+- generated release — exactly six files, with the current pointer carrying all
+  six artifact hashes;
+- content preservation — prior/current `papers.json` byte-identical; overview
+  diff limited to timestamp and the two result-chain fields.
