@@ -343,6 +343,119 @@ def _audit_document(theme: str, decision: dict[str, object]) -> dict[str, object
     }
 
 
+def test_import_full_theme_reviews_is_base_guarded_and_preserves_keep_assignments(
+    tmp_path: Path,
+) -> None:
+    request = normalize_request("ACL", 2026, "long")
+    collected_scope(tmp_path)
+    parts = _semantic_partitions(
+        tmp_path,
+        [
+            {
+                "paper_id": "acl:2026.acl-long.1",
+                "primary_topic": "Applications",
+                "secondary_topics": [],
+                "confidence": 0.91,
+                "rationale": "Original application rationale.",
+                "taxonomy_version": "2026-08-24-v1",
+            },
+                {
+                    "paper_id": "acl:2026.acl-long.2",
+                    "primary_topic": "Reasoning and Agents",
+                    "secondary_topics": [],
+                    "confidence": 0.68,
+                    "rationale": "Original keep rationale.",
+                "taxonomy_version": "2026-08-24-v1",
+            },
+        ],
+    )
+    pipeline_module.import_semantic_assignments_scope(request, tmp_path, parts)
+    classification = tmp_path / "data/classification/acl/2026-long"
+    base_sha256 = hashlib.sha256(
+        (classification / "assignments.jsonl").read_bytes()
+    ).hexdigest()
+    application = tmp_path / "applications.json"
+    application.write_text(
+        json.dumps([{
+            "paper_id": "acl:2026.acl-long.1",
+            "old_primary_topic": "Applications",
+            "decision": "change",
+            "corrected_primary_topic": "Evaluation",
+            "confidence": 0.98,
+            "rationale": "Reviewed as an evaluation contribution.",
+        }]),
+        encoding="utf-8",
+    )
+    reasoning = tmp_path / "reasoning.json"
+    reasoning.write_text(
+        json.dumps({
+            "schema_version": "full-theme-review-v1",
+            "taxonomy_version": "2026-08-24-v1",
+            "source_assignments_sha256": base_sha256,
+            "source_primary_topic": "Reasoning and Agents",
+            "reviews": [
+                {
+                    "paper_id": "acl:2026.acl-long.2",
+                    "old_primary_topic": "Reasoning and Agents",
+                    "decision": "keep",
+                    "corrected_primary_topic": "Reasoning and Agents",
+                    "confidence": 0.99,
+                    "rationale": "A new review rationale that must not erase the original.",
+                },
+            ],
+        }),
+        encoding="utf-8",
+    )
+    duplicate = tmp_path / "duplicate-applications.json"
+    duplicate.write_bytes(application.read_bytes())
+
+    assert hasattr(pipeline_module, "import_full_theme_reviews_scope")
+    with pytest.raises(ValueError, match="duplicate full-theme review paper ID"):
+        pipeline_module.import_full_theme_reviews_scope(
+            request, tmp_path, [application, duplicate, reasoning]
+        )
+
+    assignments = pipeline_module.import_full_theme_reviews_scope(
+        request, tmp_path, [application, reasoning]
+    )
+    by_id = {assignment.paper_id: assignment for assignment in assignments}
+    assert by_id["acl:2026.acl-long.1"].primary_topic == "Evaluation"
+    assert by_id["acl:2026.acl-long.1"].confidence == Decimal("0.98")
+    assert "Original application rationale." in by_id["acl:2026.acl-long.1"].rationale
+    assert by_id["acl:2026.acl-long.2"].confidence == Decimal("0.68")
+    assert by_id["acl:2026.acl-long.2"].rationale == "Original keep rationale."
+
+    manifest = json.loads((classification / "classification-manifest.json").read_text())
+    ledger = manifest["full_theme_reviews"]
+    assert ledger["base_assignments_sha256"] == base_sha256
+    assert ledger["reviewed_count"] == 2
+    assert ledger["correction_count"] == 1
+    assert ledger["keep_count"] == 1
+    assert ledger["movement_matrix"] == {
+        "Applications": {"Evaluation": 1},
+        "Reasoning and Agents": {"Reasoning and Agents": 1},
+    }
+    assert {item["source_file"] for item in ledger["sources"]} == {
+        "applications.json",
+        "reasoning.json",
+    }
+    assert json.loads((classification / "audit-decisions.json").read_text())[
+        "themes"
+    ] == {
+        "Evaluation": [],
+        "Reasoning and Agents": [],
+    }
+    low_queue = json.loads(
+        (classification / "low-confidence-review-queue.json").read_text()
+    )
+    assert [item["paper_id"] for item in low_queue["papers"]] == [
+        "acl:2026.acl-long.2"
+    ]
+    assert json.loads(
+        (classification / "low-confidence-decisions.json").read_text()
+    )["reviews"] == []
+
+
 def test_apply_audit_corrections_guards_old_topics_and_resets_audits(
     tmp_path: Path,
 ) -> None:

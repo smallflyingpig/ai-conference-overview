@@ -804,6 +804,250 @@ def _assignment_payloads(assignments: Sequence[Assignment]) -> list[dict[str, ob
     ]
 
 
+def _full_theme_review_rows(
+    path: Path, payload: object, base_sha256: str
+) -> tuple[str, list[Mapping[str, object]]]:
+    if isinstance(payload, list):
+        rows = payload
+        declared_theme = None
+    elif isinstance(payload, Mapping) and isinstance(payload.get("reviews"), list):
+        rows = payload["reviews"]
+        declared_theme = payload.get("source_primary_topic")
+        declared_sha256 = payload.get("source_assignments_sha256")
+        if declared_sha256 is not None and declared_sha256 != base_sha256:
+            raise ValueError(f"full-theme review base hash mismatch: {path.name}")
+    elif isinstance(payload, Mapping) and isinstance(payload.get("decisions"), list):
+        rows = payload["decisions"]
+        scope = payload.get("review_scope")
+        declared_theme = (
+            scope.get("old_primary_topic") if isinstance(scope, Mapping) else None
+        )
+    else:
+        raise TypeError(f"invalid full-theme review artifact: {path.name}")
+    if not rows or not all(isinstance(row, Mapping) for row in rows):
+        raise TypeError(f"full-theme review rows are invalid: {path.name}")
+    old_topics = {
+        str(row.get("old_primary_topic", row.get("old_topic", row.get("old"))))
+        for row in rows
+    }
+    if len(old_topics) != 1:
+        raise ValueError(f"full-theme review mixes source themes: {path.name}")
+    source_theme = old_topics.pop()
+    if declared_theme is not None and declared_theme != source_theme:
+        raise ValueError(f"full-theme review source-theme mismatch: {path.name}")
+    return source_theme, rows  # type: ignore[return-value]
+
+
+def import_full_theme_reviews_scope(
+    request: VenueRequest,
+    root: Path,
+    input_paths: Sequence[Path],
+) -> list[Assignment]:
+    """Apply exhaustive theme reviews against one hash-bound assignment base."""
+    _require_acl(request)
+    paths = ScopePaths(Path(root))
+    records, _excluded, _sources = load_scope_records(request, root)
+    assignment_path = paths.classification / "assignments.jsonl"
+    base_bytes = assignment_path.read_bytes()
+    base_sha256 = hashlib.sha256(base_bytes).hexdigest()
+    assignments = load_assignments(
+        assignment_path,
+        load_taxonomy(),
+        expected_paper_ids=(record.paper_id for record in records),
+    )
+    base_by_id = {assignment.paper_id: assignment for assignment in assignments}
+    manifest = json.loads(
+        (paths.classification / "classification-manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    if (
+        not isinstance(manifest, Mapping)
+        or manifest.get("assignments_sha256") != base_sha256
+    ):
+        raise ValueError("full-theme review base assignment hash is not manifest-bound")
+    classifier, semantic_labeling, audit_corrections, low_provenance = (
+        _load_classification_provenance(paths, base_sha256)
+    )
+    taxonomy_topics = {
+        str(topic["name"]) for topic in load_taxonomy()["topics"]  # type: ignore[index]
+    }
+    theme_ids: dict[str, set[str]] = {}
+    for assignment in assignments:
+        theme_ids.setdefault(assignment.primary_topic, set()).add(assignment.paper_id)
+
+    reviewed: dict[str, dict[str, object]] = {}
+    source_ledger: list[dict[str, object]] = []
+    movement_matrix: dict[str, dict[str, int]] = {}
+    for raw_path in sorted((Path(path) for path in input_paths), key=lambda path: path.name):
+        raw_bytes = raw_path.read_bytes()
+        payload = json.loads(raw_bytes)
+        source_theme, rows = _full_theme_review_rows(raw_path, payload, base_sha256)
+        if source_theme not in taxonomy_topics:
+            raise ValueError(f"unknown full-theme review source: {source_theme}")
+        file_ids: set[str] = set()
+        correction_count = 0
+        keep_count = 0
+        for row in rows:
+            paper_id = row.get("paper_id")
+            old_topic = row.get("old_primary_topic", row.get("old_topic", row.get("old")))
+            decision = row.get("decision", row.get("action"))
+            corrected_topic = row.get(
+                "corrected_primary_topic", row.get("corrected_topic", row.get("corrected"))
+            )
+            rationale = row.get("rationale")
+            try:
+                confidence = Decimal(str(row.get("confidence")))
+            except Exception as exc:
+                raise ValueError(f"invalid full-theme confidence: {paper_id}") from exc
+            if not isinstance(paper_id, str) or paper_id in reviewed:
+                raise ValueError(f"duplicate full-theme review paper ID: {paper_id}")
+            if (
+                old_topic != source_theme
+                or base_by_id.get(paper_id) is None
+                or base_by_id[paper_id].primary_topic != source_theme
+            ):
+                raise ValueError(f"full-theme old primary mismatch: {paper_id}")
+            normalized_decision = (
+                "keep" if decision == "keep" else "correct"
+                if decision in {"change", "correct", "move"}
+                else None
+            )
+            if (
+                normalized_decision is None
+                or corrected_topic not in taxonomy_topics
+                or (normalized_decision == "keep" and corrected_topic != source_theme)
+                or (normalized_decision == "correct" and corrected_topic == source_theme)
+                or not isinstance(rationale, str)
+                or not rationale.strip()
+                or confidence < 0
+                or confidence > 1
+            ):
+                raise ValueError(f"invalid full-theme review decision: {paper_id}")
+            file_ids.add(paper_id)
+            reviewed[paper_id] = {
+                "confidence": confidence,
+                "corrected_topic": str(corrected_topic),
+                "decision": normalized_decision,
+                "rationale": rationale.strip(),
+                "source_file": raw_path.name,
+                "source_theme": source_theme,
+            }
+            destination = str(corrected_topic)
+            movements = movement_matrix.setdefault(source_theme, {})
+            movements[destination] = movements.get(destination, 0) + 1
+            if normalized_decision == "correct":
+                correction_count += 1
+            else:
+                keep_count += 1
+        if file_ids != theme_ids.get(source_theme, set()):
+            raise ValueError(
+                f"full-theme review does not cover exact source-theme ID set: "
+                f"{source_theme}"
+            )
+        source_ledger.append(
+            {
+                "correction_count": correction_count,
+                "keep_count": keep_count,
+                "paper_count": len(rows),
+                "sha256": hashlib.sha256(raw_bytes).hexdigest(),
+                "source_file": raw_path.name,
+                "source_theme": source_theme,
+            }
+        )
+
+    corrected_by_id = dict(base_by_id)
+    corrections: list[dict[str, str]] = []
+    for paper_id, review in reviewed.items():
+        if review["decision"] == "keep":
+            continue
+        original = base_by_id[paper_id]
+        corrected_topic = str(review["corrected_topic"])
+        corrected_by_id[paper_id] = Assignment(
+            paper_id=paper_id,
+            primary_topic=corrected_topic,
+            secondary_topics=tuple(
+                topic for topic in original.secondary_topics if topic != corrected_topic
+            ),
+            confidence=review["confidence"],  # type: ignore[arg-type]
+            rationale=(
+                f"full-theme review correction: {original.primary_topic} -> "
+                f"{corrected_topic}; {review['rationale']} "
+                f"Original semantic rationale: {original.rationale}"
+            ),
+            taxonomy_version=original.taxonomy_version,
+        )
+        corrections.append(
+            {
+                "corrected_primary_topic": corrected_topic,
+                "original_primary_topic": original.primary_topic,
+                "paper_id": paper_id,
+                "source_file": str(review["source_file"]),
+            }
+        )
+
+    corrected = [corrected_by_id[paper_id] for paper_id in sorted(corrected_by_id)]
+    assignment_bytes = _jsonl_bytes(_assignment_payloads(corrected))
+    _atomic_write(assignment_path, assignment_bytes)
+    assignments_sha256 = hashlib.sha256(assignment_bytes).hexdigest()
+
+    old_low_decisions = json.loads(paths.low_confidence_decisions.read_bytes())
+    old_reviews = old_low_decisions.get("reviews")
+    if not isinstance(old_reviews, list):
+        raise TypeError("invalid low-confidence decisions before full-theme review")
+    for low_review in old_reviews:
+        paper_id = low_review.get("paper_id") if isinstance(low_review, Mapping) else None
+        if not isinstance(paper_id, str) or corrected_by_id.get(paper_id) != base_by_id.get(
+            paper_id
+        ):
+            raise ValueError(
+                f"low-confidence review cannot survive full-theme change: {paper_id}"
+            )
+    _empty_status, queue_sha256 = _write_low_confidence_review_queue(
+        paths,
+        records,
+        corrected,
+        assignments_sha256=assignments_sha256,
+        reset_decisions=True,
+    )
+    rebound_low_decisions = dict(old_low_decisions)
+    rebound_low_decisions["queue_sha256"] = queue_sha256
+    _atomic_write(paths.low_confidence_decisions, _json_bytes(rebound_low_decisions))
+    review_status, queue_sha256 = _load_low_confidence_reviews(
+        paths, corrected, assignments_sha256=assignments_sha256
+    )
+    if isinstance(low_provenance, Mapping):
+        low_provenance = dict(low_provenance)
+        low_provenance["output_queue_sha256"] = queue_sha256
+    full_theme_reviews = {
+        "base_assignments_sha256": base_sha256,
+        "correction_count": len(corrections),
+        "corrections": sorted(corrections, key=lambda item: item["paper_id"]),
+        "keep_count": len(reviewed) - len(corrections),
+        "method": "exhaustive title-and-abstract full-theme semantic review",
+        "movement_matrix": {
+            source: dict(sorted(destinations.items()))
+            for source, destinations in sorted(movement_matrix.items())
+        },
+        "reviewed_count": len(reviewed),
+        "sources": source_ledger,
+    }
+    _write_classification_manifest(
+        paths,
+        assignments=corrected,
+        assignments_sha256=assignments_sha256,
+        review_status=review_status,
+        queue_sha256=queue_sha256,
+        classifier=classifier,
+        semantic_labeling=semantic_labeling,
+        audit_corrections=audit_corrections,
+        low_confidence_review_provenance=low_provenance,
+        full_theme_reviews=full_theme_reviews,
+    )
+    _write_audit_samples(paths, records, corrected, reset_decisions=True)
+    return corrected
+
+
 def apply_audit_corrections_scope(
     request: VenueRequest,
     root: Path,
@@ -1264,6 +1508,7 @@ def _write_classification_manifest(
     semantic_labeling: Mapping[str, object] | None = None,
     audit_corrections: Mapping[str, object] | None = None,
     low_confidence_review_provenance: Mapping[str, object] | None = None,
+    full_theme_reviews: Mapping[str, object] | None = None,
 ) -> None:
     review_state = (
         "pending_semantic_review"
@@ -1294,6 +1539,8 @@ def _write_classification_manifest(
         payload["low_confidence_review_provenance"] = dict(
             low_confidence_review_provenance
         )
+    if full_theme_reviews is not None:
+        payload["full_theme_reviews"] = dict(full_theme_reviews)
     _atomic_write(
         paths.classification / "classification-manifest.json",
         _json_bytes(payload),
