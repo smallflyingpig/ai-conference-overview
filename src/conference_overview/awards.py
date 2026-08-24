@@ -1,0 +1,159 @@
+"""Award provenance and paper deep-read evidence contracts."""
+
+from __future__ import annotations
+
+from enum import Enum
+from urllib.parse import urlparse
+
+from pydantic import BaseModel, Field, HttpUrl
+
+from conference_overview.models import EvidenceClaim, EvidenceType
+
+
+class AwardStatus(str, Enum):
+    """The only publication-safe states for a conference award."""
+
+    VERIFIED = "verified"
+    NOT_ANNOUNCED = "not_announced"
+    NOT_VERIFIED = "not_verified"
+
+
+class AwardRecord(BaseModel):
+    """A candidate award record whose status is derived from its evidence URL."""
+
+    paper_id: str = Field(min_length=1)
+    award_type: str = Field(min_length=1)
+    status: AwardStatus = AwardStatus.NOT_ANNOUNCED
+    evidence_url: HttpUrl | None = None
+    official_citation: str | None = None
+
+
+class ResultClaim(EvidenceClaim):
+    """A paper-reported numerical result with its experimental context."""
+
+    metric: str
+    value: str | int | float
+    evaluation_setting: str
+
+
+class MethodNode(BaseModel):
+    """A diagram component that can be traced to a disclosed paper section."""
+
+    identifier: str
+    label: str
+    paper_section: str | None = None
+
+
+class MethodEdge(BaseModel):
+    """A directed disclosed data flow between two method components."""
+
+    source: str
+    target: str
+    data_flow_rationale: str | None = None
+
+
+class MethodDiagram(BaseModel):
+    """An original explanatory diagram derived only from disclosed architecture."""
+
+    nodes: list[MethodNode] = Field(default_factory=list)
+    edges: list[MethodEdge] = Field(default_factory=list)
+
+
+class DeepRead(BaseModel):
+    """Evidence-bearing, publication-ready details for an award paper."""
+
+    paper_id: str = Field(min_length=1)
+    result_claims: list[ResultClaim] = Field(default_factory=list)
+    why_it_matters: list[EvidenceClaim] = Field(default_factory=list)
+    method_diagram: MethodDiagram | None = None
+
+
+_WHY_IT_MATTERS_EVIDENCE_TYPES = frozenset(
+    {
+        EvidenceType.PAPER_REPORTED,
+        EvidenceType.CROSS_PAPER_SYNTHESIS,
+        EvidenceType.INFERENCE,
+    }
+)
+
+
+def _has_text(value: str | None) -> bool:
+    return value is not None and bool(value.strip())
+
+
+def _is_official_host(url: HttpUrl, allowed_hosts: set[str]) -> bool:
+    """Return whether *url* belongs to a configured host or its true subdomain."""
+    hostname = urlparse(str(url)).hostname
+    if hostname is None:
+        return False
+    normalized_host = hostname.rstrip(".").lower()
+    normalized_allowed_hosts = {
+        host.rstrip(".").lower() for host in allowed_hosts if host.strip()
+    }
+    return any(
+        normalized_host == allowed_host
+        or normalized_host.endswith(f".{allowed_host}")
+        for allowed_host in normalized_allowed_hosts
+    )
+
+
+def validate_award(record: AwardRecord, *, allowed_hosts: set[str]) -> AwardRecord:
+    """Derive a safe award status using only configured official source hosts."""
+    if record.evidence_url is None:
+        status = AwardStatus.NOT_ANNOUNCED
+    elif _is_official_host(record.evidence_url, allowed_hosts):
+        status = AwardStatus.VERIFIED
+    else:
+        status = AwardStatus.NOT_VERIFIED
+    return record.model_copy(update={"status": status})
+
+
+def _validate_result_claim(claim: ResultClaim) -> None:
+    if not _has_text(claim.metric):
+        raise ValueError("numeric result claim requires a metric")
+    if isinstance(claim.value, str) and not _has_text(claim.value):
+        raise ValueError("numeric result claim requires a value")
+    if not _has_text(claim.evaluation_setting):
+        raise ValueError("numeric result claim requires an evaluation setting")
+    if not claim.source_urls:
+        raise ValueError("numeric result claim requires a source URL")
+    if not _has_text(claim.locator):
+        raise ValueError("numeric result claim requires a paper locator")
+
+
+def _validate_method_diagram(diagram: MethodDiagram) -> None:
+    node_ids: set[str] = set()
+    for node in diagram.nodes:
+        if not _has_text(node.identifier):
+            raise ValueError("method diagram node requires an identifier")
+        if not _has_text(node.label):
+            raise ValueError("method diagram node requires a label")
+        if not _has_text(node.paper_section):
+            raise ValueError("method diagram node requires a paper section")
+        if node.identifier in node_ids:
+            raise ValueError("method diagram node identifiers must be unique")
+        node_ids.add(node.identifier)
+
+    for edge in diagram.edges:
+        if edge.source not in node_ids or edge.target not in node_ids:
+            raise ValueError("method diagram edge must connect disclosed nodes")
+        if not _has_text(edge.data_flow_rationale):
+            raise ValueError("method diagram edge requires a disclosed data-flow rationale")
+
+
+def validate_deep_read(deep_read: DeepRead) -> DeepRead:
+    """Reject deep-read content that cannot be traced back to paper evidence."""
+    for claim in deep_read.result_claims:
+        _validate_result_claim(claim)
+
+    for claim in deep_read.why_it_matters:
+        if claim.evidence_type not in _WHY_IT_MATTERS_EVIDENCE_TYPES:
+            raise ValueError(
+                "why_it_matters evidence type must be paper_reported, "
+                "cross_paper_synthesis, or inference"
+            )
+
+    if deep_read.method_diagram is not None:
+        _validate_method_diagram(deep_read.method_diagram)
+
+    return deep_read
