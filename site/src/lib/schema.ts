@@ -164,6 +164,15 @@ const themeAuditSchema = z
     }
   });
 
+const classificationReviewSchema = z.object({
+  confidence_threshold: z.literal("0.70"),
+  low_confidence_ids: z.array(nonBlankSchema),
+  pending_low_confidence_ids: z.array(nonBlankSchema),
+  rejected_low_confidence_ids: z.array(nonBlankSchema),
+  review_complete: z.boolean(),
+  reviewed_low_confidence_ids: z.array(nonBlankSchema),
+});
+
 const awardVerificationSchema = z.object({
   allowed_hosts: z.array(nonBlankSchema).refine((hosts) => new Set(hosts).size === hosts.length),
   evidence_host: nonBlankSchema.nullable(),
@@ -512,6 +521,7 @@ export const overviewArtifactSchema = z
       producer: z.literal("conference_overview.reports.write_release"),
       schema_version: z.literal("release-build-v1"),
     }),
+    classification_review: classificationReviewSchema.optional(),
     awards: z.array(awardSchema),
     award_state: awardStateSchema,
     award_deep_reads: z.array(deepReadArtifactSchema),
@@ -620,12 +630,53 @@ export const overviewArtifactSchema = z
         });
       }
     }
+    const lowConfidenceIds = value.assignments
+      .filter((assignment) => compareExactDecimals(assignment.confidence, "0.70") < 0)
+      .map((assignment) => assignment.paper_id)
+      .sort();
+    const classificationReview = value.classification_review;
+    if (lowConfidenceIds.length > 0 && classificationReview == null) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["classification_review"],
+        message: "low-confidence assignments require an exhaustive review registry",
+      });
+    }
+    if (classificationReview != null) {
+      const reviewed = classificationReview.reviewed_low_confidence_ids;
+      const rejected = classificationReview.rejected_low_confidence_ids;
+      const pending = classificationReview.pending_low_confidence_ids;
+      const expectedPending = lowConfidenceIds.filter((paperId) => !reviewed.includes(paperId));
+      const invalid =
+        JSON.stringify(classificationReview.low_confidence_ids) !== JSON.stringify(lowConfidenceIds) ||
+        new Set(reviewed).size !== reviewed.length ||
+        reviewed.some((paperId) => !lowConfidenceIds.includes(paperId)) ||
+        new Set(rejected).size !== rejected.length ||
+        rejected.some((paperId) => !reviewed.includes(paperId)) ||
+        JSON.stringify(pending) !== JSON.stringify(expectedPending) ||
+        classificationReview.review_complete !== (expectedPending.length === 0);
+      if (invalid) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["classification_review"],
+          message: "low-confidence review registry is incomplete or inconsistent",
+        });
+      }
+    }
     const disclosedThemes = new Set(value.theme_disclosures.map((item) => item.theme));
     for (const [theme, audit] of Object.entries(value.audits)) {
+      const pending = new Set(classificationReview?.pending_low_confidence_ids ?? []);
+      const rejected = new Set(classificationReview?.rejected_low_confidence_ids ?? []);
+      const themeLowConfidenceComplete = !value.assignments.some(
+        (assignment) =>
+          assignment.primary_topic === theme &&
+          (pending.has(assignment.paper_id) || rejected.has(assignment.paper_id)),
+      );
       const passes =
         audit.sample_size > 0 &&
         compareExactDecimals(audit.observed_precision, "0.90") >= 0 &&
-        compareExactDecimals(audit.wilson_lower_95, "0.80") >= 0;
+        compareExactDecimals(audit.wilson_lower_95, "0.80") >= 0 &&
+        themeLowConfidenceComplete;
       if (!passes && !disclosedThemes.has(theme)) {
         context.addIssue({
           code: z.ZodIssueCode.custom,

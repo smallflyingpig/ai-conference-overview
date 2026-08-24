@@ -817,6 +817,54 @@ def test_release_retains_a_failed_primary_theme_audit_when_explicitly_withheld(
     )
 
 
+def test_release_requires_low_confidence_registry_and_theme_disclosure(
+    tmp_path: Path,
+) -> None:
+    bundle = publishable_bundle()
+    low_assignment = replace(bundle.assignments[0], confidence=Decimal("0.65"))
+    low_paper_id = low_assignment.paper_id
+    low_bundle = replace(
+        bundle,
+        assignments=(low_assignment, bundle.assignments[1]),
+        low_confidence_ids=(low_paper_id,),
+    )
+
+    with pytest.raises(PublicationBlocked, match="low-confidence.*incomplete"):
+        write_release(low_bundle, tmp_path / "missing-low-review")
+
+    disclosure = ThemeDisclosure(
+        theme="Foundation Models",
+        status=ThemeDisclosureStatus.EXPERIMENTAL,
+        reason=EvidenceClaim(
+            claim="The low-confidence semantic review is incomplete.",
+            evidence_type=EvidenceType.INFERENCE,
+            source_urls=["https://aclanthology.org/volumes/2026.acl-long/"],
+            locator="low-confidence decision registry",
+        ),
+    )
+    write_release(
+        replace(
+            low_bundle,
+            theme_disclosures=(*bundle.theme_disclosures, disclosure),
+        ),
+        tmp_path / "withheld-low-review",
+    )
+    overview = json.loads(
+        (
+            resolve_current_release(tmp_path / "withheld-low-review")
+            / "overview.json"
+        ).read_text()
+    )
+    assert overview["classification_review"] == {
+        "confidence_threshold": "0.70",
+        "low_confidence_ids": [low_paper_id],
+        "pending_low_confidence_ids": [low_paper_id],
+        "rejected_low_confidence_ids": [],
+        "review_complete": False,
+        "reviewed_low_confidence_ids": [],
+    }
+
+
 @pytest.mark.parametrize(
     "records",
     [

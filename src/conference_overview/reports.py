@@ -103,6 +103,9 @@ class ReleaseBundle:
     generated_at: datetime
     assignments: Sequence[Assignment] = field(default_factory=tuple)
     audits: Mapping[str, ThemeAudit] = field(default_factory=dict)
+    low_confidence_ids: Sequence[str] = field(default_factory=tuple)
+    reviewed_low_confidence_ids: Sequence[str] = field(default_factory=tuple)
+    rejected_low_confidence_ids: Sequence[str] = field(default_factory=tuple)
     metrics: Mapping[str, MetricValue] = field(default_factory=dict)
     awards: Sequence[AwardRecord] = field(default_factory=tuple)
     award_announcement: AwardAnnouncement = field(default_factory=AwardAnnouncement)
@@ -322,6 +325,12 @@ def _overview_payload(bundle: ReleaseBundle) -> dict[str, object]:
         }
         for topic, audit in sorted(bundle.audits.items())
     }
+    low_confidence_ids = sorted(bundle.low_confidence_ids)
+    reviewed_low_confidence_ids = sorted(bundle.reviewed_low_confidence_ids)
+    rejected_low_confidence_ids = sorted(bundle.rejected_low_confidence_ids)
+    pending_low_confidence_ids = sorted(
+        set(low_confidence_ids) - set(reviewed_low_confidence_ids)
+    )
     return {
         "assignments": assignments,
         "audits": audits,
@@ -329,6 +338,14 @@ def _overview_payload(bundle: ReleaseBundle) -> dict[str, object]:
             "generated_at": bundle.generated_at.isoformat().replace("+00:00", "Z"),
             "producer": "conference_overview.reports.write_release",
             "schema_version": "release-build-v1",
+        },
+        "classification_review": {
+            "confidence_threshold": "0.70",
+            "low_confidence_ids": low_confidence_ids,
+            "pending_low_confidence_ids": pending_low_confidence_ids,
+            "rejected_low_confidence_ids": rejected_low_confidence_ids,
+            "review_complete": not pending_low_confidence_ids,
+            "reviewed_low_confidence_ids": reviewed_low_confidence_ids,
         },
         "award_state": award_policy,
         "awards": validated_awards,
@@ -771,12 +788,62 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
             raise PublicationBlocked(
                 f"publication blocked: missing theme audits: {missing_audits}"
             )
+    expected_low_confidence_ids = {
+        assignment.paper_id
+        for assignment in bundle.assignments
+        if assignment.confidence < Decimal("0.70")
+    }
+    low_confidence_ids = list(bundle.low_confidence_ids)
+    reviewed_low_confidence_ids = list(bundle.reviewed_low_confidence_ids)
+    rejected_low_confidence_ids = list(bundle.rejected_low_confidence_ids)
+    if (
+        len(low_confidence_ids) != len(set(low_confidence_ids))
+        or set(low_confidence_ids) != expected_low_confidence_ids
+    ):
+        raise PublicationBlocked(
+            "publication blocked: low-confidence registry does not match assignments"
+        )
+    if (
+        len(reviewed_low_confidence_ids) != len(set(reviewed_low_confidence_ids))
+        or not set(reviewed_low_confidence_ids).issubset(expected_low_confidence_ids)
+        or len(rejected_low_confidence_ids) != len(set(rejected_low_confidence_ids))
+        or not set(rejected_low_confidence_ids).issubset(
+            reviewed_low_confidence_ids
+        )
+    ):
+        raise PublicationBlocked(
+            "publication blocked: invalid low-confidence review decisions"
+        )
+    pending_low_confidence_ids = expected_low_confidence_ids - set(
+        reviewed_low_confidence_ids
+    )
+    assignment_theme = {
+        assignment.paper_id: assignment.primary_topic
+        for assignment in bundle.assignments
+    }
     disclosed_primary_themes = {
         disclosure.theme for disclosure in bundle.theme_disclosures
     }
     for theme, audit in bundle.audits.items():
+        theme_low_confidence_ids = {
+            paper_id
+            for paper_id in expected_low_confidence_ids
+            if assignment_theme[paper_id] == theme
+        }
         try:
-            assert_theme_publishable(audit)
+            assert_theme_publishable(
+                audit,
+                low_confidence_review_complete=not bool(
+                    theme_low_confidence_ids.intersection(
+                        pending_low_confidence_ids
+                    )
+                ),
+                rejected_low_confidence_count=len(
+                    theme_low_confidence_ids.intersection(
+                        rejected_low_confidence_ids
+                    )
+                ),
+            )
         except PublicationBlocked:
             if theme not in disclosed_primary_themes:
                 raise

@@ -10,6 +10,7 @@ import subprocess
 import tempfile
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 
@@ -102,6 +103,14 @@ class ScopePaths:
         return self.root / "data/awards/acl/2026-long.yaml"
 
     @property
+    def low_confidence_queue(self) -> Path:
+        return self.classification / "low-confidence-review-queue.json"
+
+    @property
+    def low_confidence_decisions(self) -> Path:
+        return self.classification / "low-confidence-decisions.json"
+
+    @property
     def release(self) -> Path:
         return self.root / "data/releases/ACL/2026"
 
@@ -115,6 +124,18 @@ class CollectionResult:
     manifest_path: Path
     normalized_path: Path
     validation: ValidationReport
+
+
+@dataclass(frozen=True)
+class LowConfidenceReviewStatus:
+    queued_ids: tuple[str, ...]
+    accepted_ids: tuple[str, ...]
+    rejected_ids: tuple[str, ...]
+    pending_ids: tuple[str, ...]
+
+    @property
+    def reviewed_ids(self) -> tuple[str, ...]:
+        return tuple(sorted((*self.accepted_ids, *self.rejected_ids)))
 
 
 def _require_acl(request: VenueRequest) -> None:
@@ -206,20 +227,43 @@ def collect_acl_scope(
     html_source = store_snapshot(
         html, str(request.volume_url), paths.snapshots
     ).model_copy(update={"name": "ACL Anthology volume HTML"})
+    return _normalize_acl_payloads(
+        request,
+        paths,
+        bibtex=bibtex,
+        html=html,
+        bib_source=bib_source,
+        html_source=html_source,
+    )
+
+
+def _normalize_acl_payloads(
+    request: VenueRequest,
+    paths: ScopePaths,
+    *,
+    bibtex: bytes,
+    html: bytes,
+    bib_source: SourceRef,
+    html_source: SourceRef,
+) -> CollectionResult:
     included, excluded = parse_acl_bibtex(bibtex, request, bib_source)
     enriched = enrich_acl_abstracts(included, html, html_source)
 
-    expected_acl_ids = {record.paper_id.removeprefix("acl:") for record in enriched}
+    expected_acl_ids = {
+        record.paper_id.removeprefix("acl:") for record in (*enriched, *excluded)
+    }
     html_acl_ids = {
         match.decode("ascii") for match in _HTML_PAPER_ID_PATTERN.findall(html)
     }
     missing_html_ids = sorted(expected_acl_ids - html_acl_ids)
-    if missing_html_ids:
+    unexpected_html_ids = sorted(html_acl_ids - expected_acl_ids)
+    if missing_html_ids or unexpected_html_ids:
         raise AclSourceFormatError(
             source=html_source,
             detail=(
-                "volume HTML is incomplete; missing exact ACL IDs: "
-                f"{missing_html_ids[:10]}"
+                "volume HTML/BibTeX exact ACL ID mismatch; "
+                f"missing from HTML: {missing_html_ids[:10]}; "
+                f"unexpected in HTML: {unexpected_html_ids[:10]}"
             ),
         )
 
@@ -281,6 +325,53 @@ def _load_manifest(request: VenueRequest, root: Path) -> dict[str, object]:
     if manifest.get("scope") != {"track": "long", "venue": "ACL", "year": 2026}:
         raise ValueError("collection manifest scope does not match the requested route")
     return manifest
+
+
+def rebuild_acl_scope_from_snapshots(
+    request: VenueRequest, root: Path
+) -> CollectionResult:
+    """Re-normalize only from hash-verified immutable source snapshots."""
+    paths = ScopePaths(Path(root))
+    manifest = _load_manifest(request, root)
+    raw_sources = manifest.get("sources")
+    if not isinstance(raw_sources, list):
+        raise TypeError("collection manifest has no source snapshots")
+
+    def load_source(kind: str, expected_url: str) -> tuple[bytes, SourceRef]:
+        matches = [
+            source
+            for source in raw_sources
+            if isinstance(source, Mapping) and source.get("kind") == kind
+        ]
+        if len(matches) != 1:
+            raise ValueError(f"collection manifest requires exactly one {kind} source")
+        raw_source = matches[0]
+        if raw_source.get("url") != expected_url:
+            raise ValueError(f"collection manifest {kind} URL differs from registry")
+        snapshot = paths.root / str(raw_source.get("snapshot_path"))
+        data = snapshot.read_bytes()
+        if (
+            len(data) != raw_source.get("byte_size")
+            or hashlib.sha256(data).hexdigest() != raw_source.get("sha256")
+        ):
+            raise ValueError(f"immutable {kind} snapshot disagrees with its manifest")
+        return data, SourceRef(
+            name=str(raw_source.get("name")),
+            url=expected_url,
+            retrieved_at=raw_source.get("retrieved_at"),
+            sha256=str(raw_source.get("sha256")),
+        )
+
+    bibtex, bib_source = load_source("bibtex", str(request.bibtex_url))
+    html, html_source = load_source("html", str(request.volume_url))
+    return _normalize_acl_payloads(
+        request,
+        paths,
+        bibtex=bibtex,
+        html=html,
+        bib_source=bib_source,
+        html_source=html_source,
+    )
 
 
 def load_scope_records(
@@ -559,29 +650,188 @@ def assisted_classify_scope(request: VenueRequest, root: Path) -> list[Assignmen
     ]
     assignment_bytes = _jsonl_bytes(payloads)
     _atomic_write(paths.classification / "assignments.jsonl", assignment_bytes)
-    low_confidence = [
-        assignment.paper_id
-        for assignment in assignments
-        if assignment.confidence < Decimal("0.70")
-    ]
+    review_status, queue_sha256 = _write_low_confidence_review_queue(
+        paths,
+        included,
+        assignments,
+        assignments_sha256=hashlib.sha256(assignment_bytes).hexdigest(),
+    )
+    _write_classification_manifest(
+        paths,
+        assignments=assignments,
+        assignments_sha256=hashlib.sha256(assignment_bytes).hexdigest(),
+        review_status=review_status,
+        queue_sha256=queue_sha256,
+    )
+    _write_audit_samples(paths, included, assignments)
+    return assignments
+
+
+def _write_classification_manifest(
+    paths: ScopePaths,
+    *,
+    assignments: Sequence[Assignment],
+    assignments_sha256: str,
+    review_status: LowConfidenceReviewStatus,
+    queue_sha256: str,
+) -> None:
+    review_state = (
+        "pending_semantic_review"
+        if review_status.pending_ids
+        else "reviewed_with_rejections"
+        if review_status.rejected_ids
+        else "complete"
+    )
     _atomic_write(
         paths.classification / "classification-manifest.json",
         _json_bytes(
             {
                 "classifier": "deterministic-title-abstract-assisted-v1",
-                "assignments_sha256": hashlib.sha256(assignment_bytes).hexdigest(),
+                "assignments_sha256": assignments_sha256,
                 "input_fields": ["title", "abstract"],
-                "low_confidence_ids": low_confidence,
-                "low_confidence_review_state": "pending_semantic_review",
+                "low_confidence_ids": list(review_status.queued_ids),
+                "low_confidence_review_queue_sha256": queue_sha256,
+                "low_confidence_review_state": review_state,
                 "paper_count": len(assignments),
+                "pending_low_confidence_ids": list(review_status.pending_ids),
                 "publication_status": "provisional_until_stratified_audit",
-                "reviewed_low_confidence_ids": [],
+                "rejected_low_confidence_ids": list(review_status.rejected_ids),
+                "reviewed_low_confidence_ids": list(review_status.reviewed_ids),
                 "taxonomy_version": _TAXONOMY_VERSION,
             }
         ),
     )
-    _write_audit_samples(paths, included, assignments)
-    return assignments
+
+
+def _write_low_confidence_review_queue(
+    paths: ScopePaths,
+    records: Sequence[PaperRecord],
+    assignments: Sequence[Assignment],
+    *,
+    assignments_sha256: str,
+) -> tuple[LowConfidenceReviewStatus, str]:
+    records_by_id = {record.paper_id: record for record in records}
+    low_confidence = sorted(
+        (
+            assignment
+            for assignment in assignments
+            if assignment.confidence < Decimal("0.70")
+        ),
+        key=lambda item: item.paper_id,
+    )
+    queue_bytes = _json_bytes(
+        {
+            "assignments_sha256": assignments_sha256,
+            "confidence_threshold": "0.70",
+            "papers": [
+                {
+                    "abstract": records_by_id[item.paper_id].abstract,
+                    "confidence": str(item.confidence),
+                    "paper_id": item.paper_id,
+                    "proposed_primary_topic": item.primary_topic,
+                    "rationale": item.rationale,
+                    "title": records_by_id[item.paper_id].title,
+                }
+                for item in low_confidence
+            ],
+            "schema_version": "low-confidence-review-queue-v1",
+            "taxonomy_version": _TAXONOMY_VERSION,
+        }
+    )
+    _atomic_write(paths.low_confidence_queue, queue_bytes)
+    queue_sha256 = hashlib.sha256(queue_bytes).hexdigest()
+    if not paths.low_confidence_decisions.exists():
+        _atomic_write(
+            paths.low_confidence_decisions,
+            _json_bytes(
+                {
+                    "queue_sha256": queue_sha256,
+                    "reviews": [],
+                    "schema_version": "low-confidence-review-decisions-v1",
+                    "status": "pending_semantic_review",
+                    "taxonomy_version": _TAXONOMY_VERSION,
+                }
+            ),
+        )
+    return _load_low_confidence_reviews(
+        paths,
+        assignments,
+        assignments_sha256=assignments_sha256,
+    )
+
+
+def _load_low_confidence_reviews(
+    paths: ScopePaths,
+    assignments: Sequence[Assignment],
+    *,
+    assignments_sha256: str,
+) -> tuple[LowConfidenceReviewStatus, str]:
+    try:
+        queue_bytes = paths.low_confidence_queue.read_bytes()
+        queue = json.loads(queue_bytes)
+        decisions = json.loads(paths.low_confidence_decisions.read_bytes())
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError("invalid low-confidence review registry") from exc
+    expected_ids = tuple(
+        sorted(
+            assignment.paper_id
+            for assignment in assignments
+            if assignment.confidence < Decimal("0.70")
+        )
+    )
+    papers = queue.get("papers") if isinstance(queue, Mapping) else None
+    if (
+        not isinstance(papers, list)
+        or queue.get("schema_version") != "low-confidence-review-queue-v1"
+        or queue.get("taxonomy_version") != _TAXONOMY_VERSION
+        or queue.get("assignments_sha256") != assignments_sha256
+    ):
+        raise ValueError("low-confidence review queue contract mismatch")
+    queued_ids = tuple(
+        item.get("paper_id")
+        for item in papers
+        if isinstance(item, Mapping) and isinstance(item.get("paper_id"), str)
+    )
+    if queued_ids != expected_ids:
+        raise ValueError("low-confidence review queue does not cover every exact ID")
+    queue_sha256 = hashlib.sha256(queue_bytes).hexdigest()
+    reviews = decisions.get("reviews") if isinstance(decisions, Mapping) else None
+    if (
+        not isinstance(reviews, list)
+        or decisions.get("schema_version") != "low-confidence-review-decisions-v1"
+        or decisions.get("taxonomy_version") != _TAXONOMY_VERSION
+        or decisions.get("queue_sha256") != queue_sha256
+    ):
+        raise ValueError("low-confidence decision registry contract mismatch")
+    reviewed: dict[str, str] = {}
+    for review in reviews:
+        if not isinstance(review, Mapping):
+            raise TypeError("low-confidence review decision must be an object")
+        paper_id = review.get("paper_id")
+        decision = review.get("decision")
+        review_note = review.get("review_note")
+        if (
+            not isinstance(paper_id, str)
+            or paper_id not in expected_ids
+            or paper_id in reviewed
+            or decision not in {"accept", "reject"}
+            or not isinstance(review_note, str)
+            or not review_note.strip()
+        ):
+            raise ValueError("invalid or duplicate low-confidence review decision")
+        reviewed[paper_id] = str(decision)
+    accepted_ids = tuple(sorted(key for key, value in reviewed.items() if value == "accept"))
+    rejected_ids = tuple(sorted(key for key, value in reviewed.items() if value == "reject"))
+    pending_ids = tuple(sorted(set(expected_ids) - set(reviewed)))
+    return (
+        LowConfidenceReviewStatus(
+            queued_ids=expected_ids,
+            accepted_ids=accepted_ids,
+            rejected_ids=rejected_ids,
+            pending_ids=pending_ids,
+        ),
+        queue_sha256,
+    )
 
 
 def _write_audit_samples(
@@ -651,6 +901,7 @@ def _write_audit_samples(
 def _load_theme_audits(
     paths: ScopePaths,
     assignments: Sequence[Assignment],
+    low_confidence_review: LowConfidenceReviewStatus,
 ) -> tuple[dict[str, ThemeAudit], list[ThemeDisclosure], dict[str, object]]:
     themes = sorted({assignment.primary_topic for assignment in assignments})
     try:
@@ -703,10 +954,15 @@ def _load_theme_audits(
         )
 
     ids_by_theme: dict[str, set[str]] = {}
+    low_confidence_ids_by_theme: dict[str, set[str]] = {}
     for assignment in assignments:
         ids_by_theme.setdefault(assignment.primary_topic, set()).add(
             assignment.paper_id
         )
+        if assignment.paper_id in low_confidence_review.queued_ids:
+            low_confidence_ids_by_theme.setdefault(
+                assignment.primary_topic, set()
+            ).add(assignment.paper_id)
     audits: dict[str, ThemeAudit] = {}
     review_counts: dict[str, int] = {}
     disclosures: list[ThemeDisclosure] = []
@@ -737,8 +993,19 @@ def _load_theme_audits(
         audit = audit_theme(decisions_for_theme)
         audits[theme] = audit
         review_counts[theme] = len(decisions_for_theme)
+        theme_low_confidence = low_confidence_ids_by_theme.get(theme, set())
+        theme_pending = theme_low_confidence.intersection(
+            low_confidence_review.pending_ids
+        )
+        theme_rejected = theme_low_confidence.intersection(
+            low_confidence_review.rejected_ids
+        )
         try:
-            assert_theme_publishable(audit)
+            assert_theme_publishable(
+                audit,
+                low_confidence_review_complete=not theme_pending,
+                rejected_low_confidence_count=len(theme_rejected),
+            )
         except PublicationBlocked:
             disclosures.append(
                 ThemeDisclosure(
@@ -746,9 +1013,9 @@ def _load_theme_audits(
                     status=ThemeDisclosureStatus.EXPERIMENTAL,
                     reason=EvidenceClaim(
                         claim=(
-                            "This assisted primary theme does not satisfy both the "
-                            "declared observed-precision and Wilson audit gates and is "
-                            "excluded from headline claims."
+                            "This assisted primary theme does not satisfy every "
+                            "stratified-audit and exhaustive low-confidence review "
+                            "gate and is excluded from headline claims."
                         ),
                         evidence_type=EvidenceType.INFERENCE,
                         source_urls=[volume_url],
@@ -764,6 +1031,20 @@ def _load_theme_audits(
         {
             "candidate_counts": candidate_counts,
             "method": audit_method,
+            "low_confidence_review": {
+                "pending_count": len(low_confidence_review.pending_ids),
+                "rejected_count": len(low_confidence_review.rejected_ids),
+                "reviewed_count": len(low_confidence_review.reviewed_ids),
+                "theme_complete": {
+                    theme: not bool(
+                        low_confidence_ids_by_theme.get(theme, set()).intersection(
+                            low_confidence_review.pending_ids
+                        )
+                    )
+                    for theme in themes
+                },
+                "total_count": len(low_confidence_review.queued_ids),
+            },
             "pending_counts": {
                 theme: candidate_counts[theme] - review_counts[theme]
                 for theme in themes
@@ -785,7 +1066,7 @@ _ADVANCE_TOPICS: dict[AdvanceCategory, tuple[str, ...]] = {
 }
 
 
-def _preliminary_advances(
+def _preliminary_examples(
     records: Sequence[PaperRecord],
     assignments: Sequence[Assignment],
 ) -> list[AdvanceRecord]:
@@ -805,16 +1086,17 @@ def _preliminary_advances(
         sources = [records_by_id[item.paper_id].landing_url for item in candidates]
         advances.append(
             AdvanceRecord(
-                advance_id=f"preliminary-{category.value}",
-                title=f"Preliminary {category.value.replace('_', ' ')} shortlist",
+                advance_id=f"preliminary-examples-{category.value}",
+                title=f"Preliminary {category.value.replace('_', ' ')} examples",
                 category=category,
                 supporting_paper_ids=tuple(item.paper_id for item in candidates),
                 claims=(
                     EvidenceClaim(
                         claim=(
-                            "This shortlist groups title-and-abstract evidence within a "
-                            "single ACL release; it is preliminary synthesis, not a trend "
-                            "or a paper-result claim."
+                            "These examples are selected deterministically by confidence "
+                            "and ACL ID from experimental assisted primary-topic "
+                            "assignments; they make no semantic representativeness or "
+                            "lane-purity claim, trend claim, or paper-result claim."
                         ),
                         evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
                         source_urls=sources,
@@ -917,7 +1199,7 @@ def _overview_note(
         else:
             lines.append(
                 f"- **{category.value}**: {len(advance.supporting_paper_ids)} "
-                "representative official paper links are retained in the release."
+                "preliminary example official paper links are retained in the release."
             )
     lines.extend(
         [
@@ -951,11 +1233,35 @@ def analyze_acl_scope(
         load_taxonomy(),
         expected_paper_ids=(record.paper_id for record in records),
     )
-    audits, disclosures, audit_metadata = _load_theme_audits(paths, assignments)
+    assignment_bytes = assignment_path.read_bytes()
+    assignments_sha256 = hashlib.sha256(assignment_bytes).hexdigest()
+    if not paths.low_confidence_queue.exists():
+        low_confidence_review, queue_sha256 = _write_low_confidence_review_queue(
+            paths,
+            records,
+            assignments,
+            assignments_sha256=assignments_sha256,
+        )
+    else:
+        low_confidence_review, queue_sha256 = _load_low_confidence_reviews(
+            paths,
+            assignments,
+            assignments_sha256=assignments_sha256,
+        )
+    _write_classification_manifest(
+        paths,
+        assignments=assignments,
+        assignments_sha256=assignments_sha256,
+        review_status=low_confidence_review,
+        queue_sha256=queue_sha256,
+    )
+    audits, disclosures, audit_metadata = _load_theme_audits(
+        paths, assignments, low_confidence_review
+    )
     if not paths.awards.exists():
         parse_award_inventory_scope(request, root)
     awards = _load_award_records(paths)
-    advances = _preliminary_advances(records, assignments)
+    advances = _preliminary_examples(records, assignments)
     topic_counts: dict[str, int] = {}
     for assignment in assignments:
         topic_counts[assignment.primary_topic] = (
@@ -968,9 +1274,7 @@ def analyze_acl_scope(
         )
         for theme, count in topic_counts.items()
     }
-    generated_at = max(
-        source.retrieved_at for source in sources if source.retrieved_at is not None
-    )
+    generated_at = datetime.now(UTC)
     claims = (
         EvidenceClaim(
             claim=(
@@ -990,6 +1294,9 @@ def analyze_acl_scope(
         generated_at=generated_at,
         assignments=assignments,
         audits=audits,
+        low_confidence_ids=low_confidence_review.queued_ids,
+        reviewed_low_confidence_ids=low_confidence_review.reviewed_ids,
+        rejected_low_confidence_ids=low_confidence_review.rejected_ids,
         metrics=metrics,
         awards=awards,
         award_deep_reads=(),

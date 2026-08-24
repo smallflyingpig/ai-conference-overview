@@ -21,6 +21,24 @@ _BIBTEX_ENTRY_PATTERN = re.compile(r"(?im)^\s*@([a-z]+)\s*[({]")
 _ABSTRACT_ID_PATTERN = re.compile(
     r"abstract-(\d{4})--([a-z0-9-]+)--(\d+)", re.IGNORECASE
 )
+_HTML_VOID_ELEMENTS = frozenset(
+    {
+        "area",
+        "base",
+        "br",
+        "col",
+        "embed",
+        "hr",
+        "img",
+        "input",
+        "link",
+        "meta",
+        "param",
+        "source",
+        "track",
+        "wbr",
+    }
+)
 
 
 class AclSourceFormatError(ValueError):
@@ -182,7 +200,8 @@ class _VolumeAbstractParser(HTMLParser):
             is_paper_container=_is_paper_container(tag, classes, container_paper_id),
             paper_id=container_paper_id,
         )
-        self._elements.append(element)
+        if tag not in _HTML_VOID_ELEMENTS:
+            self._elements.append(element)
 
         if link_paper_id is not None:
             self.paper_ids.add(link_paper_id)
@@ -217,6 +236,13 @@ class _VolumeAbstractParser(HTMLParser):
             if container is not None and container.paper_id is not None:
                 self._active_abstract = (container.paper_id, len(self._elements), [])
 
+    def handle_startendtag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        self.handle_starttag(tag, attrs)
+        if tag not in _HTML_VOID_ELEMENTS:
+            self.handle_endtag(tag)
+
     def _nearest_paper_container(self) -> _HtmlElement | None:
         return next(
             (
@@ -232,7 +258,7 @@ class _VolumeAbstractParser(HTMLParser):
             self._active_abstract[2].append(data)
 
     def handle_endtag(self, tag: str) -> None:
-        if not self._elements:
+        if tag in _HTML_VOID_ELEMENTS or not self._elements:
             return
         self._elements.pop()
         if (

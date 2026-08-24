@@ -74,14 +74,14 @@ const { view } = Astro.props;
 
       <section class="representative-index" aria-labelledby="representative-title">
         <div class="section-line">
-          <h3 id="representative-title">Representative papers</h3>
-          <span>Highest-confidence assignment per theme</span>
+          <h3 id="representative-title">Preliminary examples</h3>
+          <span>Confidence-ranked assisted assignments</span>
         </div>
         <ol>
           {view.topics.map((row) => (
             <li>
               <span>{row.topic}</span>
-              <a href={row.representativePaper.url}>{row.representativePaper.title}</a>
+              <a href={row.preliminaryExample.url}>{row.preliminaryExample.title}</a>
               {row.auditStatus !== "audit-passed" && <small>{row.auditStatus}</small>}
             </li>
           ))}

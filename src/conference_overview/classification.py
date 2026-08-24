@@ -356,9 +356,20 @@ def audit_theme(sample: Sequence[bool]) -> ThemeAudit:
     )
 
 
-def assert_theme_publishable(audit: ThemeAudit) -> None:
+def assert_theme_publishable(
+    audit: ThemeAudit,
+    *,
+    low_confidence_review_complete: bool = True,
+    rejected_low_confidence_count: int = 0,
+) -> None:
     """Block publication unless both declared audit thresholds are satisfied."""
     reasons: list[str] = []
+    if not low_confidence_review_complete:
+        reasons.append("low-confidence review is incomplete")
+    if rejected_low_confidence_count > 0:
+        reasons.append(
+            f"{rejected_low_confidence_count} low-confidence assignments were rejected"
+        )
     if audit.sample_size == 0:
         reasons.append("empty audit sample")
     if audit.observed_precision < _MINIMUM_PRECISION:

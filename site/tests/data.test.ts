@@ -154,6 +154,71 @@ it("retains a failed assisted-classification audit only when the theme is experi
   })).not.toThrow();
 });
 
+it("requires exhaustive low-confidence review before an audit-passed theme is final", () => {
+  const lowConfidence = {
+    ...structuredClone(overview),
+    paper_count: 1,
+    assignments: [{
+      confidence: "0.65",
+      paper_id: "acl:2026.acl-long.1",
+      primary_topic: "Foundation Models",
+      rationale: "The title and abstract proposal has low confidence.",
+      secondary_topics: [],
+      taxonomy_version: "2026-08-24-v1",
+    }],
+    audits: {
+      "Foundation Models": {
+        correct_count: 50,
+        observed_precision: "1",
+        sample_size: 50,
+        thresholds: {
+          minimum_observed_precision: "0.90",
+          minimum_wilson_lower_95: "0.80",
+        },
+        wilson_lower_95: "0.9286",
+      },
+    },
+  };
+  const onePaperValidation = {
+    ...validation,
+    discovered_count: 1,
+    included_count: 1,
+    expected_included: 1,
+  };
+
+  expect(() => parseOverview({
+    overview: lowConfidence,
+    validation: onePaperValidation,
+    provenance,
+  })).toThrow(/low-confidence|review/i);
+
+  expect(() => parseOverview({
+    overview: {
+      ...lowConfidence,
+      classification_review: {
+        confidence_threshold: "0.70",
+        low_confidence_ids: ["acl:2026.acl-long.1"],
+        pending_low_confidence_ids: ["acl:2026.acl-long.1"],
+        rejected_low_confidence_ids: [],
+        review_complete: false,
+        reviewed_low_confidence_ids: [],
+      },
+      theme_disclosures: [{
+        theme: "Foundation Models",
+        status: "experimental",
+        reason: {
+          claim: "The exhaustive low-confidence review is incomplete.",
+          evidence_type: "inference",
+          source_urls: ["https://aclanthology.org/volumes/2026.acl-long/"],
+          locator: "low-confidence decision registry",
+        },
+      }],
+    },
+    validation: onePaperValidation,
+    provenance,
+  })).not.toThrow();
+});
+
 const validation = {
   record_set_sha256: "c".repeat(64),
   discovered_count: 0,

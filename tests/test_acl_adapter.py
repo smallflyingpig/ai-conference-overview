@@ -170,3 +170,25 @@ def test_acl_volume_html_supports_the_official_2026_card_shape() -> None:
             ),
         }
     ]
+
+
+def test_acl_volume_html_keeps_void_elements_inside_one_abstract() -> None:
+    included, _ = parse_acl_bibtex(
+        BIB_FIXTURE.read_bytes(), acl_request(), bib_source()
+    )
+    html = b"""<!doctype html>
+    <a href=/2026.acl-long.1/>Paper one</a>
+    <div class="card abstract-collapse" id=abstract-2026--acl-long--1>
+      First paragraph.<br><br>Second <b>paragraph</b>.
+    </div>
+    <a href=/2026.acl-long.2/>Paper two</a>
+    <div class="card abstract-collapse" id=abstract-2026--acl-long--2>
+      Next abstract.
+    </div>"""
+
+    enriched = enrich_acl_abstracts(included, html, html_source())
+
+    assert [paper.abstract for paper in enriched] == [
+        "First paragraph.Second paragraph.",
+        "Next abstract.",
+    ]

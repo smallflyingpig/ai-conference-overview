@@ -429,6 +429,13 @@ describe("methodology audit ledger", () => {
       observedPrecision: "0.92",
       wilsonLower95: "0.8116175308165716535840671634",
     });
+    expect(view.classificationReview).toEqual({
+      complete: true,
+      lowConfidenceCount: 0,
+      pendingCount: 0,
+      rejectedCount: 0,
+      reviewedCount: 0,
+    });
     expect(view.withheldThemes.themes).toEqual(["Sparse expert routing (experimental)"]);
     expect(view.withheldThemes.items[0]).toMatchObject({
       theme: "Sparse expert routing",
@@ -437,6 +444,27 @@ describe("methodology audit ledger", () => {
       locator: "Section 3",
     });
     expect(view.withheldThemes.note).toMatch(/published with evidence/i);
+  });
+
+  it("exposes incomplete exhaustive low-confidence review counts", () => {
+    const staged = structuredClone(release);
+    staged.overview.assignments[0].confidence = "0.69";
+    staged.overview.classification_review = {
+      confidence_threshold: "0.70",
+      low_confidence_ids: [staged.overview.assignments[0].paper_id],
+      pending_low_confidence_ids: [staged.overview.assignments[0].paper_id],
+      rejected_low_confidence_ids: [],
+      review_complete: false,
+      reviewed_low_confidence_ids: [],
+    };
+
+    expect(buildMethodologyView(staged).classificationReview).toEqual({
+      complete: false,
+      lowConfidenceCount: 1,
+      pendingCount: 1,
+      rejectedCount: 0,
+      reviewedCount: 0,
+    });
   });
 
   it("defines every required advance lane even when evidence is absent", () => {

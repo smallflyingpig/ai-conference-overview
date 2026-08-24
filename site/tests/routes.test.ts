@@ -285,6 +285,16 @@ describe("typed trend filters", () => {
 });
 
 describe("distribution presentation", () => {
+  it("labels confidence-ranked papers as preliminary examples", async () => {
+    const page = await readFile(
+      fileURLToPath(new URL("../src/pages/conferences/[venue]/[year].astro", import.meta.url)),
+      "utf8",
+    );
+    expect(page).toContain("Preliminary examples");
+    expect(page).toContain("Confidence-ranked assisted assignments");
+    expect(page).not.toContain("Representative papers");
+  });
+
   it("defines a paired chart-table layout with mobile reflow and reduced-motion support", async () => {
     const css = await readFile(
       fileURLToPath(new URL("../src/styles/global.css", import.meta.url)),

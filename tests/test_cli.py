@@ -84,6 +84,41 @@ def test_acl_collect_routes_to_real_orchestration(tmp_path: Path, monkeypatch) -
     }
 
 
+def test_acl_awards_infers_the_only_configured_track(tmp_path: Path, monkeypatch) -> None:
+    def fake_awards(request, root):
+        assert request.track == "long"
+        assert request.source_key == "2026.acl-long"
+        assert root == tmp_path
+        return [{} for _ in range(30)]
+
+    monkeypatch.setattr(cli_module, "parse_award_inventory_scope", fake_awards)
+    result = runner.invoke(
+        app,
+        [
+            "awards",
+            "--venue",
+            "ACL",
+            "--year",
+            "2026",
+            "--root",
+            str(tmp_path),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert payload(result)["award_count"] == 30
+
+
+def test_acl_awards_rejects_an_explicit_unconfigured_track() -> None:
+    result = runner.invoke(
+        app,
+        ["awards", "--venue", "ACL", "--year", "2026", "--track", "short"],
+    )
+
+    assert result.exit_code == 2
+    assert payload(result)["status"] == "unsupported"
+
+
 def test_invalid_input_returns_structured_exit_two() -> None:
     result = runner.invoke(
         app,

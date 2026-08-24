@@ -8,7 +8,7 @@ export interface TopicShareRow {
   paperCount: number;
   share: number;
   shareLabel: string;
-  representativePaper: {
+  preliminaryExample: {
     paperId: string;
     title: string;
     url: string;
@@ -98,12 +98,12 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
   );
   const topics = [...assignmentsByTopic.entries()]
     .map(([topic, assignments]): TopicShareRow => {
-      const representative = [...assignments].sort(
+      const preliminaryExample = [...assignments].sort(
         (left, right) => Number(right.confidence) - Number(left.confidence),
       )[0];
-      const paper = paperById.get(representative.paper_id);
+      const paper = paperById.get(preliminaryExample.paper_id);
       if (paper == null) {
-        throw new Error(`Representative assignment has no paper: ${representative.paper_id}`);
+        throw new Error(`Preliminary example assignment has no paper: ${preliminaryExample.paper_id}`);
       }
       const share = denominator === 0 ? 0 : assignments.length / denominator;
       return {
@@ -112,7 +112,7 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
         paperCount: assignments.length,
         share,
         shareLabel: `${(share * 100).toFixed(1)}%`,
-        representativePaper: {
+        preliminaryExample: {
           paperId: paper.paper_id,
           title: paper.title,
           url: paper.landing_url,

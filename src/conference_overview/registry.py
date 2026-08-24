@@ -69,14 +69,18 @@ def normalize_request(venue: str, year: int, track: str | None) -> VenueRequest:
         ),
         canonical_venue,
     )
-    canonical_track = track.strip().lower() if track else None
-    route = (
-        venues.get(canonical_venue, {})
-        .get("years", {})
-        .get(year, {})
-        .get("tracks", {})
-        .get(canonical_track, {})
+    year_definition = (
+        venues.get(canonical_venue, {}).get("years", {}).get(year, {})
     )
+    tracks = year_definition.get("tracks", {})
+    canonical_track = track.strip().lower() if track else None
+    if canonical_track is None:
+        configured_default = year_definition.get("default_track")
+        if isinstance(configured_default, str) and configured_default in tracks:
+            canonical_track = configured_default
+        elif len(tracks) == 1:
+            canonical_track = next(iter(tracks))
+    route = tracks.get(canonical_track, {})
 
     return VenueRequest(
         venue=canonical_venue,

@@ -245,6 +245,20 @@ def test_theme_gate_requires_precision_and_lower_bound_at_the_fifty_item_cap() -
     assert_theme_publishable(audit)
 
 
+def test_theme_gate_blocks_a_passing_audit_until_every_low_confidence_id_is_reviewed() -> None:
+    audit = audit_theme([True] * 50)
+
+    with pytest.raises(PublicationBlocked, match="low-confidence.*incomplete"):
+        assert_theme_publishable(audit, low_confidence_review_complete=False)
+
+
+def test_theme_gate_blocks_rejected_low_confidence_assignments() -> None:
+    audit = audit_theme([True] * 50)
+
+    with pytest.raises(PublicationBlocked, match="rejected"):
+        assert_theme_publishable(audit, rejected_low_confidence_count=1)
+
+
 def test_theme_gate_rejects_low_precision_empty_samples_and_weak_wilson_bound() -> None:
     with pytest.raises(PublicationBlocked, match="observed precision"):
         assert_theme_publishable(audit_theme([True] * 44 + [False] * 6))

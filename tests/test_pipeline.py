@@ -1,5 +1,6 @@
 import hashlib
 import json
+from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -17,6 +18,7 @@ from conference_overview.pipeline import (
     export_classification_scope,
     load_scope_records,
     parse_award_inventory_scope,
+    rebuild_acl_scope_from_snapshots,
     validate_acl_scope,
 )
 from conference_overview.registry import normalize_request
@@ -25,6 +27,7 @@ from conference_overview.reports import resolve_current_release
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "acl"
 BIB = (FIXTURE_DIR / "2026-long-sample.bib").read_bytes()
 HTML = b"""<!doctype html>
+<a href=/2026.acl-long.0/>Proceedings front matter</a>
 <div class=\"d-sm-flex align-items-stretch mb-3\">
   <div class=\"d-block me-2 list-button-row\">
     <span title=\"Outstanding Paper\" aria-label=\"Outstanding Paper\"><i></i></span>
@@ -48,6 +51,21 @@ def official_client() -> httpx.Client:
 
     def handler(incoming: httpx.Request) -> httpx.Response:
         payload = BIB if str(incoming.url) == str(request.bibtex_url) else HTML
+        return httpx.Response(
+            200,
+            content=payload,
+            headers={"content-length": str(len(payload))},
+            request=incoming,
+        )
+
+    return httpx.Client(transport=httpx.MockTransport(handler))
+
+
+def official_client_with_bib(bib: bytes) -> httpx.Client:
+    request = normalize_request("ACL", 2026, "long")
+
+    def handler(incoming: httpx.Request) -> httpx.Response:
+        payload = bib if str(incoming.url) == str(request.bibtex_url) else HTML
         return httpx.Response(
             200,
             content=payload,
@@ -97,6 +115,40 @@ def test_collect_persists_both_immutable_sources_and_reconciled_records(
         assert source["sha256"] == hashlib.sha256(snapshot.read_bytes()).hexdigest()
 
 
+def test_collect_rejects_a_shorter_complete_bib_even_with_matching_content_length(
+    tmp_path: Path,
+) -> None:
+    shorter_complete_bib = BIB.split(b"@inproceedings{lee-2026-title", maxsplit=1)[0]
+    request = normalize_request("ACL", 2026, "long")
+
+    with (
+        official_client_with_bib(shorter_complete_bib) as client,
+        pytest.raises(ValueError, match="incomplete|mismatch|HTML|IDs"),
+    ):
+        collect_acl_scope(request, tmp_path, client=client)
+
+
+def test_rebuild_uses_existing_immutable_snapshots_without_fetching(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    request = normalize_request("ACL", 2026, "long")
+    collected_scope(tmp_path)
+    snapshot_manifests = set(
+        (tmp_path / "data/snapshots/acl/2026-long/manifests").iterdir()
+    )
+
+    def unexpected_fetch(*_args, **_kwargs):
+        raise AssertionError("snapshot rebuild must not fetch")
+
+    monkeypatch.setattr(pipeline_module, "fetch_bytes", unexpected_fetch)
+    result = rebuild_acl_scope_from_snapshots(request, tmp_path)
+
+    assert result.validation.included_count == 2
+    assert snapshot_manifests == set(
+        (tmp_path / "data/snapshots/acl/2026-long/manifests").iterdir()
+    )
+
+
 def test_validate_export_and_assisted_classification_preserve_every_id(
     tmp_path: Path,
 ) -> None:
@@ -132,6 +184,24 @@ def test_validate_export_and_assisted_classification_preserve_every_id(
     ).hexdigest()
     assert manifest["reviewed_low_confidence_ids"] == []
     assert manifest["low_confidence_review_state"] == "pending_semantic_review"
+    queue_path = (
+        tmp_path
+        / "data/classification/acl/2026-long/low-confidence-review-queue.json"
+    )
+    queue = json.loads(queue_path.read_text())
+    assert [item["paper_id"] for item in queue["papers"]] == [
+        "acl:2026.acl-long.2"
+    ]
+    assert manifest["low_confidence_review_queue_sha256"] == hashlib.sha256(
+        queue_path.read_bytes()
+    ).hexdigest()
+    low_confidence_decisions = json.loads(
+        (
+            tmp_path
+            / "data/classification/acl/2026-long/low-confidence-decisions.json"
+        ).read_text()
+    )
+    assert low_confidence_decisions["reviews"] == []
     decisions = json.loads(
         (tmp_path / "data/classification/acl/2026-long/audit-decisions.json").read_text()
     )
@@ -140,6 +210,43 @@ def test_validate_export_and_assisted_classification_preserve_every_id(
         "Reasoning and Agents": [],
     }
     assert decisions["status"] == "pending_semantic_review"
+
+
+@pytest.mark.parametrize(
+    ("decision", "rejected_count"), [("accept", 0), ("reject", 1)]
+)
+def test_low_confidence_registry_accepts_an_unsampled_review_decision(
+    tmp_path: Path, decision: str, rejected_count: int
+) -> None:
+    request = normalize_request("ACL", 2026, "long")
+    collected_scope(tmp_path)
+    assisted_classify_scope(request, tmp_path)
+    classification = tmp_path / "data/classification/acl/2026-long"
+    samples_path = classification / "audit-samples.json"
+    samples = json.loads(samples_path.read_text())
+    samples["themes"]["Evaluation"] = []
+    samples_path.write_text(json.dumps(samples))
+    queue_path = classification / "low-confidence-review-queue.json"
+    decisions_path = classification / "low-confidence-decisions.json"
+    decisions = json.loads(decisions_path.read_text())
+    decisions["reviews"] = [
+        {
+            "decision": decision,
+            "paper_id": "acl:2026.acl-long.2",
+            "review_note": "Explicit title-and-abstract semantic review.",
+        }
+    ]
+    decisions["queue_sha256"] = hashlib.sha256(queue_path.read_bytes()).hexdigest()
+    decisions_path.write_text(json.dumps(decisions))
+
+    summary = analyze_acl_scope(request, tmp_path)
+    manifest = json.loads((classification / "classification-manifest.json").read_text())
+
+    assert summary["audit"]["candidate_counts"]["Evaluation"] == 0
+    assert summary["audit"]["low_confidence_review"]["reviewed_count"] == 1
+    assert summary["audit"]["low_confidence_review"]["pending_count"] == 0
+    assert summary["audit"]["low_confidence_review"]["rejected_count"] == rejected_count
+    assert manifest["reviewed_low_confidence_ids"] == ["acl:2026.acl-long.2"]
 
 
 def test_award_inventory_is_bound_to_exact_official_volume_badge(
@@ -188,6 +295,7 @@ def test_preliminary_release_keeps_unaudited_themes_explicitly_experimental(
     summary = analyze_acl_scope(request, tmp_path, write_release=True)
     release = resolve_current_release(tmp_path / "data/releases/ACL/2026")
     overview = json.loads((release / "overview.json").read_text())
+    provenance = json.loads((release / "provenance.json").read_text())
 
     assert summary["language"] == "distribution_or_hotspot_not_trend"
     assert summary["audit"]["candidate_counts"] == {
@@ -207,6 +315,20 @@ def test_preliminary_release_keeps_unaudited_themes_explicitly_experimental(
     }
     assert overview["awards"][0]["status"] == "verified"
     assert overview["award_deep_reads"] == []
+    assert datetime.fromisoformat(
+        overview["build_metadata"]["generated_at"]
+    ) > max(
+        datetime.fromisoformat(source["retrieved_at"])
+        for source in provenance["sources"]
+    )
+    assert all(
+        advance["advance_id"].startswith("preliminary-examples-")
+        for advance in overview["advances"]
+    )
+    assert all(
+        "no semantic representativeness or lane-purity claim" in advance["claims"][0]["claim"]
+        for advance in overview["advances"]
+    )
     assert sorted(path.name for path in release.iterdir()) == [
         "overview.json",
         "overview.md",
@@ -219,6 +341,8 @@ def test_preliminary_release_keeps_unaudited_themes_explicitly_experimental(
     assert "one-year distribution" in note
     assert "not a trend" in note
     assert "Audit candidates | Reviewed" in note
+    assert "preliminary example" in note
+    assert "representative" not in note
 
 
 def test_build_site_resolves_relative_release_root_before_changing_cwd(

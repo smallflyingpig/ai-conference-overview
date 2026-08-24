@@ -24,6 +24,13 @@ def test_acl_long_request_uses_official_source_routes() -> None:
     assert str(request.volume_url) == "https://aclanthology.org/volumes/2026.acl-long/"
 
 
+def test_acl_request_infers_the_only_configured_track() -> None:
+    request = normalize_request("ACL", 2026, None)
+
+    assert request.track == "long"
+    assert request.source_key == "2026.acl-long"
+
+
 def test_official_hosts_are_canonicalized_and_deduplicated_once() -> None:
     assert canonicalize_official_hosts(
         [" Example.COM. ", "example.com", "BÜCHER.example.", "xn--bcher-kva.example"]

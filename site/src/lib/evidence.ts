@@ -189,6 +189,13 @@ export interface MethodologyView {
   formulas: Array<{ name: string; formula: string; numerator: string; denominator?: string; version: string }>;
   missingness: { abstracts: number; pdfs: number; dois: number };
   audits: Array<{ theme: string; sampleSize: number; observedPrecision: string; wilsonLower95: string; correctCount: number }>;
+  classificationReview: {
+    complete: boolean;
+    lowConfidenceCount: number;
+    pendingCount: number;
+    rejectedCount: number;
+    reviewedCount: number;
+  };
   withheldThemes: {
     themes: string[];
     note: string;
@@ -247,6 +254,13 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
       wilsonLower95: audit.wilson_lower_95,
       correctCount: audit.correct_count,
     })),
+    classificationReview: {
+      complete: release.overview.classification_review?.review_complete ?? true,
+      lowConfidenceCount: release.overview.classification_review?.low_confidence_ids.length ?? 0,
+      pendingCount: release.overview.classification_review?.pending_low_confidence_ids.length ?? 0,
+      rejectedCount: release.overview.classification_review?.rejected_low_confidence_ids.length ?? 0,
+      reviewedCount: release.overview.classification_review?.reviewed_low_confidence_ids.length ?? 0,
+    },
     withheldThemes: {
       themes: release.overview.theme_disclosures.map((item) => `${item.theme} (${item.status})`),
       note: release.overview.theme_disclosures.length === 0
