@@ -320,7 +320,7 @@ def test_import_semantic_assignments_merges_exact_partitions_and_resets_reviews(
     assert analyzed_manifest["semantic_labeling"] == manifest["semantic_labeling"]
     assert summary["classification"]["classifier"] == "agent-semantic-batch-review-v1"
     assert (
-        "explicit agent semantic assignments"
+        "agent semantic batch review"
         in (tmp_path / "notes/acl-2026-long-overview.md").read_text()
     )
 
