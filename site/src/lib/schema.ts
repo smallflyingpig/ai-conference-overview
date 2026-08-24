@@ -229,10 +229,15 @@ const crossVenueSpreadSchema = z
         message: "present venues must belong to the configured venue population",
       });
     }
-    const expectedFraction = pythonDecimalRatio(
-      value.present_venue_count,
-      value.configured_venues.length,
-    );
+    const denominator = value.configured_venues.length;
+    if (
+      !Number.isSafeInteger(value.present_venue_count) ||
+      value.present_venue_count < 0 ||
+      denominator <= 0
+    ) {
+      return;
+    }
+    const expectedFraction = pythonDecimalRatio(value.present_venue_count, denominator);
     if (compareExactDecimals(value.present_venue_fraction, expectedFraction) !== 0) {
       context.addIssue({
         code: z.ZodIssueCode.custom,

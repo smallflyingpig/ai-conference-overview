@@ -356,6 +356,29 @@ describe("parseOverview", () => {
     await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/fraction|population/i);
   });
 
+  it.each([
+    [
+      "negative present count",
+      (artifact: Record<string, any>) => {
+        artifact.metrics.cross_venue_spread.present_venue_count = -1;
+        artifact.metrics.cross_venue_spread.present_venues = [];
+        artifact.metrics.cross_venue_spread.present_venue_fraction = "-0.25";
+      },
+    ],
+    [
+      "empty configured denominator",
+      (artifact: Record<string, any>) => {
+        setCrossVenuePopulation(artifact, [], [], "0");
+      },
+    ],
+  ])("promptly rejects a %s before exact ratio arithmetic", async (_name, mutate) => {
+    const root = await mutatedTask9Release(mutate);
+
+    await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(
+      /cross.venue|configured|nonnegative|population/i,
+    );
+  });
+
   it("accepts exact terminating and non-terminating fractions in scientific notation", async () => {
     const terminating = await mutatedTask9Release((artifact) => {
       artifact.metrics.cross_venue_spread.present_venue_fraction = "5E-1";
