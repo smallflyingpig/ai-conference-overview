@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
-import { lstat, readFile, readdir } from "node:fs/promises";
+import { lstat, readFile, readdir, realpath } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { join } from "node:path";
+import { isAbsolute, join, relative, sep } from "node:path";
 
 import { z } from "zod";
 
@@ -43,6 +43,24 @@ async function readRegularFile(path: string): Promise<Buffer> {
   return readFile(path);
 }
 
+async function requireSafeDirectory(path: string, label: string): Promise<string> {
+  const stats = await lstat(path);
+  if (stats.isSymbolicLink()) {
+    throw new Error(`${label} must not be a symlink`);
+  }
+  if (!stats.isDirectory()) {
+    throw new Error(`${label} is not a directory`);
+  }
+  return realpath(path);
+}
+
+function requireContained(parent: string, child: string, label: string): void {
+  const relation = relative(parent, child);
+  if (relation === ".." || relation.startsWith(`..${sep}`) || isAbsolute(relation)) {
+    throw new Error(`${label} escapes its canonical release root`);
+  }
+}
+
 export async function loadOverview(
   venue: string,
   year: number,
@@ -53,6 +71,19 @@ export async function loadOverview(
   }
 
   const release = join(releaseRoot, venue, String(year));
+  let canonicalRoot: string;
+  let canonicalVenue: string;
+  let canonicalRelease: string;
+  try {
+    canonicalRoot = await requireSafeDirectory(releaseRoot, "Release root");
+    canonicalVenue = await requireSafeDirectory(join(releaseRoot, venue), "Venue release directory");
+    requireContained(canonicalRoot, canonicalVenue, "Venue release directory");
+    canonicalRelease = await requireSafeDirectory(release, "Release directory");
+    requireContained(canonicalVenue, canonicalRelease, "Release directory");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    throw error;
+  }
   let pointerBytes: Buffer;
   try {
     pointerBytes = await readRegularFile(join(release, "current.json"));
@@ -68,11 +99,14 @@ export async function loadOverview(
     throw new Error("Release current pointer contains invalid JSON", { cause: error });
   }
   const pointer = pointerSchema.parse(rawPointer);
+  const canonicalGenerations = await requireSafeDirectory(
+    join(release, "generations"),
+    "Release generations directory",
+  );
+  requireContained(canonicalRelease, canonicalGenerations, "Release generations directory");
   const generation = join(release, ...pointer.generation.split("/"));
-  const generationStats = await lstat(generation);
-  if (!generationStats.isDirectory() || generationStats.isSymbolicLink()) {
-    throw new Error("Release generation is not a regular directory");
-  }
+  const canonicalGeneration = await requireSafeDirectory(generation, "Release generation");
+  requireContained(canonicalGenerations, canonicalGeneration, "Release generation");
   const entries = (await readdir(generation)).sort();
   const expectedEntries = [...artifactNames].sort();
   if (JSON.stringify(entries) !== JSON.stringify(expectedEntries)) {

@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -60,6 +60,9 @@ const provenance = {
     },
   ],
   taxonomy_version: "2026-08-24-v1",
+  source_url: "https://aclanthology.org/volumes/2026.acl-long/",
+  source_sha256: "a".repeat(64),
+  source_retrieved_at: "2026-08-24T01:02:03Z",
 };
 
 const artifactNames = [
@@ -97,6 +100,53 @@ describe("parseOverview", () => {
         },
       }),
     ).toThrow(/sha256/i);
+  });
+
+  it.each([
+    ["duplicate source count", { duplicate_source_ids: ["paper-a"] }],
+    ["expected included count", { expected_included: 999 }],
+  ])("rejects validation incoherence in %s", (_name, change) => {
+    expect(() =>
+      parseOverview({
+        overview,
+        validation: { ...validation, ...change },
+        provenance,
+      }),
+    ).toThrow(/count|diagnostic|expected/i);
+  });
+
+  it("rejects a URL scheme that Python HttpUrl would reject", () => {
+    expect(() =>
+      parseOverview({
+        overview,
+        validation,
+        provenance: {
+          ...provenance,
+          sources: [{ ...provenance.sources[0], url: "ftp://example.com/source" }],
+          source_url: "ftp://example.com/source",
+        },
+      }),
+    ).toThrow(/url/i);
+  });
+
+  it("rejects single-source aliases that disagree with the canonical source", () => {
+    expect(() =>
+      parseOverview({
+        overview,
+        validation,
+        provenance: { ...provenance, source_sha256: "d".repeat(64) },
+      }),
+    ).toThrow(/alias|source/i);
+  });
+
+  it("accepts finite Decimal serialization in scientific notation", () => {
+    expect(() =>
+      parseOverview({
+        overview: { ...overview, metrics: { tiny_share: "1E-7" } },
+        validation,
+        provenance,
+      }),
+    ).not.toThrow();
   });
 });
 
@@ -144,5 +194,41 @@ describe("loadOverview", () => {
     const loaded = await loadOverview("ACL", 2026, root);
     expect(loaded?.overview.paper_count).toBe(0);
     expect(loaded?.generation).toBe(`generations/${generationName}`);
+  });
+
+  it("rejects an external release tree reached through a symlinked ancestor", async () => {
+    const root = await mkdtemp(join(tmpdir(), "conference-site-symlink-root-"));
+    const external = await mkdtemp(join(tmpdir(), "conference-site-symlink-external-"));
+    const release = join(external, "release");
+    const generationName = "e".repeat(64);
+    const generation = join(release, "generations", generationName);
+    await mkdir(generation, { recursive: true });
+    const files: Record<(typeof artifactNames)[number], string> = {
+      "papers.json": "[]\n",
+      "papers.csv": "paper_id\n",
+      "overview.json": `${JSON.stringify(overview)}\n`,
+      "overview.md": "# Conference overview\n",
+      "validation.json": `${JSON.stringify(validation)}\n`,
+      "provenance.json": `${JSON.stringify(provenance)}\n`,
+    };
+    for (const [name, contents] of Object.entries(files)) {
+      await writeFile(join(generation, name), contents);
+    }
+    await writeFile(
+      join(release, "current.json"),
+      JSON.stringify({
+        generation: `generations/${generationName}`,
+        artifact_sha256: Object.fromEntries(
+          Object.entries(files).map(([name, contents]) => [
+            name,
+            createHash("sha256").update(contents).digest("hex"),
+          ]),
+        ),
+      }),
+    );
+    await mkdir(join(root, "ACL"), { recursive: true });
+    await symlink(release, join(root, "ACL", "2026"), "dir");
+
+    await expect(loadOverview("ACL", 2026, root)).rejects.toThrow(/symlink|escape/i);
   });
 });
