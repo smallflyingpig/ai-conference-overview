@@ -1,9 +1,12 @@
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 from typer.testing import CliRunner
 
+import conference_overview.cli as cli_module
 from conference_overview.cli import app
+from conference_overview.validate import PublicationBlocked
 
 runner = CliRunner()
 
@@ -27,17 +30,57 @@ def test_cli_exposes_all_pipeline_commands() -> None:
         assert command in result.stdout
 
 
-def test_incomplete_collect_returns_structured_non_success() -> None:
+def test_unsupported_collect_returns_structured_non_success() -> None:
     result = runner.invoke(
         app,
-        ["collect", "--venues", "ACL", "--years", "2026", "--tracks", "long"],
+        ["collect", "--venues", "NEURIPS", "--years", "2025"],
     )
 
     assert result.exit_code == 2
+    assert payload(result)["command"] == "collect"
+    assert payload(result)["status"] == "unsupported"
+    assert "unsupported" in str(payload(result)["message"])
+
+
+def test_acl_collect_routes_to_real_orchestration(tmp_path: Path, monkeypatch) -> None:
+    def fake_collect(request, root):
+        assert request.source_key == "2026.acl-long"
+        assert root == tmp_path
+        return SimpleNamespace(
+            manifest_path=tmp_path / "data/manifests/acl/2026-long.json",
+            normalized_path=tmp_path / "data/normalized/acl/2026-long.jsonl",
+            validation=SimpleNamespace(
+                discovered_count=3,
+                excluded_count=1,
+                included_count=2,
+            ),
+        )
+
+    monkeypatch.setattr(cli_module, "collect_acl_scope", fake_collect)
+    result = runner.invoke(
+        app,
+        [
+            "collect",
+            "--venues",
+            "ACL",
+            "--years",
+            "2026",
+            "--tracks",
+            "long",
+            "--root",
+            str(tmp_path),
+        ],
+    )
+
+    assert result.exit_code == 0
     assert payload(result) == {
         "command": "collect",
-        "message": "live collection orchestration is not implemented",
-        "status": "unsupported",
+        "discovered_count": 3,
+        "excluded_count": 1,
+        "included_count": 2,
+        "manifest": "data/manifests/acl/2026-long.json",
+        "normalized": "data/normalized/acl/2026-long.jsonl",
+        "status": "collected",
     }
 
 
@@ -53,57 +96,44 @@ def test_invalid_input_returns_structured_exit_two() -> None:
     assert "years" in str(payload(result)["message"])
 
 
-def test_blocked_release_returns_structured_exit_three(tmp_path: Path) -> None:
-    release = tmp_path / "blocked"
-    release.mkdir()
-    (release / "validation.json").write_text(
-        json.dumps(
-            {
-                "publishable": False,
-                "status_mismatch_ids": ["paper-1"],
-                "unresolved_record_ids": [],
-                "definite_duplicate_pairs": [],
-                "duplicate_candidates": [],
-            }
-        ),
-        encoding="utf-8",
+def test_blocked_release_returns_structured_exit_three(
+    tmp_path: Path, monkeypatch
+) -> None:
+    def blocked(*_args, **_kwargs):
+        raise PublicationBlocked("release validation blocks publication")
+
+    monkeypatch.setattr(cli_module, "build_site_scope", blocked)
+    result = runner.invoke(
+        app,
+        ["build-site", "--root", str(tmp_path)],
     )
 
-    result = runner.invoke(app, ["build-site", "--release-dir", str(release)])
-
     assert result.exit_code == 3
-    assert payload(result) == {
-        "command": "build-site",
-        "details": {
-            "definite_duplicate_pairs": [],
-            "duplicate_candidates": [],
-            "status_mismatch_ids": ["paper-1"],
-            "unresolved_record_ids": [],
-        },
-        "message": "release validation blocks publication",
-        "status": "publication_blocked",
-    }
+    assert payload(result)["command"] == "build-site"
+    assert payload(result)["status"] == "publication_blocked"
 
 
-def test_invalid_release_document_returns_structured_exit_two(tmp_path: Path) -> None:
-    release = tmp_path / "invalid"
-    release.mkdir()
-    (release / "validation.json").write_text("not json", encoding="utf-8")
+def test_invalid_release_document_returns_structured_exit_two(
+    tmp_path: Path, monkeypatch
+) -> None:
+    def invalid(*_args, **_kwargs):
+        raise ValueError("invalid release current pointer")
 
-    result = runner.invoke(app, ["build-site", "--release-dir", str(release)])
+    monkeypatch.setattr(cli_module, "build_site_scope", invalid)
+    result = runner.invoke(app, ["build-site", "--root", str(tmp_path)])
 
     assert result.exit_code == 2
     assert payload(result)["status"] == "invalid_input"
 
 
 def test_malformed_utf8_release_document_returns_structured_exit_two(
-    tmp_path: Path,
+    tmp_path: Path, monkeypatch
 ) -> None:
-    release = tmp_path / "invalid-utf8"
-    release.mkdir()
-    (release / "validation.json").write_bytes(b"\xff\xfe")
+    def invalid(*_args, **_kwargs):
+        raise UnicodeError("invalid UTF-8 release document")
 
-    result = runner.invoke(app, ["build-site", "--release-dir", str(release)])
+    monkeypatch.setattr(cli_module, "build_site_scope", invalid)
+    result = runner.invoke(app, ["build-site", "--root", str(tmp_path)])
 
     assert result.exit_code == 2
     assert payload(result)["status"] == "invalid_input"

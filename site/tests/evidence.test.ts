@@ -142,6 +142,28 @@ describe("evidence labels", () => {
     expect(canonicalUrlHostname("https://2026.aclweb.org。/awards"))
       .toBe(awardHostPolicy.scopes["ACL/2026/long"][0]);
   });
+
+  it("rejects hostnames outside the producer STD3 DNS boundary", () => {
+    expect(() => canonicalUrlHostname("https://bad_host.example/awards"))
+      .toThrow(/STD3|hostname label/i);
+    expect(() => canonicalUrlHostname("https://-bad.example/awards"))
+      .toThrow(/STD3|hostname label/i);
+    expect(() => canonicalUrlHostname("https://bad-.example/awards"))
+      .toThrow(/STD3|hostname label/i);
+    expect(() => canonicalUrlHostname(`https://${"a".repeat(64)}.example/awards`))
+      .toThrow(/63 bytes|hostname label/i);
+  });
+
+  it("rejects a canonical hostname longer than 253 bytes", () => {
+    const hostname = ["a".repeat(63), "b".repeat(63), "c".repeat(63), "d".repeat(61)].join(".");
+    expect(hostname).toHaveLength(253);
+    expect(canonicalUrlHostname(`https://${hostname}/awards`)).toBe(hostname);
+
+    const overlong = `${hostname}x`;
+    expect(overlong).toHaveLength(254);
+    expect(() => canonicalUrlHostname(`https://${overlong}/awards`))
+      .toThrow(/253 bytes|hostname/i);
+  });
 });
 
 describe("award publication gate", () => {

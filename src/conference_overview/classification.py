@@ -20,7 +20,9 @@ _MAX_AUDIT_SAMPLE_SIZE = 50
 _PACKAGED_TAXONOMY_PATH = Path(__file__).with_name("taxonomy.yaml")
 _SOURCE_TAXONOMY_PATH = Path(__file__).resolve().parents[2] / "config" / "taxonomy.yaml"
 _DEFAULT_TAXONOMY_PATH = (
-    _PACKAGED_TAXONOMY_PATH if _PACKAGED_TAXONOMY_PATH.exists() else _SOURCE_TAXONOMY_PATH
+    _PACKAGED_TAXONOMY_PATH
+    if _PACKAGED_TAXONOMY_PATH.exists()
+    else _SOURCE_TAXONOMY_PATH
 )
 
 _EVIDENCE_LABEL_INSTRUCTIONS = {
@@ -63,7 +65,10 @@ class _Taxonomy:
         return frozenset(topic["name"] for topic in self.topics)
 
     def to_payload(self) -> dict[str, object]:
-        return {"version": self.version, "topics": [dict(topic) for topic in self.topics]}
+        return {
+            "version": self.version,
+            "topics": [dict(topic) for topic in self.topics],
+        }
 
 
 def load_taxonomy(path: Path = _DEFAULT_TAXONOMY_PATH) -> dict[str, object]:
@@ -82,7 +87,11 @@ def _coerce_taxonomy(taxonomy: Mapping[str, object] | None) -> _Taxonomy:
     topics = taxonomy.get("topics")
     if not isinstance(version, str) or not version.strip():
         raise ValueError("taxonomy version is required")
-    if not isinstance(topics, Sequence) or isinstance(topics, (str, bytes)) or not topics:
+    if (
+        not isinstance(topics, Sequence)
+        or isinstance(topics, (str, bytes))
+        or not topics
+    ):
         raise ValueError("taxonomy must define at least one topic")
 
     normalized_topics: list[dict[str, str]] = []
@@ -94,7 +103,10 @@ def _coerce_taxonomy(taxonomy: Mapping[str, object] | None) -> _Taxonomy:
         topic_id = topic.get("id")
         name = topic.get("name")
         definition = topic.get("definition")
-        if not all(isinstance(value, str) and value.strip() for value in (topic_id, name, definition)):
+        if not all(
+            isinstance(value, str) and value.strip()
+            for value in (topic_id, name, definition)
+        ):
             raise ValueError("taxonomy topics require id, name, and definition")
         if topic_id in topic_ids or name in topic_names:
             raise ValueError("taxonomy topic ids and names must be unique")
@@ -152,7 +164,9 @@ def validate_assignment(
         raise ValueError("assignment must be a mapping")  # noqa: TRY004
 
     paper_id = _required_text(raw_assignment.get("paper_id"), field="paper_id")
-    primary_topic = _required_text(raw_assignment.get("primary_topic"), field="primary_topic")
+    primary_topic = _required_text(
+        raw_assignment.get("primary_topic"), field="primary_topic"
+    )
     taxonomy_version = _required_text(
         raw_assignment.get("taxonomy_version"), field="taxonomy_version"
     )
@@ -255,7 +269,9 @@ def load_assignments(
         try:
             raw_assignment = json.loads(line, parse_float=Decimal)
         except json.JSONDecodeError as exc:
-            raise ValueError(f"assignment on line {line_number}: invalid JSONL assignment") from exc
+            raise ValueError(
+                f"assignment on line {line_number}: invalid JSONL assignment"
+            ) from exc
         try:
             if not isinstance(raw_assignment, Mapping):
                 raise ValueError("assignment must be an object")  # noqa: TRY004
@@ -302,17 +318,25 @@ def wilson_lower(
     squared_z = decimal_z * decimal_z
     denominator = Decimal(1) + squared_z / Decimal(total)
     centre = probability + squared_z / (Decimal(2) * Decimal(total))
-    margin = decimal_z * (
-        (probability * (Decimal(1) - probability) + squared_z / (Decimal(4) * total))
-        / Decimal(total)
-    ).sqrt()
+    margin = (
+        decimal_z
+        * (
+            (
+                probability * (Decimal(1) - probability)
+                + squared_z / (Decimal(4) * total)
+            )
+            / Decimal(total)
+        ).sqrt()
+    )
     return (centre - margin) / denominator
 
 
 def audit_theme(sample: Sequence[bool]) -> ThemeAudit:
     """Calculate auditable classification precision for one reviewed sample."""
     if len(sample) > _MAX_AUDIT_SAMPLE_SIZE:
-        raise ValueError(f"audit sample must contain at most {_MAX_AUDIT_SAMPLE_SIZE} decisions")
+        raise ValueError(
+            f"audit sample must contain at most {_MAX_AUDIT_SAMPLE_SIZE} decisions"
+        )
     if any(type(decision) is not bool for decision in sample):
         raise ValueError("audit sample decisions must be booleans")
     sample_size = len(sample)

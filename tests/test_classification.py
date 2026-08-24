@@ -23,7 +23,11 @@ def taxonomy() -> dict[str, object]:
     return {
         "version": "2026-08-24-v1",
         "topics": [
-            {"id": "foundation_models", "name": "Foundation Models", "definition": "Models."},
+            {
+                "id": "foundation_models",
+                "name": "Foundation Models",
+                "definition": "Models.",
+            },
             {"id": "evaluation", "name": "Evaluation", "definition": "Assessment."},
         ],
     }
@@ -72,7 +76,10 @@ def write_assignments(path: Path, *values: dict[str, object]) -> None:
 def test_export_batches_includes_reproducible_context_and_sorts_papers() -> None:
     batches = export_batches([record("paper-z"), record("paper-a")], taxonomy(), size=1)
 
-    assert [batch["papers"][0]["paper_id"] for batch in batches] == ["paper-a", "paper-z"]
+    assert [batch["papers"][0]["paper_id"] for batch in batches] == [
+        "paper-a",
+        "paper-z",
+    ]
     assert batches[0]["taxonomy"] == taxonomy()
     assert batches[0]["papers"][0]["abstract"] == "An abstract."
     assert batches[0]["papers"][0]["venue_native_metadata"] == {
@@ -93,14 +100,20 @@ def test_assignment_rejects_unknown_topic() -> None:
 
 def test_assignment_rejects_duplicate_or_primary_secondary_topics() -> None:
     with pytest.raises(ValueError, match="duplicate secondary topic"):
-        validate_assignment(assignment(secondary_topics=["Evaluation", "Evaluation"]), taxonomy())
+        validate_assignment(
+            assignment(secondary_topics=["Evaluation", "Evaluation"]), taxonomy()
+        )
 
     with pytest.raises(ValueError, match="primary topic cannot be repeated"):
-        validate_assignment(assignment(secondary_topics=["Foundation Models"]), taxonomy())
+        validate_assignment(
+            assignment(secondary_topics=["Foundation Models"]), taxonomy()
+        )
 
 
 @pytest.mark.parametrize("confidence", ["-0.01", "1.01"])
-def test_assignment_rejects_confidence_outside_closed_unit_interval(confidence: str) -> None:
+def test_assignment_rejects_confidence_outside_closed_unit_interval(
+    confidence: str,
+) -> None:
     with pytest.raises(ValueError, match="confidence"):
         validate_assignment(assignment(confidence=confidence), taxonomy())
 
@@ -160,11 +173,16 @@ def test_load_assignments_reports_duplicate_paper_id_with_the_correct_line(
     with pytest.raises(ValueError) as error:
         load_assignments(path, taxonomy())
 
-    assert str(error.value) == "assignment on line 2: duplicate paper_id: acl:2026.acl-long.1"
+    assert (
+        str(error.value)
+        == "assignment on line 2: duplicate paper_id: acl:2026.acl-long.1"
+    )
     assert isinstance(error.value.__cause__, ValueError)
 
 
-def test_load_assignments_reports_invalid_json_with_the_correct_line(tmp_path: Path) -> None:
+def test_load_assignments_reports_invalid_json_with_the_correct_line(
+    tmp_path: Path,
+) -> None:
     path = tmp_path / "invalid.jsonl"
     path.write_text(json.dumps(assignment(paper_id="first")) + "\n{" + "\n")
 
@@ -183,7 +201,8 @@ def test_load_assignments_rejects_non_finite_json_confidence_with_line_context(
     write_assignments(path, assignment(confidence=float("nan")))
 
     with pytest.raises(
-        ValueError, match=re.escape("assignment on line 1: confidence must be a finite number")
+        ValueError,
+        match=re.escape("assignment on line 1: confidence must be a finite number"),
     ) as error:
         load_assignments(path, taxonomy())
 
@@ -198,7 +217,9 @@ def test_load_assignments_rejects_taxonomy_version_mismatch(tmp_path: Path) -> N
         load_assignments(path, taxonomy())
 
 
-def test_load_assignments_retains_low_confidence_assignment_for_review(tmp_path: Path) -> None:
+def test_load_assignments_retains_low_confidence_assignment_for_review(
+    tmp_path: Path,
+) -> None:
     path = tmp_path / "assignments.jsonl"
     write_assignments(path, assignment(confidence="0.01"))
 

@@ -121,6 +121,36 @@ describe("distribution view", () => {
     expect(view.excludedCount).toBe(0);
     expect(view.abstractCoverageLabel).toBe("2 of 2 (100.0%)");
   });
+
+  it("exposes failed audit themes as experimental instead of audited", () => {
+    const release = structuredClone(validatedRelease);
+    const theme = release.overview.assignments[0].primary_topic;
+    release.overview.audits[theme] = {
+      correct_count: 0,
+      observed_precision: "0",
+      sample_size: 0,
+      thresholds: {
+        minimum_observed_precision: "0.90",
+        minimum_wilson_lower_95: "0.80",
+      },
+      wilson_lower_95: "0",
+    };
+    release.overview.theme_disclosures = [{
+      theme,
+      status: "experimental",
+      reason: {
+        claim: "Semantic audit decisions remain pending.",
+        evidence_type: "inference",
+        source_urls: ["https://aclanthology.org/volumes/2026.acl-long/"],
+        locator: "classification audit registry",
+      },
+    }];
+
+    const view = buildConferenceView(release);
+    expect(view.topics.find((row) => row.topic === theme)?.auditStatus).toBe("experimental");
+    expect(view.auditPassedThemeCount).toBe(view.topics.length - 1);
+    expect(view.experimentalThemeCount).toBe(1);
+  });
 });
 
 describe("trend comparability gate", () => {

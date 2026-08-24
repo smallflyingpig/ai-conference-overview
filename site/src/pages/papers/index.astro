@@ -13,7 +13,7 @@ const themes = [...new Set(papers.map((paper) => paper.theme))].sort();
     <header class="page-thesis paper-thesis">
       <p class="eyebrow">Compact research index</p>
       <h1>Find the paper.<br />Keep the source.</h1>
-      <p>Search title, author, or stable paper ID; filter by audited primary theme. Missing optional links are left blank rather than interpreted.</p>
+      <p>Search title, author, or stable paper ID; filter by the release's primary-theme assignment. Experimental labels remain disclosed in the methodology ledger.</p>
     </header>
     <section class="paper-index" aria-labelledby="paper-index-title">
       <h2 id="paper-index-title">Validated papers</h2>
@@ -25,7 +25,7 @@ const themes = [...new Set(papers.map((paper) => paper.theme))].sort();
             <label for="paper-query">Search papers</label>
             <input class="research-filter" id="paper-query" type="search" placeholder="Title, author, or paper ID" />
             <label for="paper-theme">Primary theme</label>
-            <select class="research-filter" id="paper-theme"><option value="">All audited themes</option>{themes.map((theme) => <option value={theme}>{theme}</option>)}</select>
+            <select class="research-filter" id="paper-theme"><option value="">All classified themes</option>{themes.map((theme) => <option value={theme}>{theme}</option>)}</select>
           </form>
           <p class="data-label" id="paper-count" aria-live="polite">{papers.length} PAPERS</p>
           <ol class="paper-rows" id="paper-rows">

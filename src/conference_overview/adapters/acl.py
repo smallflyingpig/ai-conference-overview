@@ -17,6 +17,10 @@ from conference_overview.models import (
 )
 
 _ACL_ID_PATTERN = re.compile(r"\d{4}\.[a-z0-9-]+(?:\.\d+)?", re.IGNORECASE)
+_BIBTEX_ENTRY_PATTERN = re.compile(r"(?im)^\s*@([a-z]+)\s*[({]")
+_ABSTRACT_ID_PATTERN = re.compile(
+    r"abstract-(\d{4})--([a-z0-9-]+)--(\d+)", re.IGNORECASE
+)
 
 
 class AclSourceFormatError(ValueError):
@@ -62,7 +66,9 @@ def _authors(author_field: str) -> list[str]:
     ]
 
 
-def _record_from_entry(entry: dict[str, str], request: VenueRequest, source: SourceRef) -> PaperRecord:
+def _record_from_entry(
+    entry: dict[str, str], request: VenueRequest, source: SourceRef
+) -> PaperRecord:
     landing_url = entry.get("url", "")
     acl_id = _acl_id_from_url(landing_url)
     if acl_id is None:
@@ -96,7 +102,30 @@ def parse_acl_bibtex(
     data: bytes, request: VenueRequest, source: SourceRef
 ) -> tuple[list[PaperRecord], list[PaperRecord]]:
     """Parse ACL papers and retain proceedings front matter as exclusions."""
-    bibliography = bibtexparser.loads(data.decode("utf-8"))
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise AclSourceFormatError(
+            source=source, detail="BibTeX is not valid UTF-8"
+        ) from exc
+    declared_entries = _BIBTEX_ENTRY_PATTERN.findall(text)
+    if not declared_entries or not text.rstrip().endswith("}"):
+        raise AclSourceFormatError(
+            source=source,
+            detail="BibTeX does not contain a complete final entry",
+        )
+    try:
+        bibliography = bibtexparser.loads(text)
+    except Exception as exc:
+        raise AclSourceFormatError(source=source, detail="BibTeX parse failed") from exc
+    if len(bibliography.entries) != len(declared_entries):
+        raise AclSourceFormatError(
+            source=source,
+            detail=(
+                "BibTeX entry count is incomplete "
+                f"(declared {len(declared_entries)}, parsed {len(bibliography.entries)})"
+            ),
+        )
     included: list[PaperRecord] = []
     excluded: list[PaperRecord] = []
 
@@ -134,14 +163,20 @@ class _VolumeAbstractParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.abstracts: dict[str, str] = {}
+        self.paper_ids: set[str] = set()
+        self.award_badges: list[dict[str, str]] = []
         self._elements: list[_HtmlElement] = []
         self._active_abstract: tuple[str, int, list[str]] | None = None
+        self._pending_awards: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attributes = dict(attrs)
         classes = set((attributes.get("class") or "").casefold().split())
         link_paper_id = _acl_id_from_url(attributes.get("href") or "")
         container_paper_id = _acl_id_from_url(attributes.get("id") or "")
+        abstract_match = _ABSTRACT_ID_PATTERN.fullmatch(attributes.get("id") or "")
+        if abstract_match is not None:
+            container_paper_id = ".".join(abstract_match.groups())
         element = _HtmlElement(
             tag=tag,
             is_paper_container=_is_paper_container(tag, classes, container_paper_id),
@@ -150,18 +185,45 @@ class _VolumeAbstractParser(HTMLParser):
         self._elements.append(element)
 
         if link_paper_id is not None:
+            self.paper_ids.add(link_paper_id)
             container = self._nearest_paper_container()
             if container is not None and container is not element:
                 container.paper_id = link_paper_id
+            for award_type in self._pending_awards:
+                self.award_badges.append(
+                    {
+                        "acl_id": link_paper_id,
+                        "award_type": award_type,
+                        "evidence_locator": (
+                            f"volume HTML paper row {link_paper_id}; "
+                            f"span[title='{award_type}'][aria-label='{award_type}']"
+                        ),
+                    }
+                )
+            self._pending_awards.clear()
 
-        if "abstract" in classes:
+        title = attributes.get("title")
+        aria_label = attributes.get("aria-label")
+        if (
+            tag == "span"
+            and title is not None
+            and title == aria_label
+            and title.casefold().endswith("paper")
+        ):
+            self._pending_awards.append(title)
+
+        if classes.intersection({"abstract", "abstract-collapse"}):
             container = self._nearest_paper_container()
             if container is not None and container.paper_id is not None:
                 self._active_abstract = (container.paper_id, len(self._elements), [])
 
     def _nearest_paper_container(self) -> _HtmlElement | None:
         return next(
-            (element for element in reversed(self._elements) if element.is_paper_container),
+            (
+                element
+                for element in reversed(self._elements)
+                if element.is_paper_container
+            ),
             None,
         )
 
@@ -173,7 +235,10 @@ class _VolumeAbstractParser(HTMLParser):
         if not self._elements:
             return
         self._elements.pop()
-        if self._active_abstract is None or len(self._elements) >= self._active_abstract[1]:
+        if (
+            self._active_abstract is None
+            or len(self._elements) >= self._active_abstract[1]
+        ):
             return
         paper_id, _, parts = self._active_abstract
         abstract = " ".join("".join(parts).split())
@@ -204,5 +269,18 @@ def enrich_acl_abstracts(
     for record in records:
         acl_id = record.paper_id.removeprefix("acl:")
         abstract = parser.abstracts.get(acl_id)
-        enriched.append(record.model_copy(update={"abstract": abstract}) if abstract else record)
+        enriched.append(
+            record.model_copy(update={"abstract": abstract}) if abstract else record
+        )
     return enriched
+
+
+def parse_acl_award_badges(html: bytes, source: SourceRef) -> list[dict[str, str]]:
+    """Return award badges bound to exact ACL IDs from the official volume HTML."""
+    parser = _VolumeAbstractParser()
+    try:
+        parser.feed(html.decode("utf-8"))
+        parser.close()
+    except (UnicodeDecodeError, ValueError) as exc:
+        raise AclSourceFormatError(source=source, detail="invalid volume HTML") from exc
+    return parser.award_badges

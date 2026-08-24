@@ -21,6 +21,23 @@ def test_fetch_returns_success_response_with_fixed_request_policy() -> None:
         assert fetch_bytes("https://example.test/volume.bib", client) == b"volume-data"
 
 
+def test_fetch_rejects_a_short_body_against_official_content_length() -> None:
+    transport = httpx.MockTransport(
+        lambda request: httpx.Response(
+            200,
+            content=b"partial",
+            headers={"content-length": "100"},
+            request=request,
+        )
+    )
+
+    with (
+        httpx.Client(transport=transport) as client,
+        pytest.raises(SourceFetchError, match="content length"),
+    ):
+        fetch_bytes("https://example.test/volume.bib", client)
+
+
 def test_fetch_retries_retryable_status_until_success() -> None:
     requests = 0
 
@@ -48,7 +65,10 @@ def test_fetch_stops_after_three_retryable_responses() -> None:
 
     transport = httpx.MockTransport(handler)
 
-    with httpx.Client(transport=transport) as client, pytest.raises(SourceFetchError) as error:
+    with (
+        httpx.Client(transport=transport) as client,
+        pytest.raises(SourceFetchError) as error,
+    ):
         fetch_bytes("https://example.test/volume.bib", client)
 
     assert error.value.url == "https://example.test/volume.bib"
@@ -66,7 +86,10 @@ def test_fetch_rejects_non_success_response_without_retry() -> None:
 
     transport = httpx.MockTransport(handler)
 
-    with httpx.Client(transport=transport) as client, pytest.raises(SourceFetchError) as error:
+    with (
+        httpx.Client(transport=transport) as client,
+        pytest.raises(SourceFetchError) as error,
+    ):
         fetch_bytes("https://example.test/volume.bib", client)
 
     assert error.value.status_code == 404

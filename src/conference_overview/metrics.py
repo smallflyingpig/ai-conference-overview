@@ -73,7 +73,9 @@ def _as_decimal(
 ) -> Decimal:
     """Convert an exact finite numeric input while rejecting runtime floats."""
     if isinstance(value, (bool, float)):
-        raise error_type("metric inputs must be int, str, or Decimal; floats are not accepted")
+        raise error_type(
+            "metric inputs must be int, str, or Decimal; floats are not accepted"
+        )
     try:
         decimal_value = value if isinstance(value, Decimal) else Decimal(value)
     except (InvalidOperation, TypeError, ValueError) as exc:
@@ -90,12 +92,16 @@ def _require_positive_denominator(value: Decimal | int | str) -> Decimal:
     return denominator
 
 
-def topic_share(topic_count: Decimal | int | str, included_count: Decimal | int | str) -> Decimal:
+def topic_share(
+    topic_count: Decimal | int | str, included_count: Decimal | int | str
+) -> Decimal:
     """Return a topic's share using the included venue-year count as denominator."""
     return _as_decimal(topic_count) / _require_positive_denominator(included_count)
 
 
-def yoy_share_delta(current_share: Decimal | int | str, prior_share: Decimal | int | str) -> Decimal:
+def yoy_share_delta(
+    current_share: Decimal | int | str, prior_share: Decimal | int | str
+) -> Decimal:
     """Return the year-over-year percentage-point difference between shares."""
     return _as_decimal(current_share) - _as_decimal(prior_share)
 
@@ -130,7 +136,8 @@ def cross_venue_spread(
     present_venue_count = len(present_venues)
     return CrossVenueSpread(
         present_venue_count=present_venue_count,
-        present_venue_fraction=Decimal(present_venue_count) / Decimal(len(configured_venue_set)),
+        present_venue_fraction=Decimal(present_venue_count)
+        / Decimal(len(configured_venue_set)),
         configured_venues=ordered_configured_venues,
         present_venues=present_venues,
     )
@@ -140,15 +147,16 @@ def validate_trend_window(years: Sequence[int]) -> None:
     """Require three or more distinct, consecutive years for trend language."""
     ordered_years = sorted(years)
     if len(ordered_years) < 3 or any(
-        current != previous + 1
-        for previous, current in pairwise(ordered_years)
+        current != previous + 1 for previous, current in pairwise(ordered_years)
     ):
         raise InsufficientTrendWindow(
             "an unqualified trend requires at least three distinct consecutive years"
         )
 
 
-def quantize_for_display(value: Decimal | int | str, *, decimal_places: int = 2) -> Decimal:
+def quantize_for_display(
+    value: Decimal | int | str, *, decimal_places: int = 2
+) -> Decimal:
     """Quantize a metric for display without changing its stored Decimal value."""
     if decimal_places < 0:
         raise ValueError("decimal_places must be non-negative")
@@ -172,7 +180,9 @@ def emerging_score(
             raise InvalidScoreComponent(f"{name} must be within [0, 1]")
 
     return EmergingScore(
-        score=sum(raw_components[name] * weight for name, weight in _EMERGING_WEIGHTS.items()),
+        score=sum(
+            raw_components[name] * weight for name, weight in _EMERGING_WEIGHTS.items()
+        ),
         components={name: str(value) for name, value in raw_components.items()},
         weights={name: str(weight) for name, weight in _EMERGING_WEIGHTS.items()},
     )

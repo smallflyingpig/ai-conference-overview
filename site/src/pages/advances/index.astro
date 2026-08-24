@@ -6,6 +6,7 @@ import { advanceCategories, buildAdvances } from "../../lib/evidence";
 
 const release = await loadOverview("ACL", 2026);
 const lanes = release == null ? advanceCategories.map((category) => ({ ...category, advances: [] })) : buildAdvances(release);
+const preliminary = (release?.overview.theme_disclosures.length ?? 0) > 0;
 ---
 
 <BaseLayout title="Advances — AI Conference Overview" description="Evidence-labeled advances across major AI research lanes." conferenceAvailable={release != null}>
@@ -13,12 +14,12 @@ const lanes = release == null ? advanceCategories.map((category) => ({ ...catego
     <header class="page-thesis">
       <p class="eyebrow">Synthesis lanes</p>
       <h1>Advance only<br />what evidence carries.</h1>
-      <p>Each lane requires paper-level support and a declared evidence type. Empty lanes are kept visible so missing synthesis cannot masquerade as a negative result.</p>
+      <p>Each lane requires official paper links and a declared evidence type. This release's title-and-abstract shortlists are preliminary while topic audits remain experimental.</p>
     </header>
     <div class="advance-ledger" aria-label="Advance categories">
       {lanes.map((category) => (
         <section id={category.id} class="advance-lane">
-          <p class="data-label">{category.advances.length === 0 ? "Evidence-limited" : "Validated synthesis"}</p>
+          <p class="data-label">{category.advances.length === 0 ? "Evidence-limited" : preliminary ? "Preliminary synthesis" : "Validated synthesis"}</p>
           <h2>{category.label}</h2>
           {category.advances.length === 0 ? <p>{release == null ? "No validated release is available." : "No categorized paper-level synthesis is published for this lane."}</p> : <div class="advance-entries">{category.advances.map((advance) => <article><h3>{advance.title}</h3><p class="data-label">Supporting papers</p><ul>{advance.supportingPapers.map((paper) => <li><a href={paper.officialUrl}>{paper.title}</a></li>)}</ul>{advance.claims.map((claim) => <div><EvidenceBadge type={claim.evidence_type} /><p>{claim.claim}</p><small>{claim.locator}</small><span class="claim-sources">{claim.source_urls.map((url, index) => <a href={url}>Claim source {index + 1}</a>)}</span></div>)}</article>)}</div>}
         </section>

@@ -20,7 +20,7 @@ const { view } = Astro.props;
 
 <BaseLayout
   title={`${view.venue} ${view.year} ${view.analysisLabel} — AI Conference Overview`}
-  description={`Validated ${view.scopeLabel} topic distribution and data health.`}
+  description={`Validated ${view.scopeLabel} corpus with an audit-labeled topic distribution.`}
   conferenceAvailable={true}
 >
   <div class="conference-shell">
@@ -48,7 +48,7 @@ const { view } = Astro.props;
     <article class="distribution-plane">
       <header class="distribution-header">
         <p class="eyebrow">Distribution evidence</p>
-        <h2>Where accepted work concentrates.</h2>
+        <h2>{view.auditPassedThemeCount === view.topics.length ? "Where accepted work concentrates." : "Preliminary assisted distribution."}</h2>
         <p>
           Primary-topic shares use <strong>{view.denominatorLabel}</strong> as the denominator.
           This is a one-year snapshot, so no year-over-year or trend claim is shown.
@@ -58,8 +58,17 @@ const { view } = Astro.props;
       <section aria-labelledby="topic-title">
         <div class="section-line">
           <h3 id="topic-title">Primary topic shares</h3>
-          <span>{view.topics.length} audited themes</span>
+          <span>
+            {view.auditPassedThemeCount} audit-passed · {view.experimentalThemeCount} experimental
+            {view.withheldThemeCount > 0 ? ` · ${view.withheldThemeCount} withheld` : ""}
+          </span>
         </div>
+        {view.auditPassedThemeCount === 0 && (
+          <p>
+            All topic labels are assisted-classification outputs pending semantic audit.
+            Treat this distribution as preliminary, not publication-safe evidence.
+          </p>
+        )}
         <TopicShareChart rows={view.topics} denominator={view.includedCount} />
       </section>
 
@@ -73,6 +82,7 @@ const { view } = Astro.props;
             <li>
               <span>{row.topic}</span>
               <a href={row.representativePaper.url}>{row.representativePaper.title}</a>
+              {row.auditStatus !== "audit-passed" && <small>{row.auditStatus}</small>}
             </li>
           ))}
         </ol>

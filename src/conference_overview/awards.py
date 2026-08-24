@@ -61,8 +61,12 @@ class AwardAnnouncement(BaseModel):
                 raise ValueError("not_announced requires explicit official metadata")
             if self.claim.evidence_type is not EvidenceType.OFFICIAL_METADATA:
                 raise ValueError("not_announced requires official_metadata evidence")
-            if str(self.evidence_url) not in {str(url) for url in self.claim.source_urls}:
-                raise ValueError("announcement evidence URL must be retained in its claim")
+            if str(self.evidence_url) not in {
+                str(url) for url in self.claim.source_urls
+            }:
+                raise ValueError(
+                    "announcement evidence URL must be retained in its claim"
+                )
         return self
 
 
@@ -87,7 +91,9 @@ class ResultClaim(EvidenceClaim):
                 "numeric result value must be a finite number"
             )
         try:
-            normalized = Decimal(value.strip() if isinstance(value, str) else str(value))
+            normalized = Decimal(
+                value.strip() if isinstance(value, str) else str(value)
+            )
         except (InvalidOperation, ValueError):
             raise ValueError("numeric result value must be a finite number") from None
         if not normalized.is_finite():
@@ -210,8 +216,7 @@ def _is_official_host(url: HttpUrl, allowed_hosts: set[str]) -> bool:
     except ValueError:
         return False
     return any(
-        normalized_host == allowed_host
-        or normalized_host.endswith(f".{allowed_host}")
+        normalized_host == allowed_host or normalized_host.endswith(f".{allowed_host}")
         for allowed_host in normalized_allowed_hosts
     )
 
@@ -261,7 +266,9 @@ def _validate_method_diagram(diagram: MethodDiagram) -> None:
         if source not in node_ids or target not in node_ids:
             raise ValueError("method diagram edge must connect disclosed nodes")
         if not _has_text(edge.data_flow_rationale):
-            raise ValueError("method diagram edge requires a disclosed data-flow rationale")
+            raise ValueError(
+                "method diagram edge requires a disclosed data-flow rationale"
+            )
         edge_pair = (source, target)
         if edge_pair in edge_pairs:
             raise ValueError("method diagram cannot contain duplicate directed edges")
@@ -304,7 +311,9 @@ def validate_deep_read(deep_read: DeepRead) -> DeepRead:
         if claim.evidence_type is EvidenceType.PAPER_REPORTED and not _has_text(
             claim.locator
         ):
-            raise ValueError("paper-reported deep-read section requires a paper locator")
+            raise ValueError(
+                "paper-reported deep-read section requires a paper locator"
+            )
 
     if deep_read.method_diagram is not None:
         _validate_method_diagram(deep_read.method_diagram)

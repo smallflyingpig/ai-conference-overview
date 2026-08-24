@@ -147,13 +147,17 @@ def test_emerging_score_rejects_out_of_range_components(component: Decimal) -> N
         )
 
 
-@pytest.mark.parametrize("denominator", [Decimal("NaN"), Decimal("Infinity"), Decimal("-Infinity")])
+@pytest.mark.parametrize(
+    "denominator", [Decimal("NaN"), Decimal("Infinity"), Decimal("-Infinity")]
+)
 def test_topic_share_rejects_non_finite_denominator(denominator: Decimal) -> None:
     with pytest.raises(InvalidDenominator):
         topic_share(topic_count=1, included_count=denominator)
 
 
-@pytest.mark.parametrize("component", [Decimal("NaN"), Decimal("Infinity"), Decimal("-Infinity")])
+@pytest.mark.parametrize(
+    "component", [Decimal("NaN"), Decimal("Infinity"), Decimal("-Infinity")]
+)
 def test_emerging_score_rejects_non_finite_components(component: Decimal) -> None:
     with pytest.raises(InvalidScoreComponent):
         emerging_score(
@@ -168,4 +172,6 @@ def test_metric_functions_reject_runtime_floats() -> None:
         topic_share(topic_count=0.5, included_count=1)
 
     with pytest.raises(InvalidScoreComponent):
-        emerging_score(share_growth=0.5, spread_growth=Decimal("0.5"), novelty=Decimal("0.25"))
+        emerging_score(
+            share_growth=0.5, spread_growth=Decimal("0.5"), novelty=Decimal("0.25")
+        )

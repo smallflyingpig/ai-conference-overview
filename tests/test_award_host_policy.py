@@ -51,9 +51,9 @@ def test_generated_policy_uses_registry_host_canonicalization(tmp_path: Path) ->
     path.write_text(yaml.safe_dump(registry), encoding="utf-8")
 
     assert b'"ACL/2026/long"' in render_policy(path)
-    assert render_policy(path).count(b'aclanthology.org') == 1
-    assert b'xn--bcher-kva.example' in render_policy(path)
-    assert render_policy(path).count(b'xn--bcher-kva.example') == 1
+    assert render_policy(path).count(b"aclanthology.org") == 1
+    assert b"xn--bcher-kva.example" in render_policy(path)
+    assert render_policy(path).count(b"xn--bcher-kva.example") == 1
 
 
 def test_generated_policy_rejects_double_terminal_dot(tmp_path: Path) -> None:
@@ -66,9 +66,7 @@ def test_generated_policy_rejects_double_terminal_dot(tmp_path: Path) -> None:
                         "years": {
                             2026: {
                                 "tracks": {
-                                    "long": {
-                                        "official_award_hosts": ["example.com.."]
-                                    }
+                                    "long": {"official_award_hosts": ["example.com.."]}
                                 }
                             }
                         }

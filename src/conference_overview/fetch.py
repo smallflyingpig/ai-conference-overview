@@ -6,11 +6,23 @@ MAX_ATTEMPTS = 3
 
 
 class SourceFetchError(RuntimeError):
-    def __init__(self, *, url: str, status_code: int | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        url: str,
+        status_code: int | None = None,
+        detail: str | None = None,
+    ) -> None:
         self.url = url
         self.status_code = status_code
-        detail = f"HTTP {status_code}" if status_code is not None else "transport error"
-        super().__init__(f"Could not fetch {url}: {detail}")
+        error_detail = (
+            detail
+            if detail is not None
+            else f"HTTP {status_code}"
+            if status_code is not None
+            else "transport error"
+        )
+        super().__init__(f"Could not fetch {url}: {error_detail}")
 
 
 def fetch_bytes(url: str, client: httpx.Client) -> bytes:
@@ -29,8 +41,31 @@ def fetch_bytes(url: str, client: httpx.Client) -> bytes:
             continue
 
         if response.status_code == httpx.codes.OK:
-            return response.content
-        if response.status_code == httpx.codes.TOO_MANY_REQUESTS or 500 <= response.status_code < 600:
+            content = response.content
+            declared_length = response.headers.get("content-length")
+            if declared_length is not None:
+                try:
+                    expected_length = int(declared_length)
+                except ValueError as exc:
+                    raise SourceFetchError(
+                        url=url,
+                        status_code=response.status_code,
+                        detail="invalid content length header",
+                    ) from exc
+                if expected_length != len(content):
+                    raise SourceFetchError(
+                        url=url,
+                        status_code=response.status_code,
+                        detail=(
+                            "content length mismatch "
+                            f"(expected {expected_length}, received {len(content)})"
+                        ),
+                    )
+            return content
+        if (
+            response.status_code == httpx.codes.TOO_MANY_REQUESTS
+            or 500 <= response.status_code < 600
+        ):
             last_status_code = response.status_code
             continue
         raise SourceFetchError(url=url, status_code=response.status_code)

@@ -4,6 +4,7 @@ export type ConferenceRelease = LoadedOverview;
 
 export interface TopicShareRow {
   topic: string;
+  auditStatus: "audit-passed" | "experimental" | "withheld";
   paperCount: number;
   share: number;
   shareLabel: string;
@@ -36,6 +37,9 @@ export interface ConferenceView {
   generation: string;
   taxonomyVersion: string;
   comparisonContract: string;
+  auditPassedThemeCount: number;
+  experimentalThemeCount: number;
+  withheldThemeCount: number;
   topics: TopicShareRow[];
 }
 
@@ -89,8 +93,11 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
     assignmentsByTopic.set(assignment.primary_topic, assignments);
   }
   const denominator = release.validation.included_count;
+  const disclosureByTheme = new Map(
+    release.overview.theme_disclosures.map((item) => [item.theme, item.status]),
+  );
   const topics = [...assignmentsByTopic.entries()]
-    .map(([topic, assignments]) => {
+    .map(([topic, assignments]): TopicShareRow => {
       const representative = [...assignments].sort(
         (left, right) => Number(right.confidence) - Number(left.confidence),
       )[0];
@@ -101,6 +108,7 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
       const share = denominator === 0 ? 0 : assignments.length / denominator;
       return {
         topic,
+        auditStatus: disclosureByTheme.get(topic) ?? "audit-passed",
         paperCount: assignments.length,
         share,
         shareLabel: `${(share * 100).toFixed(1)}%`,
@@ -138,6 +146,9 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
     generation: release.generation,
     taxonomyVersion: release.overview.taxonomy_version,
     comparisonContract: comparisonKey(release),
+    auditPassedThemeCount: topics.filter((row) => row.auditStatus === "audit-passed").length,
+    experimentalThemeCount: topics.filter((row) => row.auditStatus === "experimental").length,
+    withheldThemeCount: topics.filter((row) => row.auditStatus === "withheld").length,
     topics,
   };
 }

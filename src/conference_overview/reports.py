@@ -334,7 +334,9 @@ def _overview_payload(bundle: ReleaseBundle) -> dict[str, object]:
         "awards": validated_awards,
         "award_deep_reads": [
             deep_read.model_dump(mode="json")
-            for deep_read in sorted(bundle.award_deep_reads, key=lambda item: item.paper_id)
+            for deep_read in sorted(
+                bundle.award_deep_reads, key=lambda item: item.paper_id
+            )
         ],
         "advances": [
             advance.model_dump(mode="json")
@@ -342,7 +344,9 @@ def _overview_payload(bundle: ReleaseBundle) -> dict[str, object]:
         ],
         "theme_disclosures": [
             disclosure.model_dump(mode="json")
-            for disclosure in sorted(bundle.theme_disclosures, key=lambda item: item.theme)
+            for disclosure in sorted(
+                bundle.theme_disclosures, key=lambda item: item.theme
+            )
         ],
         "comparison_contract": _comparison_contract(bundle),
         "evidence_claims": [
@@ -378,6 +382,7 @@ def _validated_award_payload(
     first = bundle.records[0]
     allowed_hosts = official_award_hosts(first.venue, first.year, first.track)
     allowed = set(allowed_hosts)
+
     def verification(evidence_url: str | None) -> dict[str, object]:
         return {
             "allowed_hosts": sorted(allowed_hosts),
@@ -388,6 +393,7 @@ def _validated_award_payload(
             ),
             "validator": "validate_award-v1",
         }
+
     reparsed_awards = [
         AwardRecord.model_validate(award.model_dump(warnings=False))
         for award in bundle.awards
@@ -397,9 +403,16 @@ def _validated_award_payload(
         reparsed_awards, key=lambda item: (item.paper_id, item.award_type)
     ):
         validated = validate_award(award, allowed_hosts=allowed)
-        if award.status is AwardStatus.VERIFIED and validated.status is not AwardStatus.VERIFIED:
-            raise PublicationBlocked("publication blocked: official award evidence failed configured host policy")
-        evidence_url = str(validated.evidence_url) if validated.evidence_url is not None else None
+        if (
+            award.status is AwardStatus.VERIFIED
+            and validated.status is not AwardStatus.VERIFIED
+        ):
+            raise PublicationBlocked(
+                "publication blocked: official award evidence failed configured host policy"
+            )
+        evidence_url = (
+            str(validated.evidence_url) if validated.evidence_url is not None else None
+        )
         payload = validated.model_dump(mode="json")
         identity = canonical_award_identity(validated.paper_id, validated.award_type)
         payload["canonical_identity"] = identity
@@ -407,7 +420,11 @@ def _validated_award_payload(
         payload["verification"] = verification(evidence_url)
         payloads.append(payload)
 
-    verified = [payload for payload in payloads if payload["status"] == AwardStatus.VERIFIED.value]
+    verified = [
+        payload
+        for payload in payloads
+        if payload["status"] == AwardStatus.VERIFIED.value
+    ]
     if verified:
         return payloads, {
             "status": AwardStatus.VERIFIED.value,
@@ -424,15 +441,24 @@ def _validated_award_payload(
             status=AwardStatus.VERIFIED,
             evidence_url=announcement.evidence_url,
         )
-        if validate_award(probe, allowed_hosts=allowed).status is not AwardStatus.VERIFIED:
-            raise PublicationBlocked("publication blocked: award announcement is not official")
+        if (
+            validate_award(probe, allowed_hosts=allowed).status
+            is not AwardStatus.VERIFIED
+        ):
+            raise PublicationBlocked(
+                "publication blocked: award announcement is not official"
+            )
     return payloads, {
         "status": announcement.status.value,
         "evidence_url": (
-            str(announcement.evidence_url) if announcement.evidence_url is not None else None
+            str(announcement.evidence_url)
+            if announcement.evidence_url is not None
+            else None
         ),
         "evidence_claim": (
-            announcement.claim.model_dump(mode="json") if announcement.claim is not None else None
+            announcement.claim.model_dump(mode="json")
+            if announcement.claim is not None
+            else None
         ),
         "verification": verification(
             str(announcement.evidence_url)
@@ -473,8 +499,7 @@ def _markdown_bytes(bundle: ReleaseBundle) -> bytes:
         sources = ", ".join(f"<{url}>" for url in claim.source_urls)
         locator = f"; {claim.locator}" if claim.locator is not None else ""
         lines.append(
-            f"- **{claim.evidence_type.value}** — {claim.claim} "
-            f"({sources}{locator})"
+            f"- **{claim.evidence_type.value}** — {claim.claim} ({sources}{locator})"
         )
     lines.extend(["", "## Award verification", ""])
     if not bundle.awards:
@@ -532,7 +557,9 @@ def _validate_provenance(sources: Sequence[SourceRef]) -> None:
         raise PublicationBlocked("publication blocked: provenance requires a source")
     for source in sources:
         if not str(source.url).strip():
-            raise PublicationBlocked("publication blocked: provenance source URL is blank")
+            raise PublicationBlocked(
+                "publication blocked: provenance source URL is blank"
+            )
         if source.sha256 is None or _SHA256_PATTERN.fullmatch(source.sha256) is None:
             raise PublicationBlocked(
                 "publication blocked: provenance requires a valid source SHA-256"
@@ -572,7 +599,9 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
         raise ValueError("technical prose entries must be typed EvidenceClaim objects")
     if any(not isinstance(award, AwardRecord) for award in bundle.awards):
         raise ValueError("awards must be typed AwardRecord objects")
-    if any(not isinstance(deep_read, DeepRead) for deep_read in bundle.award_deep_reads):
+    if any(
+        not isinstance(deep_read, DeepRead) for deep_read in bundle.award_deep_reads
+    ):
         raise ValueError("award deep reads must be typed DeepRead objects")
     if any(not isinstance(advance, AdvanceRecord) for advance in bundle.advances):
         raise ValueError("advances must be typed AdvanceRecord objects")
@@ -670,7 +699,9 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
         if award["status"] == AwardStatus.VERIFIED.value
     }
     if any(str(award["paper_id"]) not in record_id_set for award in validated_awards):
-        raise PublicationBlocked("publication blocked: award refers to an unknown paper")
+        raise PublicationBlocked(
+            "publication blocked: award refers to an unknown paper"
+        )
     deep_read_ids: list[str] = []
     for deep_read in bundle.award_deep_reads:
         deep_read = DeepRead.model_validate(deep_read.model_dump())
@@ -695,13 +726,17 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
             )
         )
     if len(deep_read_ids) != len(set(deep_read_ids)):
-        raise PublicationBlocked("publication blocked: duplicate award deep-read paper IDs")
+        raise PublicationBlocked(
+            "publication blocked: duplicate award deep-read paper IDs"
+        )
 
     advance_ids: list[str] = []
     for advance in bundle.advances:
         advance_ids.append(advance.advance_id)
         if not set(advance.supporting_paper_ids).issubset(record_id_set):
-            raise PublicationBlocked("publication blocked: advance refers to an unknown paper")
+            raise PublicationBlocked(
+                "publication blocked: advance refers to an unknown paper"
+            )
         _validate_claims(advance.claims)
     if len(advance_ids) != len(set(advance_ids)):
         raise PublicationBlocked("publication blocked: duplicate advance IDs")
@@ -709,7 +744,9 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
     disclosure_themes = [disclosure.theme for disclosure in bundle.theme_disclosures]
     if len(disclosure_themes) != len(set(disclosure_themes)):
         raise PublicationBlocked("publication blocked: duplicate theme disclosures")
-    _validate_claims(tuple(disclosure.reason for disclosure in bundle.theme_disclosures))
+    _validate_claims(
+        tuple(disclosure.reason for disclosure in bundle.theme_disclosures)
+    )
 
     assignment_ids = [assignment.paper_id for assignment in bundle.assignments]
     if len(assignment_ids) != len(set(assignment_ids)):
@@ -734,8 +771,15 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
             raise PublicationBlocked(
                 f"publication blocked: missing theme audits: {missing_audits}"
             )
-    for audit in bundle.audits.values():
-        assert_theme_publishable(audit)
+    disclosed_primary_themes = {
+        disclosure.theme for disclosure in bundle.theme_disclosures
+    }
+    for theme, audit in bundle.audits.items():
+        try:
+            assert_theme_publishable(audit)
+        except PublicationBlocked:
+            if theme not in disclosed_primary_themes:
+                raise
     return authoritative_validation
 
 
@@ -831,7 +875,9 @@ def resolve_current_release(output_dir: Path) -> Path:
         pointer = json.loads(current.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise ArtifactValidationError("release current pointer is invalid") from exc
-    generation_value = pointer.get("generation") if isinstance(pointer, Mapping) else None
+    generation_value = (
+        pointer.get("generation") if isinstance(pointer, Mapping) else None
+    )
     artifact_hashes = (
         pointer.get("artifact_sha256") if isinstance(pointer, Mapping) else None
     )
@@ -845,7 +891,9 @@ def resolve_current_release(output_dir: Path) -> Path:
             for value in artifact_hashes.values()
         )
     ):
-        raise ArtifactValidationError("release current pointer has invalid artifact hashes")
+        raise ArtifactValidationError(
+            "release current pointer has invalid artifact hashes"
+        )
     generation_parts = Path(generation_value).parts
     if (
         len(generation_parts) != 2

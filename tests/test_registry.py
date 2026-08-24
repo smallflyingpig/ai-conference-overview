@@ -18,7 +18,9 @@ def test_acl_long_request_uses_official_source_routes() -> None:
 
     assert request.venue == "ACL"
     assert request.source_key == "2026.acl-long"
-    assert str(request.bibtex_url) == "https://aclanthology.org/2026.acl-long.bib"
+    assert str(request.bibtex_url) == (
+        "https://aclanthology.org/volumes/2026.acl-long.bib"
+    )
     assert str(request.volume_url) == "https://aclanthology.org/volumes/2026.acl-long/"
 
 

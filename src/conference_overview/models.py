@@ -82,7 +82,9 @@ class AdvanceRecord(BaseModel):
     @classmethod
     def normalize_supporting_ids(cls, values: tuple[str, ...]) -> tuple[str, ...]:
         normalized = tuple(value.strip() for value in values)
-        if any(not value for value in normalized) or len(set(normalized)) != len(normalized):
+        if any(not value for value in normalized) or len(set(normalized)) != len(
+            normalized
+        ):
             raise ValueError("supporting paper IDs must be nonblank and unique")
         return normalized
 
@@ -99,6 +101,7 @@ class ThemeDisclosure(BaseModel):
         if not normalized:
             raise ValueError("theme must not be blank")
         return normalized
+
 
 class PaperRecord(BaseModel):
     paper_id: str

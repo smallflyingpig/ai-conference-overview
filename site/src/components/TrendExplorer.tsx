@@ -79,7 +79,7 @@ export default function TrendExplorer({ view, action, initialFilters = noFilters
             value={filters.theme ?? ""}
             onChange={(event) => setFilters({ ...filters, theme: event.target.value || null })}
           >
-            <option value="">{view.availableThemes.length === 0 ? "No audited themes" : "All audited themes"}</option>
+            <option value="">{view.availableThemes.length === 0 ? "No classified themes" : "All classified themes"}</option>
             {view.availableThemes.map((theme) => <option value={theme} key={theme}>{theme}</option>)}
           </select>
           <label htmlFor="modality-filter">Modality</label>
@@ -113,6 +113,11 @@ export default function TrendExplorer({ view, action, initialFilters = noFilters
               <div><p className="eyebrow">{snapshot.periodLabel}</p><h3 id={`${snapshot.venueSlug}-${snapshot.year}-title`}>{snapshot.venue} hotspots</h3></div>
               <span>Denominator: {snapshot.denominatorLabel}</span>
             </div>
+            {(snapshot.experimentalThemeCount > 0 || snapshot.withheldThemeCount > 0) && (
+              <p className="filter-note">
+                Preliminary assisted distribution: {snapshot.experimentalThemeCount} experimental and {snapshot.withheldThemeCount} withheld themes.
+              </p>
+            )}
             <TopicShareChart rows={snapshot.topics} denominator={snapshot.includedCount} />
           </section>
         ))}

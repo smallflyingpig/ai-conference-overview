@@ -26,7 +26,11 @@ def award_record(
         paper_id="acl:2026.acl-long.1",
         award_type="Best Paper",
         status=status
-        or (AwardStatus.VERIFIED if evidence_url is not None else AwardStatus.NOT_ANNOUNCED),
+        or (
+            AwardStatus.VERIFIED
+            if evidence_url is not None
+            else AwardStatus.NOT_ANNOUNCED
+        ),
         evidence_url=evidence_url,
     )
 
@@ -52,7 +56,10 @@ def result_claim(
 
 def method_diagram(*, node: MethodNode | None = None) -> MethodDiagram:
     return MethodDiagram(
-        nodes=[node or MethodNode(identifier="planner", label="Planner", paper_section="3.1")],
+        nodes=[
+            node
+            or MethodNode(identifier="planner", label="Planner", paper_section="3.1")
+        ],
         edges=[
             MethodEdge(
                 source="planner",
@@ -66,9 +73,13 @@ def method_diagram(*, node: MethodNode | None = None) -> MethodDiagram:
 def deep_read_with_claim(*, value: str, locator: str | None) -> DeepRead:
     return DeepRead(
         paper_id="acl:2026.acl-long.1",
-        research_problem=evidence_claim("The paper studies a disclosed research problem."),
+        research_problem=evidence_claim(
+            "The paper studies a disclosed research problem."
+        ),
         contribution=evidence_claim("The paper contributes a disclosed method."),
-        method_summary=evidence_claim("The disclosed method connects inputs to outputs."),
+        method_summary=evidence_claim(
+            "The disclosed method connects inputs to outputs."
+        ),
         result_claims=[result_claim(value=value, locator=locator)],
         why_it_matters=[
             EvidenceClaim(
@@ -86,9 +97,13 @@ def deep_read_with_claim(*, value: str, locator: str | None) -> DeepRead:
 def deep_read_with_diagram(diagram: MethodDiagram) -> DeepRead:
     return DeepRead(
         paper_id="acl:2026.acl-long.1",
-        research_problem=evidence_claim("The paper studies a disclosed research problem."),
+        research_problem=evidence_claim(
+            "The paper studies a disclosed research problem."
+        ),
         contribution=evidence_claim("The paper contributes a disclosed method."),
-        method_summary=evidence_claim("The disclosed method connects inputs to outputs."),
+        method_summary=evidence_claim(
+            "The disclosed method connects inputs to outputs."
+        ),
         result_claims=[result_claim()],
         why_it_matters=[
             EvidenceClaim(
@@ -115,9 +130,15 @@ def evidence_claim(claim: str) -> EvidenceClaim:
 
 def required_deep_read_sections() -> dict[str, list[EvidenceClaim]]:
     return {
-        "data_training_setup": [evidence_claim("The paper discloses its data and training setup.")],
-        "prior_work_differences": [evidence_claim("The paper states a difference from prior work.")],
-        "reproducibility_assessment": [evidence_claim("The paper provides reproducibility evidence.")],
+        "data_training_setup": [
+            evidence_claim("The paper discloses its data and training setup.")
+        ],
+        "prior_work_differences": [
+            evidence_claim("The paper states a difference from prior work.")
+        ],
+        "reproducibility_assessment": [
+            evidence_claim("The paper provides reproducibility evidence.")
+        ],
         "transferable_implications": [
             EvidenceClaim(
                 claim="The disclosed design may transfer to another setting.",
@@ -139,7 +160,9 @@ def test_unofficial_award_source_is_not_verified() -> None:
     assert result.status is AwardStatus.NOT_VERIFIED
 
 
-@pytest.mark.parametrize("status", [AwardStatus.NOT_VERIFIED, AwardStatus.NOT_ANNOUNCED])
+@pytest.mark.parametrize(
+    "status", [AwardStatus.NOT_VERIFIED, AwardStatus.NOT_ANNOUNCED]
+)
 def test_official_host_does_not_promote_non_verified_award(
     status: AwardStatus,
 ) -> None:
@@ -227,7 +250,9 @@ def test_verified_award_requires_evidence_at_construction() -> None:
 
 
 def test_missing_award_evidence_is_not_announced() -> None:
-    result = validate_award(award_record(evidence_url=None), allowed_hosts={"aclanthology.org"})
+    result = validate_award(
+        award_record(evidence_url=None), allowed_hosts={"aclanthology.org"}
+    )
 
     assert result.status is AwardStatus.NOT_ANNOUNCED
 
@@ -267,7 +292,9 @@ def test_numeric_claim_rejects_non_finite_or_non_numeric_value(value: object) ->
         ("52.0", Decimal("52.0")),
     ],
 )
-def test_numeric_claim_canonicalizes_finite_numbers(value: object, expected: Decimal) -> None:
+def test_numeric_claim_canonicalizes_finite_numbers(
+    value: object, expected: Decimal
+) -> None:
     assert result_claim(value=value).value == expected  # type: ignore[arg-type]
 
 
@@ -295,7 +322,9 @@ def test_diagram_node_requires_paper_section() -> None:
 def test_diagram_edge_requires_disclosed_data_flow_rationale() -> None:
     diagram = MethodDiagram(
         nodes=[MethodNode(identifier="planner", label="Planner", paper_section="3.1")],
-        edges=[MethodEdge(source="planner", target="planner", data_flow_rationale=None)],
+        edges=[
+            MethodEdge(source="planner", target="planner", data_flow_rationale=None)
+        ],
     )
 
     with pytest.raises(ValueError, match="data-flow rationale"):
@@ -305,9 +334,13 @@ def test_diagram_edge_requires_disclosed_data_flow_rationale() -> None:
 def test_why_it_matters_rejects_official_metadata_evidence() -> None:
     deep_read = DeepRead(
         paper_id="acl:2026.acl-long.1",
-        research_problem=evidence_claim("The paper studies a disclosed research problem."),
+        research_problem=evidence_claim(
+            "The paper studies a disclosed research problem."
+        ),
         contribution=evidence_claim("The paper contributes a disclosed method."),
-        method_summary=evidence_claim("The disclosed method connects inputs to outputs."),
+        method_summary=evidence_claim(
+            "The disclosed method connects inputs to outputs."
+        ),
         result_claims=[result_claim()],
         why_it_matters=[
             EvidenceClaim(
@@ -339,7 +372,9 @@ def test_why_it_matters_rejects_official_metadata_evidence() -> None:
         ),
         lambda: MethodNode(identifier="planner", label=" ", paper_section="3.1"),
         lambda: MethodNode(identifier="planner", label="Planner", paper_section="\t"),
-        lambda: MethodEdge(source="planner", target="planner", data_flow_rationale="\n"),
+        lambda: MethodEdge(
+            source="planner", target="planner", data_flow_rationale="\n"
+        ),
     ],
 )
 def test_models_reject_whitespace_only_required_text(factory: object) -> None:
@@ -381,7 +416,9 @@ def test_diagram_rejects_duplicate_directed_edges() -> None:
 
 
 def test_synthetic_not_announced_fixture_is_not_an_award_claim() -> None:
-    fixture_path = Path(__file__).parent / "fixtures" / "awards" / "acl-2026-awards.yaml"
+    fixture_path = (
+        Path(__file__).parent / "fixtures" / "awards" / "acl-2026-awards.yaml"
+    )
     fixture = yaml.safe_load(fixture_path.read_text())
 
     assert fixture["synthetic_contract_fixture"] is True
@@ -392,9 +429,15 @@ def test_synthetic_not_announced_fixture_is_not_an_award_claim() -> None:
 @pytest.mark.parametrize(
     "field",
     [
-        "research_problem", "contribution", "method_summary", "result_claims",
-        "why_it_matters", "limitations", "data_training_setup",
-        "prior_work_differences", "reproducibility_assessment",
+        "research_problem",
+        "contribution",
+        "method_summary",
+        "result_claims",
+        "why_it_matters",
+        "limitations",
+        "data_training_setup",
+        "prior_work_differences",
+        "reproducibility_assessment",
         "transferable_implications",
     ],
 )

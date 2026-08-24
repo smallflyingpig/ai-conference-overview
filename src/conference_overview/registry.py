@@ -22,17 +22,23 @@ def canonicalize_official_host(host: str) -> str:
     if not candidate:
         raise ValueError("official award host must not be blank")
     try:
-        canonical = idna.encode(
-            candidate,
-            uts46=True,
-            transitional=False,
-            std3_rules=True,
-        ).decode("ascii").lower()
+        canonical = (
+            idna.encode(
+                candidate,
+                uts46=True,
+                transitional=False,
+                std3_rules=True,
+            )
+            .decode("ascii")
+            .lower()
+        )
     except idna.IDNAError as exc:
         raise ValueError("official award host must be valid IDNA") from exc
     canonical = canonical.removesuffix(".")
     labels = canonical.split(".")
-    if len(canonical) > 253 or any(_HOST_LABEL.fullmatch(label) is None for label in labels):
+    if len(canonical) > 253 or any(
+        _HOST_LABEL.fullmatch(label) is None for label in labels
+    ):
         raise ValueError("official award host must be a valid DNS hostname")
     return canonical
 
@@ -43,7 +49,9 @@ def canonicalize_official_hosts(hosts: Sequence[str]) -> tuple[str, ...]:
 
 
 def _load_venues() -> dict[str, Any]:
-    venues_path = _VENUES_RESOURCE if _VENUES_RESOURCE.is_file() else _SOURCE_VENUES_PATH
+    venues_path = (
+        _VENUES_RESOURCE if _VENUES_RESOURCE.is_file() else _SOURCE_VENUES_PATH
+    )
     with venues_path.open(encoding="utf-8") as config_file:
         return yaml.safe_load(config_file)["venues"]
 
@@ -56,7 +64,8 @@ def normalize_request(venue: str, year: int, track: str | None) -> VenueRequest:
             name
             for name, definition in venues.items()
             if canonical_venue == name
-            or canonical_venue in {alias.upper() for alias in definition.get("aliases", [])}
+            or canonical_venue
+            in {alias.upper() for alias in definition.get("aliases", [])}
         ),
         canonical_venue,
     )

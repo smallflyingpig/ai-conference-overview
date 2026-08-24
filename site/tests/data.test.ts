@@ -97,6 +97,63 @@ const overview = {
   theme_disclosures: [],
 };
 
+it("retains a failed assisted-classification audit only when the theme is experimental", () => {
+  const experimental = {
+    ...structuredClone(overview),
+    paper_count: 1,
+    assignments: [{
+      confidence: "0.70",
+      paper_id: "acl:2026.acl-long.1",
+      primary_topic: "Foundation Models",
+      rationale: "Title and abstract contain foundation-model evidence.",
+      secondary_topics: [],
+      taxonomy_version: "2026-08-24-v1",
+    }],
+    audits: {
+      "Foundation Models": {
+        correct_count: 42,
+        observed_precision: "0.84",
+        sample_size: 50,
+        thresholds: {
+          minimum_observed_precision: "0.90",
+          minimum_wilson_lower_95: "0.80",
+        },
+        wilson_lower_95: "0.7149",
+      },
+    },
+  };
+
+  const onePaperValidation = {
+    ...validation,
+    discovered_count: 1,
+    included_count: 1,
+    expected_included: 1,
+  };
+  expect(() => parseOverview({
+    overview: { ...experimental, theme_disclosures: [] },
+    validation: onePaperValidation,
+    provenance,
+  }))
+    .toThrow(/experimental|withheld|audit/i);
+  expect(() => parseOverview({
+    overview: {
+      ...experimental,
+      theme_disclosures: [{
+        theme: "Foundation Models",
+        status: "experimental",
+        reason: {
+          claim: "The assisted label failed the audit gate and is withheld from headlines.",
+          evidence_type: "inference",
+          source_urls: ["https://aclanthology.org/volumes/2026.acl-long/"],
+          locator: "classification audit registry",
+        },
+      }],
+    },
+    validation: onePaperValidation,
+    provenance,
+  })).not.toThrow();
+});
+
 const validation = {
   record_set_sha256: "c".repeat(64),
   discovered_count: 0,

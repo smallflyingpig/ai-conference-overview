@@ -47,7 +47,10 @@ def test_fuzzy_duplicate_blocks_without_deleting() -> None:
 
     assert report.included_count == 2
     assert report.duplicate_candidates == [("p1", "p2")]
-    assert records == [paper("p1", "A Study of Agents"), paper("p2", "A study of agents")]
+    assert records == [
+        paper("p1", "A Study of Agents"),
+        paper("p2", "A study of agents"),
+    ]
     with pytest.raises(PublicationBlocked, match="duplicate candidates"):
         assert_publishable(report)
 

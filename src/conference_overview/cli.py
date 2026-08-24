@@ -3,21 +3,33 @@
 from __future__ import annotations
 
 import json
-from collections.abc import Mapping
 from pathlib import Path
 from typing import Annotated, NoReturn
 
 import typer
 
+from conference_overview.pipeline import (
+    UnsupportedPipelineRoute,
+    analyze_acl_scope,
+    build_site_scope,
+    collect_acl_scope,
+    export_classification_scope,
+    parse_award_inventory_scope,
+    validate_acl_scope,
+)
 from conference_overview.registry import normalize_request
+from conference_overview.validate import PublicationBlocked
 
 app = typer.Typer(
     help="Collect, validate, analyze, and publish conference overview artifacts.",
     no_args_is_help=True,
 )
+_DEFAULT_ROOT = Path(".")
 
 
-def _exit(command: str, status: str, message: str, code: int, **details: object) -> NoReturn:
+def _exit(
+    command: str, status: str, message: str, code: int, **details: object
+) -> NoReturn:
     payload: dict[str, object] = {
         "command": command,
         "message": message,
@@ -26,6 +38,12 @@ def _exit(command: str, status: str, message: str, code: int, **details: object)
     payload.update(details)
     typer.echo(json.dumps(payload, sort_keys=True))
     raise typer.Exit(code=code)
+
+
+def _success(command: str, status: str, **details: object) -> None:
+    typer.echo(
+        json.dumps({"command": command, "status": status, **details}, sort_keys=True)
+    )
 
 
 def _parse_years(value: str) -> list[int]:
@@ -43,7 +61,9 @@ def _parse_years(value: str) -> list[int]:
             else:
                 years.append(int(normalized))
         except ValueError as exc:
-            raise ValueError("years must be comma-separated years or inclusive ranges") from exc
+            raise ValueError(
+                "years must be comma-separated years or inclusive ranges"
+            ) from exc
     if not years:
         raise ValueError("years must not be empty")
     return years
@@ -56,38 +76,43 @@ def _values(value: str, *, name: str) -> list[str]:
     return values
 
 
-def _validate_venue_request(
-    *, command: str, venues: str, years: str, tracks: str | None
-) -> None:
+def _request(*, command: str, venues: str, years: str, tracks: str | None):
     try:
         venue_values = _values(venues, name="venues")
         year_values = _parse_years(years)
-        track_values: list[str | None] = (
-            _values(tracks, name="tracks") if tracks is not None else [None]
-        )
-        for venue in venue_values:
-            for year in year_values:
-                for track in track_values:
-                    request = normalize_request(venue, year, track)
-                    if request.source_key is None:
-                        raise ValueError(
-                            "unsupported venue/year/track: "
-                            f"{request.venue}/{request.year}/{request.track or '-'}"
-                        )
+        track_values = _values(tracks, name="tracks") if tracks is not None else [None]
     except ValueError as exc:
         _exit(command, "invalid_input", str(exc), 2)
+    if len(venue_values) != 1 or len(year_values) != 1 or len(track_values) != 1:
+        _exit(
+            command,
+            "invalid_input",
+            "ACL reference orchestration requires exactly one venue, year, and track",
+            2,
+        )
+    request = normalize_request(venue_values[0], year_values[0], track_values[0])
+    if request.source_key is None:
+        _exit(
+            command,
+            "unsupported",
+            (
+                "unsupported venue/year/track: "
+                f"{request.venue}/{request.year}/{request.track or '-'}"
+            ),
+            2,
+        )
+    return request
 
 
-def _unsupported_pipeline_command(
-    command: str, venues: str, years: str, tracks: str | None, message: str
-) -> NoReturn:
-    _validate_venue_request(
-        command=command,
-        venues=venues,
-        years=years,
-        tracks=tracks,
-    )
-    _exit(command, "unsupported", message, 2)
+def _run(command: str, operation):
+    try:
+        return operation()
+    except UnsupportedPipelineRoute as exc:
+        _exit(command, "unsupported", str(exc), 2)
+    except PublicationBlocked as exc:
+        _exit(command, "publication_blocked", str(exc), 3)
+    except (OSError, TypeError, UnicodeError, ValueError, RuntimeError) as exc:
+        _exit(command, "invalid_input", str(exc), 2)
 
 
 @app.command()
@@ -95,14 +120,19 @@ def collect(
     venues: str = typer.Option(..., "--venues"),
     years: str = typer.Option(..., "--years"),
     tracks: str | None = typer.Option(None, "--tracks"),
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
 ) -> None:
-    """Collect immutable official-source snapshots (or report unsupported)."""
-    _unsupported_pipeline_command(
+    """Collect immutable official ACL source snapshots and normalized records."""
+    request = _request(command="collect", venues=venues, years=years, tracks=tracks)
+    result = _run("collect", lambda: collect_acl_scope(request, root))
+    _success(
         "collect",
-        venues,
-        years,
-        tracks,
-        "live collection orchestration is not implemented",
+        "collected",
+        discovered_count=result.validation.discovered_count,
+        excluded_count=result.validation.excluded_count,
+        included_count=result.validation.included_count,
+        manifest=result.manifest_path.relative_to(root).as_posix(),
+        normalized=result.normalized_path.relative_to(root).as_posix(),
     )
 
 
@@ -112,12 +142,25 @@ def validate_command(
     years: str = typer.Option(..., "--years"),
     tracks: str | None = typer.Option(None, "--tracks"),
     audit: bool = typer.Option(False, "--audit"),
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
 ) -> None:
-    """Validate normalized records and optional audits."""
-    del audit
-    _unsupported_pipeline_command(
-        "validate", venues, years, tracks, "validation orchestration is not implemented"
-    )
+    """Recompute canonical reconciliation and optional audit state."""
+    request = _request(command="validate", venues=venues, years=years, tracks=tracks)
+    report = _run("validate", lambda: validate_acl_scope(request, root))
+    details: dict[str, object] = {
+        "discovered_count": report.discovered_count,
+        "excluded_count": report.excluded_count,
+        "included_count": report.included_count,
+        "publishable": report.publishable,
+    }
+    if audit:
+        analysis = _run(
+            "validate",
+            lambda: analyze_acl_scope(request, root, write_release=False),
+        )
+        details["audit"] = analysis["audit"]
+        details["withheld_themes"] = analysis["withheld_themes"]
+    _success("validate", "validated", **details)
 
 
 @app.command("export-classification")
@@ -126,15 +169,28 @@ def export_classification(
     years: str = typer.Option(..., "--years"),
     tracks: str | None = typer.Option(None, "--tracks"),
     batch_size: int = typer.Option(40, "--batch-size", min=1),
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
 ) -> None:
-    """Export deterministic semantic-classification batches."""
-    del batch_size
-    _unsupported_pipeline_command(
+    """Export deterministic title-and-abstract classification batches."""
+    request = _request(
+        command="export-classification",
+        venues=venues,
+        years=years,
+        tracks=tracks,
+    )
+    paths = _run(
         "export-classification",
-        venues,
-        years,
-        tracks,
-        "classification export orchestration is not implemented",
+        lambda: export_classification_scope(
+            request,
+            root,
+            batch_size=batch_size,
+        ),
+    )
+    _success(
+        "export-classification",
+        "exported",
+        batch_count=len(paths),
+        batch_size=batch_size,
     )
 
 
@@ -144,11 +200,18 @@ def analyze(
     years: str = typer.Option(..., "--years"),
     tracks: str | None = typer.Option(None, "--tracks"),
     write_release: bool = typer.Option(False, "--write-release"),
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
 ) -> None:
-    """Analyze validated inputs and optionally write a release."""
-    del write_release
-    _unsupported_pipeline_command(
-        "analyze", venues, years, tracks, "analysis orchestration is not implemented"
+    """Run assisted analysis and optionally select an immutable release."""
+    request = _request(command="analyze", venues=venues, years=years, tracks=tracks)
+    summary = _run(
+        "analyze",
+        lambda: analyze_acl_scope(request, root, write_release=write_release),
+    )
+    _success(
+        "analyze",
+        "release_written" if write_release else "analyzed",
+        **summary,
     )
 
 
@@ -157,62 +220,35 @@ def awards(
     venue: str = typer.Option(..., "--venue"),
     year: str = typer.Option(..., "--year"),
     track: str | None = typer.Option(None, "--track"),
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
 ) -> None:
-    """Validate official award evidence and deep reads."""
-    _unsupported_pipeline_command(
-        "awards", venue, year, track, "award orchestration is not implemented"
+    """Parse an official volume-page award inventory without PDF deep reads."""
+    request = _request(command="awards", venues=venue, years=year, tracks=track)
+    inventory = _run("awards", lambda: parse_award_inventory_scope(request, root))
+    _success(
+        "awards",
+        "official_inventory",
+        award_count=len(inventory),
+        deep_read_count=0,
     )
-
-
-def _load_validation(command: str, release_dir: Path) -> Mapping[str, object]:
-    path = release_dir / "validation.json"
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-        _exit(command, "invalid_input", f"invalid validation artifact: {exc}", 2)
-    if not isinstance(payload, Mapping) or not isinstance(payload.get("publishable"), bool):
-        _exit(
-            command,
-            "invalid_input",
-            "validation artifact must contain a boolean publishable field",
-            2,
-        )
-    return payload
 
 
 @app.command("build-site")
 def build_site(
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
     release_dir: Annotated[Path | None, typer.Option("--release-dir")] = None,
+    site_dir: Annotated[Path | None, typer.Option("--site-dir")] = None,
 ) -> None:
-    """Check release publication state before the later site build integration."""
-    if release_dir is None:
-        _exit(
-            "build-site",
-            "unsupported",
-            "site build orchestration is not implemented",
-            2,
-        )
-    validation = _load_validation("build-site", release_dir)
-    if validation["publishable"] is False:
-        detail_keys = (
-            "definite_duplicate_pairs",
-            "duplicate_candidates",
-            "status_mismatch_ids",
-            "unresolved_record_ids",
-        )
-        _exit(
-            "build-site",
-            "publication_blocked",
-            "release validation blocks publication",
-            3,
-            details={key: validation.get(key, []) for key in detail_keys},
-        )
-    _exit(
+    """Build Astro only from the validated release selected by current.json."""
+    dist = _run(
         "build-site",
-        "unsupported",
-        "site build orchestration is not implemented",
-        2,
+        lambda: build_site_scope(
+            root,
+            release_dir=release_dir,
+            site_dir=site_dir,
+        ),
     )
+    _success("build-site", "built", dist=str(dist))
 
 
 if __name__ == "__main__":

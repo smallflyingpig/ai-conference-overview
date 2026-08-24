@@ -147,7 +147,7 @@ const themeAuditSchema = z
   .object({
     correct_count: z.number().int().nonnegative(),
     observed_precision: decimalSchema,
-    sample_size: z.number().int().positive().max(50),
+    sample_size: z.number().int().nonnegative().max(50),
     thresholds: z.object({
       minimum_observed_precision: z.literal("0.90"),
       minimum_wilson_lower_95: z.literal("0.80"),
@@ -155,18 +155,11 @@ const themeAuditSchema = z
     wilson_lower_95: decimalSchema,
   })
   .superRefine((value, context) => {
-    if (compareExactDecimals(value.observed_precision, "0.90") < 0) {
+    if (value.correct_count > value.sample_size) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["observed_precision"],
-        message: "audit observed precision is below 0.90",
-      });
-    }
-    if (compareExactDecimals(value.wilson_lower_95, "0.80") < 0) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["wilson_lower_95"],
-        message: "audit Wilson lower bound is below 0.80",
+        path: ["correct_count"],
+        message: "audit correct count exceeds its sample size",
       });
     }
   });
@@ -199,6 +192,19 @@ export function canonicalUrlHostname(url: string): string {
   const canonical = hostname.endsWith(".") ? hostname.slice(0, -1) : hostname;
   if (canonical.endsWith(".") || canonical.split(".").some((label) => label.length === 0)) {
     throw new Error("hostname contains an empty label or more than one terminal dot");
+  }
+  const encodedLength = (value: string) => new TextEncoder().encode(value).byteLength;
+  if (encodedLength(canonical) > 253) {
+    throw new Error("hostname exceeds 253 bytes");
+  }
+  const std3Label = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/;
+  for (const label of canonical.split(".")) {
+    if (encodedLength(label) > 63) {
+      throw new Error("hostname label exceeds 63 bytes");
+    }
+    if (!std3Label.test(label)) {
+      throw new Error("hostname label violates STD3 ASCII rules");
+    }
   }
   return canonical;
 }
@@ -611,6 +617,20 @@ export const overviewArtifactSchema = z
           code: z.ZodIssueCode.custom,
           path: ["audits", assignment.primary_topic],
           message: "missing audit for assignment primary theme",
+        });
+      }
+    }
+    const disclosedThemes = new Set(value.theme_disclosures.map((item) => item.theme));
+    for (const [theme, audit] of Object.entries(value.audits)) {
+      const passes =
+        audit.sample_size > 0 &&
+        compareExactDecimals(audit.observed_precision, "0.90") >= 0 &&
+        compareExactDecimals(audit.wilson_lower_95, "0.80") >= 0;
+      if (!passes && !disclosedThemes.has(theme)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["audits", theme],
+          message: "failed primary-theme audit must be experimental or withheld",
         });
       }
     }

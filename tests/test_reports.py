@@ -81,7 +81,9 @@ def assignment(paper_id: str) -> Assignment:
     )
 
 
-def paper_claim(text: str, *, evidence_type: EvidenceType = EvidenceType.PAPER_REPORTED) -> EvidenceClaim:
+def paper_claim(
+    text: str, *, evidence_type: EvidenceType = EvidenceType.PAPER_REPORTED
+) -> EvidenceClaim:
     return EvidenceClaim(
         claim=text,
         evidence_type=evidence_type,
@@ -115,8 +117,12 @@ def award_deep_read() -> DeepRead:
         ],
         limitations=[paper_claim("The paper evaluates one bounded setting.")],
         data_training_setup=[paper_claim("The paper discloses the training setup.")],
-        prior_work_differences=[paper_claim("The paper differs from prior work in its objective.")],
-        reproducibility_assessment=[paper_claim("The appendix discloses reproducibility details.")],
+        prior_work_differences=[
+            paper_claim("The paper differs from prior work in its objective.")
+        ],
+        reproducibility_assessment=[
+            paper_claim("The appendix discloses reproducibility details.")
+        ],
         transferable_implications=[
             paper_claim(
                 "The method may transfer to data-quality pipelines.",
@@ -330,13 +336,10 @@ def test_release_canonicalizes_official_evidence_host_with_trailing_dot(
 
     overview = json.loads(
         (
-            resolve_current_release(tmp_path / "trailing-dot-award")
-            / "overview.json"
+            resolve_current_release(tmp_path / "trailing-dot-award") / "overview.json"
         ).read_text()
     )
-    assert overview["awards"][0]["verification"]["evidence_host"] == (
-        "2026.aclweb.org"
-    )
+    assert overview["awards"][0]["verification"]["evidence_host"] == ("2026.aclweb.org")
 
 
 @pytest.mark.parametrize(
@@ -363,10 +366,14 @@ def test_release_reparses_awards_before_sorting_or_serializing(
     assert not (tmp_path / "bypassed-award").exists()
 
 
-def test_release_keeps_exact_six_artifacts_with_extended_overview(tmp_path: Path) -> None:
+def test_release_keeps_exact_six_artifacts_with_extended_overview(
+    tmp_path: Path,
+) -> None:
     write_release(publishable_bundle(), tmp_path)
 
-    assert sorted(path.name for path in resolve_current_release(tmp_path).iterdir()) == [
+    assert sorted(
+        path.name for path in resolve_current_release(tmp_path).iterdir()
+    ) == [
         "overview.json",
         "overview.md",
         "papers.csv",
@@ -376,7 +383,9 @@ def test_release_keeps_exact_six_artifacts_with_extended_overview(tmp_path: Path
     ]
 
 
-@pytest.mark.parametrize("invalid_kind", ["missing-section", "result-evidence", "empty-diagram"])
+@pytest.mark.parametrize(
+    "invalid_kind", ["missing-section", "result-evidence", "empty-diagram"]
+)
 def test_release_revalidates_deep_read_before_writing(
     tmp_path: Path, invalid_kind: str
 ) -> None:
@@ -421,7 +430,9 @@ def test_release_rejects_duplicate_normalized_award_identity(
 
 def test_release_allows_distinct_awards_for_the_same_paper(tmp_path: Path) -> None:
     bundle = publishable_bundle()
-    outstanding = bundle.awards[0].model_copy(update={"award_type": "Outstanding Paper"})
+    outstanding = bundle.awards[0].model_copy(
+        update={"award_type": "Outstanding Paper"}
+    )
 
     write_release(
         replace(bundle, awards=(*bundle.awards, outstanding)),
@@ -429,7 +440,9 @@ def test_release_allows_distinct_awards_for_the_same_paper(tmp_path: Path) -> No
     )
 
     overview = json.loads(
-        (resolve_current_release(tmp_path / "multiple-awards") / "overview.json").read_text()
+        (
+            resolve_current_release(tmp_path / "multiple-awards") / "overview.json"
+        ).read_text()
     )
     assert [award["award_type"] for award in overview["awards"]] == [
         "Best Paper",
@@ -446,7 +459,9 @@ def test_release_allows_distinct_awards_for_the_same_paper(tmp_path: Path) -> No
 def test_release_exposes_auditable_comparison_contract(tmp_path: Path) -> None:
     write_release(publishable_bundle(), tmp_path)
     release = resolve_current_release(tmp_path)
-    contract = json.loads((release / "overview.json").read_text())["comparison_contract"]
+    contract = json.loads((release / "overview.json").read_text())[
+        "comparison_contract"
+    ]
 
     assert contract["schema_version"] == "conference-comparison-v1"
     assert contract["comparison_scope"] == {
@@ -488,7 +503,9 @@ def test_release_exposes_auditable_comparison_contract(tmp_path: Path) -> None:
         ).encode()
     ).hexdigest()
     assert spread_contract["configured_venue_id"] == expected_population_id
-    identity_payload = {key: value for key, value in contract.items() if key != "contract_id"}
+    identity_payload = {
+        key: value for key, value in contract.items() if key != "contract_id"
+    }
     expected_id = hashlib.sha256(
         json.dumps(
             identity_payload,
@@ -504,7 +521,9 @@ def test_release_rejects_mixed_venue_year_or_track_scope(tmp_path: Path) -> None
     bundle = publishable_bundle()
     mixed_records = (
         bundle.records[0],
-        bundle.records[1].model_copy(update={"venue": "EMNLP", "year": 2025, "track": "short"}),
+        bundle.records[1].model_copy(
+            update={"venue": "EMNLP", "year": 2025, "track": "short"}
+        ),
     )
 
     with pytest.raises(PublicationBlocked, match="venue/year/track scope"):
@@ -620,7 +639,9 @@ def test_release_accepts_exact_cross_venue_fraction(tmp_path: Path) -> None:
     )
 
     overview = json.loads(
-        (resolve_current_release(tmp_path / "exact-spread") / "overview.json").read_text()
+        (
+            resolve_current_release(tmp_path / "exact-spread") / "overview.json"
+        ).read_text()
     )
     assert overview["metrics"]["cross_venue_spread"] == {
         "configured_venues": ["ACL", "EMNLP", "NAACL", "NeurIPS"],
@@ -668,10 +689,13 @@ def test_configured_venue_population_changes_contract_identity(tmp_path: Path) -
     )["comparison_contract"]
 
     assert first["metric_contract"]["cross_venue_spread"]["configured_venue_count"] == 2
-    assert second["metric_contract"]["cross_venue_spread"]["configured_venue_count"] == 2
-    assert first["metric_contract"]["cross_venue_spread"]["configured_venue_id"] != second[
-        "metric_contract"
-    ]["cross_venue_spread"]["configured_venue_id"]
+    assert (
+        second["metric_contract"]["cross_venue_spread"]["configured_venue_count"] == 2
+    )
+    assert (
+        first["metric_contract"]["cross_venue_spread"]["configured_venue_id"]
+        != second["metric_contract"]["cross_venue_spread"]["configured_venue_id"]
+    )
     assert first["contract_id"] != second["contract_id"]
     assert first == reordered
 
@@ -699,9 +723,11 @@ def test_equal_release_writes_are_byte_identical(tmp_path: Path) -> None:
     write_release(publishable_bundle(), second)
 
     assert {
-        path.name: path.read_bytes() for path in resolve_current_release(first).iterdir()
+        path.name: path.read_bytes()
+        for path in resolve_current_release(first).iterdir()
     } == {
-        path.name: path.read_bytes() for path in resolve_current_release(second).iterdir()
+        path.name: path.read_bytes()
+        for path in resolve_current_release(second).iterdir()
     }
 
 
@@ -744,6 +770,51 @@ def test_release_reapplies_assignment_and_audit_publication_gates(
             replace(bundle, assignments=(assignment("paper-a"),)),
             tmp_path / "missing-assignment",
         )
+
+
+def test_release_retains_a_failed_primary_theme_audit_when_explicitly_withheld(
+    tmp_path: Path,
+) -> None:
+    bundle = publishable_bundle()
+    weak_audit = ThemeAudit(
+        sample_size=50,
+        correct_count=42,
+        observed_precision=Decimal("0.84"),
+        wilson_lower_95=Decimal("0.7149"),
+    )
+    disclosure = ThemeDisclosure(
+        theme="Foundation Models",
+        status=ThemeDisclosureStatus.EXPERIMENTAL,
+        reason=EvidenceClaim(
+            claim=(
+                "The assisted primary label did not pass the declared audit gate "
+                "and is excluded from headline claims."
+            ),
+            evidence_type=EvidenceType.INFERENCE,
+            source_urls=["https://aclanthology.org/volumes/2026.acl-long/"],
+            locator="classification audit registry",
+        ),
+    )
+
+    write_release(
+        replace(
+            bundle,
+            audits={"Foundation Models": weak_audit},
+            theme_disclosures=(*bundle.theme_disclosures, disclosure),
+        ),
+        tmp_path / "experimental-theme",
+    )
+
+    overview = json.loads(
+        (
+            resolve_current_release(tmp_path / "experimental-theme") / "overview.json"
+        ).read_text()
+    )
+    assert overview["audits"]["Foundation Models"]["observed_precision"] == "0.84"
+    assert any(
+        item["theme"] == "Foundation Models" and item["status"] == "experimental"
+        for item in overview["theme_disclosures"]
+    )
 
 
 @pytest.mark.parametrize(
@@ -828,7 +899,10 @@ def test_successful_release_is_fresh_and_does_not_follow_old_symlinks(
         "provenance.json",
         "validation.json",
     ]
-    assert sorted(path.name for path in output.iterdir()) == ["current.json", "generations"]
+    assert sorted(path.name for path in output.iterdir()) == [
+        "current.json",
+        "generations",
+    ]
     assert not stale.exists()
     assert not os.path.lexists(stale_link)
     assert external.read_text(encoding="utf-8") == "external must survive"
@@ -876,7 +950,9 @@ def test_failed_prepublication_cleanup_keeps_previous_generation_visible(
     assert resolve_current_release(output) == old_generation
 
 
-def test_current_release_resolver_rejects_artifact_hash_mismatch(tmp_path: Path) -> None:
+def test_current_release_resolver_rejects_artifact_hash_mismatch(
+    tmp_path: Path,
+) -> None:
     output = tmp_path / "release"
     write_release(publishable_bundle(), output)
     generation = resolve_current_release(output)
@@ -886,7 +962,9 @@ def test_current_release_resolver_rejects_artifact_hash_mismatch(tmp_path: Path)
         resolve_current_release(output)
 
 
-def test_symlink_release_root_is_rejected_without_touching_target(tmp_path: Path) -> None:
+def test_symlink_release_root_is_rejected_without_touching_target(
+    tmp_path: Path,
+) -> None:
     external = tmp_path / "external"
     external.mkdir()
     sentinel = external / "sentinel.txt"
@@ -922,7 +1000,9 @@ def test_claims_requiring_locators_block_publication(
     tmp_path: Path, claim: EvidenceClaim
 ) -> None:
     with pytest.raises(PublicationBlocked, match="locator"):
-        write_release(replace(publishable_bundle(), claims=(claim,)), tmp_path / "release")
+        write_release(
+            replace(publishable_bundle(), claims=(claim,)), tmp_path / "release"
+        )
 
 
 @pytest.mark.parametrize("numeric_token", ["1e6", "1E-6", "-2.3e+4"])

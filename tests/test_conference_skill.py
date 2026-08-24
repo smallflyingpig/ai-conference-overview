@@ -30,9 +30,7 @@ def test_skill_is_discoverable_for_supported_conference_analysis() -> None:
         assert venue in description
 
     interface = yaml.safe_load(_read("agents/openai.yaml"))["interface"]
-    assert interface["default_prompt"].startswith(
-        "Use $analyzing-conference-trends "
-    )
+    assert interface["default_prompt"].startswith("Use $analyzing-conference-trends ")
 
 
 def test_entrypoint_routes_cli_and_conditional_references() -> None:
