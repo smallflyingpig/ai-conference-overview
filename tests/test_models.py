@@ -1,3 +1,6 @@
+import pytest
+from pydantic import ValidationError
+
 from conference_overview.models import (
     EvidenceClaim,
     EvidenceType,
@@ -77,3 +80,12 @@ def test_evidence_claim_preserves_evidence_boundary() -> None:
 
     assert claim.evidence_type is EvidenceType.OFFICIAL_METADATA
     assert claim.locator == "entry 1"
+
+
+def test_evidence_claim_requires_at_least_one_source_url() -> None:
+    with pytest.raises(ValidationError):
+        EvidenceClaim(
+            claim="The volume lists this paper as accepted.",
+            evidence_type=EvidenceType.OFFICIAL_METADATA,
+            source_urls=[],
+        )

@@ -15,13 +15,16 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.3,<9", "pytest-cov>=6,<7", "respx>=0.22,<1", "ruff>=0.9,<1"]
+dev = ["hatchling>=1.27,<2", "pytest>=8.3,<9", "pytest-cov>=6,<7", "respx>=0.22,<1", "ruff>=0.9,<1"]
 
 [project.scripts]
 conference-trends = "conference_overview.cli:app"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/conference_overview"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"config/venues.yaml" = "conference_overview/venues.yaml"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

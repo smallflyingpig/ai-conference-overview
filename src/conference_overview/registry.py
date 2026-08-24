@@ -1,3 +1,4 @@
+from importlib.resources import files
 from pathlib import Path
 from typing import Any
 
@@ -5,11 +6,13 @@ import yaml
 
 from conference_overview.models import VenueRequest
 
-_VENUES_PATH = Path(__file__).resolve().parents[2] / "config" / "venues.yaml"
+_VENUES_RESOURCE = files("conference_overview").joinpath("venues.yaml")
+_SOURCE_VENUES_PATH = Path(__file__).resolve().parents[2] / "config" / "venues.yaml"
 
 
 def _load_venues() -> dict[str, Any]:
-    with _VENUES_PATH.open(encoding="utf-8") as config_file:
+    venues_path = _VENUES_RESOURCE if _VENUES_RESOURCE.is_file() else _SOURCE_VENUES_PATH
+    with venues_path.open(encoding="utf-8") as config_file:
         return yaml.safe_load(config_file)["venues"]
 
 

@@ -28,7 +28,7 @@ class SourceRef(BaseModel):
 class EvidenceClaim(BaseModel):
     claim: str
     evidence_type: EvidenceType
-    source_urls: list[HttpUrl]
+    source_urls: list[HttpUrl] = Field(min_length=1)
     locator: str | None = None
 
 
