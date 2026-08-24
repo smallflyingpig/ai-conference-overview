@@ -738,3 +738,48 @@ Fresh acceptance evidence:
 
 Remaining gate: fresh post-revision certification decisions for the regenerated
 samples. No theme distribution is final or headline-safe before that gate.
+
+## Final certification audit (2026-08-25)
+
+Two independent fragments were merged as precision judgments, without applying
+their proposed corrected topics: `acl2026-final-cert-a.json` contains 250 rows
+(SHA-256 `83c7a92bb9cb5a9862c706fe7f2bd634e80f06719d6960b060976eb6023d4ddf`)
+and `acl2026-final-cert-b.json` contains 214 rows (SHA-256
+`709c4d215784570d2f835d60f718b5a23c66891b32ae72f20435b12d598a82bc`).
+The second fragment explicitly binds sample SHA-256
+`a5d7244b7e8d9f4b7c1d40d0f64e396db4d2bceec5983e6995c3307447936156`,
+which was independently recomputed before merge. Exact sample ID membership,
+464 unique decisions, taxonomy, boolean judgments, and substantive review notes
+were validated. The merged audit registry SHA-256 is
+`c915e01f241f3e02a9775f5c42a7391a8c8946096e7734ab24a88d5585c305ce`.
+
+Eight themes pass both publication thresholds. Reasoning and Agents is withheld
+at 44/50, observed precision 0.88, Wilson lower 95%
+0.7619518261679701276924183969. Multilingual and Inclusive NLP is withheld at
+12/14, observed precision 0.8571428571428571428571428571, Wilson lower 95%
+0.6005862050302965092105963907. The accepted low-confidence decision for
+`acl:2026.acl-long.1232` remains complete. These two themes are present only as
+experimental observations and are excluded from headline claims.
+
+The final Chinese overview now includes exact scope and coverage, official
+source hashes and retrieval times, all ten count/share/audit rows, classification
+method and limitations, evidence-labeled named papers across five advances
+lanes, award inventory/deep-read links, and implications for text LLMs,
+multimodal systems, agents, data/training, and evaluation/safety. The release
+advances distinguish paper-reported claims, cross-paper synthesis, and inference;
+the withheld Reasoning lane remains explicitly preliminary.
+
+The final pointer selects generation
+`260c8a6f7d8f4b2af83efdbf0d90a254dafb58bcf87a38608c4466d5631d86fc`.
+Its exact six artifacts and pointer hashes match. The release-backed site emits
+the ACL route, methodology audit table, advances route, awards index, and 30
+unique award-detail routes.
+
+Final verification:
+
+- `.venv/bin/pytest -q`: 238 passed;
+- `.venv/bin/ruff check .`: clean;
+- `npm --prefix site test -- --run`: 109 passed;
+- `npm --prefix site run build`: zero diagnostics, 37 pages;
+- exact-six pointer: verified;
+- award routes: 30 unique routes; ACL and methodology routes present.
