@@ -4,7 +4,7 @@
 
 本总览覆盖 ACL 2026 long track 官方 volume 页面标注的 30 篇获奖论文。论文事实只来自 ACL Anthology 官方 PDF；award 类别来自已对账的官方 volume HTML。30 条结构化 DeepRead 均通过 `DeepRead.model_validate` 与 `validate_deep_read`，并与 official inventory 逐 ID 绑定。两轮独立 QA 共发现 8 篇存在局部字段问题，所有 30 个替换均以 exact-old-value guard 应用；因此这里采用修正后的 model/metric/setting/locator，同时保留论文内部矛盾、私有数据和版本漂移等不确定性。
 
-这里的“论文明确披露”与“跨论文综合”严格分开。下文具体数值是 paper-reported；对数据 pipeline、训练和评估的迁移判断属于 synthesis/inference，不代表原论文结论。PDF 的页数、字节数和 SHA-256 见 `data/awards/acl/2026-long-deep-read-provenance.json`。
+这里的“论文明确披露”与“跨论文综合”严格分开。下文具体数值是 paper-reported；对数据 pipeline、训练和评估的迁移判断属于 synthesis/inference，不代表原论文结论。PDF 的字节数和 SHA-256 来自下载的官方 PDF bytes；页数只保留为 source-note claimed metadata，未从 PDF bytes 独立验证，见 `data/awards/acl/2026-long-deep-read-provenance.json`。
 
 ## 关键节点、关键结论、关键认知
 
@@ -16,6 +16,7 @@
 - **HSCodeComp（937）**在 632 个商品的层级规则任务上，最佳 agent 10-digit exact match 为 46.83%，但该值来自省略 expert-written Decision Rules 的配置；完整配置并未更好，提示“增加推理材料”可能引入 drift。
 - **CAR-bench（1886）**把 state、tool、execution、policy、termination 作为联合通过条件，再分开报告 Pass@k 和 Pass^k。Claude Opus 4.6 thinking 的 overall Pass^3 为 0.58，显示“偶尔成功”远不等于稳定部署。
 - **MediEval（734）**以 HSR/TIR 追踪医学判断的错误跃迁。Llama-3.3-70B base macro-F1 为 70.7%，但 TIR 仍达 21.1%；CoRFu 在特定 Q1-vs-Q2 setting 得到 77.9% 与 0 TIR，后者不能外推为临床零风险。
+- **Imperfective Paradox（689，Best Paper）**显示，压低 completion bias 的提示干预会同时伤害本应成立的 atelic entailment。因而 mitigation 不能只优化单向错误率，必须加入 telic/atelic、成立/不成立都平衡的 counterfactual controls。定位：Section 4.3、Section 5.2 与 Conclusion，PDF pp. 5–9。
 
 核心认知：总分必须与 failure transition、consistency、时间泄漏和标注链一起报告。真实部署中的评估对象不仅是输入样本，也包括检索时间、工具状态、模拟用户和多轮轨迹。
 

@@ -783,3 +783,73 @@ Final verification:
 - `npm --prefix site run build`: zero diagnostics, 37 pages;
 - exact-six pointer: verified;
 - award routes: 30 unique routes; ACL and methodology routes present.
+
+## Fix round 3: certification binding and scholarly QA (2026-08-25)
+
+Publication now fails closed unless a completed `classification-audit-v1`
+registry is bound to the authoritative `classification-audit-samples-v1`
+bytes, the current taxonomy and assignments, and contains exactly the expected
+`min(50, theme population)` ID set for every theme. Regression tests cover a
+cherry-picked subset, stale sample hash, wrong schema, wrong status, and both
+extra and missing IDs. The existing judgments and primary assignments were not
+changed; the authoritative samples were re-serialized with their assignment
+binding, and the completed registry was rebound to those exact bytes.
+
+The immutable release overview and provenance now carry the complete
+classification lineage: agent semantic batch method and all eight input hashes
+and partitions, assignments hash, every guarded full-theme repair stage,
+deterministic confidence-stratified sampling method and counts, sample and
+decision registry hashes, certification sources, and low-confidence queue and
+decision hashes/completeness. The site schema validates this structure and the
+Methodology page renders it. The audit boundary is explicit: it estimates
+sampled primary-topic precision, not recall or a random-population confidence
+interval, and primary-assignment share is not true research prevalence.
+
+The five advances lanes are now evidence-bearing syntheses rather than title
+picks. They state a research question, core problem, technical change,
+cross-paper claim, limitation/evidence boundary, and implication, and enumerate
+all supporting papers with official Anthology URLs and locators. The lanes cover
+KoCo/LCA/TOWER+/causal tracing; MACCO/AV-Dialog/Response-G1/MegaRAG and
+multimodal safety; experimental OctoTools/MoEC/SPIO/NestBrowse agents;
+KoCo/TOWER+/GeoRA/CURE/STEER/GISP training regimes; and
+Rt-LRM/MM-JudgeBias/CrossGuard/MCV/DyReMe plus the award papers
+ImplicitMemBench/VeriTaS/CAR-bench. Best Paper 689 is included with the bounded
+insight that completion-bias mitigation can harm valid atelic entailments,
+motivating balanced counterfactual controls. The rendered pass label is
+`主题门槛通过，代表论文另行语义复核`; Agents and the other withheld evidence remain
+experimental rather than headline trends.
+
+Abstract coverage is rendered at two-decimal precision (`2221/2222`, 99.95%),
+theme/pass text is derived from release data, and award PDF page counts are no
+longer trusted from notes: they are retained only as claimed values with
+`unverified_source_note`, while official PDF byte size and SHA-256 provenance
+remain verified.
+
+Round-3 regenerated identities:
+
+- assignment-bound audit samples:
+  `ea484ff1372659ed526838cfe21593b8bf1f86243e505d46247052495cf288d2`;
+- completed audit decisions:
+  `1b4c6921860a75e160ed70cfff364bac969a80e3d7b51a55168517a722242e27`;
+- DeepRead PDF provenance:
+  `f3d1858da16b0923804aec0a62118f364a63ea3c226339dac04e18e2aa234da3`;
+- Chinese overview note:
+  `33de38ea32fa52ccb4ca78aa209d38b442b0916c5fb43959cec0f57685d8cdcf`;
+- award DeepRead note:
+  `da1ecbe00c4389f95af5d0c808168561a84638cb61c9508f831ccdbcbcaba2b2`;
+- selected generation:
+  `13cd55d022d3091acc9299bb87b716aa70de4ee28d794842eb35f4650dbe25f9`;
+- release overview:
+  `19f60c5f230e2b1d8cafa74fe7128fe335826138a04e1ca451eb0e3763b791b1`;
+- release provenance:
+  `73790fb6079ff15d6f810f378a4454d7346e855148d67f5915b20bf4c0f677d0`.
+
+Fresh acceptance evidence after regeneration:
+
+- `.venv/bin/pytest -q`: 243 passed;
+- `.venv/bin/ruff check .`: clean;
+- `npm --prefix site test -- --run`: 109 passed;
+- `npm --prefix site run build`: zero diagnostics, 37 pages;
+- exact-six pointer: six exact artifact names and every pointer hash match;
+- routes: ACL conference route, Methodology audit/lineage table, Advances, and
+  30 unique award-detail routes are generated.
