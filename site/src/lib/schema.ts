@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 import { z } from "zod";
 
 const sha256Schema = z.string().regex(/^[0-9a-f]{64}$/i, "sha256 must be 64 hexadecimal characters");
@@ -166,17 +168,97 @@ const metricSchema = z.union([
   crossVenueSpreadSchema,
 ]);
 
+const formulaSchema = z.object({
+  denominator: nonBlankSchema,
+  formula: nonBlankSchema,
+  numerator: nonBlankSchema,
+  version: nonBlankSchema,
+});
+
+function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  if (value != null && typeof value === "object") {
+    return `{${Object.entries(value as Record<string, unknown>)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([key, item]) => `${JSON.stringify(key)}:${canonicalJson(item)}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+const comparisonContractSchema = z
+  .object({
+    contract_id: sha256Schema,
+    schema_version: nonBlankSchema,
+    comparison_scope: z.object({
+      denominator: z.object({
+        artifact_field: nonBlankSchema,
+        description: nonBlankSchema,
+        unit: nonBlankSchema,
+      }),
+      excluded_records: nonBlankSchema,
+      inclusion_statuses: z
+        .array(z.enum(["complete", "partial"]))
+        .min(1)
+        .refine((values) => new Set(values).size === values.length, "statuses must be unique"),
+      track: nonBlankSchema,
+      venue: nonBlankSchema,
+    }),
+    metric_contract: z.object({
+      cross_venue_spread: formulaSchema,
+      emerging_score: z.object({
+        formula: nonBlankSchema,
+        version: nonBlankSchema,
+        weights: z.object({
+          novelty: decimalSchema,
+          share_growth: decimalSchema,
+          spread_growth: decimalSchema,
+        }),
+      }),
+      emitted_metrics: z
+        .array(nonBlankSchema)
+        .refine((values) => new Set(values).size === values.length, "metrics must be unique")
+        .refine(
+          (values) => JSON.stringify(values) === JSON.stringify([...values].sort()),
+          "metrics must be sorted",
+        ),
+      formula_version: nonBlankSchema,
+      topic_share: formulaSchema,
+    }),
+  })
+  .superRefine((value, context) => {
+    const { contract_id: _contractId, ...identity } = value;
+    const expected = createHash("sha256").update(canonicalJson(identity)).digest("hex");
+    if (value.contract_id !== expected) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["contract_id"],
+        message: "comparison contract identity does not match its canonical payload",
+      });
+    }
+  });
+
 export const overviewArtifactSchema = z
   .object({
     assignments: z.array(assignmentSchema),
     audits: z.record(themeAuditSchema),
     awards: z.array(awardSchema),
+    comparison_contract: comparisonContractSchema,
     evidence_claims: z.array(evidenceClaimSchema),
     metrics: z.record(metricSchema),
     paper_count: z.number().int().nonnegative(),
     taxonomy_version: nonBlankSchema,
   })
   .superRefine((value, context) => {
+    const emittedMetrics = value.comparison_contract.metric_contract.emitted_metrics;
+    const actualMetrics = Object.keys(value.metrics).sort();
+    if (JSON.stringify(emittedMetrics) !== JSON.stringify(actualMetrics)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["comparison_contract", "metric_contract", "emitted_metrics"],
+        message: "comparison metric contract does not match emitted metrics",
+      });
+    }
     const assignmentIds = value.assignments.map((assignment) => assignment.paper_id);
     if (assignmentIds.length !== value.paper_count) {
       context.addIssue({
@@ -422,6 +504,17 @@ export const fullReleaseSchema = releaseOverviewSchema
           code: z.ZodIssueCode.custom,
           path: ["papers", index],
           message: "papers.json mixes venue, year, or track scopes",
+        });
+      }
+      const comparisonScope = value.overview.comparison_contract.comparison_scope;
+      if (
+        paper.venue !== comparisonScope.venue ||
+        paper.track !== comparisonScope.track
+      ) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["overview", "comparison_contract", "comparison_scope"],
+          message: "comparison scope does not match papers.json venue and track",
         });
       }
     }

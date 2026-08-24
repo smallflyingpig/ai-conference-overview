@@ -42,6 +42,52 @@
       "status": "verified"
     }
   ],
+  "comparison_contract": {
+    "comparison_scope": {
+      "denominator": {
+        "artifact_field": "validation.included_count",
+        "description": "validated included papers after explicit exclusions",
+        "unit": "paper"
+      },
+      "excluded_records": "kept explicit and excluded from the denominator",
+      "inclusion_statuses": [
+        "complete",
+        "partial"
+      ],
+      "track": "long",
+      "venue": "ACL"
+    },
+    "contract_id": "49d07c1bc50d5e516cd9c83f04a45f411d8b98da1d6cc25215c5078df9f88386",
+    "metric_contract": {
+      "cross_venue_spread": {
+        "denominator": "configured venue population",
+        "formula": "venues_with_topic / configured_venue_count",
+        "numerator": "configured venues with a positive topic count",
+        "version": "cross-venue-spread-v1"
+      },
+      "emerging_score": {
+        "formula": "0.45 * share_growth + 0.35 * spread_growth + 0.20 * novelty",
+        "version": "emerging-score-v1",
+        "weights": {
+          "novelty": "0.20",
+          "share_growth": "0.45",
+          "spread_growth": "0.35"
+        }
+      },
+      "emitted_metrics": [
+        "cross_venue_spread",
+        "emerging_score"
+      ],
+      "formula_version": "conference-metrics-v1",
+      "topic_share": {
+        "denominator": "validation.included_count",
+        "formula": "primary_topic_paper_count / validated_included_paper_count",
+        "numerator": "one primary-topic assignment per included paper",
+        "version": "topic-share-v1"
+      }
+    },
+    "schema_version": "conference-comparison-v1"
+  },
   "evidence_claims": [
     {
       "claim": "The papers form a source-backed distribution snapshot.",

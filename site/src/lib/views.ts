@@ -142,30 +142,13 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
   };
 }
 
-function metricContract(release: ConferenceRelease): string {
-  const describe = (value: unknown, key = ""): unknown => {
-    if (Array.isArray(value)) return value.map((item) => describe(item));
-    if (value != null && typeof value === "object") {
-      return Object.fromEntries(
-        Object.entries(value as Record<string, unknown>)
-          .sort(([left], [right]) => left.localeCompare(right))
-          .map(([childKey, childValue]) => [
-            childKey,
-            childKey === "weights" ? childValue : describe(childValue, childKey),
-          ]),
-      );
-    }
-    return key === "weights" ? value : typeof value;
-  };
-  return JSON.stringify(describe(release.overview.metrics));
-}
-
 function comparisonKey(release: ConferenceRelease): string {
   return JSON.stringify({
     venue: release.scope.venue,
     track: release.scope.track,
     taxonomyVersion: release.overview.taxonomy_version,
-    metricContract: metricContract(release),
+    comparisonScope: release.overview.comparison_contract.comparison_scope,
+    metricFormulaContractId: release.overview.comparison_contract.contract_id,
   });
 }
 

@@ -1,4 +1,5 @@
 import csv
+import hashlib
 import json
 import os
 from dataclasses import replace
@@ -11,7 +12,7 @@ import pytest
 from conference_overview import reports
 from conference_overview.awards import AwardRecord, AwardStatus
 from conference_overview.classification import Assignment, ThemeAudit, audit_theme
-from conference_overview.metrics import CrossVenueSpread, emerging_score
+from conference_overview.metrics import CrossVenueSpread, EmergingScore, emerging_score
 from conference_overview.models import (
     EvidenceClaim,
     EvidenceType,
@@ -174,6 +175,93 @@ def test_valid_release_contains_complete_provenance_and_diagnostics(
         "share_growth": "0.8",
         "spread_growth": "0.5",
     }
+
+
+def test_release_exposes_auditable_comparison_contract(tmp_path: Path) -> None:
+    write_release(publishable_bundle(), tmp_path)
+    release = resolve_current_release(tmp_path)
+    contract = json.loads((release / "overview.json").read_text())["comparison_contract"]
+
+    assert contract["schema_version"] == "conference-comparison-v1"
+    assert contract["comparison_scope"] == {
+        "denominator": {
+            "artifact_field": "validation.included_count",
+            "description": "validated included papers after explicit exclusions",
+            "unit": "paper",
+        },
+        "excluded_records": "kept explicit and excluded from the denominator",
+        "inclusion_statuses": ["complete", "partial"],
+        "track": "long",
+        "venue": "ACL",
+    }
+    assert contract["metric_contract"]["formula_version"] == "conference-metrics-v1"
+    assert contract["metric_contract"]["topic_share"] == {
+        "denominator": "validation.included_count",
+        "formula": "primary_topic_paper_count / validated_included_paper_count",
+        "numerator": "one primary-topic assignment per included paper",
+        "version": "topic-share-v1",
+    }
+    assert contract["metric_contract"]["emerging_score"]["weights"] == {
+        "novelty": "0.20",
+        "share_growth": "0.45",
+        "spread_growth": "0.35",
+    }
+    identity_payload = {key: value for key, value in contract.items() if key != "contract_id"}
+    expected_id = hashlib.sha256(
+        json.dumps(
+            identity_payload,
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode()
+    ).hexdigest()
+    assert contract["contract_id"] == expected_id
+
+
+def test_release_rejects_mixed_venue_year_or_track_scope(tmp_path: Path) -> None:
+    bundle = publishable_bundle()
+    mixed_records = (
+        bundle.records[0],
+        bundle.records[1].model_copy(update={"venue": "EMNLP", "year": 2025, "track": "short"}),
+    )
+
+    with pytest.raises(PublicationBlocked, match="venue/year/track scope"):
+        write_release(
+            replace(
+                bundle,
+                records=mixed_records,
+                validation=validate_records(mixed_records, [], expected_included=2),
+            ),
+            tmp_path / "mixed-scope",
+        )
+
+
+def test_release_rejects_metric_values_outside_declared_formula_contract(
+    tmp_path: Path,
+) -> None:
+    bundle = publishable_bundle()
+    forged = EmergingScore(
+        score=Decimal("0.60"),
+        components={
+            "share_growth": "0.8",
+            "spread_growth": "0.5",
+            "novelty": "0.25",
+        },
+        weights={
+            "share_growth": "0.40",
+            "spread_growth": "0.40",
+            "novelty": "0.20",
+        },
+    )
+
+    with pytest.raises(PublicationBlocked, match="metric formula contract"):
+        write_release(
+            replace(
+                bundle,
+                metrics={**bundle.metrics, "emerging_score": forged},
+            ),
+            tmp_path / "forged-metric",
+        )
 
 
 def test_release_orders_paper_outputs_and_derives_csv_from_the_same_payload(

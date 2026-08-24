@@ -158,6 +158,12 @@ export async function loadOverview(
       `Release scope mismatch for ${mismatchedPaper.paper_id}: expected ${venue}/${year}/${track}`,
     );
   }
+  const comparisonScope = parsed.overview.comparison_contract.comparison_scope;
+  if (comparisonScope.venue !== venue || comparisonScope.track !== track) {
+    throw new Error(
+      `Comparison contract scope mismatch: expected ${venue}/${track}`,
+    );
+  }
   return {
     ...parsed,
     generation: pointer.generation,

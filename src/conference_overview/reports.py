@@ -25,7 +25,13 @@ from conference_overview.classification import (
     ThemeAudit,
     assert_theme_publishable,
 )
-from conference_overview.metrics import CrossVenueSpread, EmergingScore
+from conference_overview.metrics import (
+    CrossVenueSpread,
+    EmergingScore,
+)
+from conference_overview.metrics import (
+    emerging_score as calculate_emerging_score,
+)
 from conference_overview.models import (
     EvidenceClaim,
     EvidenceType,
@@ -55,6 +61,13 @@ _NUMERIC_TOKEN_PATTERN = re.compile(
     r"(?:\s?(?:%|％|pp|x))?(?!\w)",
     re.IGNORECASE,
 )
+_COMPARISON_SCHEMA_VERSION = "conference-comparison-v1"
+_METRIC_FORMULA_VERSION = "conference-metrics-v1"
+_EMERGING_SCORE_WEIGHTS = {
+    "novelty": "0.20",
+    "share_growth": "0.45",
+    "spread_growth": "0.35",
+}
 
 MetricValue: TypeAlias = Decimal | int | EmergingScore | CrossVenueSpread
 
@@ -118,6 +131,60 @@ def _metric_payload(value: MetricValue) -> object:
     if isinstance(value, (Decimal, int)):
         return _decimal_payload(value)
     raise TypeError("metric values must be typed metric outputs")
+
+
+def _comparison_contract(bundle: ReleaseBundle) -> dict[str, object]:
+    if not bundle.records:
+        raise PublicationBlocked(
+            "publication blocked: comparison scope requires at least one included record"
+        )
+    first = bundle.records[0]
+    identity: dict[str, object] = {
+        "comparison_scope": {
+            "denominator": {
+                "artifact_field": "validation.included_count",
+                "description": "validated included papers after explicit exclusions",
+                "unit": "paper",
+            },
+            "excluded_records": "kept explicit and excluded from the denominator",
+            "inclusion_statuses": ["complete", "partial"],
+            "track": first.track,
+            "venue": first.venue,
+        },
+        "metric_contract": {
+            "cross_venue_spread": {
+                "denominator": "configured venue population",
+                "formula": "venues_with_topic / configured_venue_count",
+                "numerator": "configured venues with a positive topic count",
+                "version": "cross-venue-spread-v1",
+            },
+            "emerging_score": {
+                "formula": (
+                    "0.45 * share_growth + 0.35 * spread_growth + 0.20 * novelty"
+                ),
+                "version": "emerging-score-v1",
+                "weights": _EMERGING_SCORE_WEIGHTS,
+            },
+            "emitted_metrics": sorted(bundle.metrics),
+            "formula_version": _METRIC_FORMULA_VERSION,
+            "topic_share": {
+                "denominator": "validation.included_count",
+                "formula": (
+                    "primary_topic_paper_count / validated_included_paper_count"
+                ),
+                "numerator": "one primary-topic assignment per included paper",
+                "version": "topic-share-v1",
+            },
+        },
+        "schema_version": _COMPARISON_SCHEMA_VERSION,
+    }
+    canonical = json.dumps(
+        identity,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode()
+    return {"contract_id": hashlib.sha256(canonical).hexdigest(), **identity}
 
 
 def _validation_payload(report: ValidationReport) -> dict[str, object]:
@@ -226,6 +293,7 @@ def _overview_payload(bundle: ReleaseBundle) -> dict[str, object]:
                 key=lambda item: (item.paper_id, item.award_type),
             )
         ],
+        "comparison_contract": _comparison_contract(bundle),
         "evidence_claims": [
             claim.model_dump(mode="json")
             for claim in sorted(
@@ -370,6 +438,44 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
         raise ValueError("awards must be typed AwardRecord objects")
     _validate_claims(bundle.claims)
     _validate_provenance(_bundle_sources(bundle))
+
+    published_emerging_score = bundle.metrics.get("emerging_score")
+    if published_emerging_score is not None:
+        try:
+            expected_emerging_score = calculate_emerging_score(
+                share_growth=published_emerging_score.components["share_growth"],
+                spread_growth=published_emerging_score.components["spread_growth"],
+                novelty=published_emerging_score.components["novelty"],
+            )
+        except (AttributeError, KeyError, TypeError, ValueError) as exc:
+            raise PublicationBlocked(
+                "publication blocked: emerging_score violates metric formula contract"
+            ) from exc
+        if published_emerging_score != expected_emerging_score:
+            raise PublicationBlocked(
+                "publication blocked: emerging_score violates metric formula contract"
+            )
+    published_spread = bundle.metrics.get("cross_venue_spread")
+    if published_spread is not None and not isinstance(
+        published_spread, CrossVenueSpread
+    ):
+        raise PublicationBlocked(
+            "publication blocked: cross_venue_spread violates metric formula contract"
+        )
+
+    if bundle.records:
+        first_scope = (
+            bundle.records[0].venue,
+            bundle.records[0].year,
+            bundle.records[0].track,
+        )
+        if any(
+            (record.venue, record.year, record.track) != first_scope
+            for record in bundle.records
+        ):
+            raise PublicationBlocked(
+                "publication blocked: records mix venue/year/track scope"
+            )
 
     record_ids = [record.paper_id for record in bundle.records]
     assignment_ids = [assignment.paper_id for assignment in bundle.assignments]

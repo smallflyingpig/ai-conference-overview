@@ -9,10 +9,53 @@ import { describe, expect, it } from "vitest";
 import { loadOverview } from "../src/lib/data";
 import { parseOverview } from "../src/lib/schema";
 
+function comparisonContract(emittedMetrics: string[] = []) {
+  const identity = {
+    comparison_scope: {
+      denominator: {
+        artifact_field: "validation.included_count",
+        description: "validated included papers after explicit exclusions",
+        unit: "paper",
+      },
+      excluded_records: "kept explicit and excluded from the denominator",
+      inclusion_statuses: ["complete", "partial"],
+      track: "long",
+      venue: "ACL",
+    },
+    metric_contract: {
+      cross_venue_spread: {
+        denominator: "configured venue population",
+        formula: "venues_with_topic / configured_venue_count",
+        numerator: "configured venues with a positive topic count",
+        version: "cross-venue-spread-v1",
+      },
+      emerging_score: {
+        formula: "0.45 * share_growth + 0.35 * spread_growth + 0.20 * novelty",
+        version: "emerging-score-v1",
+        weights: { novelty: "0.20", share_growth: "0.45", spread_growth: "0.35" },
+      },
+      emitted_metrics: emittedMetrics,
+      formula_version: "conference-metrics-v1",
+      topic_share: {
+        denominator: "validation.included_count",
+        formula: "primary_topic_paper_count / validated_included_paper_count",
+        numerator: "one primary-topic assignment per included paper",
+        version: "topic-share-v1",
+      },
+    },
+    schema_version: "conference-comparison-v1",
+  };
+  return {
+    contract_id: createHash("sha256").update(JSON.stringify(identity)).digest("hex"),
+    ...identity,
+  };
+}
+
 const overview = {
   assignments: [],
   audits: {},
   awards: [],
+  comparison_contract: comparisonContract(),
   evidence_claims: [],
   metrics: {},
   paper_count: 0,
@@ -121,6 +164,14 @@ async function mutatedTask9Papers(
   return root;
 }
 
+function rehashComparisonContract(overviewArtifact: Record<string, any>): void {
+  const contract = overviewArtifact.comparison_contract;
+  const { contract_id: _oldId, ...identity } = contract;
+  contract.contract_id = createHash("sha256")
+    .update(JSON.stringify(identity))
+    .digest("hex");
+}
+
 describe("parseOverview", () => {
   it("rejects a release without provenance", () => {
     expect(() => parseOverview({ overview, validation })).toThrow(/provenance/i);
@@ -189,11 +240,38 @@ describe("parseOverview", () => {
   it("accepts finite Decimal serialization in scientific notation", () => {
     expect(() =>
       parseOverview({
-        overview: { ...overview, metrics: { tiny_share: "1E-7" } },
+        overview: {
+          ...overview,
+          comparison_contract: comparisonContract(["tiny_share"]),
+          metrics: { tiny_share: "1E-7" },
+        },
         validation,
         provenance,
       }),
     ).not.toThrow();
+  });
+
+  it("requires the authoritative comparison contract", () => {
+    const { comparison_contract: _missing, ...withoutContract } = overview;
+    expect(() => parseOverview({ overview: withoutContract, validation, provenance })).toThrow(
+      /comparison|contract/i,
+    );
+  });
+
+  it("rejects a comparison contract whose deterministic identity is stale", () => {
+    expect(() =>
+      parseOverview({
+        overview: {
+          ...overview,
+          comparison_contract: {
+            ...overview.comparison_contract,
+            contract_id: "f".repeat(64),
+          },
+        },
+        validation,
+        provenance,
+      }),
+    ).toThrow(/contract|identity|hash/i);
   });
 });
 
@@ -408,6 +486,28 @@ describe("loadOverview", () => {
 
     await expect(loadOverview("ACL", 2026, root, "long")).rejects.toThrow(
       /provenance|source|scope/i,
+    );
+  });
+
+  it("rejects a coherently identified comparison scope that disagrees with papers", async () => {
+    const root = await mutatedTask9Release((value) => {
+      value.comparison_contract.comparison_scope.track = "short";
+      rehashComparisonContract(value);
+    });
+
+    await expect(loadOverview("ACL", 2026, root, "long")).rejects.toThrow(
+      /comparison|scope|track/i,
+    );
+  });
+
+  it("rejects emitted metric names that disagree with overview metrics", async () => {
+    const root = await mutatedTask9Release((value) => {
+      value.comparison_contract.metric_contract.emitted_metrics = ["emerging_score"];
+      rehashComparisonContract(value);
+    });
+
+    await expect(loadOverview("ACL", 2026, root, "long")).rejects.toThrow(
+      /metric|contract/i,
     );
   });
 });

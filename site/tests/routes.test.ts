@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -37,6 +38,18 @@ function releaseForYear(year: number): LoadedOverview {
 
 function threeYears(): LoadedOverview[] {
   return [releaseForYear(2024), releaseForYear(2025), releaseForYear(2026)];
+}
+
+function changeComparisonContract(
+  release: LoadedOverview,
+  mutate: (contract: LoadedOverview["overview"]["comparison_contract"]) => void,
+): void {
+  const contract = release.overview.comparison_contract;
+  mutate(contract);
+  const { contract_id: _oldId, ...identity } = contract;
+  contract.contract_id = createHash("sha256")
+    .update(JSON.stringify(identity))
+    .digest("hex");
 }
 
 describe("conference routes", () => {
@@ -125,9 +138,29 @@ describe("trend comparability gate", () => {
     expect(buildTrendView(releases).mode).toBe("snapshot");
   });
 
-  it("rejects a three-year window with different metric contracts", () => {
+  it("rejects a three-year window when a formula changes without changing JSON types", () => {
     const releases = threeYears();
-    delete releases[0].overview.metrics.cross_venue_spread;
+    changeComparisonContract(releases[0], (contract) => {
+      contract.metric_contract.topic_share.formula =
+        "primary_topic_paper_count / discovered_paper_count";
+    });
+    expect(buildTrendView(releases).mode).toBe("snapshot");
+  });
+
+  it("rejects a three-year window when the denominator changes without changing JSON types", () => {
+    const releases = threeYears();
+    changeComparisonContract(releases[0], (contract) => {
+      contract.comparison_scope.denominator.artifact_field = "validation.discovered_count";
+    });
+    expect(buildTrendView(releases).mode).toBe("snapshot");
+  });
+
+  it("rejects a three-year window when inclusion scope changes without changing JSON types", () => {
+    const releases = threeYears();
+    changeComparisonContract(releases[0], (contract) => {
+      contract.comparison_scope.excluded_records =
+        "excluded records are retained in the denominator";
+    });
     expect(buildTrendView(releases).mode).toBe("snapshot");
   });
 
