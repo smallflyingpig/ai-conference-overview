@@ -853,3 +853,60 @@ Fresh acceptance evidence after regeneration:
 - exact-six pointer: six exact artifact names and every pointer hash match;
 - routes: ACL conference route, Methodology audit/lineage table, Advances, and
   30 unique award-detail routes are generated.
+
+## Fix round 4: deterministic sample identity and exact review lineage (2026-08-25)
+
+Code/test commit: `86b8460` (`fix: bind audit samples and review lineage`).
+
+The publication gate no longer accepts an equal-size, self-consistently
+rehashed audit registry. A shared pure builder now defines the complete
+confidence-stratified registry from the authoritative assignments and paper
+records. Both the writer and loader use that builder, and the loader requires
+exact registry equality: theme keys, ordered selected IDs, proposed topic,
+confidence, title, abstract, rationale, review placeholders, assignment hash,
+taxonomy, schema, and sampling method. The 51-paper regression was observed RED
+after replacing one of the selected 50 IDs with the sole unsampled ID and
+recomputing the sample binding used by the completed decision registry. It is
+GREEN after the gate change. A separately rehashed forged-title case is also
+rejected.
+
+The site no longer treats `full_theme_review_stages` as nullable unknown data.
+Its strict Zod contract mirrors the Python ledger: ordered stages, base
+assignment hashes, correction rows, source artifacts and source topics,
+reviewed/keep/correction counts, movement matrices, and the Git assignment-blob
+binding fields on the chained final stage. It rejects null/garbage ledgers,
+unknown fields, duplicate corrections/sources, invalid hashes, incomplete or
+mismatched source bindings, non-reconciling stage/source/movement counts,
+incorrect stage order, semantic-batch count drift, audit-count drift, and
+overview/provenance lineage disagreement.
+
+The Methodology page now renders both full-theme review stages rather than only
+the number two. For each stage it exposes the source themes and method,
+reviewed/kept/corrected counts, base-to-result assignment chain, every source
+artifact hash and optional Git binding, and the complete movement matrix.
+Rendered-release tests inspect the real generated DOM for both stages and all
+three chain hashes.
+
+No release artifact content changed, so the immutable release was not
+regenerated. `current.json` remains on
+`generations/13cd55d022d3091acc9299bb87b716aa70de4ee28d794842eb35f4650dbe25f9`.
+The generation still contains exactly six required files and all six pointer
+hashes match. A read-only load through the strengthened Python gate preserves
+464 decisions, ten themes, eight audit-passed themes, and two withheld themes;
+the sample and decision hashes remain
+`ea484ff1372659ed526838cfe21593b8bf1f86243e505d46247052495cf288d2` and
+`1b4c6921860a75e160ed70cfff364bac969a80e3d7b51a55168517a722242e27`.
+
+Fresh verification before the code commit:
+
+- `.venv/bin/pytest -q` — 245 passed;
+- `.venv/bin/ruff check .` — clean;
+- `npm --prefix site test -- --run` — 116 passed across five files;
+- `npm --prefix site run build` — Astro check reported zero diagnostics and
+  built 37 pages;
+- exact-six pointer validation — six exact names and all hashes match;
+- live audit load — 464 decisions, eight passed themes, two withheld themes.
+
+No scoped blocker remains. The durable compatibility boundary is intentional:
+any future Python lineage shape change must use a schema-version change and a
+matching TypeScript consumer update rather than passing through unknown fields.
