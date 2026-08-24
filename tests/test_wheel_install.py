@@ -56,10 +56,12 @@ def test_installed_wheel_loads_packaged_venue_registry(tmp_path: Path) -> None:
             "-c",
             """\
 from conference_overview import registry
+from conference_overview.classification import load_taxonomy
 from conference_overview.registry import normalize_request
 request = normalize_request('ACL', 2026, 'long')
 print(registry.__file__)
 print(request.source_key)
+print(load_taxonomy()['version'])
 """,
         ],
         cwd=runtime_dir,
@@ -70,6 +72,7 @@ print(request.source_key)
     )
 
     assert runtime.returncode == 0, runtime.stderr
-    registry_path, source_key = runtime.stdout.splitlines()
+    registry_path, source_key, taxonomy_version = runtime.stdout.splitlines()
     assert Path(registry_path).is_relative_to(install_dir)
     assert source_key == "2026.acl-long"
+    assert taxonomy_version == "2026-08-24-v1"
