@@ -495,7 +495,7 @@ def _minimal_deep_read(paper_id: str) -> dict[str, object]:
 
 
 def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
-    tmp_path: Path,
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     request = normalize_request("ACL", 2026, "long")
     collected_scope(tmp_path)
@@ -521,14 +521,17 @@ def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
         encoding="utf-8",
     )
     note_source = tmp_path / "notes.md"
+    official_pdf = b"%PDF-1.7\nverified official fixture bytes\n%%EOF\n"
+    official_sha256 = hashlib.sha256(official_pdf).hexdigest()
     note_source.write_text(
         "| Paper | SHA-256 | Bytes | PDF pages |\n"
         "|---|---|---:|---:|\n"
-        f"| 2026.acl-long.1 | `{'a' * 64}` | 1,234 | 3 |\n",
+        f"| 2026.acl-long.1 | `{official_sha256}` | {len(official_pdf)} | 3 |\n",
         encoding="utf-8",
     )
     review_source = tmp_path / "review.md"
     review_source.write_text("# Independent evidence QA\n\nPASS after correction.\n")
+    monkeypatch.setattr(pipeline_module, "fetch_bytes", lambda _url, _client: official_pdf)
 
     assert hasattr(pipeline_module, "import_award_deep_reads_scope")
     deep_reads = pipeline_module.import_award_deep_reads_scope(
@@ -552,10 +555,12 @@ def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
     assert provenance["deep_read_count"] == 1
     assert provenance["patch_count"] == 1
     assert provenance["pdfs"] == [{
-        "byte_size": 1234,
+        "byte_size": len(official_pdf),
         "pages": 3,
         "paper_id": "acl:2026.acl-long.1",
-        "sha256": "a" * 64,
+        "sha256": official_sha256,
+        "source_url": "https://aclanthology.org/2026.acl-long.1.pdf",
+        "verification_method": "downloaded_official_pdf_bytes",
     }]
     assert {source["source_file"] for source in provenance["sources"]} == {
         "deep-reads.yaml",
@@ -563,6 +568,33 @@ def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
         "notes.md",
         "review.md",
     }
+
+    provenance.pop("pdf_verification")
+    (tmp_path / "data/awards/acl/2026-long-deep-read-provenance.json").write_text(
+        json.dumps(provenance), encoding="utf-8"
+    )
+    export_classification_scope(request, tmp_path, batch_size=1)
+    assisted_classify_scope(request, tmp_path)
+    with pytest.raises(ValueError, match="verified official PDF provenance"):
+        analyze_acl_scope(request, tmp_path)
+
+    note_source.write_text(
+        "| Paper | SHA-256 | Bytes | PDF pages |\n"
+        "|---|---|---:|---:|\n"
+        f"| 2026.acl-long.1 | `{'a' * 64}` | 1,234 | 3 |\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(
+        ValueError, match="claimed PDF provenance does not match verified official bytes"
+    ):
+        pipeline_module.import_award_deep_reads_scope(
+            request,
+            tmp_path,
+            [deep_source],
+            [patch_source],
+            [note_source],
+            [review_source],
+        )
 
 
 @pytest.mark.parametrize(

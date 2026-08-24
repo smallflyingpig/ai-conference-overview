@@ -1063,6 +1063,11 @@ def _parse_pdf_provenance_tables(text: str) -> list[tuple[str, int, int, str]]:
     return parsed
 
 
+def _validate_complete_pdf(data: bytes, source_url: str) -> None:
+    if not data.startswith(b"%PDF-") or b"%%EOF" not in data[-1024:]:
+        raise ValueError(f"official award PDF is incomplete or invalid: {source_url}")
+
+
 def import_award_deep_reads_scope(
     request: VenueRequest,
     root: Path,
@@ -1070,6 +1075,8 @@ def import_award_deep_reads_scope(
     patch_paths: Sequence[Path],
     note_paths: Sequence[Path],
     review_paths: Sequence[Path],
+    *,
+    client: httpx.Client | None = None,
 ) -> list[DeepRead]:
     """Merge, guarded-patch, validate, and bind award-paper DeepReads."""
     _require_acl(request)
@@ -1081,6 +1088,10 @@ def import_award_deep_reads_scope(
     if not isinstance(awards, list):
         raise TypeError("official award inventory has no awards list")
     award_ids = {str(award["paper_id"]) for award in awards}
+    award_pdf_urls = {
+        str(award["paper_id"]): str(award["pdf_url"])
+        for award in awards
+    }
 
     raw_by_id: dict[str, dict[str, object]] = {}
     sources: list[dict[str, object]] = []
@@ -1171,6 +1182,37 @@ def import_award_deep_reads_scope(
     if pdfs and set(pdfs) != award_ids:
         raise ValueError("PDF provenance does not cover the exact award inventory")
 
+    verified_at = datetime.now(UTC).isoformat()
+    verified_pdfs: dict[str, dict[str, object]] = {}
+    owns_client = client is None
+    active_client = client or httpx.Client()
+    try:
+        for paper_id in sorted(award_ids):
+            source_url = award_pdf_urls[paper_id]
+            pdf_bytes = fetch_bytes(source_url, active_client)
+            _validate_complete_pdf(pdf_bytes, source_url)
+            actual_sha256 = hashlib.sha256(pdf_bytes).hexdigest()
+            claimed = pdfs.get(paper_id)
+            if claimed is None or (
+                claimed["byte_size"] != len(pdf_bytes)
+                or claimed["sha256"] != actual_sha256
+            ):
+                raise ValueError(
+                    "claimed PDF provenance does not match verified official bytes: "
+                    f"{paper_id}"
+                )
+            verified_pdfs[paper_id] = {
+                "byte_size": len(pdf_bytes),
+                "pages": claimed["pages"],
+                "paper_id": paper_id,
+                "sha256": actual_sha256,
+                "source_url": source_url,
+                "verification_method": "downloaded_official_pdf_bytes",
+            }
+    finally:
+        if owns_client:
+            active_client.close()
+
     _atomic_write(
         paths.award_deep_reads,
         yaml.safe_dump(
@@ -1189,7 +1231,11 @@ def import_award_deep_reads_scope(
                 "deep_read_count": len(deep_reads),
                 "patch_count": len(applied_patches),
                 "patches": applied_patches,
-                "pdfs": [pdfs[paper_id] for paper_id in sorted(pdfs)],
+                "pdf_verification": {
+                    "method": "downloaded_official_pdf_bytes",
+                    "verified_at": verified_at,
+                },
+                "pdfs": [verified_pdfs[paper_id] for paper_id in sorted(verified_pdfs)],
                 "schema_version": "acl-award-deep-read-provenance-v1",
                 "sources": sources,
             }
@@ -1694,6 +1740,58 @@ def _load_award_deep_reads(paths: ScopePaths) -> list[DeepRead]:
     deep_reads = [DeepRead.model_validate(item) for item in items]
     for deep_read in deep_reads:
         validate_deep_read(deep_read)
+    try:
+        provenance = json.loads(
+            paths.award_deep_read_provenance.read_text(encoding="utf-8")
+        )
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError("award deep reads require verified official PDF provenance") from exc
+    verification = (
+        provenance.get("pdf_verification")
+        if isinstance(provenance, Mapping)
+        else None
+    )
+    pdfs = provenance.get("pdfs") if isinstance(provenance, Mapping) else None
+    if (
+        not isinstance(verification, Mapping)
+        or verification.get("method") != "downloaded_official_pdf_bytes"
+        or not isinstance(verification.get("verified_at"), str)
+        or not isinstance(pdfs, list)
+    ):
+        raise ValueError("award deep reads require verified official PDF provenance")
+    try:
+        verified_at = datetime.fromisoformat(str(verification["verified_at"]))
+    except ValueError as exc:
+        raise ValueError(
+            "award deep reads require verified official PDF provenance"
+        ) from exc
+    if verified_at.tzinfo is None:
+        raise ValueError("award deep reads require verified official PDF provenance")
+    expected_ids = {item.paper_id for item in deep_reads}
+    verified_ids: set[str] = set()
+    for pdf in pdfs:
+        if not isinstance(pdf, Mapping):
+            raise TypeError("award deep reads require verified official PDF provenance")
+        paper_id = pdf.get("paper_id")
+        expected_url = (
+            f"https://aclanthology.org/{paper_id.removeprefix('acl:')}.pdf"
+            if isinstance(paper_id, str)
+            else None
+        )
+        if (
+            not isinstance(paper_id, str)
+            or paper_id in verified_ids
+            or pdf.get("verification_method") != "downloaded_official_pdf_bytes"
+            or pdf.get("source_url") != expected_url
+            or not isinstance(pdf.get("byte_size"), int)
+            or pdf["byte_size"] <= 0
+            or not isinstance(pdf.get("sha256"), str)
+            or re.fullmatch(r"[0-9a-f]{64}", str(pdf["sha256"])) is None
+        ):
+            raise ValueError("award deep reads require verified official PDF provenance")
+        verified_ids.add(paper_id)
+    if verified_ids != expected_ids:
+        raise ValueError("award deep reads require verified official PDF provenance")
     return deep_reads
 
 
