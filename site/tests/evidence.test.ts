@@ -28,7 +28,9 @@ import {
 } from "../src/lib/evidence";
 
 const fixtureRoot = fileURLToPath(new URL("./fixtures/task9-release", import.meta.url));
+const currentReleaseRoot = fileURLToPath(new URL("../../data/releases", import.meta.url));
 let release: LoadedOverview;
+let currentRelease: LoadedOverview;
 const execFileAsync = promisify(execFile);
 
 function producerAwardFields(paperId: string, normalizedAwardType: string) {
@@ -42,9 +44,14 @@ function producerAwardFields(paperId: string, normalizedAwardType: string) {
 }
 
 beforeAll(async () => {
-  const loaded = await loadOverview("ACL", 2026, fixtureRoot, "long");
-  if (loaded == null) throw new Error("validated fixture was not loaded");
-  release = loaded;
+  const [fixture, current] = await Promise.all([
+    loadOverview("ACL", 2026, fixtureRoot, "long"),
+    loadOverview("ACL", 2026, currentReleaseRoot, "long"),
+  ]);
+  if (fixture == null) throw new Error("validated fixture was not loaded");
+  if (current == null) throw new Error("current validated release was not loaded");
+  release = fixture;
+  currentRelease = current;
 });
 
 const validDeepRead: DeepRead = {
@@ -356,10 +363,10 @@ describe("complete award evidence rendering", () => {
       env: {
         ...process.env,
         ASTRO_TELEMETRY_DISABLED: "1",
-        CONFERENCE_RELEASE_ROOT: fixtureRoot,
+        CONFERENCE_RELEASE_ROOT: currentReleaseRoot,
       },
     });
-    const award = release.overview.awards[0];
+    const award = currentRelease.overview.awards[0];
     const route = awardRouteKey(award);
     const awardHtml = await readFile(
       join(siteRoot, "dist/awards", route, "index.html"), "utf8",
@@ -371,10 +378,19 @@ describe("complete award evidence rendering", () => {
       "Data / training setup", "Differences from prior work",
       "Reproducibility assessment", "Transferable implications",
     ]) expect(awardHtml).toContain(heading);
-    expect(awardHtml).toContain("https://aclanthology.org/paper-a.pdf");
-    expect(methodologyHtml).toContain("2026-08-24T02:03:04Z");
-    expect(methodologyHtml).toContain("2026-08-24T01:02:03Z");
-  }, 15_000);
+    expect(awardHtml).toContain("https://aclanthology.org/");
+    for (const expected of [
+      "Stage 1",
+      "Stage 2",
+      "655 reviewed · 217 kept · 438 corrected",
+      "143 reviewed · 112 kept · 31 corrected",
+      "c51895a7148b15c8a9756d6651ae013b85b2a17b64f8496d2fe1d17455333b6b",
+      "0de77ca92db5c7f02286fe2084a8ca13504bc29ab5a5c15bea6528ff0094dcb6",
+      "750e7de5f75221f7e451eb2ac765976c13cd1c3f8101b46f8b7f9c9a5ac50f6b",
+      "a20fdfab1b691f0215a55d573d9eba22eb3f7cdbdc6f2165df81145bd38138e7",
+      "Assignment blob binding",
+    ]) expect(methodologyHtml).toContain(expected);
+  }, 30_000);
 });
 
 describe("paper research index", () => {
@@ -394,6 +410,39 @@ describe("paper research index", () => {
 });
 
 describe("methodology audit ledger", () => {
+  it("exposes every full-theme stage with counts, movement, and assignment chain", () => {
+    const stages = buildMethodologyView(currentRelease).classificationLineage?.fullThemeStages;
+
+    expect(stages).toHaveLength(2);
+    expect(stages?.[0]).toMatchObject({
+      stageIndex: 1,
+      baseAssignmentsSha256: "c51895a7148b15c8a9756d6651ae013b85b2a17b64f8496d2fe1d17455333b6b",
+      resultAssignmentsSha256: "0de77ca92db5c7f02286fe2084a8ca13504bc29ab5a5c15bea6528ff0094dcb6",
+      reviewedCount: 655,
+      keepCount: 217,
+      correctionCount: 438,
+    });
+    expect(stages?.[0].sources).toHaveLength(4);
+    expect(stages?.[0].movements).toContainEqual({
+      sourceTheme: "Applications",
+      targetTheme: "Data and Retrieval",
+      count: 22,
+    });
+    expect(stages?.[1]).toMatchObject({
+      stageIndex: 2,
+      baseAssignmentsSha256: "0de77ca92db5c7f02286fe2084a8ca13504bc29ab5a5c15bea6528ff0094dcb6",
+      resultAssignmentsSha256: "750e7de5f75221f7e451eb2ac765976c13cd1c3f8101b46f8b7f9c9a5ac50f6b",
+      reviewedCount: 143,
+      keepCount: 112,
+      correctionCount: 31,
+    });
+    expect(stages?.[1].sources[0]).toMatchObject({
+      sourceTheme: "Reasoning and Agents",
+      assignmentBlobSha256: "0de77ca92db5c7f02286fe2084a8ca13504bc29ab5a5c15bea6528ff0094dcb6",
+      sourceCommit: "943b0fac246e9133f7f805bf24e1c87fb9f1b7d1",
+    });
+  });
+
   it("exposes source, scope, formulas, missingness, audits, and evidence limits", () => {
     const view = buildMethodologyView(release);
     expect(view.sources[0]).toMatchObject({

@@ -78,6 +78,9 @@ _SEMANTIC_PARTITION_PATTERN = re.compile(r"acl2026-reclass-mod([0-7])\.jsonl")
 _DEEP_READ_FIELD_PATTERN = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)(?:\[(\d+)\])?")
 _PDF_PROVENANCE_ID_PATTERN = re.compile(r"(?:acl:)?(2026\.acl-long\.\d+)")
 _PDF_PROVENANCE_SHA_PATTERN = re.compile(r"[0-9a-f]{64}")
+_AUDIT_SAMPLING_METHOD = (
+    "deterministic confidence-stratified sample of up to 50 per primary theme"
+)
 
 
 class UnsupportedPipelineRoute(ValueError):
@@ -1781,14 +1784,11 @@ def _load_low_confidence_reviews(
     )
 
 
-def _write_audit_samples(
-    paths: ScopePaths,
+def _build_audit_samples(
     records: Sequence[PaperRecord],
     assignments: Sequence[Assignment],
-    *,
-    assignments_sha256: str,
-    reset_decisions: bool = False,
-) -> None:
+) -> dict[str, list[dict[str, object]]]:
+    """Build the canonical confidence-stratified audit registry payload."""
     records_by_id = {record.paper_id: record for record in records}
     grouped: dict[str, list[Assignment]] = {}
     for assignment in assignments:
@@ -1817,21 +1817,42 @@ def _write_audit_samples(
             }
             for item in selected
         ]
-    sample_path = paths.classification / "audit-samples.json"
-    _atomic_write(
-        sample_path,
-        _json_bytes(
-            {
-                "assignments_sha256": assignments_sha256,
-                "sampling": (
-                    "deterministic confidence-stratified sample of up to 50 per primary theme"
-                ),
-                "schema_version": "classification-audit-samples-v1",
-                "taxonomy_version": _TAXONOMY_VERSION,
-                "themes": samples,
-            }
-        ),
+    return samples
+
+
+def _build_audit_sample_registry(
+    records: Sequence[PaperRecord],
+    assignments: Sequence[Assignment],
+    *,
+    assignments_sha256: str,
+) -> dict[str, object]:
+    return {
+        "assignments_sha256": assignments_sha256,
+        "sampling": _AUDIT_SAMPLING_METHOD,
+        "schema_version": "classification-audit-samples-v1",
+        "taxonomy_version": _TAXONOMY_VERSION,
+        "themes": _build_audit_samples(records, assignments),
+    }
+
+
+def _write_audit_samples(
+    paths: ScopePaths,
+    records: Sequence[PaperRecord],
+    assignments: Sequence[Assignment],
+    *,
+    assignments_sha256: str,
+    reset_decisions: bool = False,
+) -> None:
+    registry = _build_audit_sample_registry(
+        records,
+        assignments,
+        assignments_sha256=assignments_sha256,
     )
+    samples = registry["themes"]
+    if not isinstance(samples, Mapping):
+        raise TypeError("audit sample registry builder returned invalid themes")
+    sample_path = paths.classification / "audit-samples.json"
+    _atomic_write(sample_path, _json_bytes(registry))
     decisions_path = paths.classification / "audit-decisions.json"
     if reset_decisions or not decisions_path.exists():
         _atomic_write(
@@ -1860,6 +1881,7 @@ def _write_audit_samples(
 
 def _load_theme_audits(
     paths: ScopePaths,
+    records: Sequence[PaperRecord],
     assignments: Sequence[Assignment],
     low_confidence_review: LowConfidenceReviewStatus,
 ) -> tuple[dict[str, ThemeAudit], list[ThemeDisclosure], dict[str, object]]:
@@ -1884,6 +1906,15 @@ def _load_theme_audits(
         or not isinstance(sample_themes, Mapping)
     ):
         raise TypeError("audit sample registry must contain theme candidates")
+    expected_registry = _build_audit_sample_registry(
+        records,
+        assignments,
+        assignments_sha256=assignments_sha256,
+    )
+    if sample_registry != expected_registry:
+        raise ValueError(
+            "audit sample registry does not match the deterministic audit sample registry"
+        )
     population_counts: dict[str, int] = {}
     for assignment in assignments:
         population_counts[assignment.primary_topic] = (
@@ -2623,7 +2654,7 @@ def analyze_acl_scope(
         full_theme_reviews=full_theme_reviews,
     )
     audits, disclosures, audit_metadata = _load_theme_audits(
-        paths, assignments, low_confidence_review
+        paths, records, assignments, low_confidence_review
     )
     if not paths.awards.exists():
         parse_award_inventory_scope(request, root)

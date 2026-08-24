@@ -173,38 +173,271 @@ const classificationReviewSchema = z.object({
   reviewed_low_confidence_ids: z.array(nonBlankSchema),
 });
 
+const fullThemeReviewCorrectionSchema = z.object({
+  corrected_primary_topic: nonBlankSchema,
+  original_primary_topic: nonBlankSchema,
+  paper_id: nonBlankSchema,
+  source_file: nonBlankSchema,
+}).strict();
+
+const fullThemeReviewSourceSchema = z.object({
+  assignment_blob_sha256: sha256Schema.optional(),
+  correction_count: z.number().int().nonnegative(),
+  keep_count: z.number().int().nonnegative(),
+  paper_count: z.number().int().positive(),
+  sha256: sha256Schema,
+  source_assignment_file: nonBlankSchema.optional(),
+  source_commit: z.string().regex(/^[0-9a-f]{40}$/).optional(),
+  source_file: nonBlankSchema,
+  source_theme: nonBlankSchema,
+}).strict().superRefine((value, context) => {
+  if (value.paper_count !== value.keep_count + value.correction_count) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["paper_count"],
+      message: "full-theme review source counts do not reconcile",
+    });
+  }
+  const bindings = [
+    value.assignment_blob_sha256,
+    value.source_assignment_file,
+    value.source_commit,
+  ];
+  if (bindings.some((item) => item != null) && !bindings.every((item) => item != null)) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["assignment_blob_sha256"],
+      message: "source assignment binding fields must be complete",
+    });
+  }
+});
+
+const movementMatrixSchema = z.record(
+  nonBlankSchema,
+  z.record(nonBlankSchema, z.number().int().positive()),
+);
+
+const fullThemeReviewStageFields = {
+  base_assignments_sha256: sha256Schema,
+  correction_count: z.number().int().nonnegative(),
+  corrections: z.array(fullThemeReviewCorrectionSchema),
+  keep_count: z.number().int().nonnegative(),
+  method: nonBlankSchema,
+  movement_matrix: movementMatrixSchema,
+  reviewed_count: z.number().int().positive(),
+  sources: z.array(fullThemeReviewSourceSchema).min(1),
+} as const;
+
+const fullThemeReviewStageObjectSchema = z.object(fullThemeReviewStageFields).strict();
+type FullThemeReviewStage = z.infer<typeof fullThemeReviewStageObjectSchema>;
+
+function validateFullThemeReviewStage(
+  value: FullThemeReviewStage,
+  context: z.RefinementCtx,
+): void {
+  if (value.reviewed_count !== value.keep_count + value.correction_count) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["reviewed_count"],
+      message: "full-theme review counts do not reconcile",
+    });
+  }
+  if (value.corrections.length !== value.correction_count) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["corrections"],
+      message: "full-theme correction count does not match correction rows",
+    });
+  }
+  const correctedPaperIds = value.corrections.map((correction) => correction.paper_id);
+  if (new Set(correctedPaperIds).size !== correctedPaperIds.length) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["corrections"],
+      message: "full-theme correction paper IDs must be unique within a stage",
+    });
+  }
+  const sourceFiles = value.sources.map((source) => source.source_file);
+  const sourceThemes = value.sources.map((source) => source.source_theme);
+  if (
+    new Set(sourceFiles).size !== sourceFiles.length ||
+    new Set(sourceThemes).size !== sourceThemes.length
+  ) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["sources"],
+      message: "full-theme review sources and source themes must be unique",
+    });
+  }
+  const sourceByFile = new Map(
+    value.sources.map((source) => [source.source_file, source]),
+  );
+  const expectedMovements = new Map<string, number>();
+  for (const source of value.sources) {
+    expectedMovements.set(
+      `${source.source_theme}\0${source.source_theme}`,
+      source.keep_count,
+    );
+    if (
+      source.assignment_blob_sha256 != null &&
+      source.assignment_blob_sha256 !== value.base_assignments_sha256
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["sources", value.sources.indexOf(source), "assignment_blob_sha256"],
+        message: "source assignment binding does not match stage base assignments",
+      });
+    }
+  }
+  for (const [index, correction] of value.corrections.entries()) {
+    const source = sourceByFile.get(correction.source_file);
+    if (source == null || source.source_theme !== correction.original_primary_topic) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["corrections", index, "source_file"],
+        message: "correction is not bound to its declared source theme",
+      });
+      continue;
+    }
+    const key = `${correction.original_primary_topic}\0${correction.corrected_primary_topic}`;
+    expectedMovements.set(key, (expectedMovements.get(key) ?? 0) + 1);
+  }
+  const actualMovements = new Map<string, number>();
+  for (const [sourceTheme, targets] of Object.entries(value.movement_matrix)) {
+    for (const [targetTheme, count] of Object.entries(targets)) {
+      actualMovements.set(`${sourceTheme}\0${targetTheme}`, count);
+    }
+  }
+  const expected = [...expectedMovements].filter(([, count]) => count > 0).sort();
+  const actual = [...actualMovements].sort();
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["movement_matrix"],
+      message: "movement matrix does not match reviewed keep and correction rows",
+    });
+  }
+  const sourceReviewed = value.sources.reduce((sum, source) => sum + source.paper_count, 0);
+  const sourceKept = value.sources.reduce((sum, source) => sum + source.keep_count, 0);
+  const sourceCorrected = value.sources.reduce(
+    (sum, source) => sum + source.correction_count,
+    0,
+  );
+  if (
+    sourceReviewed !== value.reviewed_count ||
+    sourceKept !== value.keep_count ||
+    sourceCorrected !== value.correction_count
+  ) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["sources"],
+      message: "full-theme stage counts do not match source totals",
+    });
+  }
+}
+
+const fullThemeReviewStageSchema = fullThemeReviewStageObjectSchema.superRefine(
+  validateFullThemeReviewStage,
+);
+const fullThemeReviewChainSchema = z.object({
+  ...fullThemeReviewStageFields,
+  prior_stages: z.array(fullThemeReviewStageSchema).min(1),
+  stage_index: z.number().int().min(2),
+}).strict().superRefine((value, context) => {
+  validateFullThemeReviewStage(value, context);
+  if (value.stage_index !== value.prior_stages.length + 1) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["stage_index"],
+      message: "full-theme review stage order does not match its prior-stage chain",
+    });
+  }
+  for (const [index, source] of value.sources.entries()) {
+    if (source.assignment_blob_sha256 == null) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["sources", index, "assignment_blob_sha256"],
+        message: "chained full-theme review source requires an assignment binding",
+      });
+    }
+  }
+});
+const fullThemeReviewLedgerSchema = z.union([
+  fullThemeReviewChainSchema,
+  fullThemeReviewStageSchema,
+]);
+
+const semanticBatchSchema = z.object({
+  source_file: nonBlankSchema,
+  sha256: sha256Schema,
+  partition: z.number().int().min(0).max(7),
+  paper_count: z.number().int().nonnegative(),
+  partition_rule: nonBlankSchema,
+}).strict();
+
+const certificationSourceSchema = z.object({
+  source_file: nonBlankSchema,
+  sha256: sha256Schema,
+  decision_count: z.number().int().positive(),
+}).strict();
+
 const classificationLineageSchema = z.object({
   schema_version: z.literal("classification-lineage-v1"),
   taxonomy_version: nonBlankSchema,
   classifier: nonBlankSchema,
   method: nonBlankSchema,
   assignments_sha256: sha256Schema,
-  semantic_batches: z.array(z.object({
-    source_file: nonBlankSchema,
-    sha256: sha256Schema,
-    partition: z.number().int().min(0).max(7),
-    paper_count: z.number().int().nonnegative(),
-    partition_rule: nonBlankSchema,
-  })).length(8).refine((rows) => new Set(rows.map((row) => row.partition)).size === 8),
-  full_theme_review_stages: z.record(z.unknown()).nullable(),
+  semantic_batches: z.array(semanticBatchSchema).length(8).refine(
+    (rows) => rows.every((row, index) => row.partition === index),
+    "semantic batch partitions must cover exactly 0 through 7",
+  ),
+  full_theme_review_stages: fullThemeReviewLedgerSchema,
   audit: z.object({
     sample_registry_sha256: sha256Schema,
     decision_registry_sha256: sha256Schema,
     sample_method: nonBlankSchema,
     sample_counts: z.record(z.number().int().positive().max(50)),
-    certification_sources: z.array(z.object({
-      source_file: nonBlankSchema,
-      sha256: sha256Schema,
-      decision_count: z.number().int().positive().optional(),
-    }).passthrough()).min(1),
-  }),
+    certification_sources: z.array(certificationSourceSchema).min(1),
+  }).strict(),
   low_confidence_review: z.object({
     queue_sha256: sha256Schema,
     decision_registry_sha256: sha256Schema,
     complete: z.boolean(),
     reviewed_count: z.number().int().nonnegative(),
     total_count: z.number().int().nonnegative(),
-  }),
+  }).strict(),
+}).strict().superRefine((value, context) => {
+  const lowReview = value.low_confidence_review;
+  if (
+    lowReview.reviewed_count > lowReview.total_count ||
+    lowReview.complete !== (lowReview.reviewed_count === lowReview.total_count)
+  ) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["low_confidence_review"],
+      message: "low-confidence lineage counts do not match completion state",
+    });
+  }
+  const certificationSources = value.audit.certification_sources;
+  const certificationFiles = certificationSources.map((source) => source.source_file);
+  const certificationDecisionCount = certificationSources.reduce(
+    (sum, source) => sum + source.decision_count,
+    0,
+  );
+  const auditSampleCount = Object.values(value.audit.sample_counts).reduce(
+    (sum, count) => sum + count,
+    0,
+  );
+  if (
+    new Set(certificationFiles).size !== certificationFiles.length ||
+    certificationDecisionCount !== auditSampleCount
+  ) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["audit", "certification_sources"],
+      message: "certification sources must uniquely reconcile to every audit sample",
+    });
+  }
 });
 
 const awardVerificationSchema = z.object({
@@ -670,6 +903,37 @@ export const overviewArtifactSchema = z
         });
       }
     }
+    const lineage = value.classification_lineage;
+    if (lineage != null) {
+      if (lineage.taxonomy_version !== value.taxonomy_version) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["classification_lineage", "taxonomy_version"],
+          message: "classification lineage taxonomy does not match overview",
+        });
+      }
+      const semanticPaperCount = lineage.semantic_batches.reduce(
+        (sum, batch) => sum + batch.paper_count,
+        0,
+      );
+      if (semanticPaperCount !== value.paper_count) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["classification_lineage", "semantic_batches"],
+          message: "semantic batch counts do not match the published paper count",
+        });
+      }
+      const auditCounts = Object.fromEntries(
+        Object.entries(value.audits).map(([theme, audit]) => [theme, audit.sample_size]),
+      );
+      if (canonicalJson(lineage.audit.sample_counts) !== canonicalJson(auditCounts)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["classification_lineage", "audit", "sample_counts"],
+          message: "lineage audit sample counts do not match published theme audits",
+        });
+      }
+    }
     const lowConfidenceIds = value.assignments
       .filter((assignment) => compareExactDecimals(assignment.confidence, "0.70") < 0)
       .map((assignment) => assignment.paper_id)
@@ -883,6 +1147,16 @@ export const releaseOverviewSchema = z
         code: z.ZodIssueCode.custom,
         path: ["provenance", "taxonomy_version"],
         message: "taxonomy version does not match overview",
+      });
+    }
+    if (
+      canonicalJson(value.overview.classification_lineage ?? null) !==
+      canonicalJson(value.provenance.classification_lineage ?? null)
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["provenance", "classification_lineage"],
+        message: "classification lineage differs between overview and provenance",
       });
     }
   });

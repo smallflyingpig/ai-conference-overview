@@ -1018,6 +1018,153 @@ def test_completed_audit_registry_is_exactly_bound_to_authoritative_samples(
         analyze_acl_scope(request, tmp_path)
 
 
+@pytest.mark.parametrize("mutation", ["equal_size_cherry_pick", "forged_title"])
+def test_audit_registry_rejects_rehashed_equal_size_cherry_pick(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str
+) -> None:
+    request = normalize_request("ACL", 2026, "long")
+    source = pipeline_module.SourceRef(
+        name="ACL Anthology",
+        url="https://aclanthology.org/volumes/2026.acl-long/",
+        retrieved_at=datetime.fromisoformat("2026-08-24T01:02:03+00:00"),
+        sha256="a" * 64,
+    )
+    records = [
+        pipeline_module.PaperRecord(
+            paper_id=f"acl:2026.acl-long.{index}",
+            title=f"Evaluation paper {index}",
+            normalized_title=f"evaluation paper {index}",
+            authors=["Test Author"],
+            venue="ACL",
+            year=2026,
+            track="long",
+            landing_url=f"https://aclanthology.org/2026.acl-long.{index}/",
+            source=source,
+            status=pipeline_module.RecordStatus.COMPLETE,
+            abstract=f"Authoritative abstract {index}.",
+            pdf_url=f"https://aclanthology.org/2026.acl-long.{index}.pdf",
+        )
+        for index in range(1, 52)
+    ]
+    assignments = [
+        pipeline_module.Assignment(
+            paper_id=record.paper_id,
+            primary_topic="Evaluation",
+            secondary_topics=(),
+            confidence=Decimal("0.70") + Decimal(index) / Decimal(1000),
+            rationale=f"Authoritative evaluation rationale {index}.",
+            taxonomy_version="2026-08-24-v1",
+        )
+        for index, record in enumerate(records, start=1)
+    ]
+    classification = tmp_path / "data/classification/acl/2026-long"
+    classification.mkdir(parents=True)
+    assignment_path = classification / "assignments.jsonl"
+    assignment_path.write_text(
+        "".join(
+            json.dumps(
+                {
+                    "confidence": str(assignment.confidence),
+                    "paper_id": assignment.paper_id,
+                    "primary_topic": assignment.primary_topic,
+                    "rationale": assignment.rationale,
+                    "secondary_topics": list(assignment.secondary_topics),
+                    "taxonomy_version": assignment.taxonomy_version,
+                },
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            + "\n"
+            for assignment in assignments
+        ),
+        encoding="utf-8",
+    )
+    assignments_sha256 = hashlib.sha256(assignment_path.read_bytes()).hexdigest()
+    (classification / "classification-manifest.json").write_text(
+        json.dumps(
+            {
+                "assignments_sha256": assignments_sha256,
+                "classifier": "deterministic-title-abstract-assisted-v1",
+            }
+        ),
+        encoding="utf-8",
+    )
+    paths = pipeline_module.ScopePaths(tmp_path)
+    pipeline_module._write_audit_samples(
+        paths,
+        records,
+        assignments,
+        assignments_sha256=assignments_sha256,
+        reset_decisions=True,
+    )
+    sample_path = classification / "audit-samples.json"
+    samples = json.loads(sample_path.read_text(encoding="utf-8"))
+    selected_ids = {
+        row["paper_id"] for row in samples["themes"]["Evaluation"]
+    }
+    unsampled_id = next(
+        assignment.paper_id
+        for assignment in assignments
+        if assignment.paper_id not in selected_ids
+    )
+    unsampled_index = int(unsampled_id.rsplit(".", maxsplit=1)[1])
+    unsampled_assignment = assignments[unsampled_index - 1]
+    unsampled_record = records[unsampled_index - 1]
+    if mutation == "equal_size_cherry_pick":
+        samples["themes"]["Evaluation"][0] = {
+            "abstract": unsampled_record.abstract,
+            "confidence": str(unsampled_assignment.confidence),
+            "correct": None,
+            "paper_id": unsampled_id,
+            "proposed_primary_topic": unsampled_assignment.primary_topic,
+            "rationale": unsampled_assignment.rationale,
+            "review_note": None,
+            "title": unsampled_record.title,
+        }
+    else:
+        samples["themes"]["Evaluation"][0]["title"] = "Forged sampled title"
+    sample_path.write_text(json.dumps(samples, sort_keys=True), encoding="utf-8")
+    decisions = {
+        "method": "independent complete semantic certification",
+        "provenance": {
+            "assignments_sha256": assignments_sha256,
+            "audit_samples_sha256": hashlib.sha256(sample_path.read_bytes()).hexdigest(),
+            "sources": [{"source_file": "fixture.json", "sha256": "b" * 64}],
+        },
+        "schema_version": "classification-audit-v1",
+        "status": "completed_semantic_review",
+        "taxonomy_version": "2026-08-24-v1",
+        "themes": {
+            "Evaluation": [
+                {
+                    "paper_id": row["paper_id"],
+                    "correct": True,
+                    "review_note": "Independent title-and-abstract certification.",
+                }
+                for row in samples["themes"]["Evaluation"]
+            ]
+        },
+    }
+    (classification / "audit-decisions.json").write_text(
+        json.dumps(decisions, sort_keys=True), encoding="utf-8"
+    )
+    validation = pipeline_module.validate_records(
+        records, [], expected_included=len(records)
+    )
+    monkeypatch.setattr(pipeline_module, "validate_acl_scope", lambda *_: validation)
+    monkeypatch.setattr(
+        pipeline_module,
+        "load_scope_records",
+        lambda *_: (records, [], [source]),
+    )
+    monkeypatch.setattr(pipeline_module, "parse_award_inventory_scope", lambda *_: [])
+    monkeypatch.setattr(pipeline_module, "_load_award_records", lambda *_: [])
+    monkeypatch.setattr(pipeline_module, "_load_award_deep_reads", lambda *_: [])
+
+    with pytest.raises(ValueError, match="deterministic audit sample registry"):
+        analyze_acl_scope(request, tmp_path)
+
+
 def test_build_site_resolves_relative_release_root_before_changing_cwd(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

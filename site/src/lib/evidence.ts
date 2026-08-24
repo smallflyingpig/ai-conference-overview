@@ -208,10 +208,32 @@ export interface MethodologyView {
     assignmentsSha256: string;
     semanticBatchCount: number;
     fullThemeStageCount: number;
+    fullThemeStages: Array<{
+      stageIndex: number;
+      sourceThemes: string[];
+      method: string;
+      baseAssignmentsSha256: string;
+      resultAssignmentsSha256: string;
+      reviewedCount: number;
+      keepCount: number;
+      correctionCount: number;
+      movements: Array<{ sourceTheme: string; targetTheme: string; count: number }>;
+      sources: Array<{
+        sourceFile: string;
+        sourceTheme: string;
+        sha256: string;
+        paperCount: number;
+        keepCount: number;
+        correctionCount: number;
+        assignmentBlobSha256: string | null;
+        sourceAssignmentFile: string | null;
+        sourceCommit: string | null;
+      }>;
+    }>;
     auditSampleSha256: string;
     auditDecisionSha256: string;
     auditSampleMethod: string;
-    certificationSources: Array<{ source_file: string; sha256: string }>;
+    certificationSources: Array<{ source_file: string; sha256: string; decision_count: number }>;
     lowQueueSha256: string;
     lowDecisionSha256: string;
     lowComplete: boolean;
@@ -227,6 +249,42 @@ export interface MethodologyView {
 export function buildMethodologyView(release: LoadedOverview): MethodologyView {
   const comparison = release.overview.comparison_contract;
   const metric = comparison.metric_contract;
+  const lineage = release.overview.classification_lineage;
+  const fullThemeStages = lineage == null
+    ? []
+    : (() => {
+      const ledger = lineage.full_theme_review_stages;
+      const rawStages = "prior_stages" in ledger
+        ? [...ledger.prior_stages, ledger]
+        : [ledger];
+      return rawStages.map((stage, index) => ({
+        stageIndex: index + 1,
+        sourceThemes: stage.sources.map((source) => source.source_theme),
+        method: stage.method,
+        baseAssignmentsSha256: stage.base_assignments_sha256,
+        resultAssignmentsSha256:
+          rawStages[index + 1]?.base_assignments_sha256 ?? lineage.assignments_sha256,
+        reviewedCount: stage.reviewed_count,
+        keepCount: stage.keep_count,
+        correctionCount: stage.correction_count,
+        movements: Object.entries(stage.movement_matrix).flatMap(
+          ([sourceTheme, targets]) => Object.entries(targets).map(
+            ([targetTheme, count]) => ({ sourceTheme, targetTheme, count }),
+          ),
+        ),
+        sources: stage.sources.map((source) => ({
+          sourceFile: source.source_file,
+          sourceTheme: source.source_theme,
+          sha256: source.sha256,
+          paperCount: source.paper_count,
+          keepCount: source.keep_count,
+          correctionCount: source.correction_count,
+          assignmentBlobSha256: source.assignment_blob_sha256 ?? null,
+          sourceAssignmentFile: source.source_assignment_file ?? null,
+          sourceCommit: source.source_commit ?? null,
+        })),
+      }));
+    })();
   return {
     build: {
       generatedAt: release.overview.build_metadata.generated_at,
@@ -281,21 +339,20 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
       rejectedCount: release.overview.classification_review?.rejected_low_confidence_ids.length ?? 0,
       reviewedCount: release.overview.classification_review?.reviewed_low_confidence_ids.length ?? 0,
     },
-    classificationLineage: release.overview.classification_lineage == null ? null : {
-      classifier: release.overview.classification_lineage.classifier,
-      method: release.overview.classification_lineage.method,
-      assignmentsSha256: release.overview.classification_lineage.assignments_sha256,
-      semanticBatchCount: release.overview.classification_lineage.semantic_batches.length,
-      fullThemeStageCount: 1 + (Array.isArray(release.overview.classification_lineage.full_theme_review_stages?.prior_stages)
-        ? release.overview.classification_lineage.full_theme_review_stages.prior_stages.length
-        : 0),
-      auditSampleSha256: release.overview.classification_lineage.audit.sample_registry_sha256,
-      auditDecisionSha256: release.overview.classification_lineage.audit.decision_registry_sha256,
-      auditSampleMethod: release.overview.classification_lineage.audit.sample_method,
-      certificationSources: release.overview.classification_lineage.audit.certification_sources,
-      lowQueueSha256: release.overview.classification_lineage.low_confidence_review.queue_sha256,
-      lowDecisionSha256: release.overview.classification_lineage.low_confidence_review.decision_registry_sha256,
-      lowComplete: release.overview.classification_lineage.low_confidence_review.complete,
+    classificationLineage: lineage == null ? null : {
+      classifier: lineage.classifier,
+      method: lineage.method,
+      assignmentsSha256: lineage.assignments_sha256,
+      semanticBatchCount: lineage.semantic_batches.length,
+      fullThemeStageCount: fullThemeStages.length,
+      fullThemeStages,
+      auditSampleSha256: lineage.audit.sample_registry_sha256,
+      auditDecisionSha256: lineage.audit.decision_registry_sha256,
+      auditSampleMethod: lineage.audit.sample_method,
+      certificationSources: lineage.audit.certification_sources,
+      lowQueueSha256: lineage.low_confidence_review.queue_sha256,
+      lowDecisionSha256: lineage.low_confidence_review.decision_registry_sha256,
+      lowComplete: lineage.low_confidence_review.complete,
     },
     withheldThemes: {
       themes: release.overview.theme_disclosures.map((item) => `${item.theme} (${item.status})`),

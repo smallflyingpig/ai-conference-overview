@@ -278,6 +278,24 @@ const artifactNames = [
 const task9FixtureRoot = fileURLToPath(
   new URL("./fixtures/task9-release", import.meta.url),
 );
+const currentReleaseRoot = fileURLToPath(
+  new URL("../../data/releases", import.meta.url),
+);
+
+async function currentReleaseArtifacts(): Promise<{
+  overview: Record<string, any>;
+  validation: Record<string, any>;
+  provenance: Record<string, any>;
+}> {
+  const release = join(currentReleaseRoot, "ACL", "2026");
+  const pointer = JSON.parse(await readFile(join(release, "current.json"), "utf8"));
+  const generation = join(release, pointer.generation);
+  return {
+    overview: JSON.parse(await readFile(join(generation, "overview.json"), "utf8")),
+    validation: JSON.parse(await readFile(join(generation, "validation.json"), "utf8")),
+    provenance: JSON.parse(await readFile(join(generation, "provenance.json"), "utf8")),
+  };
+}
 
 async function mutatedTask9Release(
   mutate: (overview: Record<string, any>) => void,
@@ -376,6 +394,41 @@ describe("parseOverview", () => {
         },
       }),
     ).toThrow(/sha256/i);
+  });
+
+  it.each([
+    ["null review ledger", (lineage: Record<string, any>) => {
+      lineage.full_theme_review_stages = null;
+    }],
+    ["garbage review ledger", (lineage: Record<string, any>) => {
+      lineage.full_theme_review_stages = { trusted: false };
+    }],
+    ["mismatched review counts", (lineage: Record<string, any>) => {
+      lineage.full_theme_review_stages.reviewed_count += 1;
+    }],
+    ["mismatched source assignment binding", (lineage: Record<string, any>) => {
+      lineage.full_theme_review_stages.sources[0].assignment_blob_sha256 = "f".repeat(64);
+    }],
+    ["missing chained source binding", (lineage: Record<string, any>) => {
+      delete lineage.full_theme_review_stages.sources[0].assignment_blob_sha256;
+      delete lineage.full_theme_review_stages.sources[0].source_assignment_file;
+      delete lineage.full_theme_review_stages.sources[0].source_commit;
+    }],
+  ])("rejects classification lineage with %s", async (_label, mutate) => {
+    const artifacts = await currentReleaseArtifacts();
+    const lineage = structuredClone(artifacts.overview.classification_lineage);
+    mutate(lineage);
+    artifacts.overview.classification_lineage = lineage;
+    artifacts.provenance.classification_lineage = structuredClone(lineage);
+
+    expect(() => parseOverview(artifacts)).toThrow(/lineage|review|count|assignment|sha256/i);
+  });
+
+  it("rejects classification lineage hashes that differ across release artifacts", async () => {
+    const artifacts = await currentReleaseArtifacts();
+    artifacts.provenance.classification_lineage.assignments_sha256 = "f".repeat(64);
+
+    expect(() => parseOverview(artifacts)).toThrow(/lineage|provenance|match/i);
   });
 
   it.each([
