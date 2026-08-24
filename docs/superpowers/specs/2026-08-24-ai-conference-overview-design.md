@@ -3,6 +3,8 @@
 Date: 2026-08-24
 Status: Approved in chat; pending written-spec review
 Project slug: `ai-conference-overview`
+Repository: `git@github.com:smallflyingpig/ai-conference-overview.git`
+License: MIT
 
 ## 1. Objective
 
@@ -13,7 +15,7 @@ Build a reusable conference-analysis skill and a GitHub Pages website that:
 3. measures topic trends across venues and years using normalized metrics;
 4. deeply analyzes officially verified award papers;
 5. synthesizes advances in text LLMs, multimodal models, reasoning and agents, data and training, evaluation, safety, and interpretability; and
-6. publishes validated results at `https://<owner>.github.io/ai-conference-overview/`.
+6. publishes validated results at `https://smallflyingpig.github.io/ai-conference-overview/`.
 
 The initial end-to-end reference run is ACL 2026 long papers. The architecture must also support ICLR, ICML, CVPR, EMNLP, ICCV, ECCV, and NeurIPS. User input `NIPS` is normalized to `NEURIPS`.
 
@@ -249,7 +251,11 @@ The site is an Astro static application deployed as a GitHub Project Pages site 
 
 GitHub Actions performs data validation, tests, static build, and Project Pages deployment. The workflow supports manual `workflow_dispatch`. Scheduled source updates are not enabled by default because conference records and awards may be temporarily incomplete.
 
-Remote repository creation and first public deployment require a GitHub owner and explicit confirmation of the target. Local implementation and static-site validation do not depend on that target.
+The configured remote repository is `smallflyingpig/ai-conference-overview`. The first public deployment still requires build and public-endpoint acceptance checks. Local implementation and static-site validation do not depend on enabling Pages early.
+
+### 5.4 License
+
+Project-authored source code, configuration, documentation, and website content are released under the MIT License. Third-party papers, metadata, figures, and conference assets retain their original rights and are linked or attributed rather than relicensed. Generated paper diagrams must be original explanatory renderings and must not copy protected figures verbatim.
 
 ## 6. Repository Structure
 
@@ -363,7 +369,7 @@ A theme that fails the gate remains marked experimental and is excluded from hea
 - Core routes render at desktop and mobile viewports.
 - Essential charts have readable table fallbacks.
 - Paper and evidence links are traceable from displayed claims.
-- The deployed public URL returns successfully after a target owner is provided.
+- The deployed public URL `https://smallflyingpig.github.io/ai-conference-overview/` returns successfully.
 
 ## 10. Initial ACL 2026 Reference Run
 
@@ -391,7 +397,7 @@ The first release is accepted when:
 - every award is officially verified and every numerical deep-reading claim is traceable to the paper;
 - evidence types distinguish official metadata, paper-reported results, synthesis, and inference;
 - the static site builds and passes route, accessibility, and visual checks; and
-- public deployment succeeds at `https://<owner>.github.io/ai-conference-overview/` after the owner is supplied.
+- public deployment succeeds at `https://smallflyingpig.github.io/ai-conference-overview/`.
 
 ## 12. Implementation Sequence
 
@@ -401,6 +407,6 @@ The first release is accepted when:
 4. Implement official award verification and deep-reading artifacts.
 5. Build the Astro website against validated local data.
 6. Add remaining venue adapters one source family at a time.
-7. Configure GitHub Pages and perform public acceptance after the target owner is confirmed.
+7. Configure GitHub Pages for `smallflyingpig/ai-conference-overview` and perform public acceptance.
 
 Each adapter and analysis capability is added test-first. The public site never advances past the last validated snapshot.
