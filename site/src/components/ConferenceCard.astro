@@ -1,0 +1,24 @@
+---
+interface Props {
+  venue: string;
+  year: number;
+  scope: string;
+  paperCount: number;
+  href: string;
+  retrievedAt: string;
+}
+const { venue, year, scope, paperCount, href, retrievedAt } = Astro.props;
+---
+
+<article class="conference-entry">
+  <div>
+    <p class="eyebrow">Validated conference snapshot</p>
+    <h3>{venue} {year}</h3>
+  </div>
+  <dl>
+    <div><dt>Scope</dt><dd>{scope}</dd></div>
+    <div><dt>Denominator</dt><dd>{paperCount} included papers</dd></div>
+    <div><dt>Freshness</dt><dd>{retrievedAt.slice(0, 10)}</dd></div>
+  </dl>
+  <a href={href}>Open distribution <span aria-hidden="true">→</span></a>
+</article>

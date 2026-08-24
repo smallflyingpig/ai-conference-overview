@@ -1,0 +1,86 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import DataStatus from "../../../components/DataStatus.astro";
+import TopicShareChart from "../../../components/TopicShareChart";
+import { loadOverview } from "../../../lib/data";
+import { buildConferenceView, conferenceRoutes, type ConferenceView } from "../../../lib/views";
+
+export async function getStaticPaths() {
+  const release = await loadOverview("ACL", 2026);
+  const releases = release == null ? [] : [{ venue: "ACL", year: 2026, release }];
+  return conferenceRoutes(releases).map((route, index) => ({
+    ...route,
+    props: { view: buildConferenceView(releases[index]) },
+  }));
+}
+
+interface Props { view: ConferenceView }
+const { view } = Astro.props;
+---
+
+<BaseLayout
+  title={`${view.venue} ${view.year} ${view.analysisLabel} — AI Conference Overview`}
+  description={`Validated ${view.scopeLabel} topic distribution and data health.`}
+>
+  <div class="conference-shell">
+    <aside class="conference-axis">
+      <p class="eyebrow">Conference identity</p>
+      <p class="conference-monogram" aria-hidden="true">{view.venue}</p>
+      <h1>{view.year}<br />Long papers</h1>
+      <dl class="identity-index">
+        <div><dt>View</dt><dd>{view.analysisLabel}</dd></div>
+        <div><dt>Period</dt><dd>{view.periodLabel}</dd></div>
+        <div><dt>Scope</dt><dd>{view.scopeLabel}</dd></div>
+      </dl>
+      <DataStatus
+        included={view.includedCount}
+        excluded={view.excludedCount}
+        discovered={view.discoveredCount}
+        abstractCoverage={view.abstractCoverageLabel}
+        retrievedAt={view.retrievedAt}
+        sourceName={view.sourceName}
+        sourceUrl={view.sourceUrl}
+        sourceHash={view.sourceHash}
+      />
+    </aside>
+
+    <article class="distribution-plane">
+      <header class="distribution-header">
+        <p class="eyebrow">Distribution evidence</p>
+        <h2>Where accepted work concentrates.</h2>
+        <p>
+          Primary-topic shares use <strong>{view.denominatorLabel}</strong> as the denominator.
+          This is a one-year snapshot, so no year-over-year or trend claim is shown.
+        </p>
+      </header>
+
+      <section aria-labelledby="topic-title">
+        <div class="section-line">
+          <h3 id="topic-title">Primary topic shares</h3>
+          <span>{view.topics.length} audited themes</span>
+        </div>
+        <TopicShareChart rows={view.topics} denominator={view.includedCount} />
+      </section>
+
+      <section class="representative-index" aria-labelledby="representative-title">
+        <div class="section-line">
+          <h3 id="representative-title">Representative papers</h3>
+          <span>Highest-confidence assignment per theme</span>
+        </div>
+        <ol>
+          {view.topics.map((row) => (
+            <li>
+              <span>{row.topic}</span>
+              <a href={row.representativePaper.url}>{row.representativePaper.title}</a>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <footer class="artifact-trace">
+        <span>Taxonomy {view.taxonomyVersion}</span>
+        <code>{view.generation}</code>
+      </footer>
+    </article>
+  </div>
+</BaseLayout>

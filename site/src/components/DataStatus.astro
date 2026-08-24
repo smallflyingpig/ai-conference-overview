@@ -1,0 +1,30 @@
+---
+interface Props {
+  included: number;
+  excluded: number;
+  discovered: number;
+  abstractCoverage: string;
+  retrievedAt: string;
+  sourceName: string;
+  sourceUrl: string;
+  sourceHash: string;
+}
+
+const { included, excluded, discovered, abstractCoverage, retrievedAt, sourceName, sourceUrl, sourceHash } = Astro.props;
+---
+
+<section class="data-status" aria-labelledby="data-status-title">
+  <p class="eyebrow">Data health</p>
+  <h2 id="data-status-title">Publication gate passed</h2>
+  <dl>
+    <div><dt>Included</dt><dd>{included}</dd></div>
+    <div><dt>Excluded</dt><dd>{excluded}</dd></div>
+    <div><dt>Discovered</dt><dd>{discovered}</dd></div>
+    <div><dt>Abstract coverage</dt><dd>{abstractCoverage}</dd></div>
+  </dl>
+  <p class="source-note">
+    <span>Retrieved <time datetime={retrievedAt}>{retrievedAt.slice(0, 10)}</time></span>
+    <a href={sourceUrl}>{sourceName}</a>
+    <code title={sourceHash}>sha256:{sourceHash.slice(0, 12)}</code>
+  </p>
+</section>

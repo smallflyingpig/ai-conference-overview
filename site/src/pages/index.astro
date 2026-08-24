@@ -1,9 +1,14 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ConferenceCard from "../components/ConferenceCard.astro";
 import { loadOverview } from "../lib/data";
+import { projectPath } from "../lib/paths";
+import { buildConferenceView } from "../lib/views";
 
 const release = await loadOverview("ACL", 2026);
 const source = release?.provenance.sources[0];
+const conferenceView = release ? buildConferenceView({ venue: "ACL", year: 2026, release }) : null;
+const base = import.meta.env.BASE_URL;
 const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV"];
 ---
 
@@ -84,6 +89,23 @@ const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV
           ))}
         </ul>
       </section>
+
+      {conferenceView && (
+        <section class="published-index" aria-labelledby="published-title">
+          <div class="section-heading">
+            <p class="eyebrow">Published atlas entries</p>
+            <h2 id="published-title">Validated<br />snapshots.</h2>
+          </div>
+          <ConferenceCard
+            venue={conferenceView.venue}
+            year={conferenceView.year}
+            scope={conferenceView.scopeLabel}
+            paperCount={conferenceView.includedCount}
+            retrievedAt={conferenceView.retrievedAt}
+            href={projectPath(base, `conferences/${conferenceView.venueSlug}/${conferenceView.year}`)}
+          />
+        </section>
+      )}
     </div>
   </div>
 </BaseLayout>

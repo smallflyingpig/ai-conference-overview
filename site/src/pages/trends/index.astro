@@ -1,0 +1,83 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TopicShareChart from "../../components/TopicShareChart";
+import { loadOverview } from "../../lib/data";
+import { buildTrendView } from "../../lib/views";
+
+const aclRelease = await loadOverview("ACL", 2026);
+const releases = aclRelease == null ? [] : [{ venue: "ACL", year: 2026, release: aclRelease }];
+const view = buildTrendView(releases);
+---
+
+<BaseLayout
+  title="Distributions and trends — AI Conference Overview"
+  description="Validated conference distributions, with trend claims gated on comparable multi-year evidence."
+>
+  <div class="trends-shell">
+    <aside class="trend-controls" aria-labelledby="filter-title">
+      <p class="eyebrow">Evidence controls</p>
+      <h1 id="filter-title">Filter the published set</h1>
+      <form>
+        <label for="venue-filter">Venue</label>
+        <select id="venue-filter" name="venue" disabled={view.availableVenues.length === 0}>
+          {view.availableVenues.length === 0 ? <option>No published venues</option> : <option>All published venues</option>}
+          {view.availableVenues.map((venue) => <option value={venue}>{venue}</option>)}
+        </select>
+        <label for="year-filter">Year</label>
+        <select id="year-filter" name="year" disabled={view.availableYears.length === 0}>
+          {view.availableYears.length === 0 ? <option>No published years</option> : <option>All published years</option>}
+          {view.availableYears.map((year) => <option value={year}>{year}</option>)}
+        </select>
+        <label for="theme-filter">Theme</label>
+        <select id="theme-filter" name="theme" disabled={view.availableThemes.length === 0}>
+          {view.availableThemes.length === 0 ? <option>No audited themes</option> : <option>All audited themes</option>}
+          {view.availableThemes.map((theme) => <option value={theme}>{theme}</option>)}
+        </select>
+        <label for="modality-filter">Modality</label>
+        <select id="modality-filter" name="modality" disabled>
+          <option>Not available in this release</option>
+        </select>
+      </form>
+      <p class="filter-note">Controls list only fields present in validated artifacts. Disabled controls name the missing dimension.</p>
+    </aside>
+
+    <article class="trend-plane">
+      <header>
+        <p class="eyebrow">Claim boundary</p>
+        <h2>{view.heading}</h2>
+        {view.missingRequirement && <p class="gate-note" role="status">{view.missingRequirement}</p>}
+      </header>
+
+      {view.mode === "empty" ? (
+        <section class="empty-atlas" aria-labelledby="empty-title">
+          <span class="status-mark" aria-hidden="true"></span>
+          <div>
+            <h3 id="empty-title">No analysis is visible yet.</h3>
+            <p>A conference appears only after its source, record set, classification audit, and provenance pass publication gates.</p>
+          </div>
+        </section>
+      ) : (
+        view.snapshots.map((snapshot) => (
+          <section class="snapshot-strip" aria-labelledby={`${snapshot.venueSlug}-${snapshot.year}-title`}>
+            <div class="section-line">
+              <div>
+                <p class="eyebrow">{snapshot.periodLabel}</p>
+                <h3 id={`${snapshot.venueSlug}-${snapshot.year}-title`}>{snapshot.venue} hotspots</h3>
+              </div>
+              <span>Denominator: {snapshot.denominatorLabel}</span>
+            </div>
+            <TopicShareChart rows={snapshot.topics} denominator={snapshot.includedCount} />
+          </section>
+        ))
+      )}
+
+      {!view.trendWidgetsVisible && view.mode !== "empty" && (
+        <section class="withheld-widget" aria-label="Trend widgets unavailable">
+          <p class="data-label">WITHHELD</p>
+          <h3>Time series and year-over-year claims</h3>
+          <p>Two additional comparable validated years are needed before these views can be published.</p>
+        </section>
+      )}
+    </article>
+  </div>
+</BaseLayout>
