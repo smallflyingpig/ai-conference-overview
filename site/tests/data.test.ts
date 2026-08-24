@@ -100,6 +100,27 @@ async function mutatedTask9Release(
   return root;
 }
 
+async function mutatedTask9Papers(
+  mutate: (papers: Array<Record<string, any>>) => void,
+): Promise<string> {
+  const temporary = await mkdtemp(join(tmpdir(), "conference-task9-scope-"));
+  const root = join(temporary, "releases");
+  await cp(task9FixtureRoot, root, { recursive: true });
+  const release = join(root, "ACL", "2026");
+  const pointerPath = join(release, "current.json");
+  const pointer = JSON.parse(await readFile(pointerPath, "utf8"));
+  const papersPath = join(release, pointer.generation, "papers.json");
+  const papers = JSON.parse(await readFile(papersPath, "utf8"));
+  mutate(papers);
+  const contents = `${JSON.stringify(papers, null, 2)}\n`;
+  await writeFile(papersPath, contents);
+  pointer.artifact_sha256["papers.json"] = createHash("sha256")
+    .update(contents)
+    .digest("hex");
+  await writeFile(pointerPath, `${JSON.stringify(pointer, null, 2)}\n`);
+  return root;
+}
+
 describe("parseOverview", () => {
   it("rejects a release without provenance", () => {
     expect(() => parseOverview({ overview, validation })).toThrow(/provenance/i);
@@ -359,5 +380,34 @@ describe("loadOverview", () => {
     await expect(loadOverview("ACL", 2026, root)).resolves.toMatchObject({
       overview: { paper_count: 2 },
     });
+  });
+
+  it("rejects a coherently rehashed ACL 2026 long release containing EMNLP 2025 short papers", async () => {
+    const root = await mutatedTask9Papers((papers) => {
+      papers.forEach((paper) => {
+        paper.venue = "EMNLP";
+        paper.year = 2025;
+        paper.track = "short";
+      });
+    });
+
+    await expect(loadOverview("ACL", 2026, root, "long")).rejects.toThrow(
+      /scope|venue|year|track/i,
+    );
+  });
+
+  it("returns the validated selector scope rather than inferring a hardcoded view label", async () => {
+    const loaded = await loadOverview("ACL", 2026, task9FixtureRoot, "long");
+    expect(loaded?.scope).toEqual({ venue: "ACL", year: 2026, track: "long" });
+  });
+
+  it("rejects paper source metadata outside the canonical provenance scope", async () => {
+    const root = await mutatedTask9Papers((papers) => {
+      papers[0].source.name = "Unverified mirror";
+    });
+
+    await expect(loadOverview("ACL", 2026, root, "long")).rejects.toThrow(
+      /provenance|source|scope/i,
+    );
   });
 });

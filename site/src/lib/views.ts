@@ -1,46 +1,6 @@
-export interface ConferenceRelease {
-  venue: string;
-  year: number;
-  release: {
-    generation: string;
-    overview: {
-      [key: string]: unknown;
-      assignments: Array<{
-        confidence: string;
-        paper_id: string;
-        primary_topic: string;
-        rationale: string;
-        secondary_topics: string[];
-        taxonomy_version: string;
-      }>;
-      taxonomy_version: string;
-    };
-    validation: {
-      [key: string]: unknown;
-      discovered_count: number;
-      included_count: number;
-      excluded_count: number;
-      missing_abstract_count: number;
-    };
-    provenance: {
-      [key: string]: unknown;
-      sources: Array<{
-        name: string;
-        url: string;
-        retrieved_at: string;
-        sha256: string;
-      }>;
-      taxonomy_version: string;
-    };
-    papers: Array<{
-      [key: string]: unknown;
-      paper_id: string;
-      title: string;
-      landing_url: string;
-      track?: string;
-    }>;
-  };
-}
+import type { LoadedOverview } from "./data";
+
+export type ConferenceRelease = LoadedOverview;
 
 export interface TopicShareRow {
   topic: string;
@@ -58,6 +18,8 @@ export interface ConferenceView {
   venue: string;
   venueSlug: string;
   year: number;
+  track: string;
+  pageHeading: string;
   scopeLabel: string;
   analysisLabel: "Distribution";
   periodLabel: string;
@@ -73,6 +35,7 @@ export interface ConferenceView {
   sourceHash: string;
   generation: string;
   taxonomyVersion: string;
+  comparisonContract: string;
   topics: TopicShareRow[];
 }
 
@@ -100,8 +63,8 @@ export interface TrendView {
 }
 
 export function conferenceRoutes(releases: ConferenceRelease[]): ConferenceRoute[] {
-  return releases.map(({ venue, year }) => ({
-    params: { venue: venue.toLowerCase(), year: String(year) },
+  return releases.map(({ scope }) => ({
+    params: { venue: scope.venue.toLowerCase(), year: String(scope.year) },
   }));
 }
 
@@ -110,8 +73,14 @@ function formatCoverage(available: number, denominator: number): string {
   return `${available} of ${denominator} (${((available / denominator) * 100).toFixed(1)}%)`;
 }
 
-export function buildConferenceView(input: ConferenceRelease): ConferenceView {
-  const { release, venue, year } = input;
+export function buildConferenceView(release: ConferenceRelease): ConferenceView {
+  const { venue, year, track } = release.scope;
+  const mismatchedPaper = release.papers.find(
+    (paper) => paper.venue !== venue || paper.year !== year || paper.track !== track,
+  );
+  if (mismatchedPaper != null) {
+    throw new Error(`Conference view scope mismatch: ${mismatchedPaper.paper_id}`);
+  }
   const paperById = new Map(release.papers.map((paper) => [paper.paper_id, paper]));
   const assignmentsByTopic = new Map<string, typeof release.overview.assignments>();
   for (const assignment of release.overview.assignments) {
@@ -144,12 +113,13 @@ export function buildConferenceView(input: ConferenceRelease): ConferenceView {
     })
     .sort((left, right) => right.paperCount - left.paperCount || left.topic.localeCompare(right.topic));
   const source = release.provenance.sources[0];
-  const tracks = [...new Set(release.papers.map((paper) => paper.track).filter(Boolean))].join(", ");
   return {
     venue,
     venueSlug: venue.toLowerCase(),
     year,
-    scopeLabel: `${venue} ${year} · ${tracks || "validated scope"}`,
+    track,
+    pageHeading: `${venue} ${year} ${track} papers`,
+    scopeLabel: `${venue} ${year} · ${track}`,
     analysisLabel: "Distribution",
     periodLabel: `${year} snapshot`,
     trendEligible: false,
@@ -160,25 +130,53 @@ export function buildConferenceView(input: ConferenceRelease): ConferenceView {
       denominator - release.validation.missing_abstract_count,
       denominator,
     ),
-    denominatorLabel: `${denominator} included long papers`,
+    denominatorLabel: `${denominator} included ${track} papers`,
     retrievedAt: source.retrieved_at,
     sourceName: source.name,
     sourceUrl: source.url,
     sourceHash: source.sha256,
     generation: release.generation,
     taxonomyVersion: release.overview.taxonomy_version,
+    comparisonContract: comparisonKey(release),
     topics,
   };
 }
 
-function hasComparableThreeYearWindow(releases: ConferenceRelease[]): boolean {
-  const byVenue = new Map<string, number[]>();
-  for (const release of releases) {
-    const years = byVenue.get(release.venue) ?? [];
-    years.push(release.year);
-    byVenue.set(release.venue, years);
+function metricContract(release: ConferenceRelease): string {
+  const describe = (value: unknown, key = ""): unknown => {
+    if (Array.isArray(value)) return value.map((item) => describe(item));
+    if (value != null && typeof value === "object") {
+      return Object.fromEntries(
+        Object.entries(value as Record<string, unknown>)
+          .sort(([left], [right]) => left.localeCompare(right))
+          .map(([childKey, childValue]) => [
+            childKey,
+            childKey === "weights" ? childValue : describe(childValue, childKey),
+          ]),
+      );
+    }
+    return key === "weights" ? value : typeof value;
+  };
+  return JSON.stringify(describe(release.overview.metrics));
+}
+
+function comparisonKey(release: ConferenceRelease): string {
+  return JSON.stringify({
+    venue: release.scope.venue,
+    track: release.scope.track,
+    taxonomyVersion: release.overview.taxonomy_version,
+    metricContract: metricContract(release),
+  });
+}
+
+function hasComparableSnapshotWindow(snapshots: ConferenceView[]): boolean {
+  const byContract = new Map<string, number[]>();
+  for (const snapshot of snapshots) {
+    const years = byContract.get(snapshot.comparisonContract) ?? [];
+    years.push(snapshot.year);
+    byContract.set(snapshot.comparisonContract, years);
   }
-  return [...byVenue.values()].some((years) => {
+  return [...byContract.values()].some((years) => {
     const unique = [...new Set(years)].sort((a, b) => a - b);
     return unique.some((year, index) =>
       index >= 2 && unique[index - 2] === year - 2 && unique[index - 1] === year - 1,
@@ -186,12 +184,40 @@ function hasComparableThreeYearWindow(releases: ConferenceRelease[]): boolean {
   });
 }
 
-export function buildTrendView(releases: ConferenceRelease[]): TrendView {
-  const snapshots = releases.map(buildConferenceView);
-  const availableVenues = [...new Set(releases.map((release) => release.venue))].sort();
-  const availableYears = [...new Set(releases.map((release) => release.year))].sort((a, b) => a - b);
-  const availableThemes = [...new Set(snapshots.flatMap((snapshot) => snapshot.topics.map((row) => row.topic)))].sort();
-  const filters: TrendFilters = { venue: null, year: null, modality: null, theme: null };
+const emptyFilters: TrendFilters = {
+  venue: null,
+  year: null,
+  modality: null,
+  theme: null,
+};
+
+function filterSnapshots(
+  snapshots: ConferenceView[],
+  filters: TrendFilters,
+): ConferenceView[] {
+  return snapshots
+    .filter((snapshot) => filters.venue == null || snapshot.venue === filters.venue)
+    .filter((snapshot) => filters.year == null || snapshot.year === filters.year)
+    .map((snapshot) => ({
+      ...snapshot,
+      topics:
+        filters.theme == null
+          ? snapshot.topics
+          : snapshot.topics.filter((topic) => topic.topic === filters.theme),
+    }))
+    .filter((snapshot) => filters.theme == null || snapshot.topics.length > 0)
+    .filter(() => filters.modality == null);
+}
+
+export function buildTrendView(
+  releases: ConferenceRelease[],
+  filters: TrendFilters = emptyFilters,
+): TrendView {
+  const allSnapshots = releases.map(buildConferenceView);
+  const snapshots = filterSnapshots(allSnapshots, filters);
+  const availableVenues = [...new Set(allSnapshots.map((snapshot) => snapshot.venue))].sort();
+  const availableYears = [...new Set(allSnapshots.map((snapshot) => snapshot.year))].sort((a, b) => a - b);
+  const availableThemes = [...new Set(allSnapshots.flatMap((snapshot) => snapshot.topics.map((row) => row.topic)))].sort();
   if (releases.length === 0) {
     return {
       mode: "empty",
@@ -201,11 +227,11 @@ export function buildTrendView(releases: ConferenceRelease[]): TrendView {
       availableVenues,
       availableYears,
       availableThemes,
-      filters,
+      filters: { ...filters },
       snapshots,
     };
   }
-  const trendEligible = hasComparableThreeYearWindow(releases);
+  const trendEligible = hasComparableSnapshotWindow(snapshots);
   return {
     mode: trendEligible ? "trend" : "snapshot",
     heading: trendEligible ? "Comparable research trends" : "Distribution / Snapshot / Hotspot",
@@ -216,7 +242,46 @@ export function buildTrendView(releases: ConferenceRelease[]): TrendView {
     availableVenues,
     availableYears,
     availableThemes,
-    filters,
+    filters: { ...filters },
+    snapshots,
+  };
+}
+
+export function parseTrendFilters(search: string, view: TrendView): TrendFilters {
+  const query = new URLSearchParams(search);
+  const venue = query.get("venue");
+  const yearValue = query.get("year");
+  const parsedYear = yearValue == null ? null : Number(yearValue);
+  const theme = query.get("theme");
+  return {
+    venue: venue != null && view.availableVenues.includes(venue) ? venue : null,
+    year:
+      parsedYear != null && Number.isInteger(parsedYear) && view.availableYears.includes(parsedYear)
+        ? parsedYear
+        : null,
+    theme: theme != null && view.availableThemes.includes(theme) ? theme : null,
+    modality: null,
+  };
+}
+
+export function applyTrendFilters(view: TrendView, filters: TrendFilters): TrendView {
+  const snapshots = filterSnapshots(view.snapshots, filters);
+  const trendEligible = hasComparableSnapshotWindow(snapshots);
+  return {
+    ...view,
+    mode: trendEligible ? "trend" : view.mode === "empty" ? "empty" : "snapshot",
+    heading: trendEligible
+      ? "Comparable research trends"
+      : view.mode === "empty"
+        ? "No distribution published"
+        : "Distribution / Snapshot / Hotspot",
+    trendWidgetsVisible: trendEligible,
+    missingRequirement: trendEligible
+      ? null
+      : view.mode === "empty"
+        ? view.missingRequirement
+        : "Trend and year-over-year claims require at least three comparable validated years.",
+    filters: { ...filters },
     snapshots,
   };
 }

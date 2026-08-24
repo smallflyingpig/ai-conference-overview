@@ -397,6 +397,33 @@ export const fullReleaseSchema = releaseOverviewSchema
           message: "published papers must have an included status",
         });
       }
+      const canonicalSource = value.provenance.sources.some(
+        (source) =>
+          source.name === paper.source.name &&
+          source.url === paper.source.url &&
+          source.sha256 === paper.source.sha256 &&
+          source.retrieved_at === paper.source.retrieved_at,
+      );
+      if (!canonicalSource) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["papers", index, "source"],
+          message: "paper source is outside the release provenance scope",
+        });
+      }
+      const firstPaper = value.papers[0];
+      if (
+        firstPaper != null &&
+        (paper.venue !== firstPaper.venue ||
+          paper.year !== firstPaper.year ||
+          paper.track !== firstPaper.track)
+      ) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["papers", index],
+          message: "papers.json mixes venue, year, or track scopes",
+        });
+      }
     }
     const assignmentIds = new Set(
       value.overview.assignments.map((assignment) => assignment.paper_id),

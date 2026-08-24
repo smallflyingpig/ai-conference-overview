@@ -1,15 +1,17 @@
 ---
 import "../styles/global.css";
-import { projectPath } from "../lib/paths";
+import { conferenceNavigationHref, projectPath } from "../lib/paths";
 import { focusRing } from "../lib/tokens";
 
 interface Props {
   title: string;
   description: string;
+  conferenceAvailable?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, conferenceAvailable = false } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const conferenceHref = conferenceNavigationHref(base, conferenceAvailable);
 ---
 
 <!doctype html>
@@ -29,7 +31,7 @@ const base = import.meta.env.BASE_URL;
         <span>AI Conference Overview</span>
       </a>
       <nav aria-label="Primary navigation">
-        <a href={projectPath(base, "conferences/acl/2026")}>Conferences</a>
+        {conferenceHref ? <a href={conferenceHref}>Conferences</a> : <span aria-disabled="true">Conferences</span>}
         <a href={projectPath(base, "trends")}>Trends</a>
         <a href={projectPath(base, "methodology")}>Methodology</a>
       </nav>

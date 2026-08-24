@@ -29,6 +29,11 @@ const pointerSchema = z.object({
 
 export interface LoadedOverview extends FullRelease {
   generation: string;
+  scope: {
+    venue: string;
+    year: number;
+    track: string;
+  };
 }
 
 const defaultReleaseRoot = fileURLToPath(
@@ -65,9 +70,16 @@ export async function loadOverview(
   venue: string,
   year: number,
   releaseRoot = defaultReleaseRoot,
+  track = "long",
 ): Promise<LoadedOverview | null> {
-  if (!/^[A-Z0-9-]+$/.test(venue) || !Number.isInteger(year) || year < 1900 || year > 3000) {
-    throw new Error("Invalid venue or year release selector");
+  if (
+    !/^[A-Z0-9-]+$/.test(venue) ||
+    !Number.isInteger(year) ||
+    year < 1900 ||
+    year > 3000 ||
+    !/^[a-z0-9-]+$/.test(track)
+  ) {
+    throw new Error("Invalid venue, year, or track release selector");
   }
 
   const release = join(releaseRoot, venue, String(year));
@@ -138,5 +150,17 @@ export async function loadOverview(
     validation: parseJsonArtifact("validation.json"),
     provenance: parseJsonArtifact("provenance.json"),
   });
-  return { ...parsed, generation: pointer.generation };
+  const mismatchedPaper = parsed.papers.find(
+    (paper) => paper.venue !== venue || paper.year !== year || paper.track !== track,
+  );
+  if (mismatchedPaper != null) {
+    throw new Error(
+      `Release scope mismatch for ${mismatchedPaper.paper_id}: expected ${venue}/${year}/${track}`,
+    );
+  }
+  return {
+    ...parsed,
+    generation: pointer.generation,
+    scope: { venue, year, track },
+  };
 }

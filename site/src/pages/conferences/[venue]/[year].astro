@@ -7,7 +7,7 @@ import { buildConferenceView, conferenceRoutes, type ConferenceView } from "../.
 
 export async function getStaticPaths() {
   const release = await loadOverview("ACL", 2026);
-  const releases = release == null ? [] : [{ venue: "ACL", year: 2026, release }];
+  const releases = release == null ? [] : [release];
   return conferenceRoutes(releases).map((route, index) => ({
     ...route,
     props: { view: buildConferenceView(releases[index]) },
@@ -21,12 +21,13 @@ const { view } = Astro.props;
 <BaseLayout
   title={`${view.venue} ${view.year} ${view.analysisLabel} — AI Conference Overview`}
   description={`Validated ${view.scopeLabel} topic distribution and data health.`}
+  conferenceAvailable={true}
 >
   <div class="conference-shell">
     <aside class="conference-axis">
       <p class="eyebrow">Conference identity</p>
       <p class="conference-monogram" aria-hidden="true">{view.venue}</p>
-      <h1>{view.year}<br />Long papers</h1>
+      <h1>{view.pageHeading}</h1>
       <dl class="identity-index">
         <div><dt>View</dt><dd>{view.analysisLabel}</dd></div>
         <div><dt>Period</dt><dd>{view.periodLabel}</dd></div>

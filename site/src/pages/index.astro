@@ -7,7 +7,7 @@ import { buildConferenceView } from "../lib/views";
 
 const release = await loadOverview("ACL", 2026);
 const source = release?.provenance.sources[0];
-const conferenceView = release ? buildConferenceView({ venue: "ACL", year: 2026, release }) : null;
+const conferenceView = release ? buildConferenceView(release) : null;
 const base = import.meta.env.BASE_URL;
 const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV"];
 ---
@@ -15,6 +15,7 @@ const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV
 <BaseLayout
   title="AI Conference Overview — an evidence-backed research atlas"
   description="Validated conference distributions, trends, advances, and award-paper deep reads."
+  conferenceAvailable={release != null}
 >
   <div class="atlas-shell">
     <aside class="trace-panel" aria-labelledby="trace-title">
