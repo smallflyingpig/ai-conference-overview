@@ -646,14 +646,14 @@ Regenerated classification identities:
 ### Release, retained award evidence, and verification
 
 The preliminary overview note and release were regenerated at
-`2026-08-24T20:43:37.930215Z`. The 30 validated DeepReads and the corrected
+`2026-08-24T20:48:45.831646Z`. The 30 validated DeepReads and the corrected
 official-byte PDF provenance from round 2 are unchanged. `current.json` selects
-generation `07bbaed2e24f0ed24cd1e2aa9421688881045725854eeb24ae8f874baf127a42`,
+generation `07233010f636db5db66bd7ede6632b3b4d163e8d6afe64d64a56e45a87d2455a`,
 whose exact six artifacts are:
 
 | Artifact | SHA-256 |
 |---|---|
-| `overview.json` | `5268020689a2746f54005dd3d740c3ca0c10c3aa9e7c922b38a148586ef410b1` |
+| `overview.json` | `a1a14091ed0524b3e6ec397e2a4cb5a1f6d563e23a9df089ef2d8f88c6d1932a` |
 | `overview.md` | `1e380d99594c72fb480694ebffe4fa294f20c3c669cf31f6862bd4caccc19468` |
 | `papers.csv` | `192ed6e93ee76a52d90419bd0b205e9698bf8abbe5e9a17fdfd4d252137077d5` |
 | `papers.json` | `1eeda7a7cd3891bd7048bf3b20c0b3bee317fa5ca1912cb08f3defb5a8d11343` |
