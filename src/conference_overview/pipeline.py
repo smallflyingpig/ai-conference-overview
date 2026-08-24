@@ -866,7 +866,7 @@ def import_full_theme_reviews_scope(
         or manifest.get("assignments_sha256") != base_sha256
     ):
         raise ValueError("full-theme review base assignment hash is not manifest-bound")
-    classifier, semantic_labeling, audit_corrections, low_provenance = (
+    classifier, semantic_labeling, audit_corrections, low_provenance, _old_full_reviews = (
         _load_classification_provenance(paths, base_sha256)
     )
     taxonomy_topics = {
@@ -1066,7 +1066,13 @@ def apply_audit_corrections_scope(
     )
     original_by_id = {assignment.paper_id: assignment for assignment in assignments}
     original_sha256 = hashlib.sha256(assignment_path.read_bytes()).hexdigest()
-    classifier, semantic_labeling, _old_corrections, _old_low_provenance = (
+    (
+        classifier,
+        semantic_labeling,
+        _old_corrections,
+        _old_low_provenance,
+        full_theme_reviews,
+    ) = (
         _load_classification_provenance(paths, original_sha256)
     )
     sample_registry = json.loads(
@@ -1241,6 +1247,7 @@ def apply_audit_corrections_scope(
         semantic_labeling=semantic_labeling,
         audit_corrections=audit_corrections,
         low_confidence_review_provenance=low_provenance,
+        full_theme_reviews=full_theme_reviews,
     )
     _write_audit_samples(paths, records, corrected, reset_decisions=True)
     return corrected
@@ -2149,6 +2156,7 @@ def _load_classification_provenance(
     Mapping[str, object] | None,
     Mapping[str, object] | None,
     Mapping[str, object] | None,
+    Mapping[str, object] | None,
 ]:
     try:
         manifest = json.loads(
@@ -2172,17 +2180,21 @@ def _load_classification_provenance(
         raise ValueError("agent semantic classification has no source provenance")
     audit_corrections = manifest.get("audit_corrections")
     low_review_provenance = manifest.get("low_confidence_review_provenance")
+    full_theme_reviews = manifest.get("full_theme_reviews")
     if audit_corrections is not None and not isinstance(audit_corrections, Mapping):
         raise TypeError("audit correction provenance must be an object")
     if low_review_provenance is not None and not isinstance(
         low_review_provenance, Mapping
     ):
         raise TypeError("low-confidence review provenance must be an object")
+    if full_theme_reviews is not None and not isinstance(full_theme_reviews, Mapping):
+        raise TypeError("full-theme review provenance must be an object")
     return (
         classifier,
         semantic_labeling,
         audit_corrections,
         low_review_provenance,
+        full_theme_reviews,
     )
 
 
@@ -2212,6 +2224,7 @@ def analyze_acl_scope(
         semantic_labeling,
         audit_corrections,
         low_review_provenance,
+        full_theme_reviews,
     ) = _load_classification_provenance(paths, assignments_sha256)
     if not paths.low_confidence_queue.exists():
         low_confidence_review, queue_sha256 = _write_low_confidence_review_queue(
@@ -2236,6 +2249,7 @@ def analyze_acl_scope(
         semantic_labeling=semantic_labeling,
         audit_corrections=audit_corrections,
         low_confidence_review_provenance=low_review_provenance,
+        full_theme_reviews=full_theme_reviews,
     )
     audits, disclosures, audit_metadata = _load_theme_audits(
         paths, assignments, low_confidence_review

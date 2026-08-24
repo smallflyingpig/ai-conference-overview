@@ -455,6 +455,12 @@ def test_import_full_theme_reviews_is_base_guarded_and_preserves_keep_assignment
         (classification / "low-confidence-decisions.json").read_text()
     )["reviews"] == []
 
+    analyze_acl_scope(request, tmp_path)
+    rewritten_manifest = json.loads(
+        (classification / "classification-manifest.json").read_text()
+    )
+    assert rewritten_manifest["full_theme_reviews"] == ledger
+
 
 def test_apply_audit_corrections_guards_old_topics_and_resets_audits(
     tmp_path: Path,
