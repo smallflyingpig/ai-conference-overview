@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ai-conference-overview"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+  "bibtexparser>=1.4,<2",
+  "httpx>=0.28,<1",
+  "pydantic>=2.10,<3",
+  "PyYAML>=6,<7",
+  "typer>=0.15,<1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3,<9", "pytest-cov>=6,<7", "respx>=0.22,<1", "ruff>=0.9,<1"]
+
+[project.scripts]
+conference-trends = "conference_overview.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/conference_overview"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
