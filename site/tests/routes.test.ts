@@ -291,7 +291,7 @@ describe("distribution presentation", () => {
       "utf8",
     );
     expect(page).toContain("Preliminary examples");
-    expect(page).toContain("Confidence-ranked assisted assignments");
+    expect(page).toContain("Confidence-ranked semantic assignments");
     expect(page).not.toContain("Representative papers");
   });
 

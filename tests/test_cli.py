@@ -23,6 +23,7 @@ def test_cli_exposes_all_pipeline_commands() -> None:
         "collect",
         "validate",
         "export-classification",
+        "import-classification",
         "analyze",
         "awards",
         "build-site",

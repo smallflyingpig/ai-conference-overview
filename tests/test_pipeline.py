@@ -212,6 +212,126 @@ def test_validate_export_and_assisted_classification_preserve_every_id(
     assert decisions["status"] == "pending_semantic_review"
 
 
+def _semantic_partitions(root: Path, assignments: list[dict[str, object]]) -> list[Path]:
+    paths: list[Path] = []
+    for partition in range(8):
+        path = root / f"acl2026-reclass-mod{partition}.jsonl"
+        rows = [
+            assignment
+            for assignment in assignments
+            if int(str(assignment["paper_id"]).rsplit(".", maxsplit=1)[-1]) % 8
+            == partition
+        ]
+        path.write_text(
+            "".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8"
+        )
+        paths.append(path)
+    return paths
+
+
+def test_import_semantic_assignments_merges_exact_partitions_and_resets_reviews(
+    tmp_path: Path,
+) -> None:
+    request = normalize_request("ACL", 2026, "long")
+    collected_scope(tmp_path)
+    assisted_classify_scope(request, tmp_path)
+    classification = tmp_path / "data/classification/acl/2026-long"
+    (classification / "audit-decisions.json").write_text(
+        json.dumps({"status": "completed", "themes": {"Evaluation": [True]}}),
+        encoding="utf-8",
+    )
+    (classification / "low-confidence-decisions.json").write_text(
+        json.dumps({"status": "complete", "reviews": [{"paper_id": "stale"}]}),
+        encoding="utf-8",
+    )
+    semantic_rows = [
+        {
+            "paper_id": "acl:2026.acl-long.1",
+            "primary_topic": "Reasoning and Agents",
+            "secondary_topics": ["Evaluation"],
+            "confidence": 0.96,
+            "rationale": "Agent semantic review identifies tool use as the main contribution.",
+            "taxonomy_version": "2026-08-24-v1",
+        },
+        {
+            "paper_id": "acl:2026.acl-long.2",
+            "primary_topic": "Evaluation",
+            "secondary_topics": [],
+            "confidence": 0.62,
+            "rationale": "Agent semantic review identifies evaluation as the primary contribution.",
+            "taxonomy_version": "2026-08-24-v1",
+        },
+    ]
+    parts = _semantic_partitions(tmp_path, semantic_rows)
+
+    assert hasattr(pipeline_module, "import_semantic_assignments_scope")
+    imported = pipeline_module.import_semantic_assignments_scope(
+        request, tmp_path, parts
+    )
+
+    assert [assignment.paper_id for assignment in imported] == [
+        "acl:2026.acl-long.1",
+        "acl:2026.acl-long.2",
+    ]
+    assignment_rows = [
+        json.loads(line)
+        for line in (classification / "assignments.jsonl").read_text().splitlines()
+    ]
+    assert assignment_rows == [
+        {**row, "confidence": str(row["confidence"])} for row in semantic_rows
+    ]
+    manifest = json.loads((classification / "classification-manifest.json").read_text())
+    assert manifest["classifier"] == "agent-semantic-batch-review-v1"
+    assert manifest["semantic_labeling"]["method"] == "explicit_agent_semantic_labeling"
+    assert [source["partition"] for source in manifest["semantic_labeling"]["source_batches"]] == list(range(8))
+    assert [source["paper_count"] for source in manifest["semantic_labeling"]["source_batches"]] == [0, 1, 1, 0, 0, 0, 0, 0]
+    assert [source["sha256"] for source in manifest["semantic_labeling"]["source_batches"]] == [
+        hashlib.sha256(path.read_bytes()).hexdigest() for path in parts
+    ]
+    audit_decisions = json.loads((classification / "audit-decisions.json").read_text())
+    low_decisions = json.loads((classification / "low-confidence-decisions.json").read_text())
+    assert audit_decisions["status"] == "pending_semantic_review"
+    assert audit_decisions["themes"] == {
+        "Evaluation": [],
+        "Reasoning and Agents": [],
+    }
+    assert low_decisions["status"] == "pending_semantic_review"
+    assert low_decisions["reviews"] == []
+
+    summary = analyze_acl_scope(request, tmp_path)
+    analyzed_manifest = json.loads(
+        (classification / "classification-manifest.json").read_text()
+    )
+    assert analyzed_manifest["classifier"] == "agent-semantic-batch-review-v1"
+    assert analyzed_manifest["semantic_labeling"] == manifest["semantic_labeling"]
+    assert summary["classification"]["classifier"] == "agent-semantic-batch-review-v1"
+    assert "explicit agent semantic assignments" in (
+        tmp_path / "notes/acl-2026-long-overview.md"
+    ).read_text()
+
+
+def test_import_semantic_assignments_rejects_incomplete_normalized_membership(
+    tmp_path: Path,
+) -> None:
+    request = normalize_request("ACL", 2026, "long")
+    collected_scope(tmp_path)
+    parts = _semantic_partitions(
+        tmp_path,
+        [{
+            "paper_id": "acl:2026.acl-long.1",
+            "primary_topic": "Reasoning and Agents",
+            "secondary_topics": [],
+            "confidence": 0.96,
+            "rationale": "Agent semantic review identifies agent tool use.",
+            "taxonomy_version": "2026-08-24-v1",
+        }],
+    )
+
+    assert hasattr(pipeline_module, "import_semantic_assignments_scope")
+    with pytest.raises(ValueError, match="missing paper IDs.*2026.acl-long.2"):
+        pipeline_module.import_semantic_assignments_scope(request, tmp_path, parts)
+
+
 @pytest.mark.parametrize(
     ("decision", "rejected_count"), [("accept", 0), ("reject", 1)]
 )

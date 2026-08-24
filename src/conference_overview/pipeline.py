@@ -68,6 +68,7 @@ _HTML_PAPER_ID_PATTERN = re.compile(
     rb"href=(?:[\"']?(?:https://aclanthology\.org)?/)?(2026\.acl-long\.\d+)/",
     re.IGNORECASE,
 )
+_SEMANTIC_PARTITION_PATTERN = re.compile(r"acl2026-reclass-mod([0-7])\.jsonl")
 
 
 class UnsupportedPipelineRoute(ValueError):
@@ -667,6 +668,111 @@ def assisted_classify_scope(request: VenueRequest, root: Path) -> list[Assignmen
     return assignments
 
 
+def import_semantic_assignments_scope(
+    request: VenueRequest,
+    root: Path,
+    input_paths: Sequence[Path],
+) -> list[Assignment]:
+    """Merge eight explicit agent-reviewed partitions into the canonical corpus."""
+    _require_acl(request)
+    paths = ScopePaths(Path(root))
+    included, _excluded, _sources = load_scope_records(request, root)
+    expected_ids = {record.paper_id for record in included}
+    taxonomy = load_taxonomy()
+
+    partition_paths: dict[int, Path] = {}
+    for raw_path in input_paths:
+        path = Path(raw_path)
+        match = _SEMANTIC_PARTITION_PATTERN.fullmatch(path.name)
+        if match is None:
+            raise ValueError(
+                "semantic assignment inputs must be named "
+                "acl2026-reclass-mod0.jsonl through acl2026-reclass-mod7.jsonl"
+            )
+        partition = int(match.group(1))
+        if partition in partition_paths:
+            raise ValueError(f"duplicate semantic assignment partition: {partition}")
+        partition_paths[partition] = path
+    if set(partition_paths) != set(range(8)):
+        raise ValueError("semantic assignment import requires exact partitions 0 through 7")
+
+    assignments_by_id: dict[str, Assignment] = {}
+    source_batches: list[dict[str, object]] = []
+    for partition, path in sorted(partition_paths.items()):
+        raw_bytes = path.read_bytes()
+        partition_assignments = load_assignments(path, taxonomy)
+        for assignment in partition_assignments:
+            try:
+                numeric_id = int(assignment.paper_id.rsplit(".", maxsplit=1)[-1])
+            except ValueError as exc:
+                raise ValueError(
+                    f"semantic assignment has nonnumeric ACL ID: {assignment.paper_id}"
+                ) from exc
+            if numeric_id % 8 != partition:
+                raise ValueError(
+                    f"semantic assignment {assignment.paper_id} is in partition "
+                    f"{partition}, expected {numeric_id % 8}"
+                )
+            if assignment.paper_id in assignments_by_id:
+                raise ValueError(f"duplicate paper_id: {assignment.paper_id}")
+            assignments_by_id[assignment.paper_id] = assignment
+        source_batches.append(
+            {
+                "paper_count": len(partition_assignments),
+                "partition": partition,
+                "partition_rule": "ACL numeric paper ID modulo 8",
+                "sha256": hashlib.sha256(raw_bytes).hexdigest(),
+                "source_file": path.name,
+            }
+        )
+
+    seen_ids = set(assignments_by_id)
+    missing_ids = sorted(expected_ids - seen_ids)
+    unexpected_ids = sorted(seen_ids - expected_ids)
+    if missing_ids:
+        raise ValueError(f"missing paper IDs: {missing_ids}")
+    if unexpected_ids:
+        raise ValueError(f"unknown paper IDs: {unexpected_ids}")
+
+    assignments = [assignments_by_id[paper_id] for paper_id in sorted(expected_ids)]
+    assignment_bytes = _jsonl_bytes(
+        [
+            {
+                "confidence": str(assignment.confidence),
+                "paper_id": assignment.paper_id,
+                "primary_topic": assignment.primary_topic,
+                "rationale": assignment.rationale,
+                "secondary_topics": list(assignment.secondary_topics),
+                "taxonomy_version": assignment.taxonomy_version,
+            }
+            for assignment in assignments
+        ]
+    )
+    _atomic_write(paths.classification / "assignments.jsonl", assignment_bytes)
+    assignments_sha256 = hashlib.sha256(assignment_bytes).hexdigest()
+    review_status, queue_sha256 = _write_low_confidence_review_queue(
+        paths,
+        included,
+        assignments,
+        assignments_sha256=assignments_sha256,
+        reset_decisions=True,
+    )
+    _write_classification_manifest(
+        paths,
+        assignments=assignments,
+        assignments_sha256=assignments_sha256,
+        review_status=review_status,
+        queue_sha256=queue_sha256,
+        classifier="agent-semantic-batch-review-v1",
+        semantic_labeling={
+            "method": "explicit_agent_semantic_labeling",
+            "source_batches": source_batches,
+        },
+    )
+    _write_audit_samples(paths, included, assignments, reset_decisions=True)
+    return assignments
+
+
 def _write_classification_manifest(
     paths: ScopePaths,
     *,
@@ -674,6 +780,8 @@ def _write_classification_manifest(
     assignments_sha256: str,
     review_status: LowConfidenceReviewStatus,
     queue_sha256: str,
+    classifier: str = "deterministic-title-abstract-assisted-v1",
+    semantic_labeling: Mapping[str, object] | None = None,
 ) -> None:
     review_state = (
         "pending_semantic_review"
@@ -682,24 +790,25 @@ def _write_classification_manifest(
         if review_status.rejected_ids
         else "complete"
     )
+    payload: dict[str, object] = {
+        "classifier": classifier,
+        "assignments_sha256": assignments_sha256,
+        "input_fields": ["title", "abstract"],
+        "low_confidence_ids": list(review_status.queued_ids),
+        "low_confidence_review_queue_sha256": queue_sha256,
+        "low_confidence_review_state": review_state,
+        "paper_count": len(assignments),
+        "pending_low_confidence_ids": list(review_status.pending_ids),
+        "publication_status": "provisional_until_stratified_audit",
+        "rejected_low_confidence_ids": list(review_status.rejected_ids),
+        "reviewed_low_confidence_ids": list(review_status.reviewed_ids),
+        "taxonomy_version": _TAXONOMY_VERSION,
+    }
+    if semantic_labeling is not None:
+        payload["semantic_labeling"] = dict(semantic_labeling)
     _atomic_write(
         paths.classification / "classification-manifest.json",
-        _json_bytes(
-            {
-                "classifier": "deterministic-title-abstract-assisted-v1",
-                "assignments_sha256": assignments_sha256,
-                "input_fields": ["title", "abstract"],
-                "low_confidence_ids": list(review_status.queued_ids),
-                "low_confidence_review_queue_sha256": queue_sha256,
-                "low_confidence_review_state": review_state,
-                "paper_count": len(assignments),
-                "pending_low_confidence_ids": list(review_status.pending_ids),
-                "publication_status": "provisional_until_stratified_audit",
-                "rejected_low_confidence_ids": list(review_status.rejected_ids),
-                "reviewed_low_confidence_ids": list(review_status.reviewed_ids),
-                "taxonomy_version": _TAXONOMY_VERSION,
-            }
-        ),
+        _json_bytes(payload),
     )
 
 
@@ -709,6 +818,7 @@ def _write_low_confidence_review_queue(
     assignments: Sequence[Assignment],
     *,
     assignments_sha256: str,
+    reset_decisions: bool = False,
 ) -> tuple[LowConfidenceReviewStatus, str]:
     records_by_id = {record.paper_id: record for record in records}
     low_confidence = sorted(
@@ -740,7 +850,7 @@ def _write_low_confidence_review_queue(
     )
     _atomic_write(paths.low_confidence_queue, queue_bytes)
     queue_sha256 = hashlib.sha256(queue_bytes).hexdigest()
-    if not paths.low_confidence_decisions.exists():
+    if reset_decisions or not paths.low_confidence_decisions.exists():
         _atomic_write(
             paths.low_confidence_decisions,
             _json_bytes(
@@ -838,6 +948,8 @@ def _write_audit_samples(
     paths: ScopePaths,
     records: Sequence[PaperRecord],
     assignments: Sequence[Assignment],
+    *,
+    reset_decisions: bool = False,
 ) -> None:
     records_by_id = {record.paper_id: record for record in records}
     grouped: dict[str, list[Assignment]] = {}
@@ -880,7 +992,7 @@ def _write_audit_samples(
         ),
     )
     decisions_path = paths.classification / "audit-decisions.json"
-    if not decisions_path.exists():
+    if reset_decisions or not decisions_path.exists():
         _atomic_write(
             decisions_path,
             _json_bytes(
@@ -1094,7 +1206,7 @@ def _preliminary_examples(
                     EvidenceClaim(
                         claim=(
                             "These examples are selected deterministically by confidence "
-                            "and ACL ID from experimental assisted primary-topic "
+                            "and ACL ID from experimental primary-topic "
                             "assignments; they make no semantic representativeness or "
                             "lane-purity claim, trend claim, or paper-result claim."
                         ),
@@ -1135,17 +1247,26 @@ def _overview_note(
     audit_metadata: Mapping[str, object],
     advances: Sequence[AdvanceRecord],
     award_count: int,
+    classifier: str,
 ) -> bytes:
     counts: dict[str, int] = {}
     for assignment in assignments:
         counts[assignment.primary_topic] = counts.get(assignment.primary_topic, 0) + 1
+    classification_statement = (
+        "Topic labels are explicit agent semantic assignments and remain subject "
+        "to the published independent stratified audit gates."
+        if classifier == "agent-semantic-batch-review-v1"
+        else (
+            "Topic labels are deterministic assisted proposals and remain subject "
+            "to the published stratified audit gates."
+        )
+    )
     lines = [
         "# ACL 2026 long-paper preliminary overview",
         "",
         (
             "This is a one-year distribution and hotspot snapshot, not a trend. "
-            "Topic labels are deterministic assisted proposals and remain subject "
-            "to the published stratified audit gates."
+            + classification_statement
         ),
         "",
         "## Official corpus reconciliation",
@@ -1194,7 +1315,7 @@ def _overview_note(
         if advance is None:
             lines.append(
                 f"- **{category.value}**: no evidence-supported shortlist in the "
-                "current assisted assignments."
+                "current primary-topic assignments."
             )
         else:
             lines.append(
@@ -1214,13 +1335,39 @@ def _overview_note(
     return "\n".join(lines).encode()
 
 
+def _load_classification_provenance(
+    paths: ScopePaths, assignments_sha256: str
+) -> tuple[str, Mapping[str, object] | None]:
+    try:
+        manifest = json.loads(
+            (paths.classification / "classification-manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError("invalid classification manifest") from exc
+    if not isinstance(manifest, Mapping):
+        raise TypeError("classification manifest must be an object")
+    if manifest.get("assignments_sha256") != assignments_sha256:
+        raise ValueError("classification manifest does not match assignments")
+    classifier = manifest.get("classifier")
+    if not isinstance(classifier, str) or not classifier.strip():
+        raise ValueError("classification manifest has no classifier provenance")
+    semantic_labeling = manifest.get("semantic_labeling")
+    if semantic_labeling is not None and not isinstance(semantic_labeling, Mapping):
+        raise TypeError("semantic labeling provenance must be an object")
+    if classifier == "agent-semantic-batch-review-v1" and semantic_labeling is None:
+        raise ValueError("agent semantic classification has no source provenance")
+    return classifier, semantic_labeling
+
+
 def analyze_acl_scope(
     request: VenueRequest,
     root: Path,
     *,
     write_release: bool = False,
 ) -> dict[str, object]:
-    """Validate assisted labels, audits, awards, and write preliminary synthesis."""
+    """Validate topic labels, audits, awards, and write preliminary synthesis."""
     paths = ScopePaths(Path(root))
     validation = validate_acl_scope(request, root)
     assert_publishable(validation)
@@ -1235,6 +1382,9 @@ def analyze_acl_scope(
     )
     assignment_bytes = assignment_path.read_bytes()
     assignments_sha256 = hashlib.sha256(assignment_bytes).hexdigest()
+    classifier, semantic_labeling = _load_classification_provenance(
+        paths, assignments_sha256
+    )
     if not paths.low_confidence_queue.exists():
         low_confidence_review, queue_sha256 = _write_low_confidence_review_queue(
             paths,
@@ -1254,6 +1404,8 @@ def analyze_acl_scope(
         assignments_sha256=assignments_sha256,
         review_status=low_confidence_review,
         queue_sha256=queue_sha256,
+        classifier=classifier,
+        semantic_labeling=semantic_labeling,
     )
     audits, disclosures, audit_metadata = _load_theme_audits(
         paths, assignments, low_confidence_review
@@ -1309,6 +1461,10 @@ def analyze_acl_scope(
         "advance_lane_count": len(advances),
         "audit": audit_metadata,
         "award_inventory_count": len(awards),
+        "classification": {
+            "classifier": classifier,
+            "semantic_labeling": semantic_labeling,
+        },
         "included_count": validation.included_count,
         "language": "distribution_or_hotspot_not_trend",
         "theme_counts": dict(sorted(topic_counts.items())),
@@ -1324,6 +1480,7 @@ def analyze_acl_scope(
             audit_metadata=audit_metadata,
             advances=advances,
             award_count=len(awards),
+            classifier=classifier,
         ),
     )
     if write_release:

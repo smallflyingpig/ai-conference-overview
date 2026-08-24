@@ -14,6 +14,7 @@ from conference_overview.pipeline import (
     build_site_scope,
     collect_acl_scope,
     export_classification_scope,
+    import_semantic_assignments_scope,
     parse_award_inventory_scope,
     validate_acl_scope,
 )
@@ -191,6 +192,33 @@ def export_classification(
         "exported",
         batch_count=len(paths),
         batch_size=batch_size,
+    )
+
+
+@app.command("import-classification")
+def import_classification(
+    inputs: Annotated[list[Path], typer.Option("--input")],
+    venues: str = typer.Option(..., "--venues"),
+    years: str = typer.Option(..., "--years"),
+    tracks: str | None = typer.Option(None, "--tracks"),
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
+) -> None:
+    """Import eight explicit agent semantic-labeling partitions."""
+    request = _request(
+        command="import-classification",
+        venues=venues,
+        years=years,
+        tracks=tracks,
+    )
+    assignments = _run(
+        "import-classification",
+        lambda: import_semantic_assignments_scope(request, root, inputs),
+    )
+    _success(
+        "import-classification",
+        "imported",
+        paper_count=len(assignments),
+        source_count=len(inputs),
     )
 
 

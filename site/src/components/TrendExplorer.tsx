@@ -115,7 +115,7 @@ export default function TrendExplorer({ view, action, initialFilters = noFilters
             </div>
             {(snapshot.experimentalThemeCount > 0 || snapshot.withheldThemeCount > 0) && (
               <p className="filter-note">
-                Preliminary assisted distribution: {snapshot.experimentalThemeCount} experimental and {snapshot.withheldThemeCount} withheld themes.
+                Preliminary semantic distribution: {snapshot.experimentalThemeCount} experimental and {snapshot.withheldThemeCount} withheld themes.
               </p>
             )}
             <TopicShareChart rows={snapshot.topics} denominator={snapshot.includedCount} />
