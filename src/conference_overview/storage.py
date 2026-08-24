@@ -2,6 +2,7 @@ import hashlib
 import json
 import os
 import tempfile
+import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import urlparse
@@ -34,14 +35,16 @@ def store_snapshot(data: bytes, source_url: str, root: Path) -> SourceRef:
     _atomic_write(snapshot_path, data)
 
     retrieved_at = datetime.now(UTC)
+    event_id = uuid.uuid4().hex
     manifest = {
+        "event_id": event_id,
         "source_url": source_url,
         "retrieved_at": retrieved_at.isoformat(),
         "sha256": sha256,
         "byte_size": len(data),
         "snapshot_path": snapshot_relative_path.as_posix(),
     }
-    manifest_path = root / "manifests" / f"{sha256}.json"
+    manifest_path = root / "manifests" / f"{sha256}-{event_id}.json"
     _atomic_write(
         manifest_path,
         json.dumps(manifest, indent=2, sort_keys=True).encode("utf-8") + b"\n",
