@@ -76,40 +76,44 @@ export function awardStatusLabel(status: string): string {
 }
 
 const awardInsights: Record<string, string> = {
-  "acl:2026.acl-long.1301": "ImplicitMemBench 将 learning/priming、interference 与首次作答分开；17 个模型整体均未超过 66%，说明显式检索成功并不代表模型真的发生了行为适应。",
-  "acl:2026.acl-long.1654": "Audio MultiChallenge 保留真人语音中的回溯、停顿、环境与副语言线索；452 段录音、1,712 条 atomic rubric 下，最强系统 APR 为 54.65%。",
-  "acl:2026.acl-long.1948": "VeriTaS 通过季度更新、claim date 与 temporal retrieval filter 减少持续预训练带来的泄漏；知识截止日后的纵向退化表明，benchmark 设计必须考虑时间因素。",
-  "acl:2026.acl-long.937": "HSCodeComp 在 632 个商品的层级规则任务上，最佳 agent 的 10-digit exact match 为 46.83%；增加 expert-written Decision Rules 并未带来更好结果，提示更多推理材料也可能引入 drift。",
-  "acl:2026.acl-long.1886": "CAR-bench 将 state、tool、execution、policy 与 termination 设为联合通过条件，并区分 Pass@k 与 Pass^k，揭示“偶尔成功”不等于稳定部署。",
-  "acl:2026.acl-long.734": "MediEval 以 HSR/TIR 追踪医学判断的错误跃迁；即使 macro-F1 提升，TIR 仍可能较高，因此不能把单一准确率外推为临床零风险。",
-  "acl:2026.acl-long.689": "Imperfective Paradox 发现，压低 completion bias 会同时伤害本应成立的 atelic entailment；可靠 mitigation 必须加入 telic/atelic、成立/不成立双向平衡的 counterfactual controls。",
-  "acl:2026.acl-long.1550": "该工作把 working memory 的容量限制作用到表示精度，而不只是 attention locality，因此需要分别测量 encoding quality 与 retrieval locality。",
-  "acl:2026.acl-long.421": "CoSToM 先以冻结 probe 做 causal tracing，再用 activation-gradient bridge 调节浅层 LoRA；关键收益来自先定位机制、再施加最小干预。",
-  "acl:2026.acl-long.1110": "GeoRA 根据 RLVR update geometry 选择 low-energy subspace，并以残差重参数化保持初始函数不变；价值在于让 PEFT subspace 与目标优化机制对齐。",
-  "acl:2026.acl-long.1436": "STEER 分解 token entropy change 并下调异常变化；结果提示 policy update 应关注训练诱导出的分布变化，而不是只看最终 reward。",
-  "acl:2026.acl-long.1653": "GISP 在每轮 pruning 后重算 |gradient × weight|，保存 nested sparsity checkpoint；它把一次性 saliency 改造成迭代重估过程。",
-  "acl:2026.acl-long.893": "PALU 只干预 sensitive span 前 N 个 initiating token 的 frozen-reference top-K vocabulary，体现 temporal 与 vocabulary sparsity 下的最小必要干预。",
-  "acl:2026.acl-long.1321": "CURE 将 critique correctness 与 hint utility 拆成两种训练信号，移除错误答案后重新求解，以降低错误上下文 anchoring。",
-  "acl:2026.acl-long.148": "Evolutionary Guided Decoding 固定生成 policy、迭代采样并重训 value function，用于缓解 critic 的 train/deploy distribution gap。",
-  "acl:2026.acl-long.270": "Generative Montage 通过 Writer、Editor、Director 与 Sybil publisher 的角色专门化，把局部真实片段组合成全局误导；风险来自对抗迭代而不只是 agent 数量。",
-  "acl:2026.acl-long.2132": "CxMP 显示 construction semantics 的学习慢于一般语法能力，且偏置会随训练阶段变化；单 checkpoint 增益可能只是 heuristic 增强。",
-  "acl:2026.acl-long.1739": "该理论工作形式化证明 local 与 global attention 的表达能力互补；小规模 WikiText-2 结果只能作为 sanity check，不能直接外推到 frontier LLM。",
-  "acl:2026.acl-long.772": "CircularCSE 同时报告 V-Measure 与 circular CD-r，揭示几何结构 fidelity 与分类分离之间的 trade-off，不能压成单一“更好”。",
-  "acl:2026.acl-long.1340": "该工作固定 syncretism 等粗结构，只扰动形式系统性，再用小 learner 测 CETL，为结构性 counterfactual 实验提供范式。",
-  "acl:2026.acl-long.1657": "PolyGloss 使用 interleaved morpheme(gloss) serialization 联合生成 segmentation 与 gloss，并用确定性 parser 保证 hard alignment。",
-  "acl:2026.acl-long.2203": "CIG 将 conversational information gain 分解为 novelty、relevance 与 implication scope，并用 semantic-memory update 留下可追踪的处理过程。",
-  "acl:2026.acl-long.235": "RACE 将 RST discourse tree 映射为 relational graph，并用低 FPR 指标评估多类文本；论文对数据划分的描述存在内部不一致，解读中明确保留这一限制。",
-  "acl:2026.acl-long.144": "DIA-HARM 显示 dialect 配比会让 over-flag authentic speech 与 under-protect communities 之间发生反转，aggregate F1 与 calibration 都不足以描述风险。",
-  "acl:2026.acl-long.1869": "Afri-MCQA 通过 LID、ASR 与文本控制证明，native speech 的文化 VQA 失败常从语言识别和转写开始，再传导到 reasoning。",
-  "acl:2026.acl-long.875": "Educational alignment 发现 satisfaction 与四项 pedagogical metric 无显著相关；engagement 不能代表实际学习效果。",
-  "acl:2026.acl-long.2003": "ViLL-E 用共享生成 backbone 与 EOS-triggered pooling head 同时支持生成和检索，但许可型数据与外部重标使完整复现成本较高。",
-  "acl:2026.acl-long.24": "MauBERT 先注入 articulatory/phone structured bias，再用少量目标语适配；ABX 结果不能直接代表 syntax 或 semantics 能力。",
-  "acl:2026.acl-long.419": "Lychee-FD 以 layer-wise gradient conflict 与 semantic dilution 诊断驱动分层设计；其大量合成对话限制了 open-mic 外部效度。",
-  "acl:2026.acl-long.479": "Mind the (DH) Gap! 在风险选择中观察到 reasoning model 与 conversational model 两簇；最高 LLM-human correlation 仍只有 0.42，不能把模型 preference 当成人类行为替代物。",
+  "acl:2026.acl-long.1301": "ImplicitMemBench 分别测量学习或启动效应、信息干扰和首次作答表现。17 个模型的总分都没有超过 66%，说明模型能显式找回信息，并不代表它已经形成稳定的行为适应。",
+  "acl:2026.acl-long.1654": "Audio MultiChallenge 保留真人语音中的回溯、停顿、环境声和副语言信息。在 452 段录音和 1,712 条细粒度评分标准上，表现最好的系统 APR 也只有 54.65%。",
+  "acl:2026.acl-long.1948": "VeriTaS 每季度更新数据，并记录声明日期、按时间筛选检索结果，以减少持续预训练造成的信息泄漏。模型在知识截止日之后表现持续下降，说明 benchmark 设计必须把时间变化纳入考虑。",
+  "acl:2026.acl-long.937": "HSCodeComp 用 632 个商品测试层级编码规则，最佳 Agent 的十位编码完全匹配率为 46.83%。加入专家编写的 Decision Rules 后，效果反而没有提高，说明更多推理材料也可能带来干扰。",
+  "acl:2026.acl-long.1886": "CAR-bench 要求状态判断、工具选择、执行结果、策略和停止条件同时正确，并分别报告 Pass@k 与 Pass^k。它揭示了一个重要差别：模型偶尔成功，不等于能够稳定部署。",
+  "acl:2026.acl-long.734": "MediEval 用 HSR 和 TIR 追踪医学判断如何从一种错误转变为另一种错误。即使 macro-F1 提高，TIR 仍可能偏高，因此单一准确率指标不能说明临床风险已经消失。",
+  "acl:2026.acl-long.689": "Imperfective Paradox 发现，降低完成体偏差会同时损害本应成立的非终结性蕴含。要判断缓解方法是否可靠，测试集必须同时平衡终结性与非终结性、成立与不成立两组反事实样例。",
+  "acl:2026.acl-long.1550": "这项工作把工作记忆的容量限制落实到表示精度，而不只是局部注意范围。因此，评测需要分别观察编码质量和检索位置，不能把两者混为一谈。",
+  "acl:2026.acl-long.421": "CoSToM 先用冻结的探针进行因果追踪，再通过激活—梯度桥接调节浅层 LoRA。它的核心思路是先定位起作用的内部机制，再施加尽可能小的干预。",
+  "acl:2026.acl-long.1110": "GeoRA 根据 RLVR 的更新几何结构选择低能量子空间，并通过残差重参数化保持初始函数不变。这样可以让 PEFT 使用的参数子空间更贴近目标优化过程。",
+  "acl:2026.acl-long.1436": "STEER 分解 token 熵的变化，并降低异常变化样本的权重。结果表明，更新策略时需要关注训练造成的分布变化，不能只看最终奖励。",
+  "acl:2026.acl-long.1653": "GISP 每完成一轮剪枝，都会重新计算 |gradient × weight|，并保存不同稀疏度的检查点。相比一次性计算重要性，它把剪枝变成了持续重估的过程。",
+  "acl:2026.acl-long.893": "PALU 只干预敏感片段最前面的 N 个 token，并把候选限制在冻结参考模型的 top-K 词表中。这种设计同时利用了时间和词表两类稀疏性，把干预范围压到最低。",
+  "acl:2026.acl-long.1321": "CURE 把“批评是否正确”和“提示是否有用”拆成两种训练信号，再移除错误答案并重新求解，从而减少错误上下文造成的锚定效应。",
+  "acl:2026.acl-long.148": "Evolutionary Guided Decoding 固定生成策略，通过多轮采样持续重训价值函数，以缓解评分模型在训练阶段和实际生成阶段面对的数据分布差异。",
+  "acl:2026.acl-long.270": "Generative Montage 让 Writer、Editor、Director 和负责制造虚假共识的 Sybil publisher 各司其职，把局部真实的片段组合成整体误导。风险主要来自多轮对抗协作，而不只是 Agent 数量增加。",
+  "acl:2026.acl-long.2132": "CxMP 发现，模型学习构式语义的速度慢于学习一般语法，而且偏差会随训练阶段变化。因此，单个训练检查点上的提升也可能只是模型更依赖某种启发式模式。",
+  "acl:2026.acl-long.1739": "这项理论工作证明，局部注意力和全局注意力在表达能力上可以互补。WikiText-2 上的小规模实验只能说明方法可行，不能直接推及前沿大模型。",
+  "acl:2026.acl-long.772": "CircularCSE 同时报告 V-Measure 和 circular CD-r，从而分别观察分类分离度和圆形几何结构的保真度。两项指标之间存在取舍，不能简单合并成一个“更好”的分数。",
+  "acl:2026.acl-long.1340": "这项工作固定同形融合（syncretism）等整体结构，只改变形式的系统性，再用小型学习模型测量 CETL，为研究语言结构的反事实实验提供了一种可复用方法。",
+  "acl:2026.acl-long.1657": "PolyGloss 把词素及其释义（gloss）交错排列，同时生成词素切分和注释，再用确定性解析器保证二者一一对应。",
+  "acl:2026.acl-long.2203": "CIG 把对话中的信息增益拆成新颖性、相关性和影响范围，并通过语义记忆更新记录每一步信息变化，使处理过程可以追踪。",
+  "acl:2026.acl-long.235": "RACE 把 RST 篇章树转换成关系图，并用低 FPR 指标评估多种文本。论文对数据划分的描述前后不一致，因此解读时必须保留这一限制。",
+  "acl:2026.acl-long.144": "DIA-HARM 发现，改变方言数据的配比，会使“过度标记真实方言”和“对相关群体保护不足”两类风险发生反转。汇总 F1 和校准度都不足以完整描述这种变化。",
+  "acl:2026.acl-long.1869": "Afri-MCQA 通过语言识别、语音识别和文本对照实验发现，模型处理母语语音文化问答时，错误往往从语言识别和转写环节开始，随后传导到推理阶段。",
+  "acl:2026.acl-long.875": "Educational alignment 发现，用户满意度与四项教学质量指标之间没有显著相关性。对话更有参与感，并不代表学习效果更好。",
+  "acl:2026.acl-long.2003": "ViLL-E 使用共享的生成主干网络和由 EOS 触发的池化头，同时支持文本生成与检索。不过，数据许可限制和外部重标流程提高了完整复现的成本。",
+  "acl:2026.acl-long.24": "MauBERT 先注入发音和音素结构先验，再用少量目标语言数据进行适配。论文中的 ABX 结果反映语音表征能力，不能直接代表句法或语义能力。",
+  "acl:2026.acl-long.419": "Lychee-FD 从不同层之间的梯度冲突和语义稀释出发设计分层模型。不过，实验大量使用合成对话，对真实开放麦克风环境的代表性仍然有限。",
+  "acl:2026.acl-long.479": "Mind the (DH) Gap! 在风险选择任务中观察到推理型模型和对话型模型两个明显分组。模型与人类行为的最高相关系数仍只有 0.42，因此不能用模型的偏好代替真实的人类选择。",
 };
 
 export function awardChineseInsight(paperId: string): string {
-  return awardInsights[paperId] ?? "该论文的中文核心解读仍在整理中；下方保留已经检查过的英文原文摘录。";
+  const insight = awardInsights[paperId];
+  if (insight == null) {
+    throw new Error(`缺少中文解读：${paperId}`);
+  }
+  return insight;
 }
 
 export function awardDetailRoutes(
@@ -206,8 +210,8 @@ export const advanceCategories = [
   { id: "text-llms", artifactKey: "text_llms", label: "文本 LLM" },
   { id: "multimodal-models", artifactKey: "multimodal_models", label: "多模态模型" },
   { id: "reasoning-agents", artifactKey: "reasoning_agents", label: "推理与 Agents" },
-  { id: "data-training", artifactKey: "data_training", label: "数据 / Pretraining / Post-training" },
-  { id: "evaluation-trust", artifactKey: "evaluation_trust", label: "评测 / Safety / Interpretability" },
+  { id: "data-training", artifactKey: "data_training", label: "数据与训练（Pretraining / Post-training）" },
+  { id: "evaluation-trust", artifactKey: "evaluation_trust", label: "评测、Safety 与 Interpretability" },
 ] as const;
 
 const advanceNarratives: Record<string, {
@@ -219,46 +223,58 @@ const advanceNarratives: Record<string, {
   implication: string;
 }> = {
   "audited-evidence-text_llms": {
-    title: "文本 LLM：从语料 conditioning 到机制诊断",
-    researchQuestions: ["文本模型应如何组织 pretraining context、扩展长上下文、避免专项适配造成灾难性损失，并诊断内部机制？"],
-    coreProblem: "文本模型的进展同时受语料 conditioning、长上下文效率、分阶段适配和机制级诊断影响。",
-    technicalChange: "KoCo 为预训练加入结构化知识坐标；LCA 联合压缩 KV state 与稀疏计算；Tower+ 串联 continued pretraining、SFT、preference learning 与 RL；multi-component causal tracing 用于诊断相互作用的内部路径。",
-    evidenceBoundary: "这些论文覆盖不同模型家族与评测 setting；这里给出结构化比较，不意味着某一种 recipe 在所有场景都占优。",
-    implication: "评估文本模型时，应联合观察 pretraining context、适配阶段、serving cost 与 causal diagnostics，而不是把质量压缩成一个标量。",
+    title: "文本 LLM：从预训练语境设计到内部机制分析",
+    researchQuestions: ["如何组织预训练上下文、提高长上下文效率、减少专项适配带来的能力损失，并解释模型内部机制？"],
+    coreProblem: "文本模型的效果不只取决于模型规模，还受到预训练上下文、长文本计算效率、分阶段适配方法和内部机制的共同影响。",
+    technicalChange: "KoCo 在预训练数据中加入结构化知识坐标；LCA 同时压缩 KV 状态并减少无效计算；Tower+ 依次使用持续预训练、SFT、偏好学习和强化学习；多组件因果追踪（multi-component causal tracing）则用来分析多个内部组件如何共同作用。",
+    evidenceBoundary: "这些论文研究的模型、任务和评测方法并不相同。这里比较的是技术思路，不能据此断定某一种训练方法在所有场景中都更好。",
+    implication: "评估文本模型时，应同时观察预训练上下文、适配阶段、推理成本和内部机制，不能用单一分数概括模型质量。",
   },
   "audited-evidence-multimodal_models": {
     title: "多模态模型：同时兼顾组合、状态、检索与安全",
-    researchQuestions: ["多模态系统如何跨模态保持组合性、流式状态、检索结构、评估有效性与安全性？"],
-    coreProblem: "多模态系统需要同时对齐组合概念、流式交互、结构化记忆、评估可靠性与 joint-modal safety。",
-    technicalChange: "MACCO 建模 masked compositional concepts；AV-Dialog 融合流式音视频对话；Response-G1 用 scene graph 生成主动响应；MegaRAG 构建跨模态 knowledge-graph retrieval；MM-JudgeBias 与 CrossGuard 分别揭示 judge bias 和隐式联合模态攻击。",
-    evidenceBoundary: "论文覆盖的模态、任务与 threat model 不同，不能把各自报告的增益合并为统一 effect size。",
-    implication: "多模态评测应联合测试 grounding、时序状态、检索结构、judge robustness 与 cross-modal attack composition。",
+    researchQuestions: ["多模态系统如何同时处理组合概念、流式交互状态、结构化检索、评测偏差和跨模态安全问题？"],
+    coreProblem: "多模态系统既要理解不同模态之间的组合关系，也要维持流式交互状态、使用结构化记忆，并抵御多种模态共同构成的攻击。",
+    technicalChange: "MACCO 学习被遮盖的组合概念；AV-Dialog 处理流式音视频对话；Response-G1 借助场景图决定何时主动响应；MegaRAG 用跨模态知识图谱进行检索；MM-JudgeBias 和 CrossGuard 分别分析评测模型偏差与隐式跨模态攻击。",
+    evidenceBoundary: "这些论文覆盖的模态、任务和攻击方式不同，各自报告的提升不能合并成一个统一数值。",
+    implication: "多模态评测需要同时检查信息定位、时序状态、检索结构、评测模型的稳定性，以及不同模态组合后的攻击风险。",
   },
   "preliminary-examples-reasoning_agents": {
     title: "推理与 Agents：规划、工具、记忆与停止条件",
-    researchQuestions: ["Agent 应如何拆分规划、工具使用、memory routing、浏览器状态、策略选择与 termination？"],
-    coreProblem: "Agent 系统必须协调 planner-controller 分解、外部工具、持久状态、分支策略与停止决策。",
-    technicalChange: "OctoTools 统一 tool card 与 planner-executor 角色；MoEC 通过 expert memory 路由子目标；SPIO 探索并选择多条 data-science plan；NestBrowse 将浏览器动作与高层信息检索控制解耦。",
-    evidenceBoundary: "Reasoning and Agents 的主题分类在最终人工抽查中未达到精度要求，因此这些论文只作为暂定观察，不能据此判断该主题的整体占比或长期趋势。",
-    implication: "Agent 评估应拆开 plan quality、tool-state transition、policy routing、recovery 与 stopping behavior，而不只报告最终任务成功率。",
+    researchQuestions: ["Agent 应如何协调任务规划、工具调用、记忆选择、浏览器状态、策略分支和停止条件？"],
+    coreProblem: "Agent 需要把高层规划与具体执行结合起来，同时管理外部工具、长期状态、不同策略分支和停止时机。",
+    technicalChange: "OctoTools 统一描述工具能力，并分离规划与执行角色；MoEC 根据子目标选择专家记忆；SPIO 生成并筛选多条数据科学方案；NestBrowse 则把浏览器操作与高层信息检索分开学习。",
+    evidenceBoundary: "“推理与 Agents”主题在最终人工抽查中没有达到精度标准，因此这些论文只用于初步观察，不能据此判断该主题的整体占比或长期趋势。",
+    implication: "评估 Agent 时，应分别衡量规划质量、工具和状态变化、策略选择、失败恢复与停止行为，而不能只报告最终任务成功率。",
   },
   "audited-evidence-data_training": {
     title: "数据与训练：从静态配比转向迭代反馈闭环",
-    researchQuestions: ["Data conditioning、PEFT geometry、RLVR rollout 分布、critique loop、entropy weighting 与迭代重估之间如何相互作用？"],
-    coreProblem: "训练质量取决于语料如何被 conditioning、参数子空间如何选择、rollout 如何被诱导，以及模型反馈如何在迭代中重新评估。",
-    technicalChange: "KoCo 与 Tower+ 改造预训练和适配阶段；GeoRA 让 PEFT 对齐 RLVR geometry；CURE 使用 critique-driven self-improvement；STEER 根据估计的 entropy change 加权 policy update；GISP 反复重估全局 pruning importance。",
-    evidenceBoundary: "接收论文集合提供的是观察性元数据与 paper-reported 实验，不能单独证明任意通用 data-quality policy 的因果收益。",
-    implication: "数据策略实验应记录策略诱导出的 rollout 分布和迭代式 model-data feedback，而不只记录静态来源计数或最终 benchmark delta。",
+    researchQuestions: ["数据组织、PEFT 参数空间、RLVR 采样分布、批评反馈、熵权重和迭代重估会怎样共同影响训练？"],
+    coreProblem: "训练效果既取决于语料组织方式，也取决于参数子空间的选择、采样分布的变化，以及模型反馈如何进入下一轮训练。",
+    technicalChange: "KoCo 和 Tower+ 分别调整预训练语料与分阶段适配流程；GeoRA 让 PEFT 的参数空间贴近 RLVR 的优化方向；CURE 利用批评反馈改进答案；STEER 根据熵变化调整样本权重；GISP 在每轮剪枝后重新计算参数重要性。",
+    evidenceBoundary: "这些接收论文提供了论文元数据和各自报告的实验结果，但不能单独证明某种通用数据质量策略一定带来因果收益。",
+    implication: "数据策略实验除了记录数据来源和 benchmark 变化，还应跟踪采样分布如何变化，以及模型反馈怎样影响下一轮数据。",
   },
   "audited-evidence-evaluation_trust": {
     title: "评测与可信：把动态分布和评估器纳入整体设计",
-    researchQuestions: ["面对 contamination、动态分布、judge bias、多模态攻击、记忆效应与重复试验，评测如何保持有效？"],
-    coreProblem: "静态 accuracy 会掩盖 contamination、评估器偏差、多模态 jailbreak、隐式记忆效应，以及真实重复试验中的不一致行为。",
-    technicalChange: "Rt-LRM、MM-JudgeBias、CrossGuard、MCV SafetyBench 与 DyReMe 分别压力测试推理、judge、攻击和动态诊断；ImplicitMemBench、VeriTaS 与 CAR-bench 进一步加入被动记忆、持续更新的事实检查和有状态重复可靠性测试。",
-    evidenceBoundary: "各 benchmark 的构造方式和模型覆盖范围不同；具体数值见所链接论文或获奖论文解读中的对应章节和表格，这里不重新合并。",
-    implication: "评测体系应持续刷新 case、平衡 counterfactual control、重复执行有状态试验，并在模型 accuracy 与 safety 之外同步度量 evaluator reliability。",
+    researchQuestions: ["面对数据污染、持续变化的任务分布、评测模型偏差、多模态攻击和记忆效应，如何让评测长期有效？"],
+    coreProblem: "静态准确率会掩盖训练数据污染、评测模型偏差、多模态越狱、隐式记忆效应，以及模型在重复试验中的不一致表现。",
+    technicalChange: "Rt-LRM、MM-JudgeBias、CrossGuard、MCV SafetyBench 和 DyReMe 分别测试推理模型、评测模型、多模态攻击与动态诊断；ImplicitMemBench、VeriTaS 和 CAR-bench 又加入了隐式记忆、持续更新的事实检查和有状态重复试验。",
+    evidenceBoundary: "各 benchmark 的构造方式和覆盖模型不同。具体数值可查看所列论文或获奖论文解读中的章节与表格，这里不把它们合并比较。",
+    implication: "评测体系应持续更新样例、平衡反事实对照，并多次运行有状态任务；除了模型的准确率和安全性，还要衡量评测器本身是否稳定可靠。",
   },
 };
+
+function displayAdvanceLocator(
+  locator: string | null | undefined,
+): string | null | undefined {
+  if (locator === "Official ACL Anthology Abstract for every linked supporting paper") {
+    return "所列论文在 ACL Anthology 上的官方摘要";
+  }
+  if (locator === "Inference from the linked ACL paper abstracts") {
+    return "根据所列论文的 ACL Anthology 官方摘要综合分析";
+  }
+  return locator;
+}
 
 export function buildAdvances(release: LoadedOverview) {
   const paperById = new Map(release.papers.map((paper) => [paper.paper_id, paper]));
@@ -279,10 +295,10 @@ export function buildAdvances(release: LoadedOverview) {
           })),
           claims: advance.claims,
           researchQuestions: localized?.researchQuestions ?? advance.research_questions ?? [],
-          coreProblem: advance.core_problem == null ? null : { ...advance.core_problem, claim: localized?.coreProblem ?? advance.core_problem.claim },
-          technicalChange: advance.technical_change == null ? null : { ...advance.technical_change, claim: localized?.technicalChange ?? advance.technical_change.claim },
-          evidenceBoundary: advance.evidence_boundary == null ? null : { ...advance.evidence_boundary, claim: localized?.evidenceBoundary ?? advance.evidence_boundary.claim },
-          implications: (advance.implications ?? []).map((claim, index) => ({ ...claim, claim: index === 0 && localized != null ? localized.implication : claim.claim })),
+          coreProblem: advance.core_problem == null ? null : { ...advance.core_problem, claim: localized?.coreProblem ?? advance.core_problem.claim, locator: displayAdvanceLocator(advance.core_problem.locator) },
+          technicalChange: advance.technical_change == null ? null : { ...advance.technical_change, claim: localized?.technicalChange ?? advance.technical_change.claim, locator: displayAdvanceLocator(advance.technical_change.locator) },
+          evidenceBoundary: advance.evidence_boundary == null ? null : { ...advance.evidence_boundary, claim: localized?.evidenceBoundary ?? advance.evidence_boundary.claim, locator: displayAdvanceLocator(advance.evidence_boundary.locator) },
+          implications: (advance.implications ?? []).map((claim, index) => ({ ...claim, claim: index === 0 && localized != null ? localized.implication : claim.claim, locator: displayAdvanceLocator(claim.locator) })),
         };
       }),
   }));
@@ -292,7 +308,7 @@ export interface MethodologyView {
   build: { generatedAt: string; producer: string; schemaVersion: string };
   sources: Array<{ name: string; url: string; sha256: string; retrievedAt: string }>;
   taxonomyVersion: string;
-  scope: { venue: string; year: number; track: string; inclusionStatuses: string[]; denominator: string; denominatorUnit: string; denominatorValue: number; exclusions: string };
+  scope: { venue: string; year: number; track: string; inclusionStatuses: string[]; denominator: string; denominatorField: string; denominatorUnit: string; denominatorValue: number; exclusions: string };
   contractIds: { comparison: string; formula: string; configuredVenuePopulation: string };
   configuredVenues: string[];
   emergingScoreWeights: { novelty: string; share_growth: string; spread_growth: string };
@@ -359,7 +375,21 @@ function displayReviewMethod(method: string): string {
 
 function displaySampleMethod(method: string): string {
   if (method.startsWith("deterministic confidence-stratified precision audit")) {
-    return "按置信度分层、确定性抽取样本；每个 primary topic 最多 50 篇。该检查用于估计分类准确率，不估计召回率，也不把 Wilson 区间解释为总体随机抽样区间。";
+    return "按置信度分层并确定性抽取样本，每个主要主题（primary topic）最多 50 篇。该检查用于估计分类准确率，不估计召回率，也不能把 Wilson 区间理解为总体随机抽样区间。";
+  }
+  return method;
+}
+
+function displayClassifier(classifier: string): string {
+  if (classifier === "agent-semantic-batch-review-v1") {
+    return "分批语义分类（agent-semantic-batch-review-v1）";
+  }
+  return classifier;
+}
+
+function displayClassificationMethod(method: string): string {
+  if (method === "explicit_agent_semantic_labeling") {
+    return "逐篇阅读标题和摘要后明确标注主要主题";
   }
   return method;
 }
@@ -418,12 +448,13 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
     scope: {
       venue: comparison.comparison_scope.venue,
       year: release.scope.year,
-      track: comparison.comparison_scope.track,
+      track: comparison.comparison_scope.track === "long" ? "长论文" : comparison.comparison_scope.track,
       inclusionStatuses: comparison.comparison_scope.inclusion_statuses.map((status) => ({
         complete: "信息完整",
         partial: "部分信息缺失",
       }[status] ?? status)),
-      denominator: `${comparison.comparison_scope.denominator.artifact_field}：明确排除不在范围内的记录后，实际纳入统计的论文数`,
+      denominator: "明确排除不在范围内的记录后，实际纳入统计的论文数",
+      denominatorField: comparison.comparison_scope.denominator.artifact_field,
       denominatorUnit: comparison.comparison_scope.denominator.unit === "paper" ? "篇论文" : comparison.comparison_scope.denominator.unit,
       denominatorValue: release.validation.included_count,
       exclusions: "排除项单独保留，不计入统计分母",
@@ -436,7 +467,7 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
     configuredVenues: metric.cross_venue_spread.configured_venues,
     emergingScoreWeights: metric.emerging_score.weights,
     formulas: [
-      { name: "Primary topic 占比", formula: metric.topic_share.formula, numerator: "每篇纳入论文只计一个 primary topic", denominator: "纳入统计的论文数", version: metric.topic_share.version },
+      { name: "主要主题（primary topic）占比", formula: metric.topic_share.formula, numerator: "每篇纳入论文只计入一个主要主题", denominator: "纳入统计的论文数", version: metric.topic_share.version },
       { name: "跨会议覆盖率", formula: metric.cross_venue_spread.formula, numerator: "出现该主题的会议数", denominator: "配置中的会议总数", version: metric.cross_venue_spread.version },
       { name: "新兴主题得分", formula: metric.emerging_score.formula, numerator: "按权重合并主题占比变化、跨会议覆盖变化和新颖度", version: metric.emerging_score.version },
     ],
@@ -460,8 +491,8 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
       reviewedCount: release.overview.classification_review?.reviewed_low_confidence_ids.length ?? 0,
     },
     classificationLineage: lineage == null ? null : {
-      classifier: lineage.classifier,
-      method: lineage.method,
+      classifier: displayClassifier(lineage.classifier),
+      method: displayClassificationMethod(lineage.method),
       assignmentsSha256: lineage.assignments_sha256,
       semanticBatchCount: lineage.semantic_batches.length,
       fullThemeStageCount: fullThemeStages.length,
@@ -482,7 +513,7 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
       items: release.overview.theme_disclosures.map((item) => ({
         theme: item.theme,
         status: item.status,
-        claim: "该主题分类尚未同时达到分层人工抽查和低置信度逐条复查的要求，因此不纳入主要分析。",
+        claim: "该主题尚未同时达到分层人工抽查和低置信度逐篇复查的标准，因此暂不用于概括会议的主要研究方向。",
         evidenceType: item.reason.evidence_type,
         sourceUrls: item.reason.source_urls,
         locator: item.reason.locator ?? null,
@@ -490,8 +521,8 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
     },
     knownLimitations: [
       "目前只有一年的数据，只能介绍主题分布和热点，不能判断长期趋势。",
-      "缺失的可选元数据只统计覆盖率，不会被当作负面结果。",
-      "每条研究主线只有在列出相关论文并完成主题分类后，才会进入正式的综合分析。",
+      "摘要、PDF 或 DOI 等可选信息缺失时，只会影响覆盖率统计，不代表论文质量较差。",
+      "每条研究主线都必须列出相关论文，并完成主题分类检查，之后才会纳入综合分析。",
     ],
   };
 }

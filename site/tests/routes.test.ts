@@ -98,7 +98,7 @@ describe("distribution view", () => {
 
   it("derives scope and accessible page name from the validated release", () => {
     const view = buildConferenceView(validatedRelease);
-    expect(view.scopeLabel).toBe("ACL 2026 · long track");
+    expect(view.scopeLabel).toBe("ACL 2026 · 长论文");
     expect(view.pageHeading).toBe("ACL 2026 长论文");
   });
 
@@ -116,7 +116,7 @@ describe("distribution view", () => {
 
   it("publishes explicit denominators and data-health counts", () => {
     const view = buildConferenceView(validatedRelease);
-    expect(view.denominatorLabel).toBe("2 篇纳入统计的 long 论文");
+    expect(view.denominatorLabel).toBe("2 篇纳入统计的长论文");
     expect(view.includedCount).toBe(2);
     expect(view.excludedCount).toBe(0);
     expect(view.abstractCoverageLabel).toBe("2 / 2（100.00%）");
@@ -157,7 +157,7 @@ describe("trend comparability gate", () => {
   it("suppresses trend claims until three comparable years exist", () => {
     const view = buildTrendView([validatedRelease]);
     expect(view.mode).toBe("snapshot");
-    expect(view.heading).toBe("分布与热点");
+    expect(view.heading).toBe("当前论文分布");
     expect(view.trendWidgetsVisible).toBe(false);
     expect(view.missingRequirement).toMatch(/三个连续且可以直接比较的年份/);
   });
@@ -291,7 +291,7 @@ describe("distribution presentation", () => {
       "utf8",
     );
     expect(page).toContain("示例论文");
-    expect(page).toContain("每个主题中分类置信度最高的论文");
+    expect(page).toContain("各主题中分类置信度最高的一篇论文");
     expect(page).not.toContain("代表论文");
   });
 

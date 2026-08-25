@@ -17,7 +17,7 @@ test("ACL 2026 中文页面保留数据来源与表格 fallback", async ({ page 
 
   await expect(page.getByRole("heading", { name: "ACL 2026 长论文" })).toBeVisible();
   await expect(page.getByRole("link", { name: "ACL Anthology BibTeX" })).toBeVisible();
-  await expect(page.getByRole("table")).toContainText("Primary topic 分布");
+  await expect(page.getByRole("table")).toContainText("主要主题（primary topic）分布");
   await expect(page.getByText("2026 单年概览", { exact: true })).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath("acl-overview.png"), fullPage: true });
   expect(consoleErrors).toEqual([]);
@@ -43,8 +43,8 @@ test("研究进展页面用中文叙述并保留五条英文关键词 lane", asy
     "文本 LLM",
     "多模态模型",
     "推理与 Agents",
-    "数据 / Pretraining / Post-training",
-    "评测 / Safety / Interpretability",
+    "数据与训练（Pretraining / Post-training）",
+    "评测、Safety 与 Interpretability",
   ]) {
     await expect(page.getByRole("heading", { name: heading, exact: true })).toBeVisible();
   }
@@ -69,7 +69,7 @@ test("获奖论文索引进入中文解读并保留英文原文摘录", async ({
 });
 
 test("公开页面使用自然中文而不是内部工程术语", async ({ page }) => {
-  const routes = [
+  const routes = new Set([
     basePath,
     `${basePath}conferences/acl/2026/`,
     `${basePath}trends/`,
@@ -77,13 +77,32 @@ test("公开页面使用自然中文而不是内部工程术语", async ({ page 
     `${basePath}awards/`,
     `${basePath}papers/`,
     `${basePath}methodology/`,
-  ];
+  ]);
+  await page.goto(`${basePath}awards/`);
+  for (const href of await page.getByRole("link", { name: "查看详细解读" }).evaluateAll(
+    (links) => links.map((link) => link.getAttribute("href")).filter((href): href is string => href != null),
+  )) {
+    routes.add(href);
+  }
   const awkwardTerms = ["门禁", "约束", "核验", "结论", "证据", "审计", "契约", "工件", "赋值"];
+  const translationese = [
+    "语料 conditioning",
+    "评测 setting",
+    "某一种 recipe",
+    "统一 effect size",
+    "joint-modal safety",
+    "train/deploy distribution gap",
+    "小 learner",
+    "hard alignment",
+    "open-mic 外部效度",
+    "model preference",
+    "paper-reported",
+  ];
 
   for (const route of routes) {
     await page.goto(route);
     const visibleText = await page.locator("body").innerText();
-    for (const term of awkwardTerms) {
+    for (const term of [...awkwardTerms, ...translationese]) {
       expect(visibleText, `${route} should not expose ${term}`).not.toContain(term);
     }
   }

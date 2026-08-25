@@ -48,24 +48,24 @@ const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV
 
     <div class="atlas-main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">研究情报 / 2026 起</p>
-        <h1 id="page-title">把领域读成一张图谱，<br />而不是排行榜。</h1>
+        <p class="eyebrow">顶会研究观察 / 始于 2026</p>
+        <h1 id="page-title">看清研究版图，<br />而不只是论文排名。</h1>
         <p class="lede">
-          根据公开来源回答：AI 顶会正在研究什么、研究重点如何变化，以及哪些进展值得进一步关注。
+          根据公开资料梳理 AI 顶会正在研究什么、研究重点如何变化，以及哪些进展值得继续关注。
         </p>
         <div class="hero-note">
           <span class="data-label">范围</span>
-          <p>分布按统一的“会议—年份”论文总数计算；只有多年数据可以直接比较时，才使用“趋势”表述。</p>
+          <p>各主题占比统一按同一会议、同一年份的论文总数计算。只有连续多年的数据可以直接比较时，才会讨论趋势。</p>
         </div>
       </section>
 
       <section class="release-state" aria-labelledby="release-title">
         <div>
-          <p class="eyebrow">首个参考分析</p>
+          <p class="eyebrow">当前分析</p>
           <h2 id="release-title">ACL 2026 · 长论文</h2>
         </div>
         {release ? (
-          <p>论文清单和主题分类现已可用；人工抽查尚未达到要求的主题只作为暂定结果展示。</p>
+          <p>论文清单和主题分类已经整理完成。未达到人工抽查标准的主题只展示初步结果，不用于概括会议的主要方向。</p>
         ) : (
           <div class="empty-state" role="status">
             <span class="status-mark" aria-hidden="true"></span>
@@ -76,15 +76,15 @@ const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV
 
       <section class="scope-index" aria-labelledby="scope-title">
         <div class="section-heading">
-          <p class="eyebrow">会议注册表</p>
-          <h2 id="scope-title">统一主题分类，<br />保留会议原有 track。</h2>
+          <p class="eyebrow">覆盖会议</p>
+          <h2 id="scope-title">使用统一的主题分类，<br />保留各会议原有的论文类型。</h2>
         </div>
         <ul>
           {scopes.map((venue, index) => (
             <li>
               <span class="index-number">{String(index + 1).padStart(2, "0")}</span>
               <strong>{venue}</strong>
-              <span>{venue === "ACL" ? "已完成参考分析" : "Adapter 路线图"}</span>
+              <span>{venue === "ACL" ? "已完成首轮分析" : "计划接入"}</span>
             </li>
           ))}
         </ul>
@@ -93,8 +93,8 @@ const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV
       {conferenceView && (
         <section class="published-index" aria-labelledby="published-title">
           <div class="section-heading">
-            <p class="eyebrow">已发布图谱</p>
-            <h2 id="published-title">已经发布的<br />单年概览。</h2>
+            <p class="eyebrow">已发布分析</p>
+            <h2 id="published-title">查看已经完成的<br />单年概览。</h2>
           </div>
           <ConferenceCard
             venue={conferenceView.venue}

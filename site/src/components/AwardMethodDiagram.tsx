@@ -41,12 +41,12 @@ export default function AwardMethodDiagram({ diagram }: Props) {
         })}
       </svg>
       <figcaption className="graph-fallback">
-        <strong>方法图的文本等价表示</strong>
+        <strong>方法流程（文字版）</strong>
         <div>
-          <p>论文披露的节点</p>
+          <p>主要步骤</p>
           <ul>{diagram.nodes.map((node) => <li key={node.identifier}>{node.label} — {node.paper_section}</li>)}</ul>
-          <p>论文披露的有向边</p>
-          {diagram.edges.length === 0 ? <p>论文未披露。</p> : (
+          <p>步骤之间的关系</p>
+          {diagram.edges.length === 0 ? <p>论文没有说明步骤之间的关系。</p> : (
             <ul>{diagram.edges.map((edge) => (
               <li key={`${edge.source}-${edge.target}`}>
                 {diagram.nodes.find((node) => node.identifier === edge.source)!.label} → {diagram.nodes.find((node) => node.identifier === edge.target)!.label} — {edge.data_flow_rationale}

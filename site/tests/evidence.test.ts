@@ -16,6 +16,7 @@ import awardHostPolicy from "../../config/award-host-policy.json";
 import { canonicalUrlHostname, configuredAwardHostPolicy } from "../src/lib/schema";
 import {
   advanceCategories,
+  awardChineseInsight,
   awardDetailRoutes,
   awardRouteKey,
   buildAdvances,
@@ -174,6 +175,15 @@ describe("evidence labels", () => {
 });
 
 describe("award publication gate", () => {
+  it("requires a completed Chinese insight for every published award detail", () => {
+    for (const award of currentRelease.overview.awards) {
+      expect(awardChineseInsight(award.paper_id)).not.toMatch(/仍在整理中/);
+    }
+    expect(() => awardChineseInsight("acl:missing-award-insight")).toThrow(
+      /缺少中文解读/,
+    );
+  });
+
   it("creates a detail route only for a verified award with a valid matching deep read", () => {
     const routes = awardDetailRoutes(release);
     expect(routes).toHaveLength(1);
@@ -382,8 +392,8 @@ describe("complete award evidence rendering", () => {
     for (const expected of [
       "阶段 1",
       "阶段 2",
-      "复查 655 篇 · 保留 217 篇 · 修正 438 篇",
-      "复查 143 篇 · 保留 112 篇 · 修正 31 篇",
+      "共复查 655 篇：保留原分类 217 篇，调整分类 438 篇",
+      "共复查 143 篇：保留原分类 112 篇，调整分类 31 篇",
       "c51895a7148b15c8a9756d6651ae013b85b2a17b64f8496d2fe1d17455333b6b",
       "0de77ca92db5c7f02286fe2084a8ca13504bc29ab5a5c15bea6528ff0094dcb6",
       "750e7de5f75221f7e451eb2ac765976c13cd1c3f8101b46f8b7f9c9a5ac50f6b",
@@ -459,7 +469,8 @@ describe("methodology audit ledger", () => {
       producer: "conference_overview.reports.write_release",
       schemaVersion: "release-build-v1",
     });
-    expect(view.scope.denominator).toBe("validation.included_count：明确排除不在范围内的记录后，实际纳入统计的论文数");
+    expect(view.scope.denominator).toBe("明确排除不在范围内的记录后，实际纳入统计的论文数");
+    expect(view.scope.denominatorField).toBe("validation.included_count");
     expect(view.scope).toMatchObject({
       year: 2026,
       inclusionStatuses: ["信息完整", "部分信息缺失"],
@@ -472,7 +483,7 @@ describe("methodology audit ledger", () => {
     expect(view.emergingScoreWeights).toEqual({ novelty: "0.20", share_growth: "0.45", spread_growth: "0.35" });
     expect(view.formulas.every((formula) => formula.numerator != null)).toBe(true);
     expect(view.formulas.map((formula) => formula.name)).toEqual([
-      "Primary topic 占比",
+      "主要主题（primary topic）占比",
       "跨会议覆盖率",
       "新兴主题得分",
     ]);
@@ -525,8 +536,8 @@ describe("methodology audit ledger", () => {
       "文本 LLM",
       "多模态模型",
       "推理与 Agents",
-      "数据 / Pretraining / Post-training",
-      "评测 / Safety / Interpretability",
+      "数据与训练（Pretraining / Post-training）",
+      "评测、Safety 与 Interpretability",
     ]);
   });
 

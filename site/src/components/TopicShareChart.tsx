@@ -13,7 +13,7 @@ export default function TopicShareChart({ rows, denominator }: Props) {
       <div
         className="topic-ruler"
         role="img"
-        aria-label={`${denominator} 篇纳入论文的 primary topic 占比`}
+        aria-label={`${denominator} 篇论文的主要主题占比`}
       >
         {rows.map((row) => (
           <div className="topic-ruler-row" key={row.topic}>
@@ -29,9 +29,9 @@ export default function TopicShareChart({ rows, denominator }: Props) {
       </div>
       <div className="topic-table-wrap">
         <table>
-          <caption>Primary topic 分布；分母为 {denominator} 篇纳入统计的论文。</caption>
+          <caption>主要主题（primary topic）分布，共统计 {denominator} 篇论文。</caption>
           <thead>
-            <tr><th scope="col">Primary topic</th><th scope="col">论文数</th><th scope="col">占比</th></tr>
+            <tr><th scope="col">主要主题</th><th scope="col">论文数</th><th scope="col">占比</th></tr>
           </thead>
           <tbody>
             {rows.map((row) => (

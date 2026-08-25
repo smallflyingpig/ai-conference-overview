@@ -12,20 +12,20 @@ const themes = [...new Set(papers.map((paper) => paper.theme))].sort();
 <BaseLayout title="论文索引 — AI Conference Overview" description="可搜索、可筛选的会议论文索引。" conferenceAvailable={release != null}>
   <div class="evidence-shell papers-shell">
     <header class="page-thesis paper-thesis">
-      <p class="eyebrow">紧凑研究索引</p>
-      <h1>找到论文，<br />保留来源。</h1>
-      <p>可以按标题、作者或稳定 paper ID 搜索，也可以按当前数据版本中的 primary topic 分类筛选；暂定主题的抽查结果会在方法说明页列出。</p>
+      <p class="eyebrow">论文索引</p>
+      <h1>快速找到论文，<br />直接回到官方来源。</h1>
+      <p>可以按标题、作者或 paper ID 搜索，也可以按主要主题（primary topic）筛选。主题分类的人工抽查结果可在“方法说明”页面查看。</p>
     </header>
     <section class="paper-index" aria-labelledby="paper-index-title">
       <h2 id="paper-index-title">已收录论文</h2>
       {release == null ? (
-        <div class="empty-atlas" role="status"><span class="status-mark" aria-hidden="true"></span><div><h3>尚未发布论文索引</h3><p>需要先生成完成检查的正式数据版本。</p></div></div>
+        <div class="empty-atlas" role="status"><span class="status-mark" aria-hidden="true"></span><div><h3>尚未发布论文索引</h3><p>论文清单完成检查并正式发布后，这里会提供搜索和筛选。</p></div></div>
       ) : (
         <>
           <form class="paper-controls" role="search">
             <label for="paper-query">搜索论文</label>
             <input class="research-filter" id="paper-query" type="search" placeholder="标题、作者或 paper ID" />
-            <label for="paper-theme">Primary topic</label>
+            <label for="paper-theme">主要主题</label>
             <select class="research-filter" id="paper-theme"><option value="">全部已分类主题</option>{themes.map((theme) => <option value={theme}>{displayTopicLabel(theme)}</option>)}</select>
           </form>
           <p class="data-label" id="paper-count" aria-live="polite">{papers.length} 篇论文</p>

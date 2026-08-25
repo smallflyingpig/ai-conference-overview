@@ -97,7 +97,7 @@ export function displayTopicLabel(topic: string): string {
 }
 
 export function auditStatusLabel(status: TopicShareRow["auditStatus"]): string {
-  return { "audit-passed": "人工抽查达标", experimental: "暂定结果", withheld: "暂不纳入主要分析" }[status];
+  return { "audit-passed": "已通过人工抽查", experimental: "仅展示初步结果", withheld: "暂不纳入主要分析" }[status];
 }
 
 export function buildConferenceView(release: ConferenceRelease): ConferenceView {
@@ -151,7 +151,7 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
     year,
     track,
     pageHeading: `${venue} ${year} 长论文`,
-    scopeLabel: `${venue} ${year} · ${track} track`,
+    scopeLabel: `${venue} ${year} · ${track === "long" ? "长论文" : track}`,
     analysisLabel: "Distribution",
     periodLabel: `${year} 单年概览`,
     trendEligible: false,
@@ -162,7 +162,7 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
       denominator - release.validation.missing_abstract_count,
       denominator,
     ),
-    denominatorLabel: `${denominator} 篇纳入统计的 ${track} 论文`,
+    denominatorLabel: `${denominator} 篇纳入统计的${track === "long" ? "长论文" : ` ${track} 类论文`}`,
     retrievedAt: source.retrieved_at,
     sourceName: source.name,
     sourceUrl: source.url,
@@ -239,7 +239,7 @@ export function buildTrendView(
   if (releases.length === 0) {
     return {
       mode: "empty",
-      heading: "尚无已发布分布",
+      heading: "尚无已发布的论文分布",
       trendWidgetsVisible: false,
       missingRequirement: "只有完成全部检查并正式发布的数据版本才会出现在这里。",
       availableVenues,
@@ -252,7 +252,7 @@ export function buildTrendView(
   const trendEligible = hasComparableSnapshotWindow(snapshots);
   return {
     mode: trendEligible ? "trend" : "snapshot",
-    heading: trendEligible ? "可比较的研究趋势" : "分布与热点",
+    heading: trendEligible ? "可比较的研究趋势" : "当前论文分布",
     trendWidgetsVisible: trendEligible,
     missingRequirement: trendEligible
       ? null
@@ -291,8 +291,8 @@ export function applyTrendFilters(view: TrendView, filters: TrendFilters): Trend
     heading: trendEligible
       ? "可比较的研究趋势"
       : view.mode === "empty"
-        ? "尚无已发布分布"
-        : "分布与热点",
+        ? "尚无已发布的论文分布"
+        : "当前论文分布",
     trendWidgetsVisible: trendEligible,
     missingRequirement: trendEligible
       ? null

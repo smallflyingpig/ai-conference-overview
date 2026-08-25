@@ -88,13 +88,13 @@ export default function TrendExplorer({ view, action, initialFilters = noFilters
           </select>
           <button type="submit">应用筛选</button>
         </form>
-        <p className="filter-note">这里只列出当前数据版本中实际提供的字段；禁用项表示相应数据暂时缺失。</p>
-        <noscript><p className="filter-note">未启用 JavaScript 时，提交操作只会把筛选条件保存在 URL 中，页面仍展示完整已发布数据。</p></noscript>
+        <p className="filter-note">筛选项只包含当前数据版本已有的信息；无法选择的项目表示相应数据暂未提供。</p>
+        <noscript><p className="filter-note">未启用 JavaScript 时，筛选条件只会写入 URL，页面仍会显示所有已发布数据。</p></noscript>
       </aside>
 
       <article className="trend-plane" aria-live="polite">
         <header>
-          <p className="eyebrow">当前可分析的范围</p>
+          <p className="eyebrow">当前可查看的内容</p>
           <h2>{filtered.heading}</h2>
           {filtered.missingRequirement && <p className="gate-note" role="status">{filtered.missingRequirement}</p>}
         </header>
@@ -104,18 +104,18 @@ export default function TrendExplorer({ view, action, initialFilters = noFilters
             <span className="status-mark" aria-hidden="true" />
             <div>
               <h3 id="empty-title">{view.mode === "empty" ? "尚无可展示的分析。" : "没有匹配的已发布数据。"}</h3>
-              <p>{view.mode === "empty" ? "原始来源、论文清单、主题分类和版本记录全部检查完成后，会议分析才会展示。" : "请修改或清空筛选条件，返回已经发布的数据。"}</p>
+              <p>{view.mode === "empty" ? "原始资料、论文清单、主题分类和版本信息全部检查完成后，会议分析才会展示。" : "请修改或清空筛选条件，查看已有数据。"}</p>
             </div>
           </section>
         ) : filtered.snapshots.map((snapshot) => (
           <section className="snapshot-strip" aria-labelledby={`${snapshot.venueSlug}-${snapshot.year}-title`} key={`${snapshot.venue}-${snapshot.year}`}>
             <div className="section-line">
               <div><p className="eyebrow">{snapshot.periodLabel}</p><h3 id={`${snapshot.venueSlug}-${snapshot.year}-title`}>{snapshot.venue} 热点</h3></div>
-              <span>分母：{snapshot.denominatorLabel}</span>
+              <span>统计范围：{snapshot.denominatorLabel}</span>
             </div>
             {(snapshot.experimentalThemeCount > 0 || snapshot.withheldThemeCount > 0) && (
               <p className="filter-note">
-                初步主题分布：{snapshot.experimentalThemeCount} 个暂定主题，{snapshot.withheldThemeCount} 个暂不纳入主要分析的主题。
+                初步主题分布：{snapshot.experimentalThemeCount} 个主题仅展示初步结果，{snapshot.withheldThemeCount} 个主题暂不纳入主要分析。
               </p>
             )}
             <TopicShareChart rows={snapshot.topics} denominator={snapshot.includedCount} />
@@ -123,7 +123,7 @@ export default function TrendExplorer({ view, action, initialFilters = noFilters
         ))}
 
         {!filtered.trendWidgetsVisible && filtered.mode !== "empty" && filtered.snapshots.length > 0 && (
-          <section className="withheld-widget" aria-label="Trend 组件暂不可用">
+          <section className="withheld-widget" aria-label="趋势分析暂不可用">
             <p className="data-label">暂不展示</p>
             <h3>时间序列与同比变化</h3>
             <p>需要同一会议、论文类型、主题分类和统计方法下连续三个年份的数据。</p>

@@ -50,16 +50,16 @@ const { view } = Astro.props;
         <p class="eyebrow">主题分布</p>
         <h2>{view.auditPassedThemeCount > 0 ? "经过人工抽查的主题分布。" : "初步主题分布。"}</h2>
         <p>
-          Primary topic 占比以<strong>{view.denominatorLabel}</strong>为分母。
+          每篇论文只归入一个主要主题（primary topic），各主题占比按<strong>{view.denominatorLabel}</strong>计算。
           当前只有一年的数据，因此不展示同比变化，也不判断长期趋势。
         </p>
       </header>
 
       <section aria-labelledby="topic-title">
         <div class="section-line">
-          <h3 id="topic-title">Primary topic 占比</h3>
+          <h3 id="topic-title">主要主题占比</h3>
           <span>
-            {view.auditPassedThemeCount} 个主题达到抽查标准 · {view.experimentalThemeCount} 个暂定主题
+            {view.auditPassedThemeCount} 个主题通过人工抽查 · {view.experimentalThemeCount} 个主题仅展示初步结果
             {view.withheldThemeCount > 0 ? ` · ${view.withheldThemeCount} 个暂不纳入主要分析` : ""}
           </span>
         </div>
@@ -74,7 +74,7 @@ const { view } = Astro.props;
       <section class="representative-index" aria-labelledby="representative-title">
         <div class="section-line">
           <h3 id="representative-title">示例论文</h3>
-          <span>每个主题中分类置信度最高的论文</span>
+          <span>各主题中分类置信度最高的一篇论文</span>
         </div>
         <ol>
           {view.topics.map((row) => (

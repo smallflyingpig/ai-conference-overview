@@ -27,7 +27,7 @@ const { detail } = Astro.props;
     <section class="why-ledger" aria-labelledby="chinese-reading-title">
       <h2 id="chinese-reading-title">核心解读</h2>
       <article>
-        <span class="evidence-badge evidence-badge--synthesis">中文综合</span>
+        <span class="evidence-badge evidence-badge--synthesis">中文解读</span>
         <p>{awardChineseInsight(detail.paper.paper_id)}</p>
         <small>根据官方 PDF 整理；具体数字和原文位置见下方英文摘录。</small>
       </article>
@@ -39,7 +39,7 @@ const { detail } = Astro.props;
       {detail.deepRead.method_diagram && <AwardMethodDiagram diagram={detail.deepRead.method_diagram} />}
       <AwardEvidenceSections deepRead={detail.deepRead} />
       <section class="result-ledger" aria-labelledby="results-title">
-        <h2 id="results-title">论文报告结果（paper-reported）</h2>
+        <h2 id="results-title">论文原文中的结果</h2>
         {detail.deepRead.result_claims.map((claim) => <AwardResultClaim claim={claim} />)}
       </section>
     </details>
