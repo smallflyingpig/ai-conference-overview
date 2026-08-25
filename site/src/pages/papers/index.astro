@@ -2,39 +2,40 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { loadOverview } from "../../lib/data";
 import { filterPapers } from "../../lib/evidence";
+import { displayTopicLabel } from "../../lib/views";
 
 const release = await loadOverview("ACL", 2026);
 const papers = release == null ? [] : filterPapers(release, { query: "", theme: null });
 const themes = [...new Set(papers.map((paper) => paper.theme))].sort();
 ---
 
-<BaseLayout title="Papers — AI Conference Overview" description="Searchable, filterable index of validated conference papers." conferenceAvailable={release != null}>
+<BaseLayout title="论文索引 — AI Conference Overview" description="可搜索、可筛选的已验证会议论文索引。" conferenceAvailable={release != null}>
   <div class="evidence-shell papers-shell">
     <header class="page-thesis paper-thesis">
-      <p class="eyebrow">Compact research index</p>
-      <h1>Find the paper.<br />Keep the source.</h1>
-      <p>Search title, author, or stable paper ID; filter by the release's primary-theme assignment. Experimental labels remain disclosed in the methodology ledger.</p>
+      <p class="eyebrow">紧凑研究索引</p>
+      <h1>找到论文，<br />保留来源。</h1>
+      <p>按标题、作者或稳定 paper ID 搜索，并按 release 的 primary topic assignment 筛选；实验性标签始终在方法论 ledger 中披露。</p>
     </header>
     <section class="paper-index" aria-labelledby="paper-index-title">
-      <h2 id="paper-index-title">Validated papers</h2>
+      <h2 id="paper-index-title">已验证论文</h2>
       {release == null ? (
-        <div class="empty-atlas" role="status"><span class="status-mark" aria-hidden="true"></span><div><h3>No paper index published</h3><p>A validated current release is required.</p></div></div>
+        <div class="empty-atlas" role="status"><span class="status-mark" aria-hidden="true"></span><div><h3>尚未发布论文索引</h3><p>需要先生成通过验证的 current release。</p></div></div>
       ) : (
         <>
           <form class="paper-controls" role="search">
-            <label for="paper-query">Search papers</label>
-            <input class="research-filter" id="paper-query" type="search" placeholder="Title, author, or paper ID" />
-            <label for="paper-theme">Primary theme</label>
-            <select class="research-filter" id="paper-theme"><option value="">All classified themes</option>{themes.map((theme) => <option value={theme}>{theme}</option>)}</select>
+            <label for="paper-query">搜索论文</label>
+            <input class="research-filter" id="paper-query" type="search" placeholder="标题、作者或 paper ID" />
+            <label for="paper-theme">Primary topic</label>
+            <select class="research-filter" id="paper-theme"><option value="">全部已分类主题</option>{themes.map((theme) => <option value={theme}>{displayTopicLabel(theme)}</option>)}</select>
           </form>
-          <p class="data-label" id="paper-count" aria-live="polite">{papers.length} PAPERS</p>
+          <p class="data-label" id="paper-count" aria-live="polite">{papers.length} 篇论文</p>
           <ol class="paper-rows" id="paper-rows">
             {papers.map((paper) => (
               <li data-paper-row data-search={[paper.paperId, paper.title, ...paper.authors].join(" ").toLocaleLowerCase()} data-theme={paper.theme}>
-                <span class="data-label">{paper.theme}</span>
+                <span class="data-label">{displayTopicLabel(paper.theme)}</span>
                 <h3><a href={paper.officialUrl}>{paper.title}</a></h3>
                 <p>{paper.authors.join(", ")}</p>
-                <div class="plate-links"><a href={paper.officialUrl}>Official page</a>{paper.pdfUrl && <a href={paper.pdfUrl}>PDF</a>}{paper.codeUrl && <a href={paper.codeUrl}>Code</a>}</div>
+                <div class="plate-links"><a href={paper.officialUrl}>官方页面</a>{paper.pdfUrl && <a href={paper.pdfUrl}>PDF</a>}{paper.codeUrl && <a href={paper.codeUrl}>Code</a>}</div>
               </li>
             ))}
           </ol>
@@ -58,7 +59,7 @@ const themes = [...new Set(papers.map((paper) => paper.theme))].sort();
       row.hidden = !matches;
       if (matches) visible += 1;
     });
-    if (count) count.textContent = `${visible} PAPERS`;
+    if (count) count.textContent = `${visible} 篇论文`;
   }
   query?.addEventListener("input", applyFilters);
   theme?.addEventListener("change", applyFilters);

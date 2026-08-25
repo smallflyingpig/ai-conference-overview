@@ -4,7 +4,7 @@ import AwardMethodDiagram from "../../components/AwardMethodDiagram";
 import AwardResultClaim from "../../components/AwardResultClaim";
 import AwardEvidenceSections from "../../components/AwardEvidenceSections";
 import { loadOverview } from "../../lib/data";
-import { awardDetailRoutes, type AwardDetailView } from "../../lib/evidence";
+import { awardChineseInsight, awardDetailRoutes, awardTypeLabel, type AwardDetailView } from "../../lib/evidence";
 
 export async function getStaticPaths() {
   const release = await loadOverview("ACL", 2026);
@@ -15,23 +15,33 @@ interface Props { detail: AwardDetailView }
 const { detail } = Astro.props;
 ---
 
-<BaseLayout title={`${detail.paper.title} — Award reading`} description={`Evidence-grounded reading of ${detail.paper.title}.`} conferenceAvailable={true}>
+<BaseLayout title={`${detail.paper.title} — 获奖论文解读`} description={`${detail.paper.title} 的证据化中文解读。`} conferenceAvailable={true}>
   <article class="evidence-shell award-reading">
     <header class="page-thesis award-thesis">
-      <p class="eyebrow">{detail.award.award_type} · officially verified</p>
+      <p class="eyebrow">{awardTypeLabel(detail.award.award_type)} · 官方已验证</p>
       <h1>{detail.paper.title}</h1>
       <p>{detail.paper.authors.join(", ")}</p>
-      <div class="plate-links"><a href={detail.award.evidence_url!}>Official award evidence</a><a href={detail.paper.landing_url}>Paper landing page</a>{detail.paper.pdf_url && <a href={detail.paper.pdf_url}>PDF</a>}</div>
+      <div class="plate-links"><a href={detail.award.evidence_url!}>官方获奖证据</a><a href={detail.paper.landing_url}>论文官方页面</a>{detail.paper.pdf_url && <a href={detail.paper.pdf_url}>PDF</a>}</div>
     </header>
 
-    {detail.deepRead.method_diagram && <AwardMethodDiagram diagram={detail.deepRead.method_diagram} />}
-
-    <AwardEvidenceSections deepRead={detail.deepRead} />
-
-    <section class="result-ledger" aria-labelledby="results-title">
-      <h2 id="results-title">Paper-reported results</h2>
-      {detail.deepRead.result_claims.map((claim) => <AwardResultClaim claim={claim} />)}
+    <section class="why-ledger" aria-labelledby="chinese-reading-title">
+      <h2 id="chinese-reading-title">核心解读</h2>
+      <article>
+        <span class="evidence-badge evidence-badge--synthesis">中文综合</span>
+        <p>{awardChineseInsight(detail.paper.paper_id)}</p>
+        <small>基于官方 PDF DeepRead 的中文综合；具体数值与 locator 见下方原始英文证据。</small>
+      </article>
     </section>
 
+    <details class="original-deep-read">
+      <summary>查看原始英文 DeepRead</summary>
+      <p>为避免翻译改变论文原意，结构化 claim、metric、setting 与 locator 保留英文原文。</p>
+      {detail.deepRead.method_diagram && <AwardMethodDiagram diagram={detail.deepRead.method_diagram} />}
+      <AwardEvidenceSections deepRead={detail.deepRead} />
+      <section class="result-ledger" aria-labelledby="results-title">
+        <h2 id="results-title">论文报告结果（paper-reported）</h2>
+        {detail.deepRead.result_claims.map((claim) => <AwardResultClaim claim={claim} />)}
+      </section>
+    </details>
   </article>
 </BaseLayout>

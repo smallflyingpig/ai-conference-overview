@@ -1,5 +1,8 @@
 export function projectPath(base: string, route: string): string {
-  const normalizedBase = `/${base.split("/").filter(Boolean).join("/")}`;
+  const baseSegments = base.split("/").filter(Boolean);
+  const normalizedBase = baseSegments.length === 0
+    ? "/ai-conference-overview"
+    : `/${baseSegments.join("/")}`;
   const normalizedRoute = route.split("/").filter(Boolean).join("/");
   return `${normalizedBase}/${normalizedRoute}${normalizedRoute ? "/" : ""}`;
 }

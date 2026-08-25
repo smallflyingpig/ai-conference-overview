@@ -89,17 +89,17 @@ describe("conference routes", () => {
 });
 
 describe("distribution view", () => {
-  it("uses Distribution and Snapshot labels for a single year", () => {
+  it("uses a Chinese snapshot label for a single year", () => {
     const view = buildConferenceView(validatedRelease);
     expect(view.analysisLabel).toBe("Distribution");
-    expect(view.periodLabel).toBe("2026 snapshot");
+    expect(view.periodLabel).toBe("2026 单年 snapshot");
     expect(view.trendEligible).toBe(false);
   });
 
   it("derives scope and accessible page name from the validated release", () => {
     const view = buildConferenceView(validatedRelease);
-    expect(view.scopeLabel).toBe("ACL 2026 · long");
-    expect(view.pageHeading).toBe("ACL 2026 long papers");
+    expect(view.scopeLabel).toBe("ACL 2026 · long track");
+    expect(view.pageHeading).toBe("ACL 2026 长论文");
   });
 
   it("keeps chart and semantic table values identical", () => {
@@ -116,10 +116,10 @@ describe("distribution view", () => {
 
   it("publishes explicit denominators and data-health counts", () => {
     const view = buildConferenceView(validatedRelease);
-    expect(view.denominatorLabel).toBe("2 included long papers");
+    expect(view.denominatorLabel).toBe("2 篇纳入统计的 long 论文");
     expect(view.includedCount).toBe(2);
     expect(view.excludedCount).toBe(0);
-    expect(view.abstractCoverageLabel).toBe("2 of 2 (100.00%)");
+    expect(view.abstractCoverageLabel).toBe("2 / 2（100.00%）");
   });
 
   it("exposes failed audit themes as experimental instead of audited", () => {
@@ -157,9 +157,9 @@ describe("trend comparability gate", () => {
   it("suppresses trend claims until three comparable years exist", () => {
     const view = buildTrendView([validatedRelease]);
     expect(view.mode).toBe("snapshot");
-    expect(view.heading).toBe("Distribution / Snapshot / Hotspot");
+    expect(view.heading).toBe("分布 / Snapshot / 热点");
     expect(view.trendWidgetsVisible).toBe(false);
-    expect(view.missingRequirement).toMatch(/three comparable validated years/i);
+    expect(view.missingRequirement).toMatch(/三个连续且可比较的已验证年份/);
   });
 
   it("accepts three consecutive releases with the same comparison contract", () => {
@@ -280,7 +280,7 @@ describe("typed trend filters", () => {
     );
     expect(html).toContain('<option value="ACL" selected="">ACL</option>');
     expect(html).toContain('<option value="2025" selected="">2025</option>');
-    expect(html).toContain('<button type="submit">Apply filters</button>');
+    expect(html).toContain('<button type="submit">应用筛选</button>');
   });
 });
 
@@ -290,9 +290,9 @@ describe("distribution presentation", () => {
       fileURLToPath(new URL("../src/pages/conferences/[venue]/[year].astro", import.meta.url)),
       "utf8",
     );
-    expect(page).toContain("Evidence examples");
-    expect(page).toContain("Audit-labeled semantic assignments");
-    expect(page).not.toContain("Representative papers");
+    expect(page).toContain("证据样例");
+    expect(page).toContain("经 audit 标注的语义 assignment");
+    expect(page).not.toContain("代表论文");
   });
 
   it("defines a paired chart-table layout with mobile reflow and reduced-motion support", async () => {

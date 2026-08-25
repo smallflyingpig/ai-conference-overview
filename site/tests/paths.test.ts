@@ -12,4 +12,9 @@ describe("projectPath", () => {
     expect(projectPath("/ai-conference-overview/", ""))
       .toBe("/ai-conference-overview/");
   });
+
+  it("fails safe to the configured Project Pages base when Astro exposes root BASE_URL", () => {
+    expect(projectPath("/", "awards/award-a"))
+      .toBe("/ai-conference-overview/awards/award-a/");
+  });
 });

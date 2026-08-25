@@ -128,10 +128,10 @@ describe("evidence labels", () => {
       evidenceLabel("cross_paper_synthesis"),
       evidenceLabel("inference"),
     ]).toEqual([
-      "Official metadata",
-      "Paper-reported",
-      "Cross-paper synthesis",
-      "Inference",
+      "官方元数据",
+      "论文报告（paper-reported）",
+      "跨论文综合",
+      "推断",
     ]);
   });
 
@@ -250,14 +250,14 @@ describe("award publication gate", () => {
       },
       verification: release.overview.award_state.verification,
     };
-    expect(buildAwardIndex(noAnnouncement).stateLabel).toBe("Not announced");
+    expect(buildAwardIndex(noAnnouncement).stateLabel).toBe("尚未公布");
 
     const unverified = structuredClone(release);
     unverified.overview.awards[0].status = "not_verified";
     unverified.overview.award_deep_reads = [];
     unverified.overview.award_state.status = "not_verified";
-    expect(buildAwardIndex(unverified).stateLabel).toBe("Not verified");
-    expect(buildAwardIndex(null).stateLabel).toBe("Unavailable");
+    expect(buildAwardIndex(unverified).stateLabel).toBe("尚未验证");
+    expect(buildAwardIndex(null).stateLabel).toBe("不可用");
   });
 
   it("uses a collision-resistant safe route key for malicious raw paper IDs", () => {
@@ -306,7 +306,7 @@ describe("original method diagram", () => {
     expect((html.match(/data-method-edge=/g) ?? [])).toHaveLength(2);
     expect(html).toContain("Input records → Model — Records enter the disclosed model.");
     expect(html).toContain("Model → Predictions — The model emits predictions.");
-    expect(html).toContain("aria-label=\"Original explanatory method diagram\"");
+    expect(html).toContain("aria-label=\"论文方法示意图\"");
   });
 
   it("describes branched and disconnected graphs without inventing chain edges", () => {
@@ -346,9 +346,9 @@ describe("complete award evidence rendering", () => {
       deepRead: validateDeepRead(validDeepRead),
     }));
     for (const heading of [
-      "Research problem", "Contribution", "Method", "Data / training setup",
-      "Differences from prior work", "Reproducibility assessment",
-      "Transferable implications", "Why it matters", "Limitations",
+      "研究问题", "主要贡献", "方法", "数据 / 训练设置",
+      "与既有工作的差异", "可复现性评估",
+      "可迁移启示", "为什么重要", "局限",
     ]) expect(html).toContain(heading);
     expect((html.match(/https:\/\/aclanthology\.org\/paper-a\.pdf/g) ?? []).length)
       .toBeGreaterThanOrEqual(9);
@@ -375,15 +375,15 @@ describe("complete award evidence rendering", () => {
       join(siteRoot, "dist/methodology/index.html"), "utf8",
     );
     for (const heading of [
-      "Data / training setup", "Differences from prior work",
-      "Reproducibility assessment", "Transferable implications",
+      "数据 / 训练设置", "与既有工作的差异",
+      "可复现性评估", "可迁移启示",
     ]) expect(awardHtml).toContain(heading);
     expect(awardHtml).toContain("https://aclanthology.org/");
     for (const expected of [
-      "Stage 1",
-      "Stage 2",
-      "655 reviewed · 217 kept · 438 corrected",
-      "143 reviewed · 112 kept · 31 corrected",
+      "阶段 1",
+      "阶段 2",
+      "复核 655 篇 · 保留 217 篇 · 修正 438 篇",
+      "复核 143 篇 · 保留 112 篇 · 修正 31 篇",
       "c51895a7148b15c8a9756d6651ae013b85b2a17b64f8496d2fe1d17455333b6b",
       "0de77ca92db5c7f02286fe2084a8ca13504bc29ab5a5c15bea6528ff0094dcb6",
       "750e7de5f75221f7e451eb2ac765976c13cd1c3f8101b46f8b7f9c9a5ac50f6b",
@@ -492,7 +492,7 @@ describe("methodology audit ledger", () => {
       sourceUrls: ["https://aclanthology.org/paper-a.pdf"],
       locator: "Section 3",
     });
-    expect(view.withheldThemes.note).toMatch(/published with evidence/i);
+    expect(view.withheldThemes.note).toMatch(/已发布 1 个带证据/);
   });
 
   it("exposes incomplete exhaustive low-confidence review counts", () => {
@@ -518,11 +518,11 @@ describe("methodology audit ledger", () => {
 
   it("defines every required advance lane even when evidence is absent", () => {
     expect(advanceCategories.map((category) => category.label)).toEqual([
-      "Text LLMs",
-      "Multimodal Models",
-      "Reasoning and Agents",
-      "Data / Pretraining / Post-training",
-      "Evaluation / Safety / Interpretability",
+      "文本 LLM",
+      "多模态模型",
+      "推理与 Agents",
+      "数据 / Pretraining / Post-training",
+      "评测 / Safety / Interpretability",
     ]);
   });
 

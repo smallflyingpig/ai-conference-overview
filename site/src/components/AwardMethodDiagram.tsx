@@ -13,7 +13,7 @@ export default function AwardMethodDiagram({ diagram }: Props) {
   );
   return (
     <figure className="method-plate">
-      <svg viewBox={`0 0 ${width} 190`} role="img" aria-label="Original explanatory method diagram">
+      <svg viewBox={`0 0 ${width} 190`} role="img" aria-label="论文方法示意图">
         <defs>
           <marker id="method-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M 0 0 L 10 5 L 0 10 z" />
@@ -41,12 +41,12 @@ export default function AwardMethodDiagram({ diagram }: Props) {
         })}
       </svg>
       <figcaption className="graph-fallback">
-        <strong>Graph text equivalent</strong>
+        <strong>方法图的文本等价表示</strong>
         <div>
-          <p>Disclosed nodes</p>
+          <p>论文披露的节点</p>
           <ul>{diagram.nodes.map((node) => <li key={node.identifier}>{node.label} — {node.paper_section}</li>)}</ul>
-          <p>Disclosed directed edges</p>
-          {diagram.edges.length === 0 ? <p>None disclosed.</p> : (
+          <p>论文披露的有向边</p>
+          {diagram.edges.length === 0 ? <p>论文未披露。</p> : (
             <ul>{diagram.edges.map((edge) => (
               <li key={`${edge.source}-${edge.target}`}>
                 {diagram.nodes.find((node) => node.identifier === edge.source)!.label} → {diagram.nodes.find((node) => node.identifier === edge.target)!.label} — {edge.data_flow_rationale}

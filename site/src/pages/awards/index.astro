@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { loadOverview } from "../../lib/data";
-import { awardRouteKey, buildAwardIndex } from "../../lib/evidence";
+import { awardRouteKey, awardStatusLabel, awardTypeLabel, buildAwardIndex } from "../../lib/evidence";
 import { projectPath } from "../../lib/paths";
 
 const release = await loadOverview("ACL", 2026);
@@ -9,30 +9,30 @@ const view = buildAwardIndex(release);
 const base = import.meta.env.BASE_URL;
 ---
 
-<BaseLayout title="Awards — AI Conference Overview" description="Official award inventory; detail readings appear only after paper-level evidence gates pass." conferenceAvailable={release != null}>
+<BaseLayout title="获奖论文 — AI Conference Overview" description="官方获奖论文清单；只有通过 paper-level 证据门禁的论文才展示详细解读。" conferenceAvailable={release != null}>
   <div class="evidence-shell awards-shell">
     <header class="page-thesis award-thesis">
-      <p class="eyebrow">Official verification desk</p>
-      <h1>Award status,<br />before acclaim.</h1>
-      <p>Only official conference or proceedings evidence can verify an award. A detail page also requires a deep read that passes result, locator, and method-diagram checks.</p>
+      <p class="eyebrow">官方验证台</p>
+      <h1>先核验 award，<br />再讨论影响力。</h1>
+      <p>只有会议或 proceedings 的官方证据才能确认 award；详细页面还要求 DeepRead 通过结果、locator 与方法图检查。</p>
       <strong class="award-state">{view.stateLabel}</strong>
     </header>
     <section class="award-plates" aria-labelledby="award-records-title">
-      <h2 id="award-records-title">Award records</h2>
+      <h2 id="award-records-title">获奖记录</h2>
       {view.items.length === 0 ? (
-        <div class="empty-atlas" role="status"><span class="status-mark" aria-hidden="true"></span><div><h3>{view.stateLabel}</h3><p>No official award record is present in the validated current release. Candidate winners are not substituted.</p></div></div>
+        <div class="empty-atlas" role="status"><span class="status-mark" aria-hidden="true"></span><div><h3>{view.stateLabel}</h3><p>validated current release 中没有官方获奖记录；不会用候选名单替代。</p></div></div>
       ) : (
         <ol>
           {view.items.map(({ award, paper, hasDetail }) => (
             <li class="award-plate">
-              <span class="data-label">{award.award_type}</span>
+              <span class="data-label">{awardTypeLabel(award.award_type)}</span>
               <h3>{paper?.title ?? award.paper_id}</h3>
-              <p class="award-status-line">{award.status.replaceAll("_", " ")}</p>
+              <p class="award-status-line">{awardStatusLabel(award.status)}</p>
               {award.official_citation && <blockquote>{award.official_citation}</blockquote>}
               <div class="plate-links">
-                {award.evidence_url && <a href={award.evidence_url}>Official award evidence</a>}
-                {paper && <a href={paper.landing_url}>Official paper page</a>}
-                {hasDetail ? <a href={projectPath(base, `awards/${awardRouteKey(award)}`)}>Read evidence plate</a> : <span>Deep read not published</span>}
+                {award.evidence_url && <a href={award.evidence_url}>官方获奖证据</a>}
+                {paper && <a href={paper.landing_url}>论文官方页面</a>}
+                {hasDetail ? <a href={projectPath(base, `awards/${awardRouteKey(award)}`)}>阅读详细解读</a> : <span>DeepRead 尚未发布</span>}
               </div>
             </li>
           ))}

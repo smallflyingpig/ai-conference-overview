@@ -13,33 +13,33 @@ const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV
 ---
 
 <BaseLayout
-  title="AI Conference Overview — an evidence-backed research atlas"
-  description="Validated conference distributions, trends, advances, and award-paper deep reads."
+  title="AI Conference Overview — 基于证据的顶会研究图谱"
+  description="经过验证的顶会论文分布、研究进展与获奖论文深度解读。"
   conferenceAvailable={release != null}
 >
   <div class="atlas-shell">
     <aside class="trace-panel" aria-labelledby="trace-title">
-      <p class="eyebrow">Evidence trace</p>
-      <h2 id="trace-title">Know what each claim rests on.</h2>
+      <p class="eyebrow">证据链</p>
+      <h2 id="trace-title">每个结论都能追溯到证据。</h2>
       <ol class="evidence-trace">
-        <li class="official"><span>Official metadata</span><small>Proceedings and programs</small></li>
-        <li class="reported"><span>Paper-reported</span><small>Results with locators</small></li>
-        <li class="synthesis"><span>Cross-paper synthesis</span><small>Patterns across the set</small></li>
-        <li class="inference"><span>Inference</span><small>Clearly marked interpretation</small></li>
+        <li class="official"><span>官方元数据</span><small>Proceedings 与官方议程</small></li>
+        <li class="reported"><span>Paper-reported</span><small>带 locator 的论文结果</small></li>
+        <li class="synthesis"><span>跨论文综合</span><small>论文集合中的共同模式</small></li>
+        <li class="inference"><span>推断</span><small>明确标注的研究解读</small></li>
       </ol>
-      <section class="ledger" aria-label="Publication status">
-        <p class="data-label">CURRENT RELEASE</p>
+      <section class="ledger" aria-label="发布状态">
+        <p class="data-label">当前 RELEASE</p>
         {release ? (
           <>
-            <strong>ACL 2026 · Long papers</strong>
-            <span>{release.validation.included_count} validated records</span>
-            <span>Retrieved <time datetime={source?.retrieved_at}>{source?.retrieved_at.slice(0, 10)}</time></span>
+            <strong>ACL 2026 · 长论文</strong>
+            <span>{release.validation.included_count} 条已验证记录</span>
+            <span>抓取时间 <time datetime={source?.retrieved_at}>{source?.retrieved_at.slice(0, 10)}</time></span>
             <code>{release.generation.split("/")[1].slice(0, 12)}</code>
           </>
         ) : (
           <>
-            <strong>Not yet published</strong>
-            <span>The first ACL 2026 release is still moving through validation.</span>
+            <strong>尚未发布</strong>
+            <span>首个 ACL 2026 release 仍在通过验证门禁。</span>
             <code>NO CURRENT POINTER</code>
           </>
         )}
@@ -48,44 +48,43 @@ const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV
 
     <div class="atlas-main">
       <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">Research intelligence / 2026 onward</p>
-        <h1 id="page-title">Read the field as a map,<br />not a leaderboard.</h1>
+        <p class="eyebrow">研究情报 / 2026 起</p>
+        <h1 id="page-title">把领域读成一张图谱，<br />而不是排行榜。</h1>
         <p class="lede">
-          A source-backed index of what major AI conferences are studying, how attention moves,
-          and which advances survive an evidence audit.
+          用可追溯来源回答：AI 顶会正在研究什么、注意力如何迁移，以及哪些 advance 经得起证据审计。
         </p>
         <div class="hero-note">
-          <span class="data-label">SCOPE</span>
-          <p>Distributions use validated venue-year denominators. “Trend” is reserved for comparable multi-year evidence.</p>
+          <span class="data-label">范围</span>
+          <p>分布使用经过验证的“会议—年份”分母；只有存在可比较的多年证据时，才使用“趋势”表述。</p>
         </div>
       </section>
 
       <section class="release-state" aria-labelledby="release-title">
         <div>
-          <p class="eyebrow">First reference run</p>
-          <h2 id="release-title">ACL 2026 · Long papers</h2>
+          <p class="eyebrow">首个参考分析</p>
+          <h2 id="release-title">ACL 2026 · 长论文</h2>
         </div>
         {release ? (
-          <p>The validated corpus is available. Its semantic topic analysis remains preliminary wherever the audit ledger marks a theme experimental.</p>
+          <p>已验证语料现已可用；凡 audit ledger 标记为 experimental 的主题，其语义分类仍只作为实验性结果展示。</p>
         ) : (
           <div class="empty-state" role="status">
             <span class="status-mark" aria-hidden="true"></span>
-            <p><strong>Analysis withheld until publication gates pass.</strong><br />No provisional counts or fabricated metrics are shown.</p>
+            <p><strong>发布门禁通过前暂不展示分析。</strong><br />不展示临时计数，也不生成缺乏证据的指标。</p>
           </div>
         )}
       </section>
 
       <section class="scope-index" aria-labelledby="scope-title">
         <div class="section-heading">
-          <p class="eyebrow">Venue registry</p>
-          <h2 id="scope-title">One taxonomy,<br />native tracks intact.</h2>
+          <p class="eyebrow">会议注册表</p>
+          <h2 id="scope-title">统一 taxonomy，<br />保留原生 track。</h2>
         </div>
         <ul>
           {scopes.map((venue, index) => (
             <li>
               <span class="index-number">{String(index + 1).padStart(2, "0")}</span>
               <strong>{venue}</strong>
-              <span>{venue === "ACL" ? "Reference run" : "Adapter roadmap"}</span>
+              <span>{venue === "ACL" ? "已完成参考分析" : "Adapter 路线图"}</span>
             </li>
           ))}
         </ul>
@@ -94,8 +93,8 @@ const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV
       {conferenceView && (
         <section class="published-index" aria-labelledby="published-title">
           <div class="section-heading">
-            <p class="eyebrow">Published atlas entries</p>
-            <h2 id="published-title">Validated<br />snapshots.</h2>
+            <p class="eyebrow">已发布图谱</p>
+            <h2 id="published-title">经过验证的<br />snapshot。</h2>
           </div>
           <ConferenceCard
             venue={conferenceView.venue}

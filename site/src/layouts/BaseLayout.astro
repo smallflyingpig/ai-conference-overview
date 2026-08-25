@@ -15,7 +15,7 @@ const conferenceHref = conferenceNavigationHref(base, conferenceAvailable);
 ---
 
 <!doctype html>
-<html lang="en" style={`--focus-ring: ${focusRing}`}>
+<html lang="zh-CN" style={`--focus-ring: ${focusRing}`}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -24,25 +24,25 @@ const conferenceHref = conferenceNavigationHref(base, conferenceAvailable);
     <title>{title}</title>
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to research index</a>
+    <a class="skip-link" href="#main">跳到研究内容</a>
     <header class="site-header">
-      <a class="wordmark" href={projectPath(base, "")} aria-label="AI Conference Overview home">
+      <a class="wordmark" href={projectPath(base, "")} aria-label="AI Conference Overview 首页">
         <span aria-hidden="true">A/CO</span>
         <span>AI Conference Overview</span>
       </a>
-      <nav aria-label="Primary navigation">
-        {conferenceHref ? <a href={conferenceHref}>Conferences</a> : <span aria-disabled="true">Conferences</span>}
-        <a href={projectPath(base, "trends")}>Trends</a>
-        <a href={projectPath(base, "advances")}>Advances</a>
-        <a href={projectPath(base, "awards")}>Awards</a>
-        <a href={projectPath(base, "papers")}>Papers</a>
-        <a href={projectPath(base, "methodology")}>Methodology</a>
+      <nav aria-label="主导航">
+        {conferenceHref ? <a href={conferenceHref}>会议概览</a> : <span aria-disabled="true">会议概览</span>}
+        <a href={projectPath(base, "trends")}>分布与趋势</a>
+        <a href={projectPath(base, "advances")}>研究进展</a>
+        <a href={projectPath(base, "awards")}>获奖论文</a>
+        <a href={projectPath(base, "papers")}>论文索引</a>
+        <a href={projectPath(base, "methodology")}>方法论</a>
       </nav>
     </header>
     <main id="main"><slot /></main>
     <footer>
-      <span>Evidence before interpretation.</span>
-      <span class="data-label">MIT · STATIC RESEARCH ATLAS</span>
+      <span>先呈现证据，再给出解释。</span>
+      <span class="data-label">MIT · 静态研究图谱</span>
     </footer>
   </body>
 </html>

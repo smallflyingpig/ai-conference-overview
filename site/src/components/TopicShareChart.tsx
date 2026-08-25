@@ -13,12 +13,12 @@ export default function TopicShareChart({ rows, denominator }: Props) {
       <div
         className="topic-ruler"
         role="img"
-        aria-label={`Primary topic shares among ${denominator} included papers`}
+        aria-label={`${denominator} 篇纳入论文的 primary topic 占比`}
       >
         {rows.map((row) => (
           <div className="topic-ruler-row" key={row.topic}>
             <div className="topic-ruler-label">
-              <span>{row.topic}</span>
+              <span>{row.topicLabel}</span>
               <strong data-chart-value={row.shareLabel}>{row.shareLabel}</strong>
             </div>
             <span className="topic-ruler-track" aria-hidden="true">
@@ -29,13 +29,13 @@ export default function TopicShareChart({ rows, denominator }: Props) {
       </div>
       <div className="topic-table-wrap">
         <table>
-          <caption>Primary-topic distribution; denominator: {denominator} included papers.</caption>
+          <caption>Primary topic 分布；分母为 {denominator} 篇纳入统计的论文。</caption>
           <thead>
-            <tr><th scope="col">Primary topic</th><th scope="col">Papers</th><th scope="col">Share</th></tr>
+            <tr><th scope="col">Primary topic</th><th scope="col">论文数</th><th scope="col">占比</th></tr>
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.topic}><th scope="row">{row.topic}</th><td>{row.paperCount}</td><td>{row.shareLabel}</td></tr>
+              <tr key={row.topic}><th scope="row">{row.topicLabel}</th><td>{row.paperCount}</td><td>{row.shareLabel}</td></tr>
             ))}
           </tbody>
         </table>

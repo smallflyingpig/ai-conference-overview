@@ -4,6 +4,7 @@ export type ConferenceRelease = LoadedOverview;
 
 export interface TopicShareRow {
   topic: string;
+  topicLabel: string;
   auditStatus: "audit-passed" | "experimental" | "withheld";
   paperCount: number;
   share: number;
@@ -73,8 +74,30 @@ export function conferenceRoutes(releases: ConferenceRelease[]): ConferenceRoute
 }
 
 function formatCoverage(available: number, denominator: number): string {
-  if (denominator === 0) return "0 of 0 (not applicable)";
-  return `${available} of ${denominator} (${((available / denominator) * 100).toFixed(2)}%)`;
+  if (denominator === 0) return "0 / 0（不适用）";
+  return `${available} / ${denominator}（${((available / denominator) * 100).toFixed(2)}%）`;
+}
+
+const topicLabels: Record<string, string> = {
+  "Evaluation": "评测",
+  "Learning and Optimization": "学习与优化",
+  "Trustworthiness": "可信与安全",
+  "Data and Retrieval": "数据与检索",
+  "Multimodal Models": "多模态模型",
+  "Reasoning and Agents": "推理与 Agents",
+  "Applications": "应用",
+  "NLP/CV Core Tasks": "NLP/CV 核心任务",
+  "Foundation Models": "基础模型",
+  "Multilingual and Inclusive NLP": "多语言与包容性 NLP",
+  "Unassigned": "未分类",
+};
+
+export function displayTopicLabel(topic: string): string {
+  return topicLabels[topic] ?? topic;
+}
+
+export function auditStatusLabel(status: TopicShareRow["auditStatus"]): string {
+  return { "audit-passed": "audit 已通过", experimental: "实验性", withheld: "暂缓发布" }[status];
 }
 
 export function buildConferenceView(release: ConferenceRelease): ConferenceView {
@@ -108,6 +131,7 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
       const share = denominator === 0 ? 0 : assignments.length / denominator;
       return {
         topic,
+        topicLabel: displayTopicLabel(topic),
         auditStatus: disclosureByTheme.get(topic) ?? "audit-passed",
         paperCount: assignments.length,
         share,
@@ -126,10 +150,10 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
     venueSlug: venue.toLowerCase(),
     year,
     track,
-    pageHeading: `${venue} ${year} ${track} papers`,
-    scopeLabel: `${venue} ${year} · ${track}`,
+    pageHeading: `${venue} ${year} 长论文`,
+    scopeLabel: `${venue} ${year} · ${track} track`,
     analysisLabel: "Distribution",
-    periodLabel: `${year} snapshot`,
+    periodLabel: `${year} 单年 snapshot`,
     trendEligible: false,
     includedCount: denominator,
     excludedCount: release.validation.excluded_count,
@@ -138,7 +162,7 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
       denominator - release.validation.missing_abstract_count,
       denominator,
     ),
-    denominatorLabel: `${denominator} included ${track} papers`,
+    denominatorLabel: `${denominator} 篇纳入统计的 ${track} 论文`,
     retrievedAt: source.retrieved_at,
     sourceName: source.name,
     sourceUrl: source.url,
@@ -215,9 +239,9 @@ export function buildTrendView(
   if (releases.length === 0) {
     return {
       mode: "empty",
-      heading: "No distribution published",
+      heading: "尚无已发布分布",
       trendWidgetsVisible: false,
-      missingRequirement: "A validated release must pass every publication gate before it appears here.",
+      missingRequirement: "只有通过全部发布门禁的 validated release 才会出现在这里。",
       availableVenues,
       availableYears,
       availableThemes,
@@ -228,11 +252,11 @@ export function buildTrendView(
   const trendEligible = hasComparableSnapshotWindow(snapshots);
   return {
     mode: trendEligible ? "trend" : "snapshot",
-    heading: trendEligible ? "Comparable research trends" : "Distribution / Snapshot / Hotspot",
+    heading: trendEligible ? "可比较的研究趋势" : "分布 / Snapshot / 热点",
     trendWidgetsVisible: trendEligible,
     missingRequirement: trendEligible
       ? null
-      : "Trend and year-over-year claims require at least three comparable validated years.",
+      : "Trend 与 year-over-year 结论至少需要三个连续且可比较的已验证年份。",
     availableVenues,
     availableYears,
     availableThemes,
@@ -265,16 +289,16 @@ export function applyTrendFilters(view: TrendView, filters: TrendFilters): Trend
     ...view,
     mode: trendEligible ? "trend" : view.mode === "empty" ? "empty" : "snapshot",
     heading: trendEligible
-      ? "Comparable research trends"
+      ? "可比较的研究趋势"
       : view.mode === "empty"
-        ? "No distribution published"
-        : "Distribution / Snapshot / Hotspot",
+        ? "尚无已发布分布"
+        : "分布 / Snapshot / 热点",
     trendWidgetsVisible: trendEligible,
     missingRequirement: trendEligible
       ? null
       : view.mode === "empty"
         ? view.missingRequirement
-        : "Trend and year-over-year claims require at least three comparable validated years.",
+        : "Trend 与 year-over-year 结论至少需要三个连续且可比较的已验证年份。",
     filters: { ...filters },
     snapshots,
   };
