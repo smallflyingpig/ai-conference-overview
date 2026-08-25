@@ -24,11 +24,48 @@ def test_cli_exposes_all_pipeline_commands() -> None:
         "validate",
         "export-classification",
         "import-classification",
+        "export-chinese-content",
+        "check-chinese-content-sources",
+        "import-chinese-content",
+        "build-chinese-content",
         "analyze",
         "awards",
         "build-site",
     ):
         assert command in result.stdout
+
+
+def test_export_chinese_content_routes_to_scope_orchestration(
+    tmp_path: Path, monkeypatch
+) -> None:
+    def fake_export(request, root, *, shard_count):
+        assert request.source_key == "2026.acl-long"
+        assert root == tmp_path
+        assert shard_count == 16
+        return [tmp_path / f"source-{index}.jsonl" for index in range(17)]
+
+    monkeypatch.setattr(cli_module, "export_chinese_content_scope", fake_export)
+    result = runner.invoke(
+        app,
+        [
+            "export-chinese-content",
+            "--venue",
+            "ACL",
+            "--year",
+            "2026",
+            "--track",
+            "long",
+            "--root",
+            str(tmp_path),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert payload(result) == {
+        "command": "export-chinese-content",
+        "source_count": 17,
+        "status": "exported",
+    }
 
 
 def test_unsupported_collect_returns_structured_non_success() -> None:

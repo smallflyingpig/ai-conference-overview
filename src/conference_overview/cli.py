@@ -8,6 +8,12 @@ from typing import Annotated, NoReturn
 
 import typer
 
+from conference_overview.content_pipeline import (
+    build_chinese_content_scope,
+    check_chinese_content_sources_scope,
+    export_chinese_content_scope,
+    import_chinese_content_scope,
+)
 from conference_overview.pipeline import (
     UnsupportedPipelineRoute,
     analyze_acl_scope,
@@ -219,6 +225,121 @@ def import_classification(
         "imported",
         paper_count=len(assignments),
         source_count=len(inputs),
+    )
+
+
+@app.command("export-chinese-content")
+def export_chinese_content(
+    venue: str = typer.Option(..., "--venue"),
+    year: str = typer.Option(..., "--year"),
+    track: str | None = typer.Option(None, "--track"),
+    shards: int = typer.Option(16, "--shards", min=1),
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
+) -> None:
+    """Export deterministic ordinary-summary and award deep-read sources."""
+    request = _request(
+        command="export-chinese-content",
+        venues=venue,
+        years=year,
+        tracks=track,
+    )
+    paths = _run(
+        "export-chinese-content",
+        lambda: export_chinese_content_scope(request, root, shard_count=shards),
+    )
+    _success(
+        "export-chinese-content",
+        "exported",
+        source_count=len(paths),
+    )
+
+
+@app.command("check-chinese-content-sources")
+def check_chinese_content_sources(
+    venue: str = typer.Option(..., "--venue"),
+    year: str = typer.Option(..., "--year"),
+    track: str | None = typer.Option(None, "--track"),
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
+) -> None:
+    """Check source-shard membership against the selected release."""
+    request = _request(
+        command="check-chinese-content-sources",
+        venues=venue,
+        years=year,
+        tracks=track,
+    )
+    coverage = _run(
+        "check-chinese-content-sources",
+        lambda: check_chinese_content_sources_scope(request, root),
+    )
+    _success(
+        "check-chinese-content-sources",
+        "checked",
+        ordinary_count=coverage.ordinary_count,
+        award_count=coverage.award_count,
+        total_count=coverage.total_count,
+    )
+
+
+@app.command("import-chinese-content")
+def import_chinese_content(
+    summary_files: Annotated[list[Path], typer.Option("--summary-file")],
+    awards_path: Annotated[Path, typer.Option("--awards")],
+    venue: str = typer.Option(..., "--venue"),
+    year: str = typer.Option(..., "--year"),
+    track: str | None = typer.Option(None, "--track"),
+    allow_incomplete: bool = typer.Option(False, "--allow-incomplete"),
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
+) -> None:
+    """Validate authored Chinese content without selecting a generation."""
+    request = _request(
+        command="import-chinese-content",
+        venues=venue,
+        years=year,
+        tracks=track,
+    )
+    bundle = _run(
+        "import-chinese-content",
+        lambda: import_chinese_content_scope(
+            request,
+            root,
+            summary_files=summary_files,
+            award_path=awards_path,
+            allow_incomplete=allow_incomplete,
+        ),
+    )
+    _success(
+        "import-chinese-content",
+        "validated",
+        ordinary_count=bundle.ordinary_count,
+        award_count=bundle.award_count,
+        total_count=bundle.total_count,
+        complete=not allow_incomplete,
+    )
+
+
+@app.command("build-chinese-content")
+def build_chinese_content(
+    venue: str = typer.Option(..., "--venue"),
+    year: str = typer.Option(..., "--year"),
+    track: str | None = typer.Option(None, "--track"),
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
+) -> None:
+    """Build and select a complete immutable Chinese content generation."""
+    request = _request(
+        command="build-chinese-content",
+        venues=venue,
+        years=year,
+        tracks=track,
+    )
+    generation = _run(
+        "build-chinese-content",
+        lambda: build_chinese_content_scope(request, root),
+    )
+    _success(
+        "build-chinese-content",
+        "built",
+        generation=f"generations/{generation.name}",
     )
 
 
