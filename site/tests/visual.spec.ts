@@ -54,7 +54,7 @@ test("研究进展页面用中文叙述并保留五条英文关键词 lane", asy
   expect(consoleErrors).toEqual([]);
 });
 
-test("获奖论文索引进入中文解读并保留英文原文摘录", async ({ page }) => {
+test("获奖论文索引进入中文解读并保留英文原文参考", async ({ page }) => {
   const consoleErrors = watchConsoleErrors(page);
   await page.goto("/ai-conference-overview/awards/");
 
@@ -63,7 +63,7 @@ test("获奖论文索引进入中文解读并保留英文原文摘录", async ({
   await expect(detailLink).toHaveAttribute("href", new RegExp(`^${basePath}awards/award-[0-9a-f]{64}/$`));
   await detailLink.click();
   await expect(page.getByRole("heading", { name: "核心解读" })).toBeVisible();
-  await expect(page.getByText("查看英文原文摘录")).toBeVisible();
+  await expect(page.getByText("英文原文参考")).toBeVisible();
   await expect(page.getByRole("link", { name: "官方获奖页面" })).toBeVisible();
   expect(consoleErrors).toEqual([]);
 });
