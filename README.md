@@ -1,71 +1,86 @@
 # AI Conference Overview
 
-An evidence-backed research atlas for accepted-paper distributions, audited topic analysis,
-cross-paper advances, and officially verified award-paper deep reads.
+AI Conference Overview 是一个面向 AI 顶会的论文研究网站，集中展示接收论文的主题分布、值得关注的研究方向、跨论文进展和获奖论文中文解读。
 
-The static site is configured for GitHub Project Pages at
-`https://smallflyingpig.github.io/ai-conference-overview/`. The current reference release is
-**ACL 2026 Volume 1 (long papers)**: 2,223 official entries discovered, one proceedings record
-explicitly excluded, and 2,222 papers included. It is a one-year **distribution/snapshot**, not a
-trend.
+**在线访问：[AI Conference Overview](https://smallflyingpig.github.io/ai-conference-overview/)**
 
-## Venue scope
+当前版本收录 **ACL 2026 Long Papers**：从官方论文集发现 2,223 条记录，排除 1 条论文集前言后，共纳入 2,222 篇论文。由于目前只有 ACL 2026 一年的数据，网站展示的是当年论文分布，不能据此判断长期趋势。
 
-The reusable `analyzing-conference-trends` skill defines source and evidence policy for ACL,
-EMNLP, ICLR, ICML, NeurIPS (`NIPS` is normalized to `NEURIPS`), CVPR, ICCV, and ECCV. The site
-information architecture already exposes these venues as the adapter roadmap.
+## 网站里有什么
 
-Only ACL 2026 long papers have an end-to-end collected, classified, audited, and published release
-in this revision. Other venues require their official-source adapters and comparable validated
-venue-year releases before the site may show results or call a multi-year pattern a trend.
+- **会议概览**：查看 ACL 2026 Long Papers 的论文规模、主题分布和主要研究问题。
+- **分布与趋势**：比较各主题的论文数量与占比，并明确区分单年分布和多年趋势。
+- **研究进展**：从 Text LLMs、Multimodal Models、Reasoning & Agents、Data & Training、Evaluation & Trust 五个方向梳理代表性工作。
+- **获奖论文**：收录 30 篇官方获奖论文，提供三分钟导读、中文摘要、方法说明、关键结果、局限和研究启发。
+- **论文索引**：浏览 2,222 篇论文，并按标题、作者和主题检索。
+- **方法说明**：了解数据来源、分类方法、人工抽查结果和统计口径。
 
-## Evidence boundary
+## 当前收录范围
 
-Published claims remain visibly separated:
+| 会议 | 年份与 Track | 状态 |
+| --- | --- | --- |
+| ACL | 2026 Long Papers | 已完成论文收集、主题分类、人工抽查、研究综述和获奖论文解读 |
+| EMNLP | 待接入 | 已定义数据适配方向 |
+| ICLR | 待接入 | 已定义数据适配方向 |
+| ICML | 待接入 | 已定义数据适配方向 |
+| NeurIPS | 待接入 | 已定义数据适配方向 |
+| CVPR | 待接入 | 已定义数据适配方向 |
+| ICCV | 待接入 | 已定义数据适配方向 |
+| ECCV | 待接入 | 已定义数据适配方向 |
 
-- **Official metadata** comes from official proceedings or conference/program sources.
-- **Paper-reported** findings retain the paper's setting and a locator; they are not independently
-  reproduced results.
-- **Cross-paper synthesis** combines named papers without pooling incompatible metrics.
-- **Inference** is an explicitly labeled interpretation.
+仓库中的 `analyzing-conference-trends` skill 已包含这些会议的数据来源和分析规范。只有在完成相应会议、年份和 Track 的官方数据接入与质量检查后，网站才会展示对应结果。
 
-Topic counts are primary-assignment shares, not total topic prevalence in a multi-label corpus.
-Audit precision measures reviewed assignments and does not establish recall. Themes that miss the
-configured observed-precision and Wilson-lower-bound gates remain experimental and are withheld
-from headlines. Award pages exist only for officially verified records with a contract-valid deep
-read. Third-party papers, figures, metadata, and conference assets retain their original rights.
+## 如何理解网站中的分析
 
-## Install
+- 论文元数据来自官方论文集或会议官网。
+- 论文实验结果会保留原始评测条件和对应位置，但不代表本项目独立复现了这些实验。
+- 跨论文综述会列出所参考的具体论文，不会直接合并不可比较的指标。
+- 主题占比按每篇论文的主要主题统计，不等同于多标签场景下某个主题的全部覆盖率。
+- 人工抽查衡量已检查样本的分类准确程度，不能据此推断未发现主题的比例。
+- 获奖论文页面只收录官方已经公布、且已完成论文 PDF 阅读的记录。
+- 论文、图片、元数据和会议素材仍归原作者或原发布方所有。
 
-Python 3.11+ and Node.js 24 are used in CI.
+## 仓库结构
+
+```text
+config/                     会议注册表与主题分类配置
+data/                       官方数据、分类结果、分析结果和发布版本
+site/                       Astro 静态网站
+src/conference_overview/    数据收集、检查、分析与发布代码
+tests/                      Python 测试
+.agents/skills/             可复用的会议分析与中文润色 skill
+```
+
+## 安装环境
+
+CI 使用 Python 3.11+ 和 Node.js 24。
 
 ```bash
 python -m venv .venv
 .venv/bin/python -m pip install -e '.[dev]'
+
 cd site
 npm ci
 npx playwright install chromium
 cd ..
 ```
 
-The site award-source allowlist is generated from the authoritative `config/venues.yaml` registry.
-After changing `official_award_hosts`, regenerate and review it:
+获奖信息允许访问的官方域名统一配置在 `config/venues.yaml`。修改 `official_award_hosts` 后，需要重新生成并检查前端使用的域名列表：
 
 ```bash
 .venv/bin/python scripts/generate_award_host_policy.py
 ```
 
-## Reproduce an analysis
+## 重新生成会议分析
 
-The command boundary is `conference-trends`. Collection writes immutable official-source
-snapshots; validation failures do not replace the last publishable release.
+项目使用 `conference-trends` 命令完成论文收集、检查、分类和发布。原始官方数据会保存为不可变版本；如果新数据未达到发布要求，程序不会替换上一个可用版本。
 
 ```bash
 .venv/bin/conference-trends collect --venues ACL --years 2026 --tracks long
 .venv/bin/conference-trends validate --venues ACL --years 2026 --tracks long
 .venv/bin/conference-trends export-classification --venues ACL --years 2026 --tracks long
 
-# Explicit agent/human semantic labeling happens here using the exported JSONL contract.
+# 按导出的 JSONL 格式完成人工或 Agent 语义分类后再导入。
 .venv/bin/conference-trends import-classification \
   --input <reviewed-classification-directory> \
   --venues ACL --years 2026 --tracks long
@@ -76,13 +91,11 @@ snapshots; validation failures do not replace the last publishable release.
   --venues ACL --years 2026 --tracks long --write-release
 ```
 
-Semantic assignment, low-confidence review, stratified audit decisions, full-theme correction
-stages, and award PDF deep reads are evidence-bearing review steps—not unattended provider calls.
-The selected release is bound by `data/releases/ACL/2026/current.json` and artifact SHA-256 hashes.
+主题分类、低置信度论文复查、分主题人工抽查、分类修正和获奖论文 PDF 阅读都需要明确的人工或 Agent 判断，不是无人值守的模型调用。当前发布版本由 `data/releases/ACL/2026/current.json` 选择，并使用 SHA-256 记录各文件内容。
 
-## Test and preview the site
+## 测试与本地预览
 
-Run the same local acceptance gates used by CI:
+运行与 CI 相同的检查：
 
 ```bash
 .venv/bin/python -m ruff check .
@@ -95,12 +108,9 @@ npm run test:e2e
 npm run preview -- --host 127.0.0.1 --port 4321
 ```
 
-Open `http://127.0.0.1:4321/ai-conference-overview/`. Playwright checks desktop and mobile
-layouts, the ACL overview and table fallback, methodology lineage, all five advance lanes, the
-30-record award index and a deep-read route, base-path-safe internal links, HTTP success, and
-browser console errors.
+打开 `http://127.0.0.1:4321/ai-conference-overview/`。Playwright 会检查桌面端和手机端布局、ACL 会议概览、研究进展、30 篇获奖论文、内部链接、页面响应和浏览器错误。
 
-An empty-data build is also publication-safe:
+项目也支持在没有会议数据时安全构建：
 
 ```bash
 mkdir -p /tmp/ai-conference-overview-empty-releases
@@ -108,27 +118,26 @@ cd site
 CONFERENCE_RELEASE_ROOT=/tmp/ai-conference-overview-empty-releases npm run build
 ```
 
-It emits only the evidence-limited shell; it does not fabricate a conference page.
+此时网站只生成基础页面，不会自动补造会议数据。
 
-## GitHub Pages deployment
+## GitHub Pages 部署
 
-`.github/workflows/ci.yml` validates pushes, pull requests, and manual runs. The Pages workflow
-repeats the full Python, site, empty-data, production-build, and browser acceptance gates before
-uploading `site/dist`; deployment runs only for `main` pushes or a manual dispatch.
+`.github/workflows/ci.yml` 负责常规检查，`.github/workflows/pages.yml` 负责 GitHub Pages 发布。每次向 `main` 推送后，Pages workflow 会依次运行 Python 检查、站点单测、空数据构建、正式构建和浏览器测试，通过后再上传并部署 `site/dist`。
 
-Before the first public release, configure **Settings → Pages → Source: GitHub Actions**, review the
-`github-pages` environment protections, and obtain approval to push/merge the validated commit to
-`main`. Then verify the workflow and public endpoint:
+查看部署进度：
 
 ```bash
 gh run watch --exit-status
-curl --fail --location https://smallflyingpig.github.io/ai-conference-overview/
 ```
 
-No scheduled source update is enabled by default because conference and award records can be
-temporarily incomplete.
+部署完成后访问：
 
-## License
+```text
+https://smallflyingpig.github.io/ai-conference-overview/
+```
 
-Project-authored code, configuration, documentation, and explanatory site content are available
-under the [MIT License](LICENSE). Linked third-party research artifacts are not relicensed.
+项目不会默认定时更新会议数据，因为会议论文集和获奖信息在公布阶段可能暂时不完整。
+
+## 许可证
+
+本项目编写的代码、配置、文档和网站说明使用 [MIT License](LICENSE)。通过链接引用的论文及其他第三方内容不包含在该许可证内。
