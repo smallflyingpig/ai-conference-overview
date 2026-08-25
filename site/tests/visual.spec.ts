@@ -54,8 +54,11 @@ test("研究进展页面用中文叙述并保留五条英文关键词 lane", asy
   expect(consoleErrors).toEqual([]);
 });
 
-test("获奖论文索引进入中文解读并保留英文原文参考", async ({ page }) => {
+test("获奖论文索引进入中文解读并保留英文原文参考", async ({ page }, testInfo) => {
   const consoleErrors = watchConsoleErrors(page);
+  if (testInfo.project.name === "mobile-chromium") {
+    await page.setViewportSize({ width: 390, height: 844 });
+  }
   await page.goto("/ai-conference-overview/awards/");
 
   await expect(page.locator(".award-plate")).toHaveCount(30);
@@ -64,6 +67,23 @@ test("获奖论文索引进入中文解读并保留英文原文参考", async ({
   await detailLink.click();
   await expect(page.getByRole("heading", { name: "核心解读" })).toBeVisible();
   await expect(page.getByText("英文原文参考")).toBeVisible();
+  await page.getByText("英文原文参考").click();
+  await expect(page.getByText("节点编号只用于核对下方关系，不代表先后顺序。")).toBeVisible();
+  const methodLabels = page.locator(
+    "[data-method-node] > text:not(.method-section), [data-method-node] .method-node-label",
+  );
+  await expect(methodLabels.first()).toBeVisible();
+  const methodLabelSizes = await methodLabels.evaluateAll((labels) =>
+    labels.map((label) => Number.parseFloat(getComputedStyle(label).fontSize)),
+  );
+  expect(
+    methodLabelSizes.every((size) => size >= 16),
+    "流程图中的步骤名称应使用适合连续阅读的字号",
+  ).toBe(true);
+  const pageOverflow = await page.evaluate(() =>
+    document.documentElement.scrollWidth - window.innerWidth,
+  );
+  expect(pageOverflow, "展开方法流程后页面不应出现横向溢出").toBeLessThanOrEqual(1);
   await expect(page.getByRole("link", { name: "官方获奖页面" })).toBeVisible();
   expect(consoleErrors).toEqual([]);
 });

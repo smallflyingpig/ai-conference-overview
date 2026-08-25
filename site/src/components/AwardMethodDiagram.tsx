@@ -5,55 +5,46 @@ import { type MethodDiagram } from "../lib/evidence";
 interface Props { diagram: MethodDiagram }
 
 export default function AwardMethodDiagram({ diagram }: Props) {
-  const width = 760;
-  const rowY = 92;
-  const step = diagram.nodes.length > 1 ? 620 / (diagram.nodes.length - 1) : 0;
-  const positions = new Map(
-    diagram.nodes.map((node, index) => [node.identifier, { x: 70 + index * step, y: rowY }]),
+  const nodeReferences = new Map(
+    diagram.nodes.map((node, index) => [node.identifier, `N${index + 1}`]),
   );
   return (
-    <figure className="method-plate">
-      <svg viewBox={`0 0 ${width} 190`} role="img" aria-label="论文方法示意图">
-        <defs>
-          <marker id="method-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" />
-          </marker>
-        </defs>
-        {diagram.edges.map((edge) => {
-          const start = positions.get(edge.source)!;
-          const end = positions.get(edge.target)!;
-          return (
-            <g key={`${edge.source}-${edge.target}`} data-method-edge={`${edge.source}-${edge.target}`}>
-              <line x1={start.x + 58} y1={start.y} x2={end.x - 58} y2={end.y} markerEnd="url(#method-arrow)" />
-              <title>{edge.data_flow_rationale}</title>
-            </g>
-          );
-        })}
+    <figure className="method-plate" aria-label="论文方法示意图">
+      <header className="method-plate__header">
+        <span className="data-label">Method map</span>
+        <strong>论文方法流程</strong>
+        <p>先看论文列出的方法节点，再沿下方关系逐条阅读。节点编号只用于核对下方关系，不代表先后顺序。</p>
+      </header>
+      <ul className="method-flow">
         {diagram.nodes.map((node) => {
-          const position = positions.get(node.identifier)!;
           return (
-            <g key={node.identifier} data-method-node={node.identifier} transform={`translate(${position.x} ${position.y})`}>
-              <rect x="-58" y="-38" width="116" height="76" />
-              <text textAnchor="middle" y="-2">{node.label}</text>
-              <text className="method-section" textAnchor="middle" y="18">{node.paper_section}</text>
-            </g>
+            <li className="method-flow__node" key={node.identifier} data-method-node={node.identifier}>
+              <span className="method-node-index" aria-hidden="true">{nodeReferences.get(node.identifier)}</span>
+              <div>
+                <strong className="method-node-label">{node.label} — {node.paper_section}</strong>
+              </div>
+            </li>
           );
         })}
-      </svg>
-      <figcaption className="graph-fallback">
-        <strong>方法流程（文字版）</strong>
-        <div>
-          <p>主要步骤</p>
-          <ul>{diagram.nodes.map((node) => <li key={node.identifier}>{node.label} — {node.paper_section}</li>)}</ul>
-          <p>步骤之间的关系</p>
-          {diagram.edges.length === 0 ? <p>论文没有说明步骤之间的关系。</p> : (
-            <ul>{diagram.edges.map((edge) => (
-              <li key={`${edge.source}-${edge.target}`}>
-                {diagram.nodes.find((node) => node.identifier === edge.source)!.label} → {diagram.nodes.find((node) => node.identifier === edge.target)!.label} — {edge.data_flow_rationale}
+      </ul>
+      <figcaption className="method-connections">
+        <strong>步骤之间的关系</strong>
+        {diagram.edges.length === 0 ? <p>论文没有说明步骤之间的关系。</p> : (
+          <ol>{diagram.edges.map((edge) => {
+            const source = diagram.nodes.find((node) => node.identifier === edge.source)!;
+            const target = diagram.nodes.find((node) => node.identifier === edge.target)!;
+            return (
+              <li key={`${edge.source}-${edge.target}`} data-method-edge={`${edge.source}-${edge.target}`}>
+                <span className="method-edge-index" aria-hidden="true">
+                  {nodeReferences.get(edge.source)} <b>→</b> {nodeReferences.get(edge.target)}
+                </span>
+                <span className="method-edge-summary">
+                  {source.label} → {target.label} — {edge.data_flow_rationale}
+                </span>
               </li>
-            ))}</ul>
-          )}
-        </div>
+            );
+          })}</ol>
+        )}
       </figcaption>
     </figure>
   );

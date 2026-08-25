@@ -158,18 +158,25 @@ a:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 4px; }
 .plate-links a { font-weight: 700; text-underline-offset: .25rem; }
 .plate-links span { color: #53617a; }
 
-.method-plate { margin: 4rem 0; padding: clamp(1rem, 3vw, 2.5rem); border: 1px solid var(--midnight); background: linear-gradient(180deg, rgba(49,87,213,.055), transparent); overflow-x: auto; }
-.method-plate svg { display: block; min-width: 660px; }
-.method-plate line { stroke: var(--midnight); stroke-width: 1.5; }
-.method-plate marker path { fill: var(--midnight); }
-.method-plate rect { fill: var(--paper); stroke: var(--cobalt); stroke-width: 2; }
-.method-plate text { fill: var(--midnight); font: 700 13px var(--body); }
-.method-plate .method-section { fill: #53617a; font: 10px var(--mono); }
-.method-plate figcaption { display: flex; gap: 1rem; justify-content: space-between; border-top: 1px solid var(--line); padding-top: .8rem; font-size: .78rem; }
-.method-plate figcaption strong { font-family: var(--mono); text-transform: uppercase; }
-.graph-fallback > div { min-width: min(100%, 520px); }
-.graph-fallback p { margin: 0 0 .35rem; font: 700 .65rem var(--mono); text-transform: uppercase; }
-.graph-fallback ul { margin: 0 0 1rem; padding-left: 1.2rem; }
+.method-plate { margin: 3rem 0; padding: clamp(1rem, 3vw, 2.25rem); border: 1px solid var(--midnight); background: linear-gradient(180deg, rgba(49,87,213,.06), transparent); }
+.method-plate__header { max-width: 650px; margin-bottom: 1.5rem; }
+.method-plate__header .data-label { margin-bottom: .45rem; color: var(--cobalt); }
+.method-plate__header strong { display: block; font-family: var(--display); font-size: clamp(1.65rem, 2.8vw, 2.5rem); line-height: 1; }
+.method-plate__header p { margin: .7rem 0 0; color: #53617a; font-size: .9rem; }
+.method-flow { margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); list-style: none; border-top: 1px solid var(--midnight); }
+.method-flow__node { min-width: 0; padding: 1.1rem 1rem 1.1rem 0; display: grid; grid-template-columns: 2.8rem minmax(0, 1fr); gap: .75rem; border-bottom: 1px solid var(--line); }
+.method-flow__node:nth-child(odd) { border-right: 1px solid var(--line); }
+.method-flow__node:nth-child(even) { padding-left: 1rem; }
+.method-node-index { align-self: start; padding-top: .15rem; color: var(--cobalt); font: 750 .72rem var(--mono); letter-spacing: .08em; }
+.method-node-label { display: block; overflow-wrap: anywhere; font-size: clamp(1rem, 1.3vw, 1.12rem); line-height: 1.4; }
+.method-connections { margin-top: 1.6rem; padding-top: 1rem; border-top: 1px solid var(--midnight); }
+.method-connections > strong { font-family: var(--mono); font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; }
+.method-connections > p { margin-bottom: 0; }
+.method-connections ol { margin: .8rem 0 0; padding: 0; list-style: none; }
+.method-connections li { padding: .75rem 0; display: grid; grid-template-columns: 5.2rem minmax(0, 1fr); gap: 1rem; border-top: 1px solid var(--line); }
+.method-edge-index { color: var(--cobalt); font: 750 .76rem var(--mono); white-space: nowrap; }
+.method-edge-index b { padding: 0 .3rem; color: var(--midnight); }
+.method-edge-summary { overflow-wrap: anywhere; font-size: .94rem; line-height: 1.62; }
 .deep-read-core { padding: 3rem 0; border-top: 1px solid var(--line); }
 .deep-read-core > h2 { font-family: var(--display); font-size: clamp(1.8rem, 3vw, 3.3rem); text-transform: uppercase; }
 .deep-read-core > article { padding: 1rem 0; display: grid; grid-template-columns: minmax(150px, .45fr) 1.55fr; gap: 1.5rem; border-top: 1px solid var(--line); }
@@ -273,7 +280,10 @@ footer .data-label { margin: 0; }
   .paper-controls { grid-template-columns: 1fr; }
   .paper-rows .plate-links, .award-plate blockquote { grid-column: 1; }
   .quick-read-grid article, .quick-read-grid article + article { padding: 1.2rem 0; border-right: 0; border-bottom: 1px solid var(--line); }
-  .method-plate figcaption { align-items: flex-start; flex-direction: column; }
+  .method-plate { margin: 2rem 0; }
+  .method-flow { grid-template-columns: 1fr; }
+  .method-flow__node, .method-flow__node:nth-child(even) { padding: 1rem 0; border-right: 0; }
+  .method-connections li { grid-template-columns: 1fr; gap: .35rem; }
   .conference-axis, .trend-controls { position: static; }
   .conference-entry { grid-template-columns: 1fr; gap: 1rem; }
   .conference-entry > a { justify-self: start; }
