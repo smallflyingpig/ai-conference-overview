@@ -18,7 +18,7 @@ const conferenceHref = conferenceNavigationHref(base, conferenceAvailable);
 <html lang="zh-CN" style={`--focus-ring: ${focusRing}`}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
@@ -30,7 +30,10 @@ const conferenceHref = conferenceNavigationHref(base, conferenceAvailable);
         <span aria-hidden="true">A/CO</span>
         <span>AI Conference Overview</span>
       </a>
-      <nav aria-label="主导航">
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" aria-label="打开主导航">
+        <span aria-hidden="true">菜单</span>
+      </button>
+      <nav class="site-nav" id="site-navigation" aria-label="主导航">
         {conferenceHref ? <a href={conferenceHref}>会议概览</a> : <span aria-disabled="true">会议概览</span>}
         <a href={projectPath(base, "trends")}>分布与趋势</a>
         <a href={projectPath(base, "advances")}>研究进展</a>
@@ -44,5 +47,25 @@ const conferenceHref = conferenceNavigationHref(base, conferenceAvailable);
       <span>所有分析都附有资料来源，并注明适用范围。</span>
       <span class="data-label">MIT · 静态研究网站</span>
     </footer>
+    <script>
+      const toggle = document.querySelector<HTMLButtonElement>(".nav-toggle");
+      const navigation = document.querySelector<HTMLElement>("#site-navigation");
+
+      function setNavigationOpen(open: boolean) {
+        toggle?.setAttribute("aria-expanded", String(open));
+        toggle?.setAttribute("aria-label", open ? "关闭主导航" : "打开主导航");
+        navigation?.classList.toggle("is-open", open);
+      }
+
+      toggle?.addEventListener("click", () => {
+        setNavigationOpen(toggle.getAttribute("aria-expanded") !== "true");
+      });
+      navigation?.addEventListener("click", (event) => {
+        if ((event.target as Element).closest("a")) setNavigationOpen(false);
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") setNavigationOpen(false);
+      });
+    </script>
   </body>
 </html>

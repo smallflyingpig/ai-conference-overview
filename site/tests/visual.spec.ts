@@ -153,14 +153,50 @@ test("internal links stay within the project base path and resolve", async ({ pa
   expect(consoleErrors).toEqual([]);
 });
 
-test("mobile navigation and content fit the viewport", async ({ page }, testInfo) => {
+test("mobile navigation starts compact and expands on demand", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile-chromium", "mobile-only layout acceptance");
   const consoleErrors = watchConsoleErrors(page);
   await page.goto(basePath);
 
-  await expect(page.getByRole("navigation", { name: "主导航" })).toBeVisible();
+  const menuButton = page.locator(".nav-toggle");
+  const navigation = page.getByRole("navigation", { name: "主导航" });
+  await expect(menuButton).toBeVisible();
+  await expect(menuButton).toHaveAccessibleName("打开主导航");
+  await expect(menuButton).toHaveAttribute("aria-expanded", "false");
+  await expect(navigation).toBeHidden();
+
+  await menuButton.click();
+  await expect(menuButton).toHaveAttribute("aria-expanded", "true");
+  await expect(menuButton).toHaveAccessibleName("关闭主导航");
+  await expect(navigation).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
   await page.screenshot({ path: testInfo.outputPath("home-mobile.png"), fullPage: true });
   expect(consoleErrors).toEqual([]);
+});
+
+test("mobile first screens prioritize content over oversized headings", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile-chromium", "mobile-only layout acceptance");
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  await page.goto(basePath);
+  const homeHeadingSize = await page.locator(".hero h1").evaluate((heading) =>
+    Number.parseFloat(getComputedStyle(heading).fontSize),
+  );
+  expect(homeHeadingSize).toBeLessThanOrEqual(44);
+
+  for (const route of ["papers/", "awards/", "advances/", "methodology/"]) {
+    await page.goto(`${basePath}${route}`);
+    const thesisHeight = await page.locator(".page-thesis").evaluate((thesis) =>
+      thesis.getBoundingClientRect().height,
+    );
+    expect(thesisHeight, `${route} should expose content in the first screen`).toBeLessThanOrEqual(330);
+    const dimensions = await page.evaluate(() => ({
+      innerWidth: window.innerWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    const overflow = dimensions.scrollWidth - dimensions.innerWidth;
+    expect(dimensions.innerWidth, `${route} should preserve the configured phone viewport`).toBe(390);
+    expect(overflow, `${route} should fit a phone viewport`).toBeLessThanOrEqual(1);
+  }
 });
