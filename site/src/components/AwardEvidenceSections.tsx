@@ -13,7 +13,7 @@ export default function AwardEvidenceSections({ deepRead }: Props) {
     ["数据 / 训练设置", deepRead.data_training_setup],
     ["与既有工作的差异", deepRead.prior_work_differences],
     ["可复现性评估", deepRead.reproducibility_assessment],
-    ["可迁移启示", deepRead.transferable_implications],
+    ["对后续研究的启发", deepRead.transferable_implications],
     ["为什么重要", deepRead.why_it_matters],
     ["局限", deepRead.limitations],
   ] as const;

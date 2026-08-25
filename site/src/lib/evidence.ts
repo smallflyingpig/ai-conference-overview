@@ -15,10 +15,10 @@ export const evidenceTypes = [
 export type EvidenceType = (typeof evidenceTypes)[number];
 
 const evidenceLabels: Record<EvidenceType, string> = {
-  official_metadata: "官方元数据",
-  paper_reported: "论文报告（paper-reported）",
-  cross_paper_synthesis: "跨论文综合",
-  inference: "推断",
+  official_metadata: "官方信息",
+  paper_reported: "论文原文结果",
+  cross_paper_synthesis: "多篇论文综合",
+  inference: "进一步判断",
 };
 
 export function evidenceLabel(type: EvidenceType): string {
@@ -72,18 +72,18 @@ export function awardTypeLabel(awardType: string): string {
 }
 
 export function awardStatusLabel(status: string): string {
-  return { verified: "官方已验证", not_verified: "尚未验证", not_announced: "尚未公布" }[status] ?? status;
+  return { verified: "官方信息已确认", not_verified: "尚待官方确认", not_announced: "尚未公布" }[status] ?? status;
 }
 
 const awardInsights: Record<string, string> = {
-  "acl:2026.acl-long.1301": "ImplicitMemBench 将 learning/priming、interference 与首次作答分开；17 个模型整体均未超过 66%，说明显式检索成功不能替代行为适应证据。",
+  "acl:2026.acl-long.1301": "ImplicitMemBench 将 learning/priming、interference 与首次作答分开；17 个模型整体均未超过 66%，说明显式检索成功并不代表模型真的发生了行为适应。",
   "acl:2026.acl-long.1654": "Audio MultiChallenge 保留真人语音中的回溯、停顿、环境与副语言线索；452 段录音、1,712 条 atomic rubric 下，最强系统 APR 为 54.65%。",
-  "acl:2026.acl-long.1948": "VeriTaS 通过季度更新、claim date 与 temporal retrieval filter 抑制持续预训练泄漏；知识截止日后的纵向退化表明时间必须进入 benchmark contract。",
+  "acl:2026.acl-long.1948": "VeriTaS 通过季度更新、claim date 与 temporal retrieval filter 减少持续预训练带来的泄漏；知识截止日后的纵向退化表明，benchmark 设计必须考虑时间因素。",
   "acl:2026.acl-long.937": "HSCodeComp 在 632 个商品的层级规则任务上，最佳 agent 的 10-digit exact match 为 46.83%；增加 expert-written Decision Rules 并未带来更好结果，提示更多推理材料也可能引入 drift。",
   "acl:2026.acl-long.1886": "CAR-bench 将 state、tool、execution、policy 与 termination 设为联合通过条件，并区分 Pass@k 与 Pass^k，揭示“偶尔成功”不等于稳定部署。",
   "acl:2026.acl-long.734": "MediEval 以 HSR/TIR 追踪医学判断的错误跃迁；即使 macro-F1 提升，TIR 仍可能较高，因此不能把单一准确率外推为临床零风险。",
   "acl:2026.acl-long.689": "Imperfective Paradox 发现，压低 completion bias 会同时伤害本应成立的 atelic entailment；可靠 mitigation 必须加入 telic/atelic、成立/不成立双向平衡的 counterfactual controls。",
-  "acl:2026.acl-long.1550": "该工作把 working-memory 约束施加到表示精度而不只 attention locality，迫使 encoding quality 与 retrieval locality 分开测量。",
+  "acl:2026.acl-long.1550": "该工作把 working memory 的容量限制作用到表示精度，而不只是 attention locality，因此需要分别测量 encoding quality 与 retrieval locality。",
   "acl:2026.acl-long.421": "CoSToM 先以冻结 probe 做 causal tracing，再用 activation-gradient bridge 调节浅层 LoRA；关键收益来自先定位机制、再施加最小干预。",
   "acl:2026.acl-long.1110": "GeoRA 根据 RLVR update geometry 选择 low-energy subspace，并以残差重参数化保持初始函数不变；价值在于让 PEFT subspace 与目标优化机制对齐。",
   "acl:2026.acl-long.1436": "STEER 分解 token entropy change 并下调异常变化；结果提示 policy update 应关注训练诱导出的分布变化，而不是只看最终 reward。",
@@ -97,11 +97,11 @@ const awardInsights: Record<string, string> = {
   "acl:2026.acl-long.772": "CircularCSE 同时报告 V-Measure 与 circular CD-r，揭示几何结构 fidelity 与分类分离之间的 trade-off，不能压成单一“更好”。",
   "acl:2026.acl-long.1340": "该工作固定 syncretism 等粗结构，只扰动形式系统性，再用小 learner 测 CETL，为结构性 counterfactual 实验提供范式。",
   "acl:2026.acl-long.1657": "PolyGloss 使用 interleaved morpheme(gloss) serialization 联合生成 segmentation 与 gloss，并用确定性 parser 保证 hard alignment。",
-  "acl:2026.acl-long.2203": "CIG 将 conversational information gain 分解为 novelty、relevance 与 implication scope，并用 semantic-memory update 形成可审计路径。",
-  "acl:2026.acl-long.235": "RACE 将 RST discourse tree 映射为 relational graph，并用低 FPR 指标评估多类文本；论文中 split 描述存在内部不一致，解读保留该证据边界。",
+  "acl:2026.acl-long.2203": "CIG 将 conversational information gain 分解为 novelty、relevance 与 implication scope，并用 semantic-memory update 留下可追踪的处理过程。",
+  "acl:2026.acl-long.235": "RACE 将 RST discourse tree 映射为 relational graph，并用低 FPR 指标评估多类文本；论文对数据划分的描述存在内部不一致，解读中明确保留这一限制。",
   "acl:2026.acl-long.144": "DIA-HARM 显示 dialect 配比会让 over-flag authentic speech 与 under-protect communities 之间发生反转，aggregate F1 与 calibration 都不足以描述风险。",
   "acl:2026.acl-long.1869": "Afri-MCQA 通过 LID、ASR 与文本控制证明，native speech 的文化 VQA 失败常从语言识别和转写开始，再传导到 reasoning。",
-  "acl:2026.acl-long.875": "Educational alignment 发现 satisfaction 与四项 pedagogical metric 无显著相关；engagement 不能替代 learning evidence。",
+  "acl:2026.acl-long.875": "Educational alignment 发现 satisfaction 与四项 pedagogical metric 无显著相关；engagement 不能代表实际学习效果。",
   "acl:2026.acl-long.2003": "ViLL-E 用共享生成 backbone 与 EOS-triggered pooling head 同时支持生成和检索，但许可型数据与外部重标使完整复现成本较高。",
   "acl:2026.acl-long.24": "MauBERT 先注入 articulatory/phone structured bias，再用少量目标语适配；ABX 结果不能直接代表 syntax 或 semantics 能力。",
   "acl:2026.acl-long.419": "Lychee-FD 以 layer-wise gradient conflict 与 semantic dilution 诊断驱动分层设计；其大量合成对话限制了 open-mic 外部效度。",
@@ -109,7 +109,7 @@ const awardInsights: Record<string, string> = {
 };
 
 export function awardChineseInsight(paperId: string): string {
-  return awardInsights[paperId] ?? "该论文的中文核心解读仍在证据复核中；下方保留已验证的英文 DeepRead。";
+  return awardInsights[paperId] ?? "该论文的中文核心解读仍在整理中；下方保留已经检查过的英文原文摘录。";
 }
 
 export function awardDetailRoutes(
@@ -142,7 +142,7 @@ export interface AwardIndexItem {
 
 export function buildAwardIndex(
   release: LoadedOverview | null,
-): { stateLabel: "不可用" | "尚未公布" | "尚未验证" | "已验证"; items: AwardIndexItem[] } {
+): { stateLabel: "不可用" | "尚未公布" | "尚待官方确认" | "官方信息已确认"; items: AwardIndexItem[] } {
   if (release == null) {
     return { stateLabel: "不可用", items: [] };
   }
@@ -154,8 +154,8 @@ export function buildAwardIndex(
     hasDetail: detailIds.has(awardRouteKey(award)),
   }));
   const stateLabels = {
-      verified: "已验证",
-      not_verified: "尚未验证",
+      verified: "官方信息已确认",
+      not_verified: "尚待官方确认",
       not_announced: "尚未公布",
     } as const;
   return {
@@ -227,7 +227,7 @@ const advanceNarratives: Record<string, {
     implication: "评估文本模型时，应联合观察 pretraining context、适配阶段、serving cost 与 causal diagnostics，而不是把质量压缩成一个标量。",
   },
   "audited-evidence-multimodal_models": {
-    title: "多模态模型：组合、状态、检索与安全的联合约束",
+    title: "多模态模型：同时兼顾组合、状态、检索与安全",
     researchQuestions: ["多模态系统如何跨模态保持组合性、流式状态、检索结构、评估有效性与安全性？"],
     coreProblem: "多模态系统需要同时对齐组合概念、流式交互、结构化记忆、评估可靠性与 joint-modal safety。",
     technicalChange: "MACCO 建模 masked compositional concepts；AV-Dialog 融合流式音视频对话；Response-G1 用 scene graph 生成主动响应；MegaRAG 构建跨模态 knowledge-graph retrieval；MM-JudgeBias 与 CrossGuard 分别揭示 judge bias 和隐式联合模态攻击。",
@@ -239,23 +239,23 @@ const advanceNarratives: Record<string, {
     researchQuestions: ["Agent 应如何拆分规划、工具使用、memory routing、浏览器状态、策略选择与 termination？"],
     coreProblem: "Agent 系统必须协调 planner-controller 分解、外部工具、持久状态、分支策略与停止决策。",
     technicalChange: "OctoTools 统一 tool card 与 planner-executor 角色；MoEC 通过 expert memory 路由子目标；SPIO 探索并选择多条 data-science plan；NestBrowse 将浏览器动作与高层信息检索控制解耦。",
-    evidenceBoundary: "Reasoning and Agents 未通过最终主题 precision 门禁，因此这些论文仅作为实验性观察，不能支撑 headline prevalence 或 trend 结论。",
+    evidenceBoundary: "Reasoning and Agents 的主题分类在最终人工抽查中未达到精度要求，因此这些论文只作为暂定观察，不能据此判断该主题的整体占比或长期趋势。",
     implication: "Agent 评估应拆开 plan quality、tool-state transition、policy routing、recovery 与 stopping behavior，而不只报告最终任务成功率。",
   },
   "audited-evidence-data_training": {
     title: "数据与训练：从静态配比转向迭代反馈闭环",
     researchQuestions: ["Data conditioning、PEFT geometry、RLVR rollout 分布、critique loop、entropy weighting 与迭代重估之间如何相互作用？"],
-    coreProblem: "训练质量取决于语料如何被 conditioning、参数子空间如何选择、rollout 如何被诱导，以及证据如何在迭代中重新估计。",
+    coreProblem: "训练质量取决于语料如何被 conditioning、参数子空间如何选择、rollout 如何被诱导，以及模型反馈如何在迭代中重新评估。",
     technicalChange: "KoCo 与 Tower+ 改造预训练和适配阶段；GeoRA 让 PEFT 对齐 RLVR geometry；CURE 使用 critique-driven self-improvement；STEER 根据估计的 entropy change 加权 policy update；GISP 反复重估全局 pruning importance。",
     evidenceBoundary: "接收论文集合提供的是观察性元数据与 paper-reported 实验，不能单独证明任意通用 data-quality policy 的因果收益。",
     implication: "数据策略实验应记录策略诱导出的 rollout 分布和迭代式 model-data feedback，而不只记录静态来源计数或最终 benchmark delta。",
   },
   "audited-evidence-evaluation_trust": {
-    title: "评测与可信：把动态分布和评估器纳入 contract",
+    title: "评测与可信：把动态分布和评估器纳入整体设计",
     researchQuestions: ["面对 contamination、动态分布、judge bias、多模态攻击、记忆效应与重复试验，评测如何保持有效？"],
     coreProblem: "静态 accuracy 会掩盖 contamination、评估器偏差、多模态 jailbreak、隐式记忆效应，以及真实重复试验中的不一致行为。",
-    technicalChange: "Rt-LRM、MM-JudgeBias、CrossGuard、MCV SafetyBench 与 DyReMe 分别压力测试推理、judge、攻击和动态诊断；ImplicitMemBench、VeriTaS 与 CAR-bench 进一步加入被动记忆、持续更新的事实核验和有状态重复可靠性证据。",
-    evidenceBoundary: "各 benchmark 的构造选择和模型覆盖不同；数值结果只存在于链接论文或已验证 award DeepRead locator 中，这里不重新合并。",
+    technicalChange: "Rt-LRM、MM-JudgeBias、CrossGuard、MCV SafetyBench 与 DyReMe 分别压力测试推理、judge、攻击和动态诊断；ImplicitMemBench、VeriTaS 与 CAR-bench 进一步加入被动记忆、持续更新的事实检查和有状态重复可靠性测试。",
+    evidenceBoundary: "各 benchmark 的构造方式和模型覆盖范围不同；具体数值见所链接论文或获奖论文解读中的对应章节和表格，这里不重新合并。",
     implication: "评测体系应持续刷新 case、平衡 counterfactual control、重复执行有状态试验，并在模型 accuracy 与 safety 之外同步度量 evaluator reliability。",
   },
 };
@@ -350,6 +350,20 @@ export interface MethodologyView {
   knownLimitations: string[];
 }
 
+function displayReviewMethod(method: string): string {
+  if (method === "exhaustive title-and-abstract full-theme semantic review") {
+    return "逐篇阅读标题和摘要，完成全主题语义复查";
+  }
+  return method;
+}
+
+function displaySampleMethod(method: string): string {
+  if (method.startsWith("deterministic confidence-stratified precision audit")) {
+    return "按置信度分层、确定性抽取样本；每个 primary topic 最多 50 篇。该检查用于估计分类准确率，不估计召回率，也不把 Wilson 区间解释为总体随机抽样区间。";
+  }
+  return method;
+}
+
 export function buildMethodologyView(release: LoadedOverview): MethodologyView {
   const comparison = release.overview.comparison_contract;
   const metric = comparison.metric_contract;
@@ -364,7 +378,7 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
       return rawStages.map((stage, index) => ({
         stageIndex: index + 1,
         sourceThemes: stage.sources.map((source) => source.source_theme),
-        method: stage.method,
+        method: displayReviewMethod(stage.method),
         baseAssignmentsSha256: stage.base_assignments_sha256,
         resultAssignmentsSha256: stage.result_assignments_sha256,
         reviewedCount: stage.reviewed_count,
@@ -405,11 +419,14 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
       venue: comparison.comparison_scope.venue,
       year: release.scope.year,
       track: comparison.comparison_scope.track,
-      inclusionStatuses: comparison.comparison_scope.inclusion_statuses,
-      denominator: `${comparison.comparison_scope.denominator.artifact_field}: ${comparison.comparison_scope.denominator.description}`,
-      denominatorUnit: comparison.comparison_scope.denominator.unit,
+      inclusionStatuses: comparison.comparison_scope.inclusion_statuses.map((status) => ({
+        complete: "信息完整",
+        partial: "部分信息缺失",
+      }[status] ?? status)),
+      denominator: `${comparison.comparison_scope.denominator.artifact_field}：明确排除不在范围内的记录后，实际纳入统计的论文数`,
+      denominatorUnit: comparison.comparison_scope.denominator.unit === "paper" ? "篇论文" : comparison.comparison_scope.denominator.unit,
       denominatorValue: release.validation.included_count,
-      exclusions: comparison.comparison_scope.excluded_records,
+      exclusions: "排除项单独保留，不计入统计分母",
     },
     contractIds: {
       comparison: comparison.contract_id,
@@ -419,9 +436,9 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
     configuredVenues: metric.cross_venue_spread.configured_venues,
     emergingScoreWeights: metric.emerging_score.weights,
     formulas: [
-      { name: "Topic share", ...metric.topic_share },
-      { name: "Cross-venue spread", ...metric.cross_venue_spread },
-      { name: "Emerging Score", formula: metric.emerging_score.formula, numerator: "加权 share growth、spread growth 与 novelty 分量", version: metric.emerging_score.version },
+      { name: "Primary topic 占比", formula: metric.topic_share.formula, numerator: "每篇纳入论文只计一个 primary topic", denominator: "纳入统计的论文数", version: metric.topic_share.version },
+      { name: "跨会议覆盖率", formula: metric.cross_venue_spread.formula, numerator: "出现该主题的会议数", denominator: "配置中的会议总数", version: metric.cross_venue_spread.version },
+      { name: "新兴主题得分", formula: metric.emerging_score.formula, numerator: "按权重合并主题占比变化、跨会议覆盖变化和新颖度", version: metric.emerging_score.version },
     ],
     missingness: {
       abstracts: release.validation.missing_abstract_count,
@@ -451,7 +468,7 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
       fullThemeStages,
       auditSampleSha256: lineage.audit.sample_registry_sha256,
       auditDecisionSha256: lineage.audit.decision_registry_sha256,
-      auditSampleMethod: lineage.audit.sample_method,
+      auditSampleMethod: displaySampleMethod(lineage.audit.sample_method),
       certificationSources: lineage.audit.certification_sources,
       lowQueueSha256: lineage.low_confidence_review.queue_sha256,
       lowDecisionSha256: lineage.low_confidence_review.decision_registry_sha256,
@@ -460,21 +477,21 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
     withheldThemes: {
       themes: release.overview.theme_disclosures.map((item) => `${item.theme} (${item.status})`),
       note: release.overview.theme_disclosures.length === 0
-        ? "当前 validated release 未发布暂缓或实验性主题 registry。"
-        : `已发布 ${release.overview.theme_disclosures.length} 个带证据的暂缓或实验性主题 disclosure。`,
+        ? "当前数据版本没有需要暂时排除的主题。"
+        : `当前有 ${release.overview.theme_disclosures.length} 个主题暂不纳入主要分析。`,
       items: release.overview.theme_disclosures.map((item) => ({
         theme: item.theme,
         status: item.status,
-        claim: "该 assisted primary theme 未同时满足分层 audit 与穷尽式低置信度复核门禁，因此不进入 headline 结论。",
+        claim: "该主题分类尚未同时达到分层人工抽查和低置信度逐条复查的要求，因此不纳入主要分析。",
         evidenceType: item.reason.evidence_type,
         sourceUrls: item.reason.source_urls,
         locator: item.reason.locator ?? null,
       })),
     },
     knownLimitations: [
-      "单年 snapshot 只能支撑分布与热点表述，不能支撑 trend 结论。",
-      "缺失的可选元数据只按 coverage 报告，不被当作负面结果。",
-      "Advance lane 只有在结论包含 paper-level 支撑与类别 assignment 后，才不再标记为 evidence-limited。",
+      "目前只有一年的数据，只能介绍主题分布和热点，不能判断长期趋势。",
+      "缺失的可选元数据只统计覆盖率，不会被当作负面结果。",
+      "每条研究主线只有在列出相关论文并完成主题分类后，才会进入正式的综合分析。",
     ],
   };
 }

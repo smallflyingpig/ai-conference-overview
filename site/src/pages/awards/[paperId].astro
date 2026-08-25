@@ -15,13 +15,13 @@ interface Props { detail: AwardDetailView }
 const { detail } = Astro.props;
 ---
 
-<BaseLayout title={`${detail.paper.title} — 获奖论文解读`} description={`${detail.paper.title} 的证据化中文解读。`} conferenceAvailable={true}>
+<BaseLayout title={`${detail.paper.title} — 获奖论文解读`} description={`${detail.paper.title} 的中文解读。`} conferenceAvailable={true}>
   <article class="evidence-shell award-reading">
     <header class="page-thesis award-thesis">
-      <p class="eyebrow">{awardTypeLabel(detail.award.award_type)} · 官方已验证</p>
+      <p class="eyebrow">{awardTypeLabel(detail.award.award_type)} · 官方信息已确认</p>
       <h1>{detail.paper.title}</h1>
       <p>{detail.paper.authors.join(", ")}</p>
-      <div class="plate-links"><a href={detail.award.evidence_url!}>官方获奖证据</a><a href={detail.paper.landing_url}>论文官方页面</a>{detail.paper.pdf_url && <a href={detail.paper.pdf_url}>PDF</a>}</div>
+      <div class="plate-links"><a href={detail.award.evidence_url!}>官方获奖页面</a><a href={detail.paper.landing_url}>论文官方页面</a>{detail.paper.pdf_url && <a href={detail.paper.pdf_url}>PDF</a>}</div>
     </header>
 
     <section class="why-ledger" aria-labelledby="chinese-reading-title">
@@ -29,13 +29,13 @@ const { detail } = Astro.props;
       <article>
         <span class="evidence-badge evidence-badge--synthesis">中文综合</span>
         <p>{awardChineseInsight(detail.paper.paper_id)}</p>
-        <small>基于官方 PDF DeepRead 的中文综合；具体数值与 locator 见下方原始英文证据。</small>
+        <small>根据官方 PDF 整理；具体数字和原文位置见下方英文摘录。</small>
       </article>
     </section>
 
     <details class="original-deep-read">
-      <summary>查看原始英文 DeepRead</summary>
-      <p>为避免翻译改变论文原意，结构化 claim、metric、setting 与 locator 保留英文原文。</p>
+      <summary>查看英文原文摘录</summary>
+      <p>为避免翻译改变论文原意，研究发现、指标、实验设置和原文位置保留英文。</p>
       {detail.deepRead.method_diagram && <AwardMethodDiagram diagram={detail.deepRead.method_diagram} />}
       <AwardEvidenceSections deepRead={detail.deepRead} />
       <section class="result-ledger" aria-labelledby="results-title">

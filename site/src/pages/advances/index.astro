@@ -8,19 +8,19 @@ const release = await loadOverview("ACL", 2026);
 const lanes = release == null ? advanceCategories.map((category) => ({ ...category, advances: [] })) : buildAdvances(release);
 ---
 
-<BaseLayout title="研究进展 — AI Conference Overview" description="按证据类型标注的大模型研究进展。" conferenceAvailable={release != null}>
+<BaseLayout title="研究进展 — AI Conference Overview" description="区分论文原文、多篇论文综合和进一步判断的大模型研究进展。" conferenceAvailable={release != null}>
   <div class="evidence-shell advances-shell">
     <header class="page-thesis">
       <p class="eyebrow">综合分析主线</p>
-      <h1>只推进证据<br />能够支撑的结论。</h1>
-      <p>每条主线都链接具体官方论文，并区分 paper-reported、跨论文综合与推断。通过 audit 的主题只发布有边界的综合结论；未通过门禁的主题继续标记为实验性。</p>
+      <h1>只分析目前材料<br />能够支持的研究发现。</h1>
+      <p>每条主线都链接到官方论文，并区分论文原文结果、多篇论文综合和进一步判断。人工抽查达到要求的主题可以进入综合分析；其余主题只作为暂定观察。</p>
     </header>
     <div class="advance-ledger" aria-label="研究进展类别">
       {lanes.map((category) => (
         <section id={category.id} class="advance-lane">
-          <p class="data-label">{category.advances.length === 0 ? "证据有限" : category.advances.some((advance) => advance.audited) ? "主题门槛已通过 · 代表论文另行语义复核" : "实验性观察 · 不形成 headline trend"}</p>
+          <p class="data-label">{category.advances.length === 0 ? "可用材料有限" : category.advances.some((advance) => advance.audited) ? "主题分类抽查达标 · 示例论文另行复查" : "暂定观察 · 不判断长期趋势"}</p>
           <h2>{category.label}</h2>
-          {category.advances.length === 0 ? <p>{release == null ? "当前没有 validated release。" : "该主线尚未发布 paper-level 综合分析。"}</p> : <div class="advance-entries">{category.advances.map((advance) => <article><h3>{advance.title}</h3><h4>核心研究问题</h4><ul>{advance.researchQuestions.map((question) => <li>{question}</li>)}</ul>{advance.coreProblem != null && <div><EvidenceBadge type={advance.coreProblem.evidence_type} /><strong>核心问题</strong><p>{advance.coreProblem.claim}</p><small>{advance.coreProblem.locator}</small></div>}{advance.technicalChange != null && <div><EvidenceBadge type={advance.technicalChange.evidence_type} /><strong>技术变化</strong><p>{advance.technicalChange.claim}</p><small>{advance.technicalChange.locator}</small></div>}<p class="data-label">支撑论文</p><ul>{advance.supportingPapers.map((paper) => <li><a href={paper.officialUrl}>{paper.title}</a></li>)}</ul>{advance.evidenceBoundary != null && <div><EvidenceBadge type={advance.evidenceBoundary.evidence_type} /><strong>证据边界</strong><p>{advance.evidenceBoundary.claim}</p><small>{advance.evidenceBoundary.locator}</small></div>}{advance.implications.map((claim) => <div><EvidenceBadge type={claim.evidence_type} /><strong>迁移启示</strong><p>{claim.claim}</p><small>{claim.locator}</small></div>)}</article>)}</div>}
+          {category.advances.length === 0 ? <p>{release == null ? "当前没有可用的数据版本。" : "该主线尚未完成逐篇综合分析。"}</p> : <div class="advance-entries">{category.advances.map((advance) => <article><h3>{advance.title}</h3><h4>核心研究问题</h4><ul>{advance.researchQuestions.map((question) => <li>{question}</li>)}</ul>{advance.coreProblem != null && <div><EvidenceBadge type={advance.coreProblem.evidence_type} /><strong>核心问题</strong><p>{advance.coreProblem.claim}</p><small>{advance.coreProblem.locator}</small></div>}{advance.technicalChange != null && <div><EvidenceBadge type={advance.technicalChange.evidence_type} /><strong>技术变化</strong><p>{advance.technicalChange.claim}</p><small>{advance.technicalChange.locator}</small></div>}<p class="data-label">相关论文</p><ul>{advance.supportingPapers.map((paper) => <li><a href={paper.officialUrl}>{paper.title}</a></li>)}</ul>{advance.evidenceBoundary != null && <div><EvidenceBadge type={advance.evidenceBoundary.evidence_type} /><strong>适用范围</strong><p>{advance.evidenceBoundary.claim}</p><small>{advance.evidenceBoundary.locator}</small></div>}{advance.implications.map((claim) => <div><EvidenceBadge type={claim.evidence_type} /><strong>对后续研究的启发</strong><p>{claim.claim}</p><small>{claim.locator}</small></div>)}</article>)}</div>}
         </section>
       ))}
     </div>

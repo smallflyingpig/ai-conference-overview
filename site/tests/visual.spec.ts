@@ -11,25 +11,25 @@ function watchConsoleErrors(page: Page) {
   return errors;
 }
 
-test("ACL 2026 中文页面保留 provenance 与表格 fallback", async ({ page }, testInfo) => {
+test("ACL 2026 中文页面保留数据来源与表格 fallback", async ({ page }, testInfo) => {
   const consoleErrors = watchConsoleErrors(page);
   await page.goto("/ai-conference-overview/conferences/acl/2026/");
 
   await expect(page.getByRole("heading", { name: "ACL 2026 长论文" })).toBeVisible();
   await expect(page.getByRole("link", { name: "ACL Anthology BibTeX" })).toBeVisible();
   await expect(page.getByRole("table")).toContainText("Primary topic 分布");
-  await expect(page.getByText("2026 单年 snapshot", { exact: true })).toBeVisible();
+  await expect(page.getByText("2026 单年概览", { exact: true })).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath("acl-overview.png"), fullPage: true });
   expect(consoleErrors).toEqual([]);
 });
 
-test("方法论页面用中文呈现可审计 classification lineage", async ({ page }, testInfo) => {
+test("方法说明页面用中文呈现分类处理记录", async ({ page }, testInfo) => {
   const consoleErrors = watchConsoleErrors(page);
   await page.goto("/ai-conference-overview/methodology/");
 
-  await expect(page.getByRole("heading", { name: "分类 lineage" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "全主题复核链" })).toBeVisible();
-  await expect(page.getByText("Assignments SHA-256", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "分类处理记录" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "全主题复查过程" })).toBeVisible();
+  await expect(page.getByText("分类结果 SHA-256", { exact: true })).toBeVisible();
   await expect(page.locator(".lineage-stages > li")).toHaveCount(2);
   await page.screenshot({ path: testInfo.outputPath("methodology.png"), fullPage: true });
   expect(consoleErrors).toEqual([]);
@@ -54,18 +54,44 @@ test("研究进展页面用中文叙述并保留五条英文关键词 lane", asy
   expect(consoleErrors).toEqual([]);
 });
 
-test("获奖论文索引进入中文解读并保留原始英文证据", async ({ page }) => {
+test("获奖论文索引进入中文解读并保留英文原文摘录", async ({ page }) => {
   const consoleErrors = watchConsoleErrors(page);
   await page.goto("/ai-conference-overview/awards/");
 
   await expect(page.locator(".award-plate")).toHaveCount(30);
-  const detailLink = page.getByRole("link", { name: "阅读详细解读" }).first();
+  const detailLink = page.getByRole("link", { name: "查看详细解读" }).first();
   await expect(detailLink).toHaveAttribute("href", new RegExp(`^${basePath}awards/award-[0-9a-f]{64}/$`));
   await detailLink.click();
   await expect(page.getByRole("heading", { name: "核心解读" })).toBeVisible();
-  await expect(page.getByText("查看原始英文 DeepRead")).toBeVisible();
-  await expect(page.getByRole("link", { name: "官方获奖证据" })).toBeVisible();
+  await expect(page.getByText("查看英文原文摘录")).toBeVisible();
+  await expect(page.getByRole("link", { name: "官方获奖页面" })).toBeVisible();
   expect(consoleErrors).toEqual([]);
+});
+
+test("公开页面使用自然中文而不是内部工程术语", async ({ page }) => {
+  const routes = [
+    basePath,
+    `${basePath}conferences/acl/2026/`,
+    `${basePath}trends/`,
+    `${basePath}advances/`,
+    `${basePath}awards/`,
+    `${basePath}papers/`,
+    `${basePath}methodology/`,
+  ];
+  const awkwardTerms = ["门禁", "约束", "核验", "结论", "证据", "审计", "契约", "工件", "赋值"];
+
+  for (const route of routes) {
+    await page.goto(route);
+    const visibleText = await page.locator("body").innerText();
+    for (const term of awkwardTerms) {
+      expect(visibleText, `${route} should not expose ${term}`).not.toContain(term);
+    }
+  }
+
+  await page.goto(`${basePath}awards/`);
+  await expect(page.getByRole("heading", { name: /先确认获奖信息，?\s*再分析论文价值。?/ })).toBeVisible();
+  await page.goto(`${basePath}methodology/`);
+  await expect(page.getByRole("heading", { name: /每个数字，?\s*都能找到来源和计算方法。?/ })).toBeVisible();
 });
 
 test("internal links stay within the project base path and resolve", async ({ page }) => {

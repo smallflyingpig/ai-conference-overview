@@ -4,7 +4,6 @@ from pathlib import Path
 
 import yaml
 
-
 SKILL_ROOT = Path(".agents/skills/polishing-chinese-writing")
 
 

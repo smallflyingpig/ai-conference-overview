@@ -20,7 +20,7 @@ const { view } = Astro.props;
 
 <BaseLayout
   title={`${view.venue} ${view.year} 论文分布 — AI Conference Overview`}
-  description={`${view.scopeLabel} 的已验证语料与经过 audit 标注的主题分布。`}
+  description={`${view.scopeLabel} 的论文清单和经过人工抽查的主题分布。`}
   conferenceAvailable={true}
 >
   <div class="conference-shell">
@@ -47,11 +47,11 @@ const { view } = Astro.props;
 
     <article class="distribution-plane">
       <header class="distribution-header">
-        <p class="eyebrow">分布证据</p>
-        <h2>{view.auditPassedThemeCount > 0 ? "经过 audit 约束的语义分布。" : "初步语义分布。"}</h2>
+        <p class="eyebrow">主题分布</p>
+        <h2>{view.auditPassedThemeCount > 0 ? "经过人工抽查的主题分布。" : "初步主题分布。"}</h2>
         <p>
           Primary topic 占比以<strong>{view.denominatorLabel}</strong>为分母。
-          当前只有单年 snapshot，因此不展示 year-over-year 或 trend 结论。
+          当前只有一年的数据，因此不展示同比变化，也不判断长期趋势。
         </p>
       </header>
 
@@ -59,14 +59,13 @@ const { view } = Astro.props;
         <div class="section-line">
           <h3 id="topic-title">Primary topic 占比</h3>
           <span>
-            {view.auditPassedThemeCount} 个 audit 已通过 · {view.experimentalThemeCount} 个实验性主题
-            {view.withheldThemeCount > 0 ? ` · ${view.withheldThemeCount} 个暂缓发布` : ""}
+            {view.auditPassedThemeCount} 个主题达到抽查标准 · {view.experimentalThemeCount} 个暂定主题
+            {view.withheldThemeCount > 0 ? ` · ${view.withheldThemeCount} 个暂不纳入主要分析` : ""}
           </span>
         </div>
         {view.auditPassedThemeCount === 0 && (
           <p>
-            所有 topic assignment 在独立 classification audit 完成前均为初步结果；
-            该分布不能作为可安全发布的最终证据。
+            所有主题分类仍在等待独立人工抽查，目前只展示初步分布。
           </p>
         )}
         <TopicShareChart rows={view.topics} denominator={view.includedCount} />
@@ -74,8 +73,8 @@ const { view } = Astro.props;
 
       <section class="representative-index" aria-labelledby="representative-title">
         <div class="section-line">
-          <h3 id="representative-title">证据样例</h3>
-          <span>经 audit 标注的语义 assignment</span>
+          <h3 id="representative-title">示例论文</h3>
+          <span>每个主题中分类置信度最高的论文</span>
         </div>
         <ol>
           {view.topics.map((row) => (
@@ -89,7 +88,7 @@ const { view } = Astro.props;
       </section>
 
       <footer class="artifact-trace">
-        <span>Taxonomy {view.taxonomyVersion}</span>
+        <span>主题分类版本 {view.taxonomyVersion}</span>
         <code>{view.generation}</code>
       </footer>
     </article>

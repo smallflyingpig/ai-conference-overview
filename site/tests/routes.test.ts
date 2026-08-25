@@ -92,7 +92,7 @@ describe("distribution view", () => {
   it("uses a Chinese snapshot label for a single year", () => {
     const view = buildConferenceView(validatedRelease);
     expect(view.analysisLabel).toBe("Distribution");
-    expect(view.periodLabel).toBe("2026 单年 snapshot");
+    expect(view.periodLabel).toBe("2026 单年概览");
     expect(view.trendEligible).toBe(false);
   });
 
@@ -157,9 +157,9 @@ describe("trend comparability gate", () => {
   it("suppresses trend claims until three comparable years exist", () => {
     const view = buildTrendView([validatedRelease]);
     expect(view.mode).toBe("snapshot");
-    expect(view.heading).toBe("分布 / Snapshot / 热点");
+    expect(view.heading).toBe("分布与热点");
     expect(view.trendWidgetsVisible).toBe(false);
-    expect(view.missingRequirement).toMatch(/三个连续且可比较的已验证年份/);
+    expect(view.missingRequirement).toMatch(/三个连续且可以直接比较的年份/);
   });
 
   it("accepts three consecutive releases with the same comparison contract", () => {
@@ -222,7 +222,7 @@ describe("trend comparability gate", () => {
     const view = buildTrendView([]);
     expect(view.mode).toBe("empty");
     expect(view.availableVenues).toEqual([]);
-    expect(view.missingRequirement).toMatch(/validated release/i);
+    expect(view.missingRequirement).toMatch(/完成全部检查并正式发布的数据版本/);
   });
 });
 
@@ -285,13 +285,13 @@ describe("typed trend filters", () => {
 });
 
 describe("distribution presentation", () => {
-  it("labels papers as audit-bounded evidence examples", async () => {
+  it("labels papers as clear topic examples", async () => {
     const page = await readFile(
       fileURLToPath(new URL("../src/pages/conferences/[venue]/[year].astro", import.meta.url)),
       "utf8",
     );
-    expect(page).toContain("证据样例");
-    expect(page).toContain("经 audit 标注的语义 assignment");
+    expect(page).toContain("示例论文");
+    expect(page).toContain("每个主题中分类置信度最高的论文");
     expect(page).not.toContain("代表论文");
   });
 

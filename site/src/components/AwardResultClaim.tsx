@@ -17,8 +17,8 @@ export default function AwardResultClaim({ claim }: Props) {
       </div>
       <div>
         <dl>
-          <div><dt>评测 setting</dt><dd>{claim.evaluation_setting}</dd></div>
-          <div><dt>证据 locator</dt><dd>{claim.locator}</dd></div>
+          <div><dt>评测设置</dt><dd>{claim.evaluation_setting}</dd></div>
+          <div><dt>原文位置</dt><dd>{claim.locator}</dd></div>
         </dl>
         <div className="claim-sources">
           {claim.source_urls.map((url, index) => (

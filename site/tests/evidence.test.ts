@@ -128,10 +128,10 @@ describe("evidence labels", () => {
       evidenceLabel("cross_paper_synthesis"),
       evidenceLabel("inference"),
     ]).toEqual([
-      "官方元数据",
-      "论文报告（paper-reported）",
-      "跨论文综合",
-      "推断",
+      "官方信息",
+      "论文原文结果",
+      "多篇论文综合",
+      "进一步判断",
     ]);
   });
 
@@ -256,7 +256,7 @@ describe("award publication gate", () => {
     unverified.overview.awards[0].status = "not_verified";
     unverified.overview.award_deep_reads = [];
     unverified.overview.award_state.status = "not_verified";
-    expect(buildAwardIndex(unverified).stateLabel).toBe("尚未验证");
+    expect(buildAwardIndex(unverified).stateLabel).toBe("尚待官方确认");
     expect(buildAwardIndex(null).stateLabel).toBe("不可用");
   });
 
@@ -348,7 +348,7 @@ describe("complete award evidence rendering", () => {
     for (const heading of [
       "研究问题", "主要贡献", "方法", "数据 / 训练设置",
       "与既有工作的差异", "可复现性评估",
-      "可迁移启示", "为什么重要", "局限",
+      "对后续研究的启发", "为什么重要", "局限",
     ]) expect(html).toContain(heading);
     expect((html.match(/https:\/\/aclanthology\.org\/paper-a\.pdf/g) ?? []).length)
       .toBeGreaterThanOrEqual(9);
@@ -376,19 +376,19 @@ describe("complete award evidence rendering", () => {
     );
     for (const heading of [
       "数据 / 训练设置", "与既有工作的差异",
-      "可复现性评估", "可迁移启示",
+      "可复现性评估", "对后续研究的启发",
     ]) expect(awardHtml).toContain(heading);
     expect(awardHtml).toContain("https://aclanthology.org/");
     for (const expected of [
       "阶段 1",
       "阶段 2",
-      "复核 655 篇 · 保留 217 篇 · 修正 438 篇",
-      "复核 143 篇 · 保留 112 篇 · 修正 31 篇",
+      "复查 655 篇 · 保留 217 篇 · 修正 438 篇",
+      "复查 143 篇 · 保留 112 篇 · 修正 31 篇",
       "c51895a7148b15c8a9756d6651ae013b85b2a17b64f8496d2fe1d17455333b6b",
       "0de77ca92db5c7f02286fe2084a8ca13504bc29ab5a5c15bea6528ff0094dcb6",
       "750e7de5f75221f7e451eb2ac765976c13cd1c3f8101b46f8b7f9c9a5ac50f6b",
       "a20fdfab1b691f0215a55d573d9eba22eb3f7cdbdc6f2165df81145bd38138e7",
-      "Assignment blob binding",
+      "分类版本",
     ]) expect(methodologyHtml).toContain(expected);
   }, 30_000);
 });
@@ -411,7 +411,8 @@ describe("paper research index", () => {
 
 describe("methodology audit ledger", () => {
   it("exposes every full-theme stage with counts, movement, and assignment chain", () => {
-    const stages = buildMethodologyView(currentRelease).classificationLineage?.fullThemeStages;
+    const methodology = buildMethodologyView(currentRelease);
+    const stages = methodology.classificationLineage?.fullThemeStages;
 
     expect(stages).toHaveLength(2);
     expect(stages?.[0]).toMatchObject({
@@ -441,6 +442,9 @@ describe("methodology audit ledger", () => {
       assignmentBlobSha256: "0de77ca92db5c7f02286fe2084a8ca13504bc29ab5a5c15bea6528ff0094dcb6",
       sourceCommit: "943b0fac246e9133f7f805bf24e1c87fb9f1b7d1",
     });
+    expect(stages?.every((stage) => stage.method === "逐篇阅读标题和摘要，完成全主题语义复查")).toBe(true);
+    expect(methodology.classificationLineage?.auditSampleMethod).toContain("按置信度分层");
+    expect(methodology.classificationLineage?.auditSampleMethod).not.toContain("precision audit");
   });
 
   it("exposes source, scope, formulas, missingness, audits, and evidence limits", () => {
@@ -455,11 +459,11 @@ describe("methodology audit ledger", () => {
       producer: "conference_overview.reports.write_release",
       schemaVersion: "release-build-v1",
     });
-    expect(view.scope.denominator).toContain("validation.included_count");
+    expect(view.scope.denominator).toBe("validation.included_count：明确排除不在范围内的记录后，实际纳入统计的论文数");
     expect(view.scope).toMatchObject({
       year: 2026,
-      inclusionStatuses: ["complete", "partial"],
-      denominatorUnit: "paper",
+      inclusionStatuses: ["信息完整", "部分信息缺失"],
+      denominatorUnit: "篇论文",
       denominatorValue: 2,
     });
     expect(view.contractIds.comparison).toMatch(/^[0-9a-f]{64}$/);
@@ -468,9 +472,9 @@ describe("methodology audit ledger", () => {
     expect(view.emergingScoreWeights).toEqual({ novelty: "0.20", share_growth: "0.45", spread_growth: "0.35" });
     expect(view.formulas.every((formula) => formula.numerator != null)).toBe(true);
     expect(view.formulas.map((formula) => formula.name)).toEqual([
-      "Topic share",
-      "Cross-venue spread",
-      "Emerging Score",
+      "Primary topic 占比",
+      "跨会议覆盖率",
+      "新兴主题得分",
     ]);
     expect(view.missingness).toEqual({ abstracts: 0, pdfs: 0, dois: 0 });
     expect(view.audits[0]).toMatchObject({
@@ -492,7 +496,7 @@ describe("methodology audit ledger", () => {
       sourceUrls: ["https://aclanthology.org/paper-a.pdf"],
       locator: "Section 3",
     });
-    expect(view.withheldThemes.note).toMatch(/已发布 1 个带证据/);
+    expect(view.withheldThemes.note).toMatch(/当前有 1 个主题暂不纳入主要分析/);
   });
 
   it("exposes incomplete exhaustive low-confidence review counts", () => {

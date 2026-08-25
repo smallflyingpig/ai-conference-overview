@@ -46,7 +46,7 @@ export default function TrendExplorer({ view, action, initialFilters = noFilters
   return (
     <div className="trends-shell">
       <aside className="trend-controls" aria-labelledby="filter-title">
-        <p className="eyebrow">证据筛选</p>
+        <p className="eyebrow">筛选条件</p>
         <h1 id="filter-title">筛选已发布数据</h1>
         <form method="get" action={action} onSubmit={submit}>
           <label htmlFor="venue-filter">会议</label>
@@ -84,17 +84,17 @@ export default function TrendExplorer({ view, action, initialFilters = noFilters
           </select>
           <label htmlFor="modality-filter">模态</label>
           <select id="modality-filter" name="modality" disabled value="">
-            <option value="">当前 release 未提供</option>
+            <option value="">当前数据版本未提供</option>
           </select>
           <button type="submit">应用筛选</button>
         </form>
-        <p className="filter-note">这里只列出 validated artifact 中实际存在的字段；禁用项表示当前缺失的分析维度。</p>
+        <p className="filter-note">这里只列出当前数据版本中实际提供的字段；禁用项表示相应数据暂时缺失。</p>
         <noscript><p className="filter-note">未启用 JavaScript 时，提交操作只会把筛选条件保存在 URL 中，页面仍展示完整已发布数据。</p></noscript>
       </aside>
 
       <article className="trend-plane" aria-live="polite">
         <header>
-          <p className="eyebrow">结论边界</p>
+          <p className="eyebrow">当前可分析的范围</p>
           <h2>{filtered.heading}</h2>
           {filtered.missingRequirement && <p className="gate-note" role="status">{filtered.missingRequirement}</p>}
         </header>
@@ -103,8 +103,8 @@ export default function TrendExplorer({ view, action, initialFilters = noFilters
           <section className="empty-atlas" aria-labelledby="empty-title">
             <span className="status-mark" aria-hidden="true" />
             <div>
-              <h3 id="empty-title">{view.mode === "empty" ? "尚无可展示的分析。" : "没有匹配的已发布 snapshot。"}</h3>
-              <p>{view.mode === "empty" ? "只有 source、record set、classification audit 与 provenance 全部通过发布门禁后，会议分析才会出现。" : "请修改或清空筛选条件，返回经过验证的已发布数据。"}</p>
+              <h3 id="empty-title">{view.mode === "empty" ? "尚无可展示的分析。" : "没有匹配的已发布数据。"}</h3>
+              <p>{view.mode === "empty" ? "原始来源、论文清单、主题分类和版本记录全部检查完成后，会议分析才会展示。" : "请修改或清空筛选条件，返回已经发布的数据。"}</p>
             </div>
           </section>
         ) : filtered.snapshots.map((snapshot) => (
@@ -115,7 +115,7 @@ export default function TrendExplorer({ view, action, initialFilters = noFilters
             </div>
             {(snapshot.experimentalThemeCount > 0 || snapshot.withheldThemeCount > 0) && (
               <p className="filter-note">
-                初步语义分布：{snapshot.experimentalThemeCount} 个实验性主题，{snapshot.withheldThemeCount} 个暂缓发布主题。
+                初步主题分布：{snapshot.experimentalThemeCount} 个暂定主题，{snapshot.withheldThemeCount} 个暂不纳入主要分析的主题。
               </p>
             )}
             <TopicShareChart rows={snapshot.topics} denominator={snapshot.includedCount} />
@@ -124,9 +124,9 @@ export default function TrendExplorer({ view, action, initialFilters = noFilters
 
         {!filtered.trendWidgetsVisible && filtered.mode !== "empty" && filtered.snapshots.length > 0 && (
           <section className="withheld-widget" aria-label="Trend 组件暂不可用">
-            <p className="data-label">暂缓发布</p>
-            <h3>时间序列与 year-over-year 结论</h3>
-            <p>需要同一会议、track、taxonomy 与 metric contract 下连续三个年份的 release。</p>
+            <p className="data-label">暂不展示</p>
+            <h3>时间序列与同比变化</h3>
+            <p>需要同一会议、论文类型、主题分类和统计方法下连续三个年份的数据。</p>
           </section>
         )}
       </article>

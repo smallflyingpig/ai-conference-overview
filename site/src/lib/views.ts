@@ -97,7 +97,7 @@ export function displayTopicLabel(topic: string): string {
 }
 
 export function auditStatusLabel(status: TopicShareRow["auditStatus"]): string {
-  return { "audit-passed": "audit 已通过", experimental: "实验性", withheld: "暂缓发布" }[status];
+  return { "audit-passed": "人工抽查达标", experimental: "暂定结果", withheld: "暂不纳入主要分析" }[status];
 }
 
 export function buildConferenceView(release: ConferenceRelease): ConferenceView {
@@ -153,7 +153,7 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
     pageHeading: `${venue} ${year} 长论文`,
     scopeLabel: `${venue} ${year} · ${track} track`,
     analysisLabel: "Distribution",
-    periodLabel: `${year} 单年 snapshot`,
+    periodLabel: `${year} 单年概览`,
     trendEligible: false,
     includedCount: denominator,
     excludedCount: release.validation.excluded_count,
@@ -241,7 +241,7 @@ export function buildTrendView(
       mode: "empty",
       heading: "尚无已发布分布",
       trendWidgetsVisible: false,
-      missingRequirement: "只有通过全部发布门禁的 validated release 才会出现在这里。",
+      missingRequirement: "只有完成全部检查并正式发布的数据版本才会出现在这里。",
       availableVenues,
       availableYears,
       availableThemes,
@@ -252,11 +252,11 @@ export function buildTrendView(
   const trendEligible = hasComparableSnapshotWindow(snapshots);
   return {
     mode: trendEligible ? "trend" : "snapshot",
-    heading: trendEligible ? "可比较的研究趋势" : "分布 / Snapshot / 热点",
+    heading: trendEligible ? "可比较的研究趋势" : "分布与热点",
     trendWidgetsVisible: trendEligible,
     missingRequirement: trendEligible
       ? null
-      : "Trend 与 year-over-year 结论至少需要三个连续且可比较的已验证年份。",
+      : "研究趋势和同比变化至少需要三个连续且可以直接比较的年份。",
     availableVenues,
     availableYears,
     availableThemes,
@@ -292,13 +292,13 @@ export function applyTrendFilters(view: TrendView, filters: TrendFilters): Trend
       ? "可比较的研究趋势"
       : view.mode === "empty"
         ? "尚无已发布分布"
-        : "分布 / Snapshot / 热点",
+        : "分布与热点",
     trendWidgetsVisible: trendEligible,
     missingRequirement: trendEligible
       ? null
       : view.mode === "empty"
         ? view.missingRequirement
-        : "Trend 与 year-over-year 结论至少需要三个连续且可比较的已验证年份。",
+        : "研究趋势和同比变化至少需要三个连续且可以直接比较的年份。",
     filters: { ...filters },
     snapshots,
   };
