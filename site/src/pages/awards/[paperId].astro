@@ -4,6 +4,7 @@ import AwardMethodDiagram from "../../components/AwardMethodDiagram";
 import AwardResultClaim from "../../components/AwardResultClaim";
 import AwardEvidenceSections from "../../components/AwardEvidenceSections";
 import AwardChineseReading from "../../components/AwardChineseReading.astro";
+import { loadAuthoredAwardContent } from "../../lib/authored-award-content";
 import { loadChineseContent } from "../../lib/content-data";
 import { loadOverview } from "../../lib/data";
 import { awardChineseInsight, awardDetailRoutes, awardTypeLabel, type AwardDetailView } from "../../lib/evidence";
@@ -13,13 +14,12 @@ export async function getStaticPaths() {
   const release = await loadOverview("ACL", 2026);
   if (release == null) return [];
   const content = await loadChineseContent(release);
+  const awardContent = content ?? await loadAuthoredAwardContent(release);
   return awardDetailRoutes(release).map((route) => ({
     ...route,
     props: {
       ...route.props,
-      reading: content == null
-        ? null
-        : buildAwardChineseReading(release, content, route.props.detail.paper.paper_id),
+      reading: buildAwardChineseReading(release, awardContent, route.props.detail.paper.paper_id),
     },
   }));
 }

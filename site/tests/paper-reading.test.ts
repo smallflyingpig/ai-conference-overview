@@ -38,7 +38,7 @@ describe("award Chinese reading model", () => {
     expect(reading.sections.map((section) => section.heading)).toEqual([
       "研究背景",
       "方法怎么做",
-      "为什么值得关注",
+      "主要结果与意义",
       "局限与适用范围",
       "对后续研究的启发",
     ]);

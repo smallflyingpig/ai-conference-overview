@@ -65,7 +65,7 @@ test("获奖论文索引进入中文解读并保留英文原文参考", async ({
   const detailLink = page.getByRole("link", { name: "查看详细解读" }).first();
   await expect(detailLink).toHaveAttribute("href", new RegExp(`^${basePath}awards/award-[0-9a-f]{64}/$`));
   await detailLink.click();
-  await expect(page.getByRole("heading", { name: "核心解读" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "三分钟读懂" })).toBeVisible();
   await expect(page.getByText("英文原文参考")).toBeVisible();
   await page.getByText("英文原文参考").click();
   await expect(page.getByText("节点编号只用于核对下方关系，不代表先后顺序。")).toBeVisible();
