@@ -126,6 +126,14 @@ def test_numeric_chinese_claim_requires_source_token() -> None:
         validate_summary_sources(forged, "The method improves accuracy.")
 
 
+def test_numeric_source_check_accepts_equivalent_percent_suffix() -> None:
+    summary = paper_summary().model_copy(
+        update={"main_findings": "论文报告准确率达到 46.83%。"}
+    )
+
+    validate_summary_sources(summary, "Exact match value: 46.83")
+
+
 def test_bundle_requires_exact_partition_of_all_paper_ids() -> None:
     papers = [
         paper("acl:2026.acl-long.1"),

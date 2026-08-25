@@ -3,16 +3,29 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import AwardMethodDiagram from "../../components/AwardMethodDiagram";
 import AwardResultClaim from "../../components/AwardResultClaim";
 import AwardEvidenceSections from "../../components/AwardEvidenceSections";
+import AwardChineseReading from "../../components/AwardChineseReading.astro";
+import { loadChineseContent } from "../../lib/content-data";
 import { loadOverview } from "../../lib/data";
 import { awardChineseInsight, awardDetailRoutes, awardTypeLabel, type AwardDetailView } from "../../lib/evidence";
+import { buildAwardChineseReading, type AwardChineseReading as AwardChineseReadingView } from "../../lib/paper-reading";
 
 export async function getStaticPaths() {
   const release = await loadOverview("ACL", 2026);
-  return awardDetailRoutes(release);
+  if (release == null) return [];
+  const content = await loadChineseContent(release);
+  return awardDetailRoutes(release).map((route) => ({
+    ...route,
+    props: {
+      ...route.props,
+      reading: content == null
+        ? null
+        : buildAwardChineseReading(release, content, route.props.detail.paper.paper_id),
+    },
+  }));
 }
 
-interface Props { detail: AwardDetailView }
-const { detail } = Astro.props;
+interface Props { detail: AwardDetailView; reading: AwardChineseReadingView | null }
+const { detail, reading } = Astro.props;
 ---
 
 <BaseLayout title={`${detail.paper.title} — 获奖论文解读`} description={`${detail.paper.title} 的中文解读。`} conferenceAvailable={true}>
@@ -24,18 +37,19 @@ const { detail } = Astro.props;
       <div class="plate-links"><a href={detail.award.evidence_url!}>官方获奖页面</a><a href={detail.paper.landing_url}>论文官方页面</a>{detail.paper.pdf_url && <a href={detail.paper.pdf_url}>PDF</a>}</div>
     </header>
 
-    <section class="why-ledger" aria-labelledby="chinese-reading-title">
-      <h2 id="chinese-reading-title">核心解读</h2>
-      <article>
-        <span class="evidence-badge evidence-badge--synthesis">中文解读</span>
-        <p>{awardChineseInsight(detail.paper.paper_id)}</p>
-        <small>根据官方 PDF 整理；具体数字和原文位置见下方英文摘录。</small>
-      </article>
-    </section>
+    {reading
+      ? <AwardChineseReading reading={reading} />
+      : <section class="why-ledger" aria-labelledby="chinese-reading-title">
+          <h2 id="chinese-reading-title">核心解读</h2>
+          <article>
+            <span class="evidence-badge evidence-badge--synthesis">中文解读</span>
+            <p>{awardChineseInsight(detail.paper.paper_id)}</p>
+          </article>
+        </section>}
 
     <details class="original-deep-read">
-      <summary>查看英文原文摘录</summary>
-      <p>为避免翻译改变论文原意，研究发现、指标、实验设置和原文位置保留英文。</p>
+      <summary>英文原文参考</summary>
+      <p>这里保留论文中的英文表述、实验指标和原文位置，方便进一步查阅。</p>
       {detail.deepRead.method_diagram && <AwardMethodDiagram diagram={detail.deepRead.method_diagram} />}
       <AwardEvidenceSections deepRead={detail.deepRead} />
       <section class="result-ledger" aria-labelledby="results-title">

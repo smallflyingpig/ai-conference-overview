@@ -1,0 +1,46 @@
+---
+import type { AwardChineseReading as AwardChineseReadingView } from "../lib/paper-reading";
+
+interface Props { reading: AwardChineseReadingView }
+const { reading } = Astro.props;
+const quickRead = [
+  ["研究问题", reading.quickRead.researchProblem],
+  ["核心方法", reading.quickRead.coreMethod],
+  ["主要发现", reading.quickRead.mainFinding],
+] as const;
+---
+
+<section class="award-quick-read" aria-labelledby="quick-read-title">
+  <div class="award-section-heading">
+    <p class="data-label">QUICK READ</p>
+    <h2 id="quick-read-title">三分钟读懂</h2>
+  </div>
+  <div class="quick-read-grid">
+    {quickRead.map(([label, value]) => (
+      <article>
+        <h3>{label}</h3>
+        <p>{value}</p>
+      </article>
+    ))}
+  </div>
+</section>
+
+<section class="award-chinese-abstract" aria-labelledby="abstract-zh-title">
+  <div class="award-section-heading">
+    <p class="data-label">ABSTRACT IN CHINESE</p>
+    <h2 id="abstract-zh-title">中文摘要</h2>
+  </div>
+  <p>{reading.abstractZh}</p>
+</section>
+
+{reading.sections.map((section, index) => (
+  <section class="award-learning-section" aria-labelledby={`learning-section-${index}`}>
+    <div class="award-section-heading">
+      <span>{String(index + 1).padStart(2, "0")}</span>
+      <h2 id={`learning-section-${index}`}>{section.heading}</h2>
+    </div>
+    <div class="learning-copy">
+      {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+  </section>
+))}

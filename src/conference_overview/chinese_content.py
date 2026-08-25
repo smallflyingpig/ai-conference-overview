@@ -260,9 +260,15 @@ def _public_award_text(deep_read: AwardDeepReadZh) -> str:
 
 
 def _validate_numeric_tokens(public_text: str, source_text: str, paper_id: str) -> None:
-    source_tokens = set(_NUMERIC_TOKEN_PATTERN.findall(source_text))
+    def normalized_tokens(text: str) -> set[str]:
+        return {
+            token.removesuffix("%").removesuffix("pp").removesuffix("PP")
+            for token in _NUMERIC_TOKEN_PATTERN.findall(text)
+        }
+
+    source_tokens = normalized_tokens(source_text)
     unsupported = sorted(
-        set(_NUMERIC_TOKEN_PATTERN.findall(public_text)).difference(source_tokens)
+        normalized_tokens(public_text).difference(source_tokens)
     )
     if unsupported:
         raise ContentPublicationBlocked(

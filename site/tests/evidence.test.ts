@@ -30,6 +30,7 @@ import {
 
 const fixtureRoot = fileURLToPath(new URL("./fixtures/task9-release", import.meta.url));
 const currentReleaseRoot = fileURLToPath(new URL("../../data/releases", import.meta.url));
+const contentRoot = fileURLToPath(new URL("./fixtures/task-content", import.meta.url));
 let release: LoadedOverview;
 let currentRelease: LoadedOverview;
 const execFileAsync = promisify(execFile);
@@ -400,6 +401,32 @@ describe("complete award evidence rendering", () => {
       "a20fdfab1b691f0215a55d573d9eba22eb3f7cdbdc6f2165df81145bd38138e7",
       "分类版本",
     ]) expect(methodologyHtml).toContain(expected);
+
+    await execFileAsync(join(siteRoot, "node_modules/.bin/astro"), ["build"], {
+      cwd: siteRoot,
+      env: {
+        ...process.env,
+        ASTRO_TELEMETRY_DISABLED: "1",
+        CONFERENCE_RELEASE_ROOT: fixtureRoot,
+        CONFERENCE_CONTENT_ROOT: contentRoot,
+      },
+    });
+    const fixtureRoute = awardRouteKey(release.overview.awards[0]);
+    const fixtureAwardHtml = await readFile(
+      join(siteRoot, "dist/awards", fixtureRoute, "index.html"), "utf8",
+    );
+    for (const heading of [
+      "三分钟读懂",
+      "中文摘要",
+      "研究背景",
+      "方法怎么做",
+      "为什么值得关注",
+      "局限与适用范围",
+      "对后续研究的启发",
+      "英文原文参考",
+    ]) expect(fixtureAwardHtml).toContain(heading);
+    expect(fixtureAwardHtml.indexOf("三分钟读懂"))
+      .toBeLessThan(fixtureAwardHtml.indexOf("英文原文参考"));
   }, 30_000);
 });
 
