@@ -873,8 +873,7 @@ def _seed_icml_award_import(tmp_path: Path) -> tuple[object, Path, Path, Path, b
     awards.mkdir(parents=True)
     paper_id = "pmlr:v267:wu25i"
     pdf_url = (
-        "https://raw.githubusercontent.com/mlresearch/v267/main/assets/"
-        "wu25i/wu25i.pdf"
+        "https://raw.githubusercontent.com/mlresearch/v267/main/assets/wu25i/wu25i.pdf"
     )
     (awards / "2025-main.yaml").write_text(
         yaml.safe_dump(
@@ -896,13 +895,7 @@ def _seed_icml_award_import(tmp_path: Path) -> tuple[object, Path, Path, Path, b
     )
     deep_source = tmp_path / "icml-deep-reads.yaml"
     deep_source.write_text(
-        yaml.safe_dump(
-            {
-                "deep_reads": [
-                    _minimal_deep_read(paper_id, pdf_url=pdf_url)
-                ]
-            }
-        ),
+        yaml.safe_dump({"deep_reads": [_minimal_deep_read(paper_id, pdf_url=pdf_url)]}),
         encoding="utf-8",
     )
     official_pdf = b"%PDF-1.7\nverified PMLR fixture bytes\n%%EOF\n"
@@ -952,14 +945,23 @@ def test_import_award_deep_reads_accepts_pmlr_id_and_inventory_pdf(
     provenance = json.loads(
         (tmp_path / "data/awards/icml/2025-main-deep-read-provenance.json").read_text()
     )
-    assert provenance["schema_version"] == (
-        "conference-award-deep-read-provenance-v1"
-    )
+    assert provenance["schema_version"] == ("conference-award-deep-read-provenance-v1")
     assert provenance["pdfs"][0]["paper_id"] == "pmlr:v267:wu25i"
     output = yaml.safe_load(
         (tmp_path / "data/awards/icml/2025-main-deep-reads.yaml").read_text()
     )
     assert output["schema_version"] == "conference-award-deep-reads-v1"
+
+
+def test_load_icml_award_deep_reads_uses_inventory_pdf_urls() -> None:
+    root = Path(__file__).parents[1]
+    paths = pipeline_module.ScopePaths.for_request(
+        root, normalize_request("ICML", 2025, "main")
+    )
+
+    deep_reads = pipeline_module._load_award_deep_reads(paths)
+
+    assert len(deep_reads) == 8
 
 
 def test_import_position_paper_deep_read_finds_nested_pdf_evidence(
@@ -1032,9 +1034,7 @@ def test_import_icml_award_deep_reads_rejects_invalid_official_pdf_before_write(
                 ),
                 encoding="utf-8",
             )
-    monkeypatch.setattr(
-        pipeline_module, "fetch_bytes", lambda _url, _client: fetched
-    )
+    monkeypatch.setattr(pipeline_module, "fetch_bytes", lambda _url, _client: fetched)
 
     with pytest.raises(ValueError):
         pipeline_module.import_award_deep_reads_scope(
@@ -1046,9 +1046,7 @@ def test_import_icml_award_deep_reads_rejects_invalid_official_pdf_before_write(
             [review_source],
         )
 
-    assert not (
-        tmp_path / "data/awards/icml/2025-main-deep-reads.yaml"
-    ).exists()
+    assert not (tmp_path / "data/awards/icml/2025-main-deep-reads.yaml").exists()
 
 
 @pytest.mark.parametrize(("decision", "rejected_count"), [("accept", 0), ("reject", 1)])
@@ -1203,7 +1201,9 @@ def test_completed_audit_registry_is_exactly_bound_to_authoritative_samples(
         "method": "independent complete semantic certification",
         "provenance": {
             "assignments_sha256": assignments_sha256,
-            "audit_samples_sha256": hashlib.sha256(samples_path.read_bytes()).hexdigest(),
+            "audit_samples_sha256": hashlib.sha256(
+                samples_path.read_bytes()
+            ).hexdigest(),
             "sources": [{"source_file": "fixture.json", "sha256": "a" * 64}],
         },
         "schema_version": "classification-audit-v1",
@@ -1324,9 +1324,7 @@ def test_audit_registry_rejects_rehashed_equal_size_cherry_pick(
     )
     sample_path = classification / "audit-samples.json"
     samples = json.loads(sample_path.read_text(encoding="utf-8"))
-    selected_ids = {
-        row["paper_id"] for row in samples["themes"]["Evaluation"]
-    }
+    selected_ids = {row["paper_id"] for row in samples["themes"]["Evaluation"]}
     unsampled_id = next(
         assignment.paper_id
         for assignment in assignments
@@ -1353,7 +1351,9 @@ def test_audit_registry_rejects_rehashed_equal_size_cherry_pick(
         "method": "independent complete semantic certification",
         "provenance": {
             "assignments_sha256": assignments_sha256,
-            "audit_samples_sha256": hashlib.sha256(sample_path.read_bytes()).hexdigest(),
+            "audit_samples_sha256": hashlib.sha256(
+                sample_path.read_bytes()
+            ).hexdigest(),
             "sources": [{"source_file": "fixture.json", "sha256": "b" * 64}],
         },
         "schema_version": "classification-audit-v1",

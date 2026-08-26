@@ -724,9 +724,7 @@ def import_semantic_assignments_scope(
         for assignment in source_assignments:
             if partition is not None:
                 try:
-                    numeric_id = int(
-                        assignment.paper_id.rsplit(".", maxsplit=1)[-1]
-                    )
+                    numeric_id = int(assignment.paper_id.rsplit(".", maxsplit=1)[-1])
                 except ValueError as exc:
                     raise ValueError(
                         "semantic assignment has nonnumeric ACL ID: "
@@ -1516,8 +1514,7 @@ def import_award_deep_reads_scope(
             and award_types[paper_id] != "Outstanding Position Paper"
         ):
             raise ValueError(
-                "only an official position paper may use no_numeric_result: "
-                f"{paper_id}"
+                f"only an official position paper may use no_numeric_result: {paper_id}"
             )
         serialized = deep_read.model_dump(mode="json")
         referenced_pdf_urls = {
@@ -1966,9 +1963,8 @@ def _load_theme_audits(
             for item in candidates
             if isinstance(item, Mapping) and isinstance(item.get("paper_id"), str)
         }
-        if (
-            len(ids) != len(candidates)
-            or len(candidates) != min(50, population_counts[theme])
+        if len(ids) != len(candidates) or len(candidates) != min(
+            50, population_counts[theme]
         ):
             raise ValueError(f"invalid audit sample candidates for {theme}")
         candidate_ids[theme] = ids
@@ -1984,10 +1980,12 @@ def _load_theme_audits(
         if not isinstance(decisions, Mapping):
             raise ValueError("audit decision registry must be an object")
         status = decisions.get("status")
-        if (
-            decisions.get("schema_version") != "classification-audit-v1"
-            or status not in {"pending_semantic_review", "completed_semantic_review"}
-        ):
+        if decisions.get(
+            "schema_version"
+        ) != "classification-audit-v1" or status not in {
+            "pending_semantic_review",
+            "completed_semantic_review",
+        }:
             raise ValueError("audit decision schema or status mismatch")
         if decisions.get("taxonomy_version") != _TAXONOMY_VERSION:
             raise ValueError("audit decision taxonomy version mismatch")
@@ -2018,7 +2016,10 @@ def _load_theme_audits(
                 and isinstance(review.get("paper_id"), str)
             }
             if status == "completed_semantic_review":
-                if len(decision_ids) != len(raw_reviews) or decision_ids != candidate_ids[theme]:
+                if (
+                    len(decision_ids) != len(raw_reviews)
+                    or decision_ids != candidate_ids[theme]
+                ):
                     raise ValueError(
                         f"completed audit must match exact audit sample ID set for {theme}"
                     )
@@ -2194,9 +2195,7 @@ def import_low_confidence_decisions_scope(
         for assignment in assignments
         if assignment.confidence < Decimal("0.70")
     }
-    assignments_by_id = {
-        assignment.paper_id: assignment for assignment in assignments
-    }
+    assignments_by_id = {assignment.paper_id: assignment for assignment in assignments}
     canonical_reviews: list[dict[str, object]] = []
     seen_ids: set[str] = set()
     for review in reviews:
@@ -2385,40 +2384,84 @@ _ADVANCE_TOPICS: dict[AdvanceCategory, tuple[str, ...]] = {
 
 _CURATED_ADVANCES: dict[AdvanceCategory, dict[str, object]] = {
     AdvanceCategory.TEXT_LLMS: {
-        "paper_ids": ("acl:2026.acl-long.1111", "acl:2026.acl-long.1176", "acl:2026.acl-long.1366", "acl:2026.acl-long.154"),
-        "questions": ("How should text models condition pretraining, extend context, specialize without catastrophic loss, and diagnose internal mechanisms?",),
+        "paper_ids": (
+            "acl:2026.acl-long.1111",
+            "acl:2026.acl-long.1176",
+            "acl:2026.acl-long.1366",
+            "acl:2026.acl-long.154",
+        ),
+        "questions": (
+            "How should text models condition pretraining, extend context, specialize without catastrophic loss, and diagnose internal mechanisms?",
+        ),
         "problem": "Text-model progress couples corpus conditioning, long-context efficiency, staged adaptation, and mechanism-level diagnosis.",
         "change": "KoCo adds structured knowledge coordinates to pretraining; LCA jointly compresses KV state and sparse computation; Tower+ stages continued pretraining, supervised, preference, and reinforcement learning; multi-component causal tracing diagnoses interacting internal pathways.",
         "boundary": "The linked abstracts report distinct model families and evaluation settings; this lane is a structured comparison, not evidence that one recipe dominates across settings.",
         "implication": "Evaluate pretraining context, adaptation stages, serving cost, and causal diagnostics together rather than treating text-model quality as one scalar.",
     },
     AdvanceCategory.MULTIMODAL_MODELS: {
-        "paper_ids": ("acl:2026.acl-long.1490", "acl:2026.acl-long.1954", "acl:2026.acl-long.2042", "acl:2026.acl-long.2218", "acl:2026.acl-long.1162", "acl:2026.acl-long.1178"),
-        "questions": ("How can multimodal systems preserve composition, streaming state, retrieval structure, evaluator validity, and safety across modalities?",),
+        "paper_ids": (
+            "acl:2026.acl-long.1490",
+            "acl:2026.acl-long.1954",
+            "acl:2026.acl-long.2042",
+            "acl:2026.acl-long.2218",
+            "acl:2026.acl-long.1162",
+            "acl:2026.acl-long.1178",
+        ),
+        "questions": (
+            "How can multimodal systems preserve composition, streaming state, retrieval structure, evaluator validity, and safety across modalities?",
+        ),
         "problem": "Multimodal systems must align compositional concepts, streaming interaction, structured memory, evaluation reliability, and joint-modal safety.",
         "change": "MACCO models masked compositional concepts; AV-Dialog integrates streaming audio-visual dialogue; Response-G1 uses scene graphs for proactive response; MegaRAG builds cross-modal knowledge-graph retrieval; MM-JudgeBias and CrossGuard expose judge bias and implicit joint-modal attacks.",
         "boundary": "The papers cover different modalities, tasks, and threat models, so their reported gains cannot be pooled into a common effect size.",
         "implication": "Multimodal evaluation should jointly test grounding, temporal state, retrieval structure, judge robustness, and cross-modal attack composition.",
     },
     AdvanceCategory.REASONING_AGENTS: {
-        "paper_ids": ("acl:2026.acl-long.1", "acl:2026.acl-long.1027", "acl:2026.acl-long.1039", "acl:2026.acl-long.1049"),
-        "questions": ("How should agents decompose planning, tool use, memory routing, browser state, policy choice, and termination?",),
+        "paper_ids": (
+            "acl:2026.acl-long.1",
+            "acl:2026.acl-long.1027",
+            "acl:2026.acl-long.1039",
+            "acl:2026.acl-long.1049",
+        ),
+        "questions": (
+            "How should agents decompose planning, tool use, memory routing, browser state, policy choice, and termination?",
+        ),
         "problem": "Agent systems must coordinate planner-controller decomposition with external tools, persistent state, branching strategies, and termination decisions.",
         "change": "OctoTools standardizes tool cards and planner-executor roles; MoEC routes subgoals through expert memory; SPIO explores and selects multiple data-science plans; NestBrowse separates browser actions from higher-level information-seeking control.",
         "boundary": "Reasoning and Agents failed the final theme precision gate, so these papers are experimental observations and cannot support a headline prevalence or trend claim.",
         "implication": "Agent evaluation should separate plan quality, tool-state transitions, policy routing, recovery, and stopping behavior rather than report only final-task success.",
     },
     AdvanceCategory.DATA_TRAINING: {
-        "paper_ids": ("acl:2026.acl-long.1111", "acl:2026.acl-long.1366", "acl:2026.acl-long.1110", "acl:2026.acl-long.1321", "acl:2026.acl-long.1436", "acl:2026.acl-long.1653"),
-        "questions": ("How do data conditioning, PEFT geometry, RLVR rollout distributions, critique loops, entropy weighting, and iterative re-estimation interact?",),
+        "paper_ids": (
+            "acl:2026.acl-long.1111",
+            "acl:2026.acl-long.1366",
+            "acl:2026.acl-long.1110",
+            "acl:2026.acl-long.1321",
+            "acl:2026.acl-long.1436",
+            "acl:2026.acl-long.1653",
+        ),
+        "questions": (
+            "How do data conditioning, PEFT geometry, RLVR rollout distributions, critique loops, entropy weighting, and iterative re-estimation interact?",
+        ),
         "problem": "Training quality depends on how corpora are conditioned, parameter subspaces are selected, rollouts are induced, and evidence is re-estimated across iterations.",
         "change": "KoCo and Tower+ alter pretraining/adaptation stages; GeoRA aligns PEFT with RLVR geometry; CURE uses critique-driven self-improvement; STEER weights policy updates through estimated entropy change; GISP repeatedly re-estimates global pruning importance.",
         "boundary": "The accepted-paper corpus is observational metadata plus paper-reported experiments; it does not by itself establish causal gains from any general data-quality policy.",
         "implication": "Data strategy experiments should log induced rollout distributions and iterative model-data feedback, not only static source counts or final benchmark deltas.",
     },
     AdvanceCategory.EVALUATION_TRUST: {
-        "paper_ids": ("acl:2026.acl-long.1034", "acl:2026.acl-long.1162", "acl:2026.acl-long.1178", "acl:2026.acl-long.1186", "acl:2026.acl-long.1218", "acl:2026.acl-long.1301", "acl:2026.acl-long.1948", "acl:2026.acl-long.1886", "acl:2026.acl-long.689"),
-        "questions": ("How can evaluation remain valid under contamination, dynamic distributions, judge bias, multimodal attacks, memory effects, and repeated trials?",),
+        "paper_ids": (
+            "acl:2026.acl-long.1034",
+            "acl:2026.acl-long.1162",
+            "acl:2026.acl-long.1178",
+            "acl:2026.acl-long.1186",
+            "acl:2026.acl-long.1218",
+            "acl:2026.acl-long.1301",
+            "acl:2026.acl-long.1948",
+            "acl:2026.acl-long.1886",
+            "acl:2026.acl-long.689",
+        ),
+        "questions": (
+            "How can evaluation remain valid under contamination, dynamic distributions, judge bias, multimodal attacks, memory effects, and repeated trials?",
+        ),
         "problem": "Static accuracy can conceal contamination, evaluator bias, multimodal jailbreaks, implicit memory effects, and inconsistent behavior across repeated realistic trials.",
         "change": "Rt-LRM, MM-JudgeBias, CrossGuard, MCV SafetyBench, and DyReMe stress reasoning, judges, attacks, and dynamic diagnosis; ImplicitMemBench, VeriTaS, and CAR-bench add passive memory, refreshed fact-checking, and repeated stateful reliability evidence.",
         "boundary": "Benchmark construction choices and model coverage differ; numeric results are available only in the linked paper or validated award DeepRead locators and are not recombined here.",
@@ -2468,12 +2511,12 @@ def _preliminary_examples(
             for topic in topics
         )
         if audited:
-            locator = "Official ACL Anthology Abstract for every linked supporting paper"
+            locator = (
+                "Official ACL Anthology Abstract for every linked supporting paper"
+            )
             claims = (
                 EvidenceClaim(
-                    claim=(
-                        str(curated["change"])
-                    ),
+                    claim=(str(curated["change"])),
                     evidence_type=EvidenceType.PAPER_REPORTED,
                     source_urls=sources,
                     locator=locator,
@@ -2608,15 +2651,33 @@ def _load_award_deep_reads(paths: ScopePaths) -> list[DeepRead]:
     if verified_at.tzinfo is None:
         raise ValueError("award deep reads require verified official PDF provenance")
     expected_ids = {item.paper_id for item in deep_reads}
+    try:
+        inventory = yaml.safe_load(paths.awards.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, yaml.YAMLError) as exc:
+        raise ValueError(
+            "award deep reads require verified official PDF provenance"
+        ) from exc
+    inventory_awards = (
+        inventory.get("awards") if isinstance(inventory, Mapping) else None
+    )
+    if not isinstance(inventory_awards, list):
+        raise TypeError("award deep reads require verified official PDF provenance")
+    expected_pdf_urls = {
+        str(award["paper_id"]): str(award["pdf_url"])
+        for award in inventory_awards
+        if isinstance(award, Mapping)
+        and isinstance(award.get("paper_id"), str)
+        and isinstance(award.get("pdf_url"), str)
+    }
+    if set(expected_pdf_urls) != expected_ids:
+        raise ValueError("award deep reads require verified official PDF provenance")
     verified_ids: set[str] = set()
     for pdf in pdfs:
         if not isinstance(pdf, Mapping):
             raise TypeError("award deep reads require verified official PDF provenance")
         paper_id = pdf.get("paper_id")
         expected_url = (
-            f"https://aclanthology.org/{paper_id.removeprefix('acl:')}.pdf"
-            if isinstance(paper_id, str)
-            else None
+            expected_pdf_urls.get(paper_id) if isinstance(paper_id, str) else None
         )
         if (
             not isinstance(paper_id, str)
@@ -2687,35 +2748,35 @@ def _overview_note(
         )
     lines.extend(
         [
-        "",
-        "## 分类方法、审计门槛与限制",
-        "",
-        (
-            "分类采用 agent semantic batch review：逐篇读取官方 title + abstract，给出单一 "
-            "primary topic；随后经历独立审计修正和全主题复核。最终认证对每个主题使用固定、"
-            "确定性的置信度分层样本（最多 50 篇），门槛同时要求 observed precision ≥ 0.90 "
-            "且双侧 Wilson 95% 下界 ≥ 0.80。审计中的 false 只测量标签精度，不回写 topic。"
-        ),
-        (
-            "限制：taxonomy 是分析框架而非 ACL 官方 track；一篇论文只能有一个 primary topic，"
-            "会压缩跨主题贡献，因此 primary-assignment share 不等于研究问题的真实 prevalence；"
-            "摘要审计不替代全文复核。该审计是确定性的置信度分层 precision 检查，不估计 recall，"
-            "也不是随机总体抽样置信区间；样本较小的主题仍受 Wilson 下界约束。"
-        ),
-        "",
-        "## 主要研究问题",
-        "",
-        "1. 测量效度与动态可靠性：评测如何抵抗污染、分布漂移、judge bias 与重复试验不一致？",
-        "2. 高效适配与推理：如何同时控制长上下文 KV/compute、PEFT、持续训练与推理成本？",
-        "3. 真实分布下的安全与公平：如何覆盖多模态联合攻击、过度拒绝、群体差异和现实混杂？",
-        "4. Grounding、retrieval 与 memory：外部证据、结构化检索和长期状态如何共同约束生成？",
-        "5. 多模态组合与流式交互：模型如何表示组合关系、时序证据、说话人和响应时机？",
-        "6. Agent 分解：如何分别评估 tool、state、policy、planner/controller 和 termination？",
-        "",
-        "## 十主题单年分布与最终审计",
-        "",
-        "| 主题 | 论文数 | 占比 | 审计正确/样本 | Precision | Wilson 95% 下界 | 状态 |",
-        "|---|---:|---:|---:|---:|---:|---|",
+            "",
+            "## 分类方法、审计门槛与限制",
+            "",
+            (
+                "分类采用 agent semantic batch review：逐篇读取官方 title + abstract，给出单一 "
+                "primary topic；随后经历独立审计修正和全主题复核。最终认证对每个主题使用固定、"
+                "确定性的置信度分层样本（最多 50 篇），门槛同时要求 observed precision ≥ 0.90 "
+                "且双侧 Wilson 95% 下界 ≥ 0.80。审计中的 false 只测量标签精度，不回写 topic。"
+            ),
+            (
+                "限制：taxonomy 是分析框架而非 ACL 官方 track；一篇论文只能有一个 primary topic，"
+                "会压缩跨主题贡献，因此 primary-assignment share 不等于研究问题的真实 prevalence；"
+                "摘要审计不替代全文复核。该审计是确定性的置信度分层 precision 检查，不估计 recall，"
+                "也不是随机总体抽样置信区间；样本较小的主题仍受 Wilson 下界约束。"
+            ),
+            "",
+            "## 主要研究问题",
+            "",
+            "1. 测量效度与动态可靠性：评测如何抵抗污染、分布漂移、judge bias 与重复试验不一致？",
+            "2. 高效适配与推理：如何同时控制长上下文 KV/compute、PEFT、持续训练与推理成本？",
+            "3. 真实分布下的安全与公平：如何覆盖多模态联合攻击、过度拒绝、群体差异和现实混杂？",
+            "4. Grounding、retrieval 与 memory：外部证据、结构化检索和长期状态如何共同约束生成？",
+            "5. 多模态组合与流式交互：模型如何表示组合关系、时序证据、说话人和响应时机？",
+            "6. Agent 分解：如何分别评估 tool、state、policy、planner/controller 和 termination？",
+            "",
+            "## 十主题单年分布与最终审计",
+            "",
+            "| 主题 | 论文数 | 占比 | 审计正确/样本 | Precision | Wilson 95% 下界 | 状态 |",
+            "|---|---:|---:|---:|---:|---:|---|",
         ]
     )
     candidate_counts = audit_metadata["candidate_counts"]
@@ -2783,7 +2844,9 @@ def _overview_note(
                 lines.append(f"  - 研究问题：{question}")
             for paper_id in advance.supporting_paper_ids:
                 paper = records_by_id[paper_id]
-                lines.append(f"  - 支撑论文：[{paper.title}]({paper.landing_url})（定位：Abstract）。")
+                lines.append(
+                    f"  - 支撑论文：[{paper.title}]({paper.landing_url})（定位：Abstract）。"
+                )
             typed_claims = [
                 claim
                 for claim in (
@@ -3219,9 +3282,9 @@ def collect_icml_award_inventory_scope(
     finally:
         if owns_client:
             active_client.close()
-    source = store_snapshot(
-        html, _ICML_2025_AWARDS_URL, paths.snapshots
-    ).model_copy(update={"name": "ICML 2025 Awards"})
+    source = store_snapshot(html, _ICML_2025_AWARDS_URL, paths.snapshots).model_copy(
+        update={"name": "ICML 2025 Awards"}
+    )
     badges = parse_icml_awards_html(html, source)
     counts = {
         award_type: sum(badge.award_type == award_type for badge in badges)
