@@ -1445,6 +1445,7 @@ def import_award_deep_reads_scope(
         raise TypeError("official award inventory has no awards list")
     award_ids = {str(award["paper_id"]) for award in awards}
     award_pdf_urls = {str(award["paper_id"]): str(award["pdf_url"]) for award in awards}
+    award_types = {str(award["paper_id"]): str(award["award_type"]) for award in awards}
 
     raw_by_id: dict[str, dict[str, object]] = {}
     sources: list[dict[str, object]] = []
@@ -1510,6 +1511,14 @@ def import_award_deep_reads_scope(
     for paper_id in sorted(raw_by_id):
         deep_read = DeepRead.model_validate(raw_by_id[paper_id])
         validate_deep_read(deep_read)
+        if (
+            deep_read.no_numeric_result is not None
+            and award_types[paper_id] != "Outstanding Position Paper"
+        ):
+            raise ValueError(
+                "only an official position paper may use no_numeric_result: "
+                f"{paper_id}"
+            )
         serialized = deep_read.model_dump(mode="json")
         referenced_pdf_urls = {
             str(url)

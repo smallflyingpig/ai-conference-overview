@@ -962,6 +962,45 @@ def test_import_award_deep_reads_accepts_pmlr_id_and_inventory_pdf(
     assert output["schema_version"] == "conference-award-deep-reads-v1"
 
 
+def test_import_position_paper_deep_read_finds_nested_pdf_evidence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    request, deep_source, note_source, review_source, official_pdf = (
+        _seed_icml_award_import(tmp_path)
+    )
+    inventory_path = tmp_path / "data/awards/icml/2025-main.yaml"
+    inventory = yaml.safe_load(inventory_path.read_text())
+    inventory["awards"][0]["award_type"] = "Outstanding Position Paper"
+    inventory_path.write_text(yaml.safe_dump(inventory), encoding="utf-8")
+    payload = yaml.safe_load(deep_source.read_text())
+    deep_read = payload["deep_reads"][0]
+    result = deep_read.pop("result_claims")[0]
+    deep_read["no_numeric_result"] = {
+        "paper_type": "position_paper",
+        "reason": {
+            "claim": "The paper presents a position and research agenda.",
+            "evidence_type": "paper_reported",
+            "locator": "Abstract and Section 1",
+            "source_urls": result["source_urls"],
+        },
+    }
+    deep_source.write_text(yaml.safe_dump(payload), encoding="utf-8")
+    monkeypatch.setattr(
+        pipeline_module, "fetch_bytes", lambda _url, _client: official_pdf
+    )
+
+    imported = pipeline_module.import_award_deep_reads_scope(
+        request,
+        tmp_path,
+        [deep_source],
+        [],
+        [note_source],
+        [review_source],
+    )
+
+    assert imported[0].no_numeric_result is not None
+
+
 @pytest.mark.parametrize(
     "mutation", ["not_pdf", "missing_eof", "wrong_hash", "unlisted_url"]
 )

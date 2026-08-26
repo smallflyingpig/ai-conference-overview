@@ -278,6 +278,30 @@ describe("award publication gate", () => {
     expect(() => validateDeepRead(inferredResult)).toThrow(/paper_reported|literal/i);
   });
 
+  it("supports an explicit non-numeric state only for a position paper", () => {
+    const positionPaper = structuredClone(validDeepRead);
+    positionPaper.result_claims = [];
+    positionPaper.no_numeric_result = {
+      paper_type: "position_paper",
+      reason: {
+        claim: "This position paper proposes a research agenda rather than a numeric benchmark result.",
+        evidence_type: "paper_reported",
+        source_urls: ["https://proceedings.mlr.press/v267/paper.pdf"],
+        locator: "Abstract and Section 1",
+      },
+    };
+    expect(validateDeepRead(positionPaper).no_numeric_result?.paper_type)
+      .toBe("position_paper");
+
+    const missingBoth = structuredClone(validDeepRead);
+    missingBoth.result_claims = [];
+    expect(() => validateDeepRead(missingBoth)).toThrow(/numeric result/i);
+
+    const bothStates = structuredClone(positionPaper);
+    bothStates.result_claims = structuredClone(validDeepRead.result_claims);
+    expect(() => validateDeepRead(bothStates)).toThrow(/numeric result/i);
+  });
+
   it("requires every approved deep-read section and interpretive transfer evidence", () => {
     for (const field of [
       "data_training_setup", "prior_work_differences",

@@ -60,7 +60,17 @@ const { detail, reading } = Astro.props;
       <AwardEvidenceSections deepRead={detail.deepRead} />
       <section class="result-ledger" aria-labelledby="results-title">
         <h2 id="results-title">论文原文中的结果</h2>
-        {detail.deepRead.result_claims.map((claim) => <AwardResultClaim claim={claim} />)}
+        {detail.deepRead.result_claims.length > 0
+          ? detail.deepRead.result_claims.map((claim) => <AwardResultClaim claim={claim} />)
+          : detail.deepRead.no_numeric_result && <article class="evidence-card">
+              <p>{detail.deepRead.no_numeric_result.reason.claim}</p>
+              <p class="source-line">
+                原文位置：{detail.deepRead.no_numeric_result.reason.locator}
+                {detail.deepRead.no_numeric_result.reason.source_urls.map((url) =>
+                  <><span> · </span><a href={url}>查看论文</a></>
+                )}
+              </p>
+            </article>}
       </section>
     </details>
   </article>

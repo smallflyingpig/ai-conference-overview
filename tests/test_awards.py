@@ -12,6 +12,7 @@ from conference_overview.awards import (
     MethodDiagram,
     MethodEdge,
     MethodNode,
+    NoNumericResult,
     ResultClaim,
     validate_award,
     validate_deep_read,
@@ -158,6 +159,30 @@ def test_unofficial_award_source_is_not_verified() -> None:
     )
 
     assert result.status is AwardStatus.NOT_VERIFIED
+
+
+def test_position_paper_can_explicitly_report_no_numeric_result() -> None:
+    deep_read = deep_read_with_claim(value="52.0", locator="Table 2").model_dump()
+    deep_read["result_claims"] = []
+    deep_read["no_numeric_result"] = NoNumericResult(
+        paper_type="position_paper",
+        reason=evidence_claim(
+            "The paper presents a normative position rather than an empirical method comparison."
+        ),
+    ).model_dump()
+
+    parsed = validate_deep_read(DeepRead.model_validate(deep_read))
+
+    assert parsed.result_claims == []
+    assert parsed.no_numeric_result is not None
+
+
+def test_ordinary_deep_read_still_requires_a_numeric_result() -> None:
+    deep_read = deep_read_with_claim(value="52.0", locator="Table 2").model_dump()
+    deep_read["result_claims"] = []
+
+    with pytest.raises(ValidationError, match="numeric results"):
+        DeepRead.model_validate(deep_read)
 
 
 @pytest.mark.parametrize(

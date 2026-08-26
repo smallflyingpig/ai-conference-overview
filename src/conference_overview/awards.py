@@ -101,6 +101,23 @@ class ResultClaim(EvidenceClaim):
         return normalized
 
 
+class NoNumericResult(BaseModel):
+    """Explicit state for a position paper whose main contribution is normative."""
+
+    paper_type: Literal["position_paper"]
+    reason: EvidenceClaim
+
+    @model_validator(mode="after")
+    def validate_reason(self) -> NoNumericResult:
+        if self.reason.evidence_type is not EvidenceType.PAPER_REPORTED:
+            raise ValueError("no-numeric-result reason must be paper_reported")
+        if not self.reason.source_urls or not _has_text(self.reason.locator):
+            raise ValueError(
+                "no-numeric-result reason requires a source URL and paper locator"
+            )
+        return self
+
+
 class MethodNode(BaseModel):
     """A diagram component that can be traced to a disclosed paper section."""
 
@@ -145,7 +162,8 @@ class DeepRead(BaseModel):
     research_problem: EvidenceClaim
     contribution: EvidenceClaim
     method_summary: EvidenceClaim
-    result_claims: list[ResultClaim] = Field(min_length=1)
+    result_claims: list[ResultClaim] = Field(default_factory=list)
+    no_numeric_result: NoNumericResult | None = None
     why_it_matters: list[EvidenceClaim] = Field(min_length=1)
     limitations: list[EvidenceClaim] = Field(min_length=1)
     data_training_setup: list[EvidenceClaim] = Field(min_length=1)
@@ -158,6 +176,14 @@ class DeepRead(BaseModel):
     @classmethod
     def normalize_required_text(cls, value: str) -> str:
         return _normalized_required_text(value)
+
+    @model_validator(mode="after")
+    def require_result_or_position_state(self) -> DeepRead:
+        if bool(self.result_claims) == (self.no_numeric_result is not None):
+            raise ValueError(
+                "deep read requires numeric results or one position-paper no-numeric-result state"
+            )
+        return self
 
 
 _WHY_IT_MATTERS_EVIDENCE_TYPES = frozenset(

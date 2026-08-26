@@ -619,6 +619,17 @@ const resultClaimSchema = z.object({
   evaluation_setting: z.string().trim().min(1, "evaluation setting is required"),
   locator: z.string().trim().min(1, "paper locator is required"),
 });
+const noNumericResultSchema = z.object({
+  paper_type: z.literal("position_paper"),
+  reason: evidenceClaimSchema.refine(
+    (claim) =>
+      claim.evidence_type === "paper_reported" &&
+      claim.source_urls.length > 0 &&
+      claim.locator != null &&
+      claim.locator.trim().length > 0,
+    "non-numeric result reason requires paper-reported source evidence and a locator",
+  ),
+});
 const methodNodeSchema = z.object({ identifier: nonBlankSchema, label: nonBlankSchema, paper_section: nonBlankSchema });
 const methodEdgeSchema = z.object({ source: nonBlankSchema, target: nonBlankSchema, data_flow_rationale: nonBlankSchema });
 export const methodDiagramArtifactSchema = z.object({
@@ -649,7 +660,8 @@ export const deepReadArtifactSchema = z.object({
   research_problem: evidenceClaimSchema,
   contribution: evidenceClaimSchema,
   method_summary: evidenceClaimSchema,
-  result_claims: z.array(resultClaimSchema).min(1),
+  result_claims: z.array(resultClaimSchema),
+  no_numeric_result: noNumericResultSchema.nullish(),
   why_it_matters: z.array(interpretiveClaimSchema).min(1),
   limitations: z.array(evidenceClaimSchema).min(1),
   data_training_setup: z.array(evidenceClaimSchema).min(1),
@@ -657,6 +669,16 @@ export const deepReadArtifactSchema = z.object({
   reproducibility_assessment: z.array(evidenceClaimSchema).min(1),
   transferable_implications: z.array(transferableClaimSchema).min(1),
   method_diagram: methodDiagramArtifactSchema.nullable(),
+}).superRefine((deepRead, context) => {
+  const hasNumericResults = deepRead.result_claims.length > 0;
+  const hasExplicitNonNumericState = deepRead.no_numeric_result != null;
+  if (hasNumericResults === hasExplicitNonNumericState) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["result_claims"],
+      message: "deep read requires exactly one numeric result state",
+    });
+  }
 });
 
 const advanceArtifactSchema = z.object({
