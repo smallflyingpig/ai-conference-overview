@@ -1,0 +1,663 @@
+deep_reads:
+- contribution:
+    claim: The paper defines policy value for identifying the worst-off and a prediction-access
+      ratio that compares marginal gains from better prediction with gains from expanded
+      screening capacity.
+    evidence_type: paper_reported
+    locator: Sections 1.1 and 3, PDF pp. 2-5
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/fischer-abaigar25a/fischer-abaigar25a.pdf
+  data_training_setup:
+  - claim: The empirical study uses German Federal Employment Agency data on unemployment
+      episodes and compares interpretable and more complex predictors within simulated
+      screening policies.
+    evidence_type: paper_reported
+    locator: Section 5 and Appendix A, PDF pp. 7-8 and 12-13
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/fischer-abaigar25a/fischer-abaigar25a.pdf
+  limitations:
+  - claim: The formal analysis uses stylized distributional assumptions, while the
+      case study is limited to a German unemployment-screening setting without downstream
+      intervention outcomes.
+    evidence_type: paper_reported
+    locator: Sections 3, 5, and 6, PDF pp. 4-9
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/fischer-abaigar25a/fischer-abaigar25a.pdf
+  method_diagram: null
+  method_summary:
+    claim: It analyzes the ratio theoretically under a Gaussian model, then applies
+      the same comparison to German long-term-unemployment data and alternative prediction
+      models.
+    evidence_type: paper_reported
+    locator: Sections 3-5, PDF pp. 4-8
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/fischer-abaigar25a/fischer-abaigar25a.pdf
+  no_numeric_result: null
+  paper_id: pmlr:v267:fischer-abaigar25a
+  prior_work_differences:
+  - claim: Unlike accuracy-centered profiling studies, the framework directly compares
+      improvements to prediction with an operational policy lever, screening capacity.
+    evidence_type: paper_reported
+    locator: Sections 1.1 and 2, PDF pp. 2-3
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/fischer-abaigar25a/fischer-abaigar25a.pdf
+  reproducibility_assessment:
+  - claim: The equations, estimands, model comparisons, and dataset provenance are
+      described, but access to the administrative microdata is restricted.
+    evidence_type: inference
+    locator: Sections 3-5 and Appendix A
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/fischer-abaigar25a/fischer-abaigar25a.pdf
+  research_problem:
+    claim: Risk-prediction systems for public programs are usually judged by predictive
+      accuracy without comparing their welfare gains with alternatives such as screening
+      more people.
+    evidence_type: paper_reported
+    locator: Abstract and Section 1, PDF pp. 1-2
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/fischer-abaigar25a/fischer-abaigar25a.pdf
+  result_claims:
+  - claim: Under the stated sufficient condition, increasing screening capacity raises
+      policy value by at least twice as much as the compared prediction improvement.
+    evaluation_setting: Gaussian outcome model under Theorem 3.4's conditions
+    evidence_type: paper_reported
+    locator: Theorem 3.4 and discussion, PDF p. 5
+    metric: minimum relative policy-value gain
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/fischer-abaigar25a/fischer-abaigar25a.pdf
+    value: '2'
+  transferable_implications:
+  - claim: For high-stakes model deployment, prediction quality should be evaluated
+      against the strongest non-model intervention under a shared welfare metric.
+    evidence_type: inference
+    locator: Derived from the prediction-access framework in Sections 3-6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/fischer-abaigar25a/fischer-abaigar25a.pdf
+  why_it_matters:
+  - claim: The work changes the deployment question from whether a model is more accurate
+      to whether prediction is the best use of a limited public-service budget.
+    evidence_type: inference
+    locator: Synthesis of Sections 1, 3, and 5
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/fischer-abaigar25a/fischer-abaigar25a.pdf
+- contribution:
+    claim: The paper introduces marginal importance-weighted and marginal variational
+      score-matching objectives, with extensions to truncated, sliced, and denoising
+      score matching.
+    evidence_type: paper_reported
+    locator: Sections 4.1-4.4, PDF pp. 4-7
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/givens25a/givens25a.pdf
+  data_training_setup:
+  - claim: Experiments cover synthetic parameter estimation, synthetic graph recovery,
+      and S&P 100 and yeast expression data under artificial missingness.
+    evidence_type: paper_reported
+    locator: Section 5 and Appendix E, PDF pp. 7-9 and 16-18
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/givens25a/givens25a.pdf
+  limitations:
+  - claim: The finite-sample loss bound does not directly yield parameter-error guarantees,
+      and the variational procedure adds optimization complexity when observed and
+      missing coordinates vary by record.
+    evidence_type: paper_reported
+    locator: Section 6, PDF p. 9
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/givens25a/givens25a.pdf
+  method_diagram: null
+  method_summary:
+    claim: The importance-weighted method estimates missing-coordinate expectations
+      using a proposal distribution, while the variational method jointly learns a
+      conditional approximation for the missing coordinates and the full score.
+    evidence_type: paper_reported
+    locator: Sections 4.1-4.2 and Algorithms 1-2, PDF pp. 4-7
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/givens25a/givens25a.pdf
+  no_numeric_result: null
+  paper_id: pmlr:v267:givens25a
+  prior_work_differences:
+  - claim: Unlike missing-data diffusion methods that assume a neural score network,
+      the proposed objectives preserve general explicit parameterizations and do not
+      require extra artificial corruption.
+    evidence_type: paper_reported
+    locator: Section 2, PDF pp. 2-3
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/givens25a/givens25a.pdf
+  reproducibility_assessment:
+  - claim: The paper provides algorithms, experimental details, and a public code
+      repository, while several key quantitative comparisons are presented as plots
+      rather than tables.
+    evidence_type: inference
+    locator: Algorithms 1-2, Section 5, and Appendix E
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/givens25a/givens25a.pdf
+  research_problem:
+    claim: Classical score matching assumes fully observed training samples, yet many
+      real datasets have different coordinates missing in different records.
+    evidence_type: paper_reported
+    locator: Abstract and Section 1, PDF pp. 1-2
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/givens25a/givens25a.pdf
+  result_claims:
+  - claim: The real yeast experiment retains 106 genes that are observed in at least
+      95 percent of samples, and Marg-Var is reported to outperform the compared methods
+      on the resulting graph-recovery evaluation.
+    evaluation_setting: Brem-Kruglyak yeast expression data after the paper's 95-percent
+      observation filter
+    evidence_type: paper_reported
+    locator: Section 5.2.5 and Figure 7, PDF p. 9
+    metric: genes in yeast graph-recovery evaluation
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/givens25a/givens25a.pdf
+    value: '106'
+  transferable_implications:
+  - claim: Missing-data objectives should be evaluated separately in low-dimensional
+      small-sample regimes and in high-dimensional conditional-modeling regimes because
+      the preferred estimator changes.
+    evidence_type: inference
+    locator: Derived from Sections 5-6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/givens25a/givens25a.pdf
+  why_it_matters:
+  - claim: The method lets score-based estimators use partially observed records without
+      restricting the score model to a particular neural architecture.
+    evidence_type: inference
+    locator: Synthesis of Sections 1 and 4
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/givens25a/givens25a.pdf
+- contribution:
+    claim: The position paper frames future-of-work harms as an AI-safety priority
+      and proposes transition support, collective licensing, and pro-worker international
+      governance.
+    evidence_type: paper_reported
+    locator: Abstract and Sections 3-5, PDF pp. 1 and 5-8
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/hazra25a/hazra25a.pdf
+  data_training_setup:
+  - claim: No new model is trained; the paper organizes published economic evidence,
+      labor-market observations, copyright cases, and governance proposals.
+    evidence_type: paper_reported
+    locator: Sections 2-5, PDF pp. 2-8
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/hazra25a/hazra25a.pdf
+  limitations:
+  - claim: The paper advances a policy position and draws on prior empirical studies;
+      it does not causally evaluate the proposed governance mechanisms or quantify
+      their implementation costs.
+    evidence_type: paper_reported
+    locator: Sections 3-6, PDF pp. 5-9
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/hazra25a/hazra25a.pdf
+  method_diagram: null
+  method_summary:
+    claim: The argument combines economic theories of technological substitution,
+      market power, copyright, and labor transition to connect model development practices
+      with distributional consequences.
+    evidence_type: paper_reported
+    locator: Sections 2-5, PDF pp. 2-8
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/hazra25a/hazra25a.pdf
+  no_numeric_result:
+    paper_type: position_paper
+    reason:
+      claim: This is a normative position paper that synthesizes economic and governance
+        arguments rather than reporting a new controlled empirical result.
+      evidence_type: paper_reported
+      locator: Abstract and Sections 1-6
+      source_urls:
+      - https://raw.githubusercontent.com/mlresearch/v267/main/assets/hazra25a/hazra25a.pdf
+  paper_id: pmlr:v267:hazra25a
+  prior_work_differences:
+  - claim: The central shift is from preventing discrete harmful model outputs to
+      treating labor-market structure and meaningful human work as safety outcomes.
+    evidence_type: paper_reported
+    locator: Sections 1 and 5, PDF pp. 1-2 and 7-8
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/hazra25a/hazra25a.pdf
+  reproducibility_assessment:
+  - claim: The argument and cited sources can be inspected, but its policy effectiveness
+      cannot be reproduced as a model experiment and would require separate causal
+      and institutional evaluation.
+    evidence_type: inference
+    locator: Sections 2-6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/hazra25a/hazra25a.pdf
+  research_problem:
+    claim: AI-safety agendas emphasize content, manipulation, cyber, bio, and existential
+      risks while giving less attention to medium- and long-term effects on work,
+      labor power, and inequality.
+    evidence_type: paper_reported
+    locator: Abstract and Section 1, PDF pp. 1-2
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/hazra25a/hazra25a.pdf
+  result_claims: []
+  transferable_implications:
+  - claim: Responsible-AI evaluation should add labor displacement, worker agency,
+      compensation, and market concentration to the set of monitored downstream outcomes.
+    evidence_type: inference
+    locator: Derived from Sections 3-6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/hazra25a/hazra25a.pdf
+  why_it_matters:
+  - claim: The paper broadens safety analysis from model behavior at the interface
+      to the institutions that distribute productivity gains, bargaining power, and
+      creative compensation.
+    evidence_type: inference
+    locator: Synthesis of Sections 1-6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/hazra25a/hazra25a.pdf
+- contribution:
+    claim: The paper formalizes the training difficulty and shows that confidence-based
+      adaptive token ordering can avoid hard subproblems at inference without retraining.
+    evidence_type: paper_reported
+    locator: Sections 3-4, PDF pp. 3-7
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25ah/kim25ah.pdf
+  data_training_setup:
+  - claim: Experiments train masked diffusion and autoregressive models on ordering-sensitive
+      SAT, Sudoku, and Zebra tasks and also test adaptive decoding on pretrained LLaDA-8B
+      coding and math benchmarks.
+    evidence_type: paper_reported
+    locator: Sections 3.3-4.3 and Appendix, PDF pp. 4-9
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25ah/kim25ah.pdf
+  limitations:
+  - claim: The largest gains appear on structured logic puzzles; improvements on LLaDA
+      coding and math benchmarks are smaller, and the adaptive heuristics are not
+      guaranteed to find an optimal order.
+    evidence_type: paper_reported
+    locator: Sections 4.3-5, PDF pp. 7-9
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25ah/kim25ah.pdf
+  method_diagram: null
+  method_summary:
+    claim: At each denoising step, adaptive inference selects masked positions using
+      token confidence or probability margin, then unmasks the most promising positions
+      instead of following a random order.
+    evidence_type: paper_reported
+    locator: Section 4.1, PDF pp. 5-6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25ah/kim25ah.pdf
+  no_numeric_result: null
+  paper_id: pmlr:v267:kim25ah
+  prior_work_differences:
+  - claim: Rather than changing masked-diffusion training, the main method exploits
+      its existing arbitrary-order decoding freedom with an adaptive inference policy.
+    evidence_type: paper_reported
+    locator: Sections 1-2 and 4, PDF pp. 1-3 and 5-7
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25ah/kim25ah.pdf
+  reproducibility_assessment:
+  - claim: The paper specifies task generators, model sizes, decoding policies, and
+      ablations; full replication still depends on matching the synthetic-task construction
+      and pretrained-model inference setup.
+    evidence_type: inference
+    locator: Sections 3-4 and Appendix
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25ah/kim25ah.pdf
+  research_problem:
+    claim: Masked diffusion models face harder training conditionals than autoregressive
+      models but can choose token-generation order at inference time, creating a trade-off
+      that was not well characterized.
+    evidence_type: paper_reported
+    locator: Abstract and Section 1, PDF pp. 1-2
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25ah/kim25ah.pdf
+  result_claims:
+  - claim: Top-K probability-margin decoding raises Sudoku accuracy from 6.88 percent
+      with vanilla masked-diffusion inference to 89.49 percent.
+    evaluation_setting: 6M masked diffusion model with Top-K probability-margin inference
+    evidence_type: paper_reported
+    locator: Table 2 and Section 4.2, PDF p. 7
+    metric: Sudoku solve accuracy percent
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25ah/kim25ah.pdf
+    value: '89.49'
+  transferable_implications:
+  - claim: For non-autoregressive generators, evaluation should search over justified
+      decoding schedules before attributing failure solely to model capacity or training.
+    evidence_type: inference
+    locator: Derived from Sections 4-5
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25ah/kim25ah.pdf
+  why_it_matters:
+  - claim: 'The study isolates token order as an inference-time capability: a model
+      that appears weak under random decoding may already contain a strong solver
+      accessible through better scheduling.'
+    evidence_type: inference
+    locator: Synthesis of Sections 3-5
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25ah/kim25ah.pdf
+- contribution:
+    claim: The paper proposes a two-stage process in which authors assess review quality
+      with reduced retaliation risk and reviewers receive portable, formal recognition
+      for high-quality service.
+    evidence_type: paper_reported
+    locator: Sections 4-5, PDF pp. 5-7
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25am/kim25am.pdf
+  data_training_setup:
+  - claim: No model is trained; the paper combines submission statistics, a stakeholder
+      analysis, existing reviewer-recognition programs, and a proposed workflow.
+    evidence_type: paper_reported
+    locator: Sections 1-5 and Tables 1-2
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25am/kim25am.pdf
+  limitations:
+  - claim: The proposal has not been trialed at conference scale and may add author
+      burden, gaming incentives, privacy concerns, and governance overhead.
+    evidence_type: paper_reported
+    locator: Sections 6-7, PDF pp. 7-8
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25am/kim25am.pdf
+  method_diagram: null
+  method_summary:
+    claim: Review text and author feedback are separated into stages, while a cross-conference
+      reward system records service quality and offers badges, credits, and other
+      incentives.
+    evidence_type: paper_reported
+    locator: Sections 4.1-5.2 and Figure 2, PDF pp. 5-7
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25am/kim25am.pdf
+  no_numeric_result:
+    paper_type: position_paper
+    reason:
+      claim: This position paper proposes governance changes for peer review and does
+        not report a controlled evaluation of the proposed process.
+      evidence_type: paper_reported
+      locator: Abstract and Sections 4-8
+      source_urls:
+      - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25am/kim25am.pdf
+  paper_id: pmlr:v267:kim25am
+  prior_work_differences:
+  - claim: Instead of relying only on reviewer guidelines or one-off awards, the proposal
+      creates recurring author-to-reviewer feedback and recognition that can transfer
+      across venues.
+    evidence_type: paper_reported
+    locator: Sections 3-5, PDF pp. 4-7
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25am/kim25am.pdf
+  reproducibility_assessment:
+  - claim: The proposed stages and reward categories are explicit, but there is no
+      deployment dataset or trial from which to estimate effects on review quality
+      or retaliation.
+    evidence_type: inference
+    locator: Sections 4-8
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25am/kim25am.pdf
+  research_problem:
+    claim: AI conferences face rapidly growing submission loads, declining review
+      quality, and weak reviewer accountability in a largely one-way review process.
+    evidence_type: paper_reported
+    locator: Abstract and Section 1, PDF pp. 1-2
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25am/kim25am.pdf
+  result_claims: []
+  transferable_implications:
+  - claim: Large-scale evaluation workflows may improve when feedback quality is measured
+      in both directions and high-quality reviewing becomes a visible, cumulative
+      contribution.
+    evidence_type: inference
+    locator: Derived from Sections 4-8
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25am/kim25am.pdf
+  why_it_matters:
+  - claim: The proposal treats review quality as a system-design problem involving
+      authors, reviewers, and conferences rather than attributing failure to reviewer
+      effort alone.
+    evidence_type: inference
+    locator: Synthesis of Sections 2-5
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/kim25am/kim25am.pdf
+- contribution:
+    claim: The paper builds controlled algorithmic creativity tasks and compares next-token
+      training with teacherless and diffusion-style multi-token training, while proposing
+      seed-conditioning as an input-side source of diversity.
+    evidence_type: paper_reported
+    locator: Sections 2-4, PDF pp. 3-8
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/nagarajan25a/nagarajan25a.pdf
+  data_training_setup:
+  - claim: Main experiments use Gemma v1 2B averaged over four runs and compare SEDD
+      90M with GPT-2 86M; training continues until the paper's creativity score saturates.
+    evidence_type: paper_reported
+    locator: Section 4 experimental details, PDF p. 6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/nagarajan25a/nagarajan25a.pdf
+  limitations:
+  - claim: The tasks deliberately caricature real creativity, some gains disappear
+      for smaller teacherless Transformers, and no result proves that the alternatives
+      dominate next-token training generally.
+    evidence_type: paper_reported
+    locator: Section 6 and Appendix A, PDF pp. 9 and 11
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/nagarajan25a/nagarajan25a.pdf
+  method_diagram: null
+  method_summary:
+    claim: Creativity is measured through correctness, diversity across generated
+      solutions, and originality relative to training examples; models are varied
+      along training objective and where sampling randomness is injected.
+    evidence_type: paper_reported
+    locator: Sections 2.2-4, PDF pp. 3-8
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/nagarajan25a/nagarajan25a.pdf
+  no_numeric_result: null
+  paper_id: pmlr:v267:nagarajan25a
+  prior_work_differences:
+  - claim: The paper studies in-distribution originality and diversity on minimal
+      open-ended tasks rather than only accuracy failures or temperature-based diversity
+      at decoding.
+    evidence_type: paper_reported
+    locator: Sections 1 and 5, PDF pp. 1-2 and 9
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/nagarajan25a/nagarajan25a.pdf
+  reproducibility_assessment:
+  - claim: Task definitions, model settings, ablations, and part of the code are disclosed,
+      but several reported scores must be read from plots and only part of the code
+      is released.
+    evidence_type: inference
+    locator: Abstract, Section 4, figures, and appendices
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/nagarajan25a/nagarajan25a.pdf
+  research_problem:
+    claim: Next-token training and output-temperature sampling may be poorly matched
+      to open-ended tasks that require a stochastic multi-step leap while preserving
+      coherence and originality.
+    evidence_type: paper_reported
+    locator: Abstract and Section 1, PDF pp. 1-2
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/nagarajan25a/nagarajan25a.pdf
+  result_claims:
+  - claim: The similarly sized SEDD diffusion model improves algorithmic creativity
+      over GPT-2 next-token training on three of four tasks.
+    evaluation_setting: SEDD 90M versus GPT-2 86M across four controlled algorithmic
+      tasks
+    evidence_type: paper_reported
+    locator: Figure 4 and Section 4, PDF p. 7
+    metric: tasks with higher algorithmic-creativity score
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/nagarajan25a/nagarajan25a.pdf
+    value: '3'
+  transferable_implications:
+  - claim: Generative-data pipelines should track originality and diversity at fixed
+      quality, and compare input-side stochastic conditioning with output-temperature
+      sampling rather than treating temperature as the only exploration control.
+    evidence_type: inference
+    locator: Derived from Sections 2, 4, and 6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/nagarajan25a/nagarajan25a.pdf
+  why_it_matters:
+  - claim: The experiments separate open-ended exploration from ordinary accuracy,
+      showing that a training objective can preserve correctness yet still collapse
+      the range of novel solutions.
+    evidence_type: inference
+    locator: Synthesis of Sections 2-4
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/nagarajan25a/nagarajan25a.pdf
+- contribution:
+    claim: The paper recasts conformal prediction as Bayesian quadrature over an unknown
+      quantile function and derives a posterior distribution over deployment loss
+      without choosing a parametric prior.
+    evidence_type: paper_reported
+    locator: Sections 3-4, PDF pp. 3-6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/snell25a/snell25a.pdf
+  data_training_setup:
+  - claim: Evaluation uses 10,000 random splits for synthetic binomial and heteroskedastic
+      settings, plus MS-COCO multilabel classification with 1,000 calibration and
+      3,952 test examples per split.
+    evidence_type: paper_reported
+    locator: Section 5, PDF pp. 6-8
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/snell25a/snell25a.pdf
+  limitations:
+  - claim: The guarantees assume deployment data are IID with calibration data and
+      losses have a known upper bound; violating either condition invalidates the
+      guarantee.
+    evidence_type: paper_reported
+    locator: Section 6, PDF p. 8
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/snell25a/snell25a.pdf
+  method_diagram: null
+  method_summary:
+    claim: Observed calibration losses constrain a monotone quantile function; a Bayesian-quadrature
+      construction produces a distribution over expected loss, and a highest-posterior-density
+      rule chooses decisions under a user-set risk probability.
+    evidence_type: paper_reported
+    locator: Sections 3.1-4.3, PDF pp. 3-6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/snell25a/snell25a.pdf
+  no_numeric_result: null
+  paper_id: pmlr:v267:snell25a
+  prior_work_differences:
+  - claim: Instead of only guaranteeing marginal expected loss, the method models
+      a data-conditional distribution over loss and permits prior information to be
+      incorporated in future extensions.
+    evidence_type: paper_reported
+    locator: Sections 1, 2.3, and 6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/snell25a/snell25a.pdf
+  reproducibility_assessment:
+  - claim: The derivation, simulation settings, baselines, and public code URL are
+      provided, supporting replication under the stated bounded-loss and IID assumptions.
+    evidence_type: inference
+    locator: Sections 4-5 and code footnote, PDF pp. 5-7
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/snell25a/snell25a.pdf
+  research_problem:
+    claim: Standard conformal guarantees control loss on average over unseen calibration
+      datasets and provide limited information about risk conditional on the calibration
+      data actually observed.
+    evidence_type: paper_reported
+    locator: Abstract and Sections 1-2, PDF pp. 1-3
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/snell25a/snell25a.pdf
+  result_claims:
+  - claim: In the synthetic binomial experiment, the proposed 95-percent rule exceeds
+      the target risk in 0.03 percent of 10,000 trials, compared with 21.20 percent
+      for conformal risk control.
+    evaluation_setting: 10,000 synthetic binomial trials with beta=0.95
+    evidence_type: paper_reported
+    locator: Table 1 and Section 6, PDF p. 7
+    metric: trials exceeding target risk percent
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/snell25a/snell25a.pdf
+    value: '0.03'
+  transferable_implications:
+  - claim: Uncertainty tools should report how often a calibration-conditioned decision
+      can violate a target, not only an average-coverage statement across hypothetical
+      datasets.
+    evidence_type: inference
+    locator: Derived from Sections 5-6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/snell25a/snell25a.pdf
+  why_it_matters:
+  - claim: The framework exposes the distribution of plausible deployment risk rather
+      than compressing uncertainty into a single marginal guarantee.
+    evidence_type: inference
+    locator: Synthesis of Sections 3-6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/snell25a/snell25a.pdf
+- contribution:
+    claim: CollabLLM estimates the long-term value of a response through simulated
+      future dialogue and reinforcement-finetunes the policy with multiturn-aware
+      rewards.
+    evidence_type: paper_reported
+    locator: Figure 1 and Sections 3-4, PDF pp. 1 and 3-5
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/wu25i/wu25i.pdf
+  data_training_setup:
+  - claim: The benchmark covers document creation, question answering, and problem
+      solving; training combines supervised data, preference data, simulated multi-turn
+      trajectories, and reinforcement fine-tuning.
+    evidence_type: paper_reported
+    locator: Sections 4-5 and Appendix E, PDF pp. 5-8 and 16-17
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/wu25i/wu25i.pdf
+  limitations:
+  - claim: The user simulator may not match real users, reward aggregation depends
+      on chosen weights and judges, and the main tasks cover a bounded set of collaborative
+      scenarios.
+    evidence_type: paper_reported
+    locator: Sections 6-8 and Appendix, PDF pp. 9-11
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/wu25i/wu25i.pdf
+  method_diagram: null
+  method_summary:
+    claim: For a candidate response, a user simulator rolls the conversation forward;
+      task performance, interactivity, and efficiency are combined into a long-horizon
+      reward used for offline and online policy optimization.
+    evidence_type: paper_reported
+    locator: Sections 3.2-4.2, PDF pp. 3-6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/wu25i/wu25i.pdf
+  no_numeric_result: null
+  paper_id: pmlr:v267:wu25i
+  prior_work_differences:
+  - claim: Unlike single-turn preference optimization, CollabLLM evaluates the downstream
+      conversation induced by a response and rewards progress toward the user's eventual
+      intent.
+    evidence_type: paper_reported
+    locator: Sections 1, 3, and 7, PDF pp. 1-4 and 10
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/wu25i/wu25i.pdf
+  reproducibility_assessment:
+  - claim: The paper provides formulas, prompts, hyperparameters, benchmark construction,
+      model comparisons, and a project URL; reproduction still depends on proprietary
+      judge and base-model components.
+    evidence_type: inference
+    locator: Sections 3-6 and Appendices D-G
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/wu25i/wu25i.pdf
+  research_problem:
+    claim: LLMs trained with immediate next-turn rewards often answer ambiguous requests
+      too early instead of helping users clarify goals over multiple turns.
+    evidence_type: paper_reported
+    locator: Abstract and Section 1, PDF pp. 1-2
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/wu25i/wu25i.pdf
+  result_claims:
+  - claim: In a study with 201 human judges, CollabLLM increases user satisfaction
+      by 17.6 percent.
+    evaluation_setting: document-creation user study with 201 MTurk participants
+    evidence_type: paper_reported
+    locator: Abstract and Section 6, PDF pp. 1 and 9
+    metric: relative user-satisfaction improvement percent
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/wu25i/wu25i.pdf
+    value: '17.6'
+  transferable_implications:
+  - claim: Agent training should measure user-goal progress, clarification quality,
+      and interaction cost over a rollout instead of optimizing each assistant turn
+      independently.
+    evidence_type: inference
+    locator: Derived from Sections 3-6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/wu25i/wu25i.pdf
+  why_it_matters:
+  - claim: The work treats clarification, suggestion, and shorter collaboration as
+      trainable long-horizon behavior rather than prompt-side etiquette.
+    evidence_type: inference
+    locator: Synthesis of Sections 1 and 3-6
+    source_urls:
+    - https://raw.githubusercontent.com/mlresearch/v267/main/assets/wu25i/wu25i.pdf
+schema_version: conference-award-deep-reads-v1
