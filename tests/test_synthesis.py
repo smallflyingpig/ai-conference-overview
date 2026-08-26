@@ -77,3 +77,34 @@ def test_single_year_advances_cover_five_lanes_without_trend_language() -> None:
         for claim in advance.claims
         for url in claim.source_urls
     )
+
+
+def test_text_lane_uses_the_configured_core_task_taxonomy_name() -> None:
+    topics = [
+        "NLP/CV Core Tasks",
+        "Multimodal Models",
+        "Reasoning and Agents",
+        "Learning and Optimization",
+        "Evaluation",
+    ]
+    records = [_paper(index, topic) for index, topic in enumerate(topics)]
+    assignments = [
+        Assignment(
+            paper_id=record.paper_id,
+            primary_topic=topic,
+            secondary_topics=(),
+            confidence=Decimal("0.95"),
+            rationale=f"The abstract directly studies {topic}.",
+            taxonomy_version="2026-08-24-v1",
+        )
+        for record, topic in zip(records, topics, strict=True)
+    ]
+
+    advances = build_single_year_advances(
+        records,
+        assignments,
+        {topic: audit_theme([True] * 50) for topic in topics},
+    )
+
+    assert len(advances) == 5
+    assert records[0].paper_id in advances[0].supporting_paper_ids

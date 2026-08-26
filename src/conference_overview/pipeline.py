@@ -668,8 +668,16 @@ def import_semantic_assignments_scope(
     request: VenueRequest,
     root: Path,
     input_paths: Sequence[Path],
+    *,
+    labeling_method: str = "explicit_agent_semantic_labeling",
 ) -> list[Assignment]:
     """Merge reviewed assignment files into the exact normalized corpus."""
+    classifiers = {
+        "explicit_agent_semantic_labeling": "agent-semantic-batch-review-v1",
+        "embedding_assisted_semantic_labeling": "semantic-embedding-candidate-v1",
+    }
+    if labeling_method not in classifiers:
+        raise ValueError(f"unsupported semantic labeling method: {labeling_method}")
     paths = ScopePaths.for_request(Path(root), request)
     report, included = _validated_classification_records(request, root)
     assert_publishable(report)
@@ -784,9 +792,9 @@ def import_semantic_assignments_scope(
         assignments_sha256=assignments_sha256,
         review_status=review_status,
         queue_sha256=queue_sha256,
-        classifier="agent-semantic-batch-review-v1",
+        classifier=classifiers[labeling_method],
         semantic_labeling={
-            "method": "explicit_agent_semantic_labeling",
+            "method": labeling_method,
             "source_batches": source_batches,
         },
     )

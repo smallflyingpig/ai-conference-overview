@@ -292,6 +292,47 @@ def test_import_semantic_assignments_accepts_exact_icml_membership_and_is_stable
     )
 
 
+def test_import_semantic_assignments_records_embedding_assisted_method(
+    tmp_path: Path,
+) -> None:
+    request = _collect_small_icml_2025(tmp_path)
+    first = _write_assignment_source(
+        tmp_path / "embedding-a.jsonl", ("pmlr:v267:a-mancisidor25a",)
+    )
+    second = _write_assignment_source(
+        tmp_path / "embedding-b.jsonl", ("pmlr:v267:aamand25a",)
+    )
+
+    import_semantic_assignments_scope(
+        request,
+        tmp_path,
+        [first, second],
+        labeling_method="embedding_assisted_semantic_labeling",
+    )
+
+    manifest = json.loads(
+        (tmp_path / "data/classification/icml/2025-main/classification-manifest.json").read_text()
+    )
+    assert manifest["classifier"] == "semantic-embedding-candidate-v1"
+    assert manifest["semantic_labeling"]["method"] == (
+        "embedding_assisted_semantic_labeling"
+    )
+
+
+def test_import_semantic_assignments_rejects_unknown_labeling_method(
+    tmp_path: Path,
+) -> None:
+    request = _collect_small_icml_2025(tmp_path)
+
+    with pytest.raises(ValueError, match="unsupported semantic labeling method"):
+        import_semantic_assignments_scope(
+            request,
+            tmp_path,
+            [],
+            labeling_method="unrecorded_method",
+        )
+
+
 @pytest.mark.parametrize(
     "case", ["missing", "extra", "duplicate", "duplicate_source", "taxonomy"]
 )

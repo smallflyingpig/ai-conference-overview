@@ -16,7 +16,7 @@ from conference_overview.models import (
 _LANES: tuple[tuple[AdvanceCategory, tuple[str, ...], str, str], ...] = (
     (
         AdvanceCategory.TEXT_LLMS,
-        ("Foundation Models", "NLP and CV Core Methods"),
+        ("Foundation Models", "NLP/CV Core Tasks"),
         "基础模型如何改进表示、生成与适配？",
         "基础模型的能力提升需要同时处理表示方式、训练目标与适配效率。",
     ),

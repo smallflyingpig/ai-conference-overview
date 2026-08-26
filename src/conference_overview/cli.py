@@ -217,6 +217,10 @@ def import_classification(
     venues: str = typer.Option(..., "--venues"),
     years: str = typer.Option(..., "--years"),
     tracks: str | None = typer.Option(None, "--tracks"),
+    labeling_method: str = typer.Option(
+        "explicit_agent_semantic_labeling",
+        "--labeling-method",
+    ),
     root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
 ) -> None:
     """Import exact semantic-labeling files for the requested conference."""
@@ -228,7 +232,12 @@ def import_classification(
     )
     assignments = _run(
         "import-classification",
-        lambda: import_semantic_assignments_scope(request, root, inputs),
+        lambda: import_semantic_assignments_scope(
+            request,
+            root,
+            inputs,
+            labeling_method=labeling_method,
+        ),
     )
     _success(
         "import-classification",
