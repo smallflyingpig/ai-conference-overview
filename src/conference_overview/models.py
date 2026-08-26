@@ -133,7 +133,11 @@ class VenueRequest(BaseModel):
     venue: str
     year: int
     track: str | None = None
+    adapter: str | None = None
     source_key: str | None = None
+    source_urls: dict[str, HttpUrl] = Field(default_factory=dict)
+    final_source_url: HttpUrl | None = None
+    publication_status: str | None = None
     bibtex_url: HttpUrl | None = None
     volume_url: HttpUrl | None = None
     official_award_hosts: tuple[str, ...] = Field(default_factory=tuple)

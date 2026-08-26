@@ -86,7 +86,11 @@ def normalize_request(venue: str, year: int, track: str | None) -> VenueRequest:
         venue=canonical_venue,
         year=year,
         track=canonical_track,
+        adapter=route.get("adapter"),
         source_key=route.get("source_key"),
+        source_urls=route.get("source_urls", {}),
+        final_source_url=route.get("final_source_url"),
+        publication_status=route.get("publication_status"),
         bibtex_url=route.get("bibtex_url"),
         volume_url=route.get("volume_url"),
         official_award_hosts=canonicalize_official_hosts(

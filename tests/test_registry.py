@@ -31,6 +31,36 @@ def test_acl_request_infers_the_only_configured_track() -> None:
     assert request.source_key == "2026.acl-long"
 
 
+def test_icml_main_request_uses_official_preliminary_sources() -> None:
+    request = normalize_request("icml", 2026, None)
+
+    assert request.venue == "ICML"
+    assert request.track == "main"
+    assert request.adapter == "icml_virtual"
+    assert request.source_key == "icml-2026-main-preliminary"
+    assert request.publication_status == "preliminary_official_program"
+    assert str(request.source_urls["papers_page"]) == (
+        "https://icml.cc/virtual/2026/papers.html"
+    )
+    assert str(request.source_urls["events"]) == (
+        "https://icml.cc/static/virtual/data/icml-2026-orals-posters.json"
+    )
+    assert str(request.source_urls["abstracts"]) == (
+        "https://icml.cc/static/virtual/data/icml-2026-abstracts.json"
+    )
+    assert str(request.source_urls["openreview_group"]) == (
+        "https://openreview.net/group?id=ICML.cc/2026/Conference"
+    )
+    assert str(request.final_source_url) == "https://proceedings.mlr.press/v306/"
+    assert request.official_award_hosts == ()
+
+
+def test_icml_rejects_acl_track_name() -> None:
+    request = normalize_request("ICML", 2026, "long")
+
+    assert request.source_key is None
+
+
 def test_official_hosts_are_canonicalized_and_deduplicated_once() -> None:
     assert canonicalize_official_hosts(
         [" Example.COM. ", "example.com", "BÜCHER.example.", "xn--bcher-kva.example"]
