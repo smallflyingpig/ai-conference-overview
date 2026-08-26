@@ -18,8 +18,8 @@ const { view } = Astro.props;
 ---
 
 <BaseLayout
-  title={`${view.venue} ${view.year} 论文分布 — AI Conference Overview`}
-  description={`${view.scopeLabel} 的论文清单和经过人工抽查的主题分布。`}
+  title={`${view.venue} ${view.year} 论文 — AI Conference Overview`}
+  description={`${view.scopeLabel} 的论文清单${view.mode === "distribution" ? "和主题分布" : ""}。`}
   conferenceAvailable={true}
 >
   <div class="conference-shell">
@@ -28,7 +28,7 @@ const { view } = Astro.props;
       <p class="conference-monogram" aria-hidden="true">{view.venue}</p>
       <h1>{view.pageHeading}</h1>
       <dl class="identity-index">
-        <div><dt>视图</dt><dd>分布</dd></div>
+        <div><dt>内容</dt><dd>{view.mode === "papers-only" ? "论文清单" : "主题分布"}</dd></div>
         <div><dt>时间</dt><dd>{view.periodLabel}</dd></div>
         <div><dt>范围</dt><dd>{view.scopeLabel}</dd></div>
       </dl>
@@ -47,16 +47,16 @@ const { view } = Astro.props;
     {view.mode === "papers-only" ? (
       <article class="distribution-plane preliminary-conference">
         <header class="distribution-header">
-          <p class="eyebrow">预发布论文清单</p>
+          <p class="eyebrow">{view.publicationStatus === "final" ? "正式论文集" : "预发布论文清单"}</p>
           <h2>主会论文已经可以浏览。</h2>
           <p class="preliminary-notice">{view.publicationNotice}</p>
         </header>
         <section class="preliminary-scope" aria-labelledby="included-scope">
-          <div><h3 id="included-scope">本次收录</h3><p>ICML 2026 Main Conference 官方论文记录，以及官网提供的英文摘要和展示信息。</p></div>
-          <div><h3>暂不包含</h3><p>Position Papers、Journal-to-Conference、workshops、主题分布、趋势、Advances 和获奖论文分析。</p></div>
+          <div><h3 id="included-scope">本次收录</h3><p>{view.venue} {view.year} Main Conference 官方论文记录，以及官方来源提供的英文摘要和论文信息。</p></div>
+          <div><h3>本轮暂不提供</h3><p>Workshops 等其他 track，以及主题分布、趋势、Advances 和获奖论文分析。</p></div>
         </section>
-        <p><a class="primary-link" href="/ai-conference-overview/papers/">浏览 ICML 2026 论文</a></p>
-        <footer class="artifact-trace"><span>等待 PMLR Volume 306 最终对照</span><code>{view.generation}</code></footer>
+        <p><a class="primary-link" href="/ai-conference-overview/papers/">浏览 {view.venue} {view.year} 论文</a></p>
+        <footer class="artifact-trace"><span>{view.publicationStatus === "final" ? "数据来自正式论文集" : "等待正式论文集发布后再次对照"}</span><code>{view.generation}</code></footer>
       </article>
     ) : (
     <article class="distribution-plane">

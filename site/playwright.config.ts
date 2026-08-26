@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const origin = "http://127.0.0.1:4321";
+const port = process.env.PLAYWRIGHT_PORT ?? "4321";
+const origin = `http://127.0.0.1:${port}`;
 
 export default defineConfig({
   testDir: "./tests",
@@ -26,7 +27,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run preview -- --host 127.0.0.1 --port 4321",
+    command: `npm run preview -- --host 127.0.0.1 --port ${port}`,
     url: `${origin}/ai-conference-overview/`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

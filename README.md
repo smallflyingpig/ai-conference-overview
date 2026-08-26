@@ -4,7 +4,7 @@ AI Conference Overview 是一个面向 AI 顶会的论文研究网站，集中�
 
 **在线访问：[AI Conference Overview](https://smallflyingpig.github.io/ai-conference-overview/)**
 
-当前版本收录 **ACL 2026 Long Papers**：从官方论文集发现 2,223 条记录，排除 1 条论文集前言后，共纳入 2,222 篇论文。由于目前只有 ACL 2026 一年的数据，网站展示的是当年论文分布，不能据此判断长期趋势。
+当前版本收录 **ACL 2026 Long Papers** 和 **ICML 2025 Main Conference**，共可检索 5,552 篇论文。ACL 2026 已完成主题分析和获奖论文解读；ICML 2025 目前先提供 PMLR 正式论文集、英文摘要和论文详情，主题分析将在后续补充。
 
 ## 网站里有什么
 
@@ -12,7 +12,7 @@ AI Conference Overview 是一个面向 AI 顶会的论文研究网站，集中�
 - **分布与趋势**：比较各主题的论文数量与占比，并明确区分单年分布和多年趋势。
 - **研究进展**：从 Text LLMs、Multimodal Models、Reasoning & Agents、Data & Training、Evaluation & Trust 五个方向梳理代表性工作。
 - **获奖论文**：收录 30 篇官方获奖论文，提供三分钟导读、中文摘要、方法说明、关键结果、局限和研究启发。
-- **论文索引**：浏览 2,222 篇论文，并按标题、作者和主题检索。
+- **论文索引**：浏览 5,552 篇论文，并按标题、作者、会议和主题检索。
 - **方法说明**：了解数据来源、分类方法、人工抽查结果和统计口径。
 
 ## 当前收录范围
@@ -20,6 +20,7 @@ AI Conference Overview 是一个面向 AI 顶会的论文研究网站，集中�
 | 会议 | 年份与 Track | 状态 |
 | --- | --- | --- |
 | ACL | 2026 Long Papers | 已完成论文收集、主题分类、人工抽查、研究综述和获奖论文解读 |
+| ICML | 2025 Main Conference | 已从 PMLR Volume 267 收录 3,330 篇正式论文；当前提供论文清单、英文摘要和详情页 |
 | EMNLP | 待接入 | 已定义数据适配方向 |
 | ICLR | 待接入 | 已定义数据适配方向 |
 | ICML | 2026 Main Conference | 接入和网页代码已完成；官方分页与 OpenReview 精确查询目前返回 403，因此尚未发布不完整的论文目录，等待官方接口恢复后再导入 |
@@ -119,6 +120,21 @@ ICML 2026 的预发布数据以 OpenReview 中 `ICML.cc/2026/Conference` 的精�
 
 只要官方分页、OpenReview 查询或总数对照失败，导入就会停止，也不会生成 `data/releases/ICML/2026/current.json`。项目不会改用第三方列表，也不会根据标题或 session 猜测论文所属 Track。
 
+### 导入 ICML 2025 Main Conference
+
+ICML 2025 使用正式发布的 [PMLR Volume 267](https://proceedings.mlr.press/v267/)。程序会同时下载论文集目录和官方 Citeproc 元数据，只有两边的 3,330 个论文 ID 完全一致时才会生成发布版本。当前数据没有缺失英文摘要或 PDF 链接；PMLR 元数据未提供 DOI，因此 DOI 缺失数为 3,330。
+
+```bash
+.venv/bin/conference-trends collect \
+  --venues ICML --years 2025 --tracks main
+.venv/bin/conference-trends validate \
+  --venues ICML --years 2025 --tracks main
+.venv/bin/conference-trends analyze \
+  --venues ICML --years 2025 --tracks main --write-release
+```
+
+这一步只发布论文清单和英文详情，不会自动生成主题分布、趋势、中文摘要、研究综述或获奖论文解读。
+
 ## 测试与本地预览
 
 运行与 CI 相同的检查：
@@ -134,7 +150,7 @@ npm run test:e2e
 npm run preview -- --host 127.0.0.1 --port 4321
 ```
 
-打开 `http://127.0.0.1:4321/ai-conference-overview/`。Playwright 会检查桌面端和手机端布局、ACL 会议概览、研究进展、30 篇获奖论文、内部链接、页面响应和浏览器错误。
+打开 `http://127.0.0.1:4321/ai-conference-overview/`。Playwright 会检查桌面端和手机端布局、ACL 会议概览、ICML 2025 论文清单、研究进展、30 篇获奖论文、内部链接、页面响应和浏览器错误。
 
 项目也支持在没有会议数据时安全构建：
 

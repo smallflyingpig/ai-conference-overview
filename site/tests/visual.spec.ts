@@ -23,6 +23,26 @@ test("ACL 2026 中文页面保留数据来源与表格 fallback", async ({ page 
   expect(consoleErrors).toEqual([]);
 });
 
+test("ICML 2025 正式论文集可以检索并进入英文详情", async ({ page }) => {
+  const consoleErrors = watchConsoleErrors(page);
+  await page.goto(`${basePath}conferences/icml/2025/`);
+
+  await expect(page.getByRole("heading", { name: "ICML 2025 主会论文" })).toBeVisible();
+  await expect(page.getByText("正式论文集", { exact: true })).toBeVisible();
+  await expect(page.getByText("3330", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("预发布论文清单", { exact: true })).toHaveCount(0);
+
+  await page.getByRole("link", { name: "浏览 ICML 2025 论文" }).click();
+  await page.getByLabel("会议").selectOption("ICML");
+  await page.getByLabel("搜索论文").fill("Lightweight Protocols for Distributed Private Quantile Estimation");
+  await expect(page.locator("[data-paper-row]:visible")).toHaveCount(1);
+  await page.locator("[data-paper-row]:visible h3 a").click();
+  await expect(page.getByRole("heading", { name: "Lightweight Protocols for Distributed Private Quantile Estimation" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "英文摘要" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "官方页面" })).toBeVisible();
+  expect(consoleErrors).toEqual([]);
+});
+
 test("方法说明页面用中文呈现分类处理记录", async ({ page }, testInfo) => {
   const consoleErrors = watchConsoleErrors(page);
   await page.goto("/ai-conference-overview/methodology/");
@@ -92,6 +112,7 @@ test("公开页面使用自然中文而不是内部工程术语", async ({ page 
   const routes = new Set([
     basePath,
     `${basePath}conferences/acl/2026/`,
+    `${basePath}conferences/icml/2025/`,
     `${basePath}trends/`,
     `${basePath}advances/`,
     `${basePath}awards/`,
@@ -138,6 +159,7 @@ test("internal links stay within the project base path and resolve", async ({ pa
   const routes = [
     basePath,
     `${basePath}conferences/acl/2026/`,
+    `${basePath}conferences/icml/2025/`,
     `${basePath}trends/`,
     `${basePath}advances/`,
     `${basePath}awards/`,

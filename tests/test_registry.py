@@ -55,6 +55,19 @@ def test_icml_main_request_uses_official_preliminary_sources() -> None:
     assert request.official_award_hosts == ()
 
 
+def test_icml_2025_defaults_to_final_pmlr_proceedings() -> None:
+    request = normalize_request("ICML", 2025, None)
+
+    assert request.track == "main"
+    assert request.adapter == "pmlr"
+    assert request.source_key == "pmlr-v267"
+    assert request.publication_status == "final_proceedings"
+    assert str(request.source_urls["volume"]) == "https://proceedings.mlr.press/v267/"
+    assert str(request.source_urls["metadata"]) == (
+        "https://proceedings.mlr.press/v267/assets/bib/citeproc.yaml"
+    )
+
+
 def test_icml_rejects_acl_track_name() -> None:
     request = normalize_request("ICML", 2026, "long")
 

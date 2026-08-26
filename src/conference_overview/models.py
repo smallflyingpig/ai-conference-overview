@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Literal
 
-from pydantic import BaseModel, Field, HttpUrl, field_validator
+from pydantic import BaseModel, Field, HttpUrl, field_validator, model_validator
 
 
 class RecordStatus(str, Enum):
@@ -41,8 +41,8 @@ class AnalysisAvailability(BaseModel):
 
 
 class PublicationContext(BaseModel):
-    status: Literal["preliminary_official_program"]
-    final_source_status: Literal["not_published"]
+    status: Literal["preliminary_official_program", "final_proceedings"]
+    final_source_status: Literal["not_published", "available"]
     final_source_url: HttpUrl
     notice: str = Field(min_length=1)
     analysis_availability: AnalysisAvailability
@@ -54,6 +54,16 @@ class PublicationContext(BaseModel):
         if not normalized:
             raise ValueError("publication notice must not be blank")
         return normalized
+
+    @model_validator(mode="after")
+    def validate_source_state(self) -> "PublicationContext":
+        expected = {
+            "preliminary_official_program": "not_published",
+            "final_proceedings": "available",
+        }[self.status]
+        if self.final_source_status != expected:
+            raise ValueError("publication status contradicts final source status")
+        return self
 
 
 class SourceRef(BaseModel):

@@ -101,7 +101,7 @@ const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV
             <ConferenceCard
               venue={conferenceView.venue}
               year={conferenceView.year}
-              scope={`${conferenceView.scopeLabel}${conferenceView.mode === "papers-only" ? " · 预发布" : ""}`}
+              scope={`${conferenceView.scopeLabel}${conferenceView.publicationStatus === "preliminary" ? " · 预发布" : ""}`}
               paperCount={conferenceView.includedCount}
               retrievedAt={conferenceView.retrievedAt}
               href={projectPath(base, `conferences/${conferenceView.venueSlug}/${conferenceView.year}`)}

@@ -10,8 +10,11 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from enum import Enum
 from html import unescape
+from typing import Any
+from urllib.parse import urlparse
 
 import httpx
+import yaml
 
 from conference_overview.adapters.acl import normalize_title
 from conference_overview.fetch import (
@@ -41,6 +44,132 @@ class FetchedPmlrSource:
 
 class PmlrReconciliationError(ValueError):
     """Raised when preliminary and final identities cannot be matched safely."""
+
+
+def _configured_volume(request: VenueRequest) -> str:
+    raw = request.source_urls.get("volume") or request.final_source_url
+    if raw is None:
+        raise PmlrReconciliationError("request has no configured PMLR volume")
+    match = re.search(r"/v(\d+)/?$", urlparse(str(raw)).path)
+    if match is None:
+        raise PmlrReconciliationError("configured PMLR URL has no volume number")
+    return match.group(1)
+
+
+def _clean_text(value: object) -> str | None:
+    if not isinstance(value, str):
+        return None
+    cleaned = _html_text(value)
+    return cleaned or None
+
+
+def _citeproc_authors(value: object) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    authors: list[str] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        name = " ".join(
+            part
+            for key in ("given", "family")
+            if (part := _clean_text(item.get(key))) is not None
+        )
+        if name:
+            authors.append(name)
+    return authors
+
+
+def parse_pmlr_citeproc(
+    data: bytes, request: VenueRequest, source: SourceRef
+) -> tuple[PaperRecord, ...]:
+    """Parse the official PMLR citeproc YAML for one configured volume."""
+    try:
+        payload: Any = yaml.safe_load(data.decode("utf-8"))
+    except (UnicodeDecodeError, yaml.YAMLError) as exc:
+        raise PmlrReconciliationError("PMLR citeproc metadata is invalid") from exc
+    if not isinstance(payload, list) or not payload:
+        raise PmlrReconciliationError("PMLR citeproc metadata contains no papers")
+    volume = _configured_volume(request)
+    expected_container = (
+        "Proceedings of the 42nd International Conference on Machine Learning"
+        if (request.venue, request.year, volume) == ("ICML", 2025, "267")
+        else None
+    )
+    if expected_container is None:
+        raise PmlrReconciliationError("unsupported PMLR proceedings scope")
+    records: list[PaperRecord] = []
+    seen_ids: set[str] = set()
+    for item in payload:
+        if not isinstance(item, dict):
+            raise PmlrReconciliationError("PMLR citeproc paper entry is not an object")
+        raw_id = _clean_text(item.get("id"))
+        title = _clean_text(item.get("title"))
+        abstract = _clean_text(item.get("abstract"))
+        landing = _clean_text(item.get("URL"))
+        pdf = _clean_text(item.get("PDF"))
+        pages = _clean_text(item.get("page"))
+        raw_volume = str(item.get("volume", ""))
+        container = _clean_text(item.get("container-title"))
+        if (
+            raw_id is None
+            or title is None
+            or landing is None
+            or raw_volume != volume
+            or container != expected_container
+        ):
+            raise PmlrReconciliationError("PMLR citeproc paper entry is out of scope or incomplete")
+        if raw_id in seen_ids:
+            raise PmlrReconciliationError(f"duplicate PMLR paper ID: {raw_id}")
+        expected_landing = f"https://proceedings.mlr.press/v{volume}/{raw_id}.html"
+        if landing != expected_landing:
+            raise PmlrReconciliationError(f"unexpected PMLR landing URL: {landing}")
+        seen_ids.add(raw_id)
+        records.append(
+            PaperRecord(
+                paper_id=f"pmlr:v{volume}:{raw_id}",
+                title=title,
+                normalized_title=normalize_title(title),
+                authors=_citeproc_authors(item.get("author")),
+                venue=request.venue,
+                year=request.year,
+                track=request.track or "main",
+                landing_url=landing,
+                source=source,
+                status=RecordStatus.COMPLETE if abstract else RecordStatus.PARTIAL,
+                abstract=abstract,
+                doi=_clean_text(item.get("DOI")),
+                pdf_url=pdf,
+                native_metadata={
+                    "pmlr_id": raw_id,
+                    "pages": pages or "",
+                    "volume": volume,
+                },
+            )
+        )
+    return tuple(sorted(records, key=lambda record: record.paper_id))
+
+
+def pmlr_volume_paper_ids(data: bytes, request: VenueRequest) -> tuple[str, ...]:
+    """Validate a PMLR volume page and return its stable landing-page IDs."""
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise PmlrReconciliationError("PMLR volume page is not UTF-8") from exc
+    volume = _configured_volume(request)
+    if (
+        f"Volume {volume}: International Conference on Machine Learning" not in text
+        or "Proceedings of the 42nd International Conference on Machine Learning"
+        not in text
+    ):
+        raise PmlrReconciliationError("PMLR volume page has the wrong conference identity")
+    ids = re.findall(
+        rf'href="https://proceedings\.mlr\.press/v{volume}/([a-z0-9-]+)\.html"',
+        text,
+    )
+    if not ids or len(ids) != len(set(ids)):
+        raise PmlrReconciliationError("PMLR volume page has missing or duplicate paper IDs")
+    return tuple(sorted(ids))
 
 
 @dataclass(frozen=True)

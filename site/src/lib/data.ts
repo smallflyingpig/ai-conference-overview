@@ -49,6 +49,7 @@ const defaultReleaseRoot = fileURLToPath(
 
 export const configuredReleaseSelectors: PublishedReleaseSelector[] = [
   { venue: "ACL", year: 2026, track: "long" },
+  { venue: "ICML", year: 2025, track: "main" },
   { venue: "ICML", year: 2026, track: "main" },
 ];
 

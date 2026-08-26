@@ -174,8 +174,8 @@ const classificationReviewSchema = z.object({
 });
 
 const publicationContextSchema = z.object({
-  status: z.literal("preliminary_official_program"),
-  final_source_status: z.literal("not_published"),
+  status: z.enum(["preliminary_official_program", "final_proceedings"]),
+  final_source_status: z.enum(["not_published", "available"]),
   final_source_url: z.string().url().refine(
     (value) => new URL(value).protocol === "https:",
     "final source URL must use HTTPS",
@@ -188,7 +188,18 @@ const publicationContextSchema = z.object({
     advances: z.literal(false),
     awards: z.literal(false),
   }).strict(),
-}).strict();
+}).strict().superRefine((value, context) => {
+  const expectedFinalSourceStatus = value.status === "final_proceedings"
+    ? "available"
+    : "not_published";
+  if (value.final_source_status !== expectedFinalSourceStatus) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["final_source_status"],
+      message: "publication status and final source status do not match",
+    });
+  }
+});
 
 const fullThemeReviewCorrectionSchema = z.object({
   corrected_primary_topic: nonBlankSchema,

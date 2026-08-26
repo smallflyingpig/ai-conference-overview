@@ -76,6 +76,25 @@ function preliminaryIcmlRelease(): LoadedOverview {
   return release;
 }
 
+function finalIcml2025Release(): LoadedOverview {
+  const release = preliminaryIcmlRelease();
+  release.scope.year = 2025;
+  release.papers.forEach((paper, index) => {
+    paper.paper_id = `pmlr:v267:paper-${index + 1}`;
+    paper.year = 2025;
+  });
+  release.overview.publication_context = {
+    status: "final_proceedings",
+    final_source_status: "available",
+    final_source_url: "https://proceedings.mlr.press/v267/",
+    notice: "来自 PMLR Volume 267 的 ICML 2025 正式论文集。",
+    analysis_availability: {
+      papers: true, distribution: false, trends: false, advances: false, awards: false,
+    },
+  };
+  return release;
+}
+
 function changeComparisonContract(
   release: LoadedOverview,
   mutate: (contract: LoadedOverview["overview"]["comparison_contract"]) => void,
@@ -99,6 +118,20 @@ describe("conference routes", () => {
       "来自 ICML 官方会议程序，等待 PMLR 最终对照。",
     );
     expect(view.topics).toEqual([]);
+  });
+
+  it("labels ICML 2025 as final proceedings instead of a preliminary release", () => {
+    const view = buildConferenceView(finalIcml2025Release());
+
+    expect(view.mode).toBe("papers-only");
+    expect(view.publicationStatus).toBe("final");
+    expect(view.pageHeading).toBe("ICML 2025 主会论文");
+    expect(view.publicationNotice).toBe(
+      "来自 PMLR Volume 267 的 ICML 2025 正式论文集。",
+    );
+    expect(conferenceRoutes([finalIcml2025Release()])).toEqual([
+      { params: { venue: "icml", year: "2025" } },
+    ]);
   });
 
   it("aggregates ACL and ICML paper rows with stable internal routes", () => {

@@ -145,3 +145,33 @@ def test_available_pmlr_writes_snapshot_and_diff_without_selecting_release(
     assert json.loads(output.read_text())["matched_count"] == 1
     assert (output.parent / "source.html").read_bytes() == html
     assert not (tmp_path / "data/releases/ICML/2026/current.json").exists()
+
+
+def test_icml_2025_collects_final_pmlr_records_and_builds_papers_only_release(
+    tmp_path: Path,
+) -> None:
+    fixture_root = Path(__file__).parent / "fixtures/pmlr"
+    volume = (fixture_root / "icml-2025-volume-small.html").read_bytes()
+    metadata = (fixture_root / "icml-2025-citeproc-small.yaml").read_bytes()
+    request = normalize_request("ICML", 2025, "main")
+
+    def handler(incoming: httpx.Request) -> httpx.Response:
+        if str(incoming.url) == str(request.source_urls["volume"]):
+            return httpx.Response(200, content=volume, request=incoming)
+        if str(incoming.url) == str(request.source_urls["metadata"]):
+            return httpx.Response(200, content=metadata, request=incoming)
+        raise AssertionError(f"unexpected request: {incoming.url}")
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        result = collect_scope(request, tmp_path, client=client)
+    summary = build_preliminary_release(request, tmp_path, write_release=True)
+    generation = resolve_current_release(tmp_path / "data/releases/ICML/2025")
+    overview = json.loads((generation / "overview.json").read_text())
+    note = (tmp_path / "notes/icml-2025-main-overview.md").read_text()
+
+    assert result.validation.included_count == 2
+    assert summary["publication_status"] == "final_proceedings"
+    assert overview["publication_context"]["status"] == "final_proceedings"
+    assert overview["publication_context"]["final_source_status"] == "available"
+    assert overview["paper_count"] == 2
+    assert "- 缺少 DOI：2" in note

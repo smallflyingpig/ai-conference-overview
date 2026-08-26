@@ -34,7 +34,7 @@ def fetch_bytes(url: str, client: httpx.Client) -> bytes:
             response = client.get(
                 url,
                 follow_redirects=True,
-                headers={"User-Agent": USER_AGENT},
+                headers={"User-Agent": USER_AGENT, "Accept-Encoding": "identity"},
                 timeout=REQUEST_TIMEOUT_SECONDS,
             )
         except httpx.TransportError:

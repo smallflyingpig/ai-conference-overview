@@ -44,6 +44,7 @@ export interface ConferenceView {
   withheldThemeCount: number;
   topics: TopicShareRow[];
   publicationNotice: string | null;
+  publicationStatus: "preliminary" | "final" | null;
   finalSourceUrl: string | null;
 }
 
@@ -185,6 +186,11 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
     withheldThemeCount: topics.filter((row) => row.auditStatus === "withheld").length,
     topics: papersOnly ? [] : topics,
     publicationNotice: publicationContext?.notice ?? null,
+    publicationStatus: publicationContext == null
+      ? null
+      : publicationContext.status === "final_proceedings"
+        ? "final"
+        : "preliminary",
     finalSourceUrl: publicationContext?.final_source_url ?? null,
   };
 }

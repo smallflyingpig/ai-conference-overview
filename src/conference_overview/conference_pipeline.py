@@ -6,6 +6,7 @@ import hashlib
 import json
 from collections.abc import Mapping
 from dataclasses import asdict
+from datetime import UTC, datetime
 from pathlib import Path
 
 import httpx
@@ -19,9 +20,12 @@ from conference_overview.adapters.icml import (
 from conference_overview.adapters.pmlr import (
     FinalSourceStatus,
     fetch_final_source,
+    parse_pmlr_citeproc,
     parse_pmlr_volume,
+    pmlr_volume_paper_ids,
     reconcile_pmlr_records,
 )
+from conference_overview.fetch import fetch_bytes
 from conference_overview.models import (
     AnalysisAvailability,
     PaperRecord,
@@ -64,6 +68,8 @@ def collect_scope(
 ) -> CollectionResult:
     if request.adapter == "icml_virtual":
         return collect_icml_scope(request, root, client=client)
+    if request.adapter == "pmlr":
+        return collect_pmlr_scope(request, root, client=client)
     if (request.venue, request.year, request.track) == ("ACL", 2026, "long"):
         return collect_acl_scope(request, root, client=client)
     raise UnsupportedPipelineRoute(
@@ -109,6 +115,101 @@ def collect_icml_scope(
         ),
     )
     return _normalize_icml_corpus(request, paths, corpus)
+
+
+def _fetched_pmlr(kind: str, url: str, data: bytes) -> FetchedIcmlSource:
+    return FetchedIcmlSource(
+        kind=kind,
+        url=url,
+        data=data,
+        source=SourceRef(
+            name=f"PMLR Volume 267 {kind}",
+            url=url,
+            retrieved_at=datetime.now(UTC),
+            sha256=hashlib.sha256(data).hexdigest(),
+        ),
+    )
+
+
+def collect_pmlr_scope(
+    request: VenueRequest,
+    root: Path,
+    *,
+    client: httpx.Client | None = None,
+) -> CollectionResult:
+    if request.track != "main" or set(request.source_urls) != {"volume", "metadata"}:
+        raise ValueError("PMLR request does not declare the exact final source set")
+    paths = ScopePaths.for_request(Path(root), request)
+    owns_client = client is None
+    active_client = client or httpx.Client()
+    try:
+        sources = tuple(
+            _persist_source(
+                _fetched_pmlr(kind, str(request.source_urls[kind]), fetch_bytes(str(request.source_urls[kind]), active_client)),
+                paths.snapshots,
+            )
+            for kind in ("volume", "metadata")
+        )
+    finally:
+        if owns_client:
+            active_client.close()
+    return _normalize_pmlr_corpus(request, paths, sources)
+
+
+def _normalize_pmlr_corpus(
+    request: VenueRequest,
+    paths: ScopePaths,
+    sources: tuple[FetchedIcmlSource, ...],
+) -> CollectionResult:
+    source_by_kind = {source.kind: source for source in sources}
+    if set(source_by_kind) != {"volume", "metadata"} or len(sources) != 2:
+        raise ValueError("PMLR source set is incomplete")
+    records = parse_pmlr_citeproc(
+        source_by_kind["metadata"].data,
+        request,
+        source_by_kind["metadata"].source,
+    )
+    volume_ids = pmlr_volume_paper_ids(source_by_kind["volume"].data, request)
+    record_ids = tuple(
+        sorted(str(record.native_metadata["pmlr_id"]) for record in records)
+    )
+    if volume_ids != record_ids:
+        raise ValueError("PMLR volume page and citeproc metadata paper IDs disagree")
+    validation = validate_records(records, (), expected_included=len(records))
+    normalized_bytes = _jsonl_bytes(
+        [record.model_dump(mode="json") for record in records]
+    )
+    _atomic_write(paths.normalized, normalized_bytes)
+    manifest = {
+        "schema_version": "conference-collection-manifest-v1",
+        "scope": {
+            "venue": request.venue,
+            "year": request.year,
+            "track": request.track,
+        },
+        "publication_status": request.publication_status,
+        "counts": {
+            "discovered": len(records),
+            "duplicate_candidates": validation.duplicate_candidate_count,
+            "excluded": 0,
+            "included": len(records),
+            "unresolved": 0,
+            "presentation_rows": 0,
+        },
+        "excluded_ids": [],
+        "unresolved_ids": [],
+        "normalized": {
+            "path": paths.normalized.relative_to(paths.manifest.parents[3]).as_posix(),
+            "record_set_sha256": validation.record_set_sha256,
+            "sha256": hashlib.sha256(normalized_bytes).hexdigest(),
+        },
+        "sources": [
+            _source_manifest(source, paths=paths, page_index=index)
+            for index, source in enumerate(sources)
+        ],
+    }
+    _atomic_write(paths.manifest, _json_bytes(manifest))
+    return CollectionResult(paths.manifest, paths.normalized, validation)
 
 
 def _source_manifest(
@@ -246,6 +347,14 @@ def _load_manifest_sources(
                 ),
             )
         )
+    if request.adapter == "pmlr":
+        expected = [
+            ("volume", str(request.source_urls["volume"])),
+            ("metadata", str(request.source_urls["metadata"])),
+        ]
+        if [(source.kind, source.url) for source in loaded] != expected:
+            raise ValueError("PMLR collection source set differs from registry")
+        return loaded
     if loaded[0].url != str(request.source_urls["events"]):
         raise ValueError("first event source URL differs from registry")
     event_pages = [source for source in loaded if source.kind == "events"]
@@ -261,10 +370,12 @@ def _load_manifest_sources(
 def rebuild_scope_from_snapshots(
     request: VenueRequest, root: Path
 ) -> CollectionResult:
-    if request.adapter != "icml_virtual":
+    if request.adapter not in {"icml_virtual", "pmlr"}:
         raise UnsupportedPipelineRoute("snapshot rebuild is not available for this route")
     paths, manifest = _load_icml_manifest(request, root)
     loaded = _load_manifest_sources(request, paths, manifest)
+    if request.adapter == "pmlr":
+        return _normalize_pmlr_corpus(request, paths, tuple(loaded))
     corpus = IcmlRawCorpus(
         event_pages=tuple(source for source in loaded if source.kind == "events"),
         abstracts=next(source for source in loaded if source.kind == "abstracts"),
@@ -297,7 +408,7 @@ def load_scope_records(
 
 
 def validate_scope(request: VenueRequest, root: Path) -> ValidationReport:
-    if request.adapter != "icml_virtual":
+    if request.adapter not in {"icml_virtual", "pmlr"}:
         return validate_acl_scope(request, root)
     paths, manifest = _load_icml_manifest(request, root)
     included, excluded, _sources = load_scope_records(request, root)
@@ -338,17 +449,22 @@ def build_preliminary_release(
     *,
     write_release: bool,
 ) -> dict[str, object]:
-    if request.adapter != "icml_virtual":
-        raise UnsupportedPipelineRoute("preliminary release is not available for this route")
+    if request.adapter not in {"icml_virtual", "pmlr"}:
+        raise UnsupportedPipelineRoute("papers-only release is not available for this route")
     paths = ScopePaths.for_request(Path(root), request)
     report = validate_scope(request, root)
     assert_publishable(report)
     records, excluded, sources = load_scope_records(request, root)
+    final = request.publication_status == "final_proceedings"
     context = PublicationContext(
-        status="preliminary_official_program",
-        final_source_status="not_published",
+        status="final_proceedings" if final else "preliminary_official_program",
+        final_source_status="available" if final else "not_published",
         final_source_url=request.final_source_url,
-        notice="来自 ICML 官方会议程序，等待 PMLR 最终对照。",
+        notice=(
+            "来自 PMLR Volume 267 的 ICML 2025 正式论文集。"
+            if final
+            else "来自 ICML 官方会议程序，等待 PMLR 最终对照。"
+        ),
         analysis_availability=AnalysisAvailability(
             papers=True,
             distribution=False,
@@ -358,13 +474,14 @@ def build_preliminary_release(
         ),
     )
     note = (
-        "# ICML 2026 Main Conference 预发布说明\n\n"
+        f"# ICML {request.year} Main Conference 论文集说明\n\n"
         f"- 收录论文：{report.included_count}\n"
         f"- 排除记录：{report.excluded_count}\n"
         f"- 待处理记录：{len(report.unresolved_record_ids)}\n"
         f"- 缺少英文摘要：{len(report.missing_abstract_ids)}\n"
         f"- 缺少 PDF：{len(report.missing_pdf_ids)}\n"
-        f"- 最终对照：{request.final_source_url}（尚未发布）\n"
+        f"- 缺少 DOI：{len(report.missing_doi_ids)}\n"
+        f"- 论文集：{request.final_source_url}（{'已正式发布' if final else '尚未发布'}）\n"
     ).encode()
     _atomic_write(paths.notes, note)
     if write_release:
@@ -399,7 +516,7 @@ def analyze_scope(
     *,
     write_release: bool,
 ) -> dict[str, object]:
-    if request.adapter == "icml_virtual":
+    if request.adapter in {"icml_virtual", "pmlr"}:
         return build_preliminary_release(request, root, write_release=write_release)
     return analyze_acl_scope(request, root, write_release=write_release)
 

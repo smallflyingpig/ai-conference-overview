@@ -6,7 +6,11 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { loadOverview, loadPublishedOverviews } from "../src/lib/data";
+import {
+  configuredReleaseSelectors,
+  loadOverview,
+  loadPublishedOverviews,
+} from "../src/lib/data";
 import { parseOverview } from "../src/lib/schema";
 
 function canonicalJson(value: unknown): string {
@@ -318,6 +322,70 @@ it("accepts a papers-only preliminary overview without assignments", () => {
     validation: preliminaryValidation,
     provenance: preliminaryProvenance,
   })).toThrow(/preliminary release/i);
+});
+
+it("accepts a papers-only final PMLR overview and rejects contradictory status", () => {
+  const publicationContext = {
+    status: "final_proceedings",
+    final_source_status: "available",
+    final_source_url: "https://proceedings.mlr.press/v267/",
+    notice: "来自 PMLR Volume 267 的 ICML 2025 正式论文集。",
+    analysis_availability: {
+      papers: true,
+      distribution: false,
+      trends: false,
+      advances: false,
+      awards: false,
+    },
+  } as const;
+  const finalOverview = {
+    ...structuredClone(overview),
+    paper_count: 1,
+    taxonomy_version: "not-classified",
+    publication_context: publicationContext,
+  };
+  const finalValidation = {
+    ...validation,
+    discovered_count: 1,
+    included_count: 1,
+    expected_included: 1,
+  };
+  const finalProvenance = {
+    ...provenance,
+    taxonomy_version: "not-classified",
+    publication_context: publicationContext,
+  };
+
+  expect(() => parseOverview({
+    overview: finalOverview,
+    validation: finalValidation,
+    provenance: finalProvenance,
+  })).not.toThrow();
+  expect(() => parseOverview({
+    overview: {
+      ...finalOverview,
+      publication_context: {
+        ...publicationContext,
+        final_source_status: "not_published",
+      },
+    },
+    validation: finalValidation,
+    provenance: {
+      ...finalProvenance,
+      publication_context: {
+        ...publicationContext,
+        final_source_status: "not_published",
+      },
+    },
+  })).toThrow(/final source status|publication/i);
+});
+
+it("loads ICML 2025 before ICML 2026 from configured release selectors", () => {
+  expect(configuredReleaseSelectors).toEqual([
+    { venue: "ACL", year: 2026, track: "long" },
+    { venue: "ICML", year: 2025, track: "main" },
+    { venue: "ICML", year: 2026, track: "main" },
+  ]);
 });
 
 const artifactNames = [

@@ -8,6 +8,7 @@ from conference_overview.adapters.pmlr import (
     FinalSourceStatus,
     PmlrReconciliationError,
     check_final_source,
+    parse_pmlr_citeproc,
     parse_pmlr_volume,
     reconcile_pmlr_records,
 )
@@ -92,3 +93,33 @@ def test_parse_pmlr_volume_extracts_typed_final_record() -> None:
     assert str(records[0].pdf_url) == (
         "https://proceedings.mlr.press/v306/example1/example1.pdf"
     )
+
+
+def test_parse_pmlr_citeproc_preserves_final_paper_identity_and_abstract() -> None:
+    data = (
+        Path(__file__).parent / "fixtures/pmlr/icml-2025-citeproc-small.yaml"
+    ).read_bytes()
+    source = SourceRef(
+        name="PMLR Volume 267 metadata",
+        url="https://proceedings.mlr.press/v267/assets/bib/citeproc.yaml",
+        retrieved_at=datetime(2026, 8, 26, tzinfo=UTC),
+        sha256="b" * 64,
+    )
+
+    records = parse_pmlr_citeproc(
+        data, normalize_request("ICML", 2025, "main"), source
+    )
+
+    assert [item.paper_id for item in records] == [
+        "pmlr:v267:a-mancisidor25a",
+        "pmlr:v267:aamand25a",
+    ]
+    assert records[0].authors == ["Rogelio A. Mancisidor", "Robert Jenssen"]
+    assert records[0].abstract == (
+        "CoDE aggregates dependent experts for multimodal variational autoencoders."
+    )
+    assert records[0].native_metadata == {
+        "pmlr_id": "a-mancisidor25a",
+        "pages": "1-26",
+        "volume": "267",
+    }

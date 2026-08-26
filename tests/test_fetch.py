@@ -38,6 +38,24 @@ def test_fetch_rejects_a_short_body_against_official_content_length() -> None:
         fetch_bytes("https://example.test/volume.bib", client)
 
 
+def test_fetch_requests_identity_encoding_before_comparing_content_length() -> None:
+    payload = b"official-volume-page" * 100
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.headers["accept-encoding"] == "identity"
+        return httpx.Response(
+            200,
+            content=payload,
+            headers={"content-length": str(len(payload))},
+            request=request,
+        )
+
+    transport = httpx.MockTransport(handler)
+
+    with httpx.Client(transport=transport) as client:
+        assert fetch_bytes("https://example.test/volume.html", client) == payload
+
+
 def test_fetch_retries_retryable_status_until_success() -> None:
     requests = 0
 
