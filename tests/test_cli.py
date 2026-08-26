@@ -94,7 +94,7 @@ def test_acl_collect_routes_to_real_orchestration(tmp_path: Path, monkeypatch) -
             ),
         )
 
-    monkeypatch.setattr(cli_module, "collect_acl_scope", fake_collect)
+    monkeypatch.setattr(cli_module, "collect_scope", fake_collect)
     result = runner.invoke(
         app,
         [
@@ -120,6 +120,42 @@ def test_acl_collect_routes_to_real_orchestration(tmp_path: Path, monkeypatch) -
         "normalized": "data/normalized/acl/2026-long.jsonl",
         "status": "collected",
     }
+
+
+def test_icml_collect_routes_to_generic_orchestration(
+    tmp_path: Path, monkeypatch
+) -> None:
+    def fake_collect(request, root):
+        assert (request.venue, request.year, request.track) == ("ICML", 2026, "main")
+        assert root == tmp_path
+        return SimpleNamespace(
+            manifest_path=tmp_path / "data/manifests/icml/2026-main.json",
+            normalized_path=tmp_path / "data/normalized/icml/2026-main.jsonl",
+            validation=SimpleNamespace(
+                discovered_count=5,
+                excluded_count=2,
+                included_count=3,
+            ),
+        )
+
+    monkeypatch.setattr(cli_module, "collect_scope", fake_collect)
+    result = runner.invoke(
+        app,
+        [
+            "collect",
+            "--venues",
+            "ICML",
+            "--years",
+            "2026",
+            "--tracks",
+            "main",
+            "--root",
+            str(tmp_path),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert payload(result)["included_count"] == 3
 
 
 def test_acl_awards_infers_the_only_configured_track(tmp_path: Path, monkeypatch) -> None:

@@ -8,6 +8,7 @@ from typing import Annotated, NoReturn
 
 import typer
 
+from conference_overview.conference_pipeline import collect_scope, validate_scope
 from conference_overview.content_pipeline import (
     build_chinese_content_scope,
     check_chinese_content_sources_scope,
@@ -18,11 +19,9 @@ from conference_overview.pipeline import (
     UnsupportedPipelineRoute,
     analyze_acl_scope,
     build_site_scope,
-    collect_acl_scope,
     export_classification_scope,
     import_semantic_assignments_scope,
     parse_award_inventory_scope,
-    validate_acl_scope,
 )
 from conference_overview.registry import normalize_request
 from conference_overview.validate import PublicationBlocked
@@ -129,9 +128,9 @@ def collect(
     tracks: str | None = typer.Option(None, "--tracks"),
     root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
 ) -> None:
-    """Collect immutable official ACL source snapshots and normalized records."""
+    """Collect immutable official conference snapshots and normalized records."""
     request = _request(command="collect", venues=venues, years=years, tracks=tracks)
-    result = _run("collect", lambda: collect_acl_scope(request, root))
+    result = _run("collect", lambda: collect_scope(request, root))
     _success(
         "collect",
         "collected",
@@ -153,7 +152,7 @@ def validate_command(
 ) -> None:
     """Recompute canonical reconciliation and optional audit state."""
     request = _request(command="validate", venues=venues, years=years, tracks=tracks)
-    report = _run("validate", lambda: validate_acl_scope(request, root))
+    report = _run("validate", lambda: validate_scope(request, root))
     details: dict[str, object] = {
         "discovered_count": report.discovered_count,
         "excluded_count": report.excluded_count,
