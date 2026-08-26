@@ -158,6 +158,34 @@ def test_icml_collect_routes_to_generic_orchestration(
     assert payload(result)["included_count"] == 3
 
 
+def test_reconcile_final_reports_not_published_without_writing(
+    tmp_path: Path, monkeypatch
+) -> None:
+    def fake_reconcile(request, root):
+        assert (request.venue, request.year, request.track) == ("ICML", 2026, "main")
+        assert root == tmp_path
+        return {"status": "not_published"}
+
+    monkeypatch.setattr(cli_module, "reconcile_final_scope", fake_reconcile)
+    result = runner.invoke(
+        app,
+        [
+            "reconcile-final", "--venues", "ICML", "--years", "2026",
+            "--tracks", "main", "--root", str(tmp_path),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert payload(result) == {
+        "command": "reconcile-final",
+        "status": "not_published",
+        "venue": "ICML",
+        "year": 2026,
+        "track": "main",
+    }
+    assert list(tmp_path.rglob("*")) == []
+
+
 def test_acl_awards_infers_the_only_configured_track(tmp_path: Path, monkeypatch) -> None:
     def fake_awards(request, root):
         assert request.track == "long"

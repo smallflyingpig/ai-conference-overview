@@ -16,6 +16,7 @@ from conference_overview.adapters.icml import (
     fetch_icml_sources,
     parse_icml_sources,
 )
+from conference_overview.adapters.pmlr import FinalSourceStatus, check_final_source
 from conference_overview.models import (
     AnalysisAvailability,
     PaperRecord,
@@ -396,3 +397,24 @@ def analyze_scope(
     if request.adapter == "icml_virtual":
         return build_preliminary_release(request, root, write_release=write_release)
     return analyze_acl_scope(request, root, write_release=write_release)
+
+
+def reconcile_final_scope(
+    request: VenueRequest,
+    root: Path,
+    *,
+    client: httpx.Client | None = None,
+) -> dict[str, object]:
+    del root
+    if request.adapter != "icml_virtual":
+        raise UnsupportedPipelineRoute("final reconciliation is not available for this route")
+    owns_client = client is None
+    active_client = client or httpx.Client()
+    try:
+        status = check_final_source(request, active_client)
+    finally:
+        if owns_client:
+            active_client.close()
+    if status is FinalSourceStatus.NOT_PUBLISHED:
+        return {"status": status.value}
+    return {"status": status.value}

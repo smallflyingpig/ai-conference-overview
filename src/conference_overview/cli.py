@@ -11,6 +11,7 @@ import typer
 from conference_overview.conference_pipeline import (
     analyze_scope,
     collect_scope,
+    reconcile_final_scope,
     validate_scope,
 )
 from conference_overview.content_pipeline import (
@@ -364,6 +365,29 @@ def analyze(
         "analyze",
         "release_written" if write_release else "analyzed",
         **summary,
+    )
+
+
+@app.command("reconcile-final")
+def reconcile_final(
+    venues: str = typer.Option(..., "--venues"),
+    years: str = typer.Option(..., "--years"),
+    tracks: str | None = typer.Option(None, "--tracks"),
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
+) -> None:
+    """Check the configured final proceedings source without auto-publishing."""
+    request = _request(
+        command="reconcile-final", venues=venues, years=years, tracks=tracks
+    )
+    result = _run(
+        "reconcile-final", lambda: reconcile_final_scope(request, root)
+    )
+    _success(
+        "reconcile-final",
+        str(result["status"]),
+        venue=request.venue,
+        year=request.year,
+        track=request.track,
     )
 
 
