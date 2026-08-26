@@ -1,0 +1,2603 @@
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en"> 
+
+<head>
+    <style>html { scroll-padding-top: 70px; /* height of sticky header plus extra */ }</style>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/static/virtual/js/virtual.js"></script>
+    <meta name="google-site-verification" content="0jwPnVXIAk4FvFdT37dwMmd-kjHF86e5DKwvqlStUW0">
+
+
+    
+    <link rel="stylesheet" href="/static/core/css/core.css" type="text/css">
+    <link rel="stylesheet" href="/static/virtual/css/virtual.css" type="text/css">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/static/core/css/custom.css" type="text/css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <script nonce="aK9lLgNMw6ZnoKoZ43nsrw==">
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['\\[', '\\]']],
+            processEscapes: true,
+          },
+          options: {
+            ignoreHtmlClass: 'no-mathjax',
+          }
+        };
+    </script>
+
+    <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+            nonce="aK9lLgNMw6ZnoKoZ43nsrw==" >
+    </script>
+
+    <!--This script keeps local links inside the web app rather than opening them
+in Safari, and has nothing to do with editing or Aloha.-->
+
+<script nonce="aK9lLgNMw6ZnoKoZ43nsrw==">
+    (function (document, navigator, standalone) {
+
+        if ((standalone in navigator) && navigator[standalone]) {
+            var curnode, location = document.location, stop = /^(a|html)$/i;
+            document.addEventListener('click', function (e) {
+                curnode = e.target;
+                while (!(stop).test(curnode.nodeName)) {
+                    curnode = curnode.parentNode;
+                }
+
+                if (
+                    'href' in curnode && // is a link
+                    (chref = curnode.href).replace(location.href, '').indexOf('#') && // is not an anchor
+                    (!(/^[a-z\+\.\-]+:/i).test(chref) ||                       // either does not have a proper scheme (relative links)
+                        chref.indexOf(location.protocol + '//' + location.host) === 0) // or is in the same protocol and domain
+                ) {
+                    e.preventDefault();
+                    location.href = curnode.href;
+                }
+            }, false);
+        }
+    })(document, window.navigator, 'standalone');
+</script>
+
+
+<style>
+
+    @media screen and (min-width: 767px) {
+        .blurb {
+            min-height: 260px;
+        }
+    }
+</style>
+    
+
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
+</script>
+
+<script nonce="aK9lLgNMw6ZnoKoZ43nsrw==">
+    if (typeof jQuery === 'undefined') {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = "/static/core/js/jquery-3.6.1.min.js";
+        document.head.appendChild(script);
+    }
+</script>
+
+    
+    <script nonce="aK9lLgNMw6ZnoKoZ43nsrw==">
+        var $ = jQuery;
+    </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+    <script src="/static/core/js/ajax-csrf-snippet.js"></script>
+    
+    <link rel="stylesheet" href="/static/fontawesomefree/css/all.min.css">
+    <script src="/static/fontawesomefree/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+
+
+    <style nonce="aK9lLgNMw6ZnoKoZ43nsrw==">
+        body {
+            font-family: Exo;}
+    </style>
+
+
+
+
+
+
+
+
+        
+
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/virtual/css/virtual.css">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.3.1/typeahead.bundle.min.js" integrity="sha512-lEb9Vp/rkl9g2E/LdHIMFTqz21+LA79f84gqP75fbimHqVTu6483JG1AwJlWLLQ8ezTehty78fObKupq3HSHPQ==" crossorigin="anonymous"></script>
+    <script src="/static/core/js/moment/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="/static/core/js/ajax-csrf-snippet.js" ></script>
+    <script src="/static/virtual/js/virtual.js"></script>
+    
+
+    
+
+    
+    
+    
+    <title>ICML 2025 Awards</title>
+
+    <title>ICML 2025</title>
+</head>
+
+<body>
+<!-- <h1><a href="#" onclick="alert('CSP Test');">CSP Test</a></h1> -->
+
+
+
+
+<div class="noprint">
+    
+        
+            <!--Navbar start-->
+<header>
+    <a href="#child-menu" class="off-screen">Skip to yearly menu bar</a>
+    <a href="#main" class="off-screen">Skip to main content</a>
+    <div id="id_navbar" class="navbar navbar-expand-sm navbar-dark" aria-label="Main Navigation"
+         style="background-color:#212529">
+        <h2 class="off-screen">Main Navigation</h2>
+        <div class="container-fluid">
+            <div><a class="navbar-brand" href="/" aria-label="Home">
+
+                <img src="/static/core/img/icml-navbar-logo.svg" alt="conference_logo" height="40"></a></div>
+
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarToggler1"
+                    aria-expanded="false" aria-label="Toggle main navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarToggler1">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            ICML
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/FAQ">
+                    <span >
+                        Help/FAQ
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Help/Contact">
+                    <span >
+                        Contact ICML
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Profile/create">
+                    <span >
+                        Create Profile
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/yearly-document/CodeOfConduct">
+                    <span >
+                        Code of Conduct
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/public/PrivacyPolicy">
+                    <span >
+                        Privacy Policy
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/2026/Press">
+                    <span >
+                        Press
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/public/JournalToConference">
+                    <span >
+                        Journal To Conference Track
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/careers">
+                    <span >
+                        Careers
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Downloads">
+                    <span >
+                        Downloads
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/public/Inclusion">
+                    <span >
+                        Inclusion
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/Conferences/FutureMeetings">
+                    <span >
+                        Future Meetings
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/MyStuff">
+                    <span >
+                        My Stuff
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+                    
+                </ul>
+
+                
+                <form class="d-flex mx-2" aria-label="Search" role="search" action="/search">
+                    <div class="input-group" role="search" style="outline-color:green;">
+                        <input type="text" class="form-control" placeholder="Search" name="q"
+                               value=""
+                               aria-label="Search" aria-describedby="btnGroupAddon"
+                                id="navbar-search">
+                        <div class="input-group-text btn-primary" id="btnGroupAddon">
+                            <button style="border: none; background-color: transparent; padding: 0;" type="submit" aria-label="execute search">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+
+                
+                    <a href="/accounts/login?nextp=/virtual/2025/poster/45587 " class="navbar-brand"><span
+                            class="fa-solid fa-right-to-bracket"></span> Login</a>
+                
+
+            </div>
+        </div>
+    </div>
+</header>
+<!--Navbar end-->
+        
+    
+</div><!--noprint div-->
+
+<!--This holds the whole page including the navbar-->
+<main id="main">
+    
+        
+            <div class="container-fluid">
+                
+<!--Navbar start-->
+
+
+
+
+<div class="container-fluid">
+
+    <div class="dropdown" id="child-menu">
+        <nav class="align-middle navbar navbar-expand-lg  rounded-bottom"
+             style="min-height: 57px; background-image: url(/static/virtual/img/navbackground.png); background-repeat: repeat-x;">
+            <div class="container-fluid">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarToggler1385"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarToggler1385">
+                    <ul class="navbar-nav me-auto mb-lg-0">
+                        
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle border-3  btn btn-primary text-white p-1" style= "background-color: #070bff; font-size: 1.2 em;"
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Select Year: (2025)
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2026">2026
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2025">2025
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2024">2024
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2023">2023
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2022">2022
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2021/index.html">2021
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2020/">2020
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2019/">2019
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2018">2018
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2017">2017
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2016">2016
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2015">2015
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2014">2014
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2013">2013
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2012">2012
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2011">2011
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2010">2010
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2009">2009
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2008">2008
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2008">2007
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2007">2006
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2005">2005
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2005">2004
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/2002">2002
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="/Conferences/1996">1996
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item " >
+                <a class="dropdown-item p-1"
+                   href="http://www.machinelearning.org/archive.html">IMLS Archives
+                </a>
+                
+            </li>
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/index.html">
+                    <span >
+                        Getting Started
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/calendar">
+                    <span >
+                        Schedule
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/events/tutorial">
+                    <span >
+                        Tutorials
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Main Conference
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/eventlistwithbios/invited%20talk">
+                    <span >
+                        Invited Talks
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/events/oral">
+                    <span >
+                        Orals
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/awards_detail">
+                    <span >
+                        Awards
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/test-of-time-award">
+                    <span >
+                        Test of Time Award
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/papers.html">
+                    <span >
+                        Papers
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/events/2025SpotlightPosters">
+                    <span >
+                        Spotlight Posters
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/events/workshop">
+                    <span >
+                        Workshops
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Community
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/community?show=socials">
+                    <span >
+                        Socials
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Exhibitors
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/sponsor_list">
+                    <span >
+                        Exhibitors
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/events/expo">
+                    <span >
+                        Expo
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/organizers">
+                    <span >
+                        Organizers
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/search">
+                    <span >
+                        <i class="fas fa-search"></i>
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+    <li class="dropdown-item dropdown pe-3">
+        <a class="nav-link dropdown-toggle  p-1" 
+           href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Help
+        </a>
+        <ul class="dropdown-menu">
+            
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="/virtual/2025/faq">
+                    <span >
+                        FAQ
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="https://chat.icml.cc">
+                    <span >
+                        RocketChat Help
+                    </span>
+                </a>
+                
+                    <hr class="dropdown-divider" aria-hidden="true">
+                
+            </li>
+
+        
+
+    
+
+
+
+    
+        
+            <li class="dropdown-item  pe-2" >
+                <a class="nav-link p-1"  href="">
+                    <span >
+                        RocketChat Desktop Client
+                    </span>
+                </a>
+                
+            </li>
+
+        
+
+    
+
+
+
+        </ul>
+    </li>
+    
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!--Navbar end-->
+
+            </div>
+            <br><br>
+        
+    
+    
+        
+        <div class="container">
+    
+    
+
+    
+
+    <div class="container">
+
+        <div></div>
+        
+            <table>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Test of Time Award</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-39855">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/test-of-time/39855">Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift</a>
+</div>
+<div class="type_display_name_virtual_card">Test Of Time</div>
+<div class="author-str">Sergey Ioffe &middot; Christian Szegedy</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-39855"></div>
+
+
+    <p style="font-size:.9em;">[ West Exhibition Hall C ]</p>
+
+
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            Training Deep Neural Networks is complicated by the fact that the distribution of each layer&#x27;s inputs changes during training, as the parameters of the previous layers change. This slows down the training by requiring lower learning rates and careful parameter initialization, and makes it notoriously hard to train models with saturating nonlinearities. We refer to this phenomenon as internal covariate shift, and address the problem by normalizing layer inputs. Our method draws its strength from making normalization a part of the model architecture and performing the normalization for each training mini-batch. Batch Normalization allows us to use much higher learning rates and be less careful about initialization. It also acts as a regularizer, in some cases eliminating the need for Dropout. Applied to a state-of-the-art image classification model, Batch Normalization achieves the same accuracy with 14 times fewer training steps, and beats the original model by a significant margin. Using an ensemble of batch-normalized networks, we improve upon the best published result on ImageNet classification: reaching 4.9% top-5 validation error (and 4.8% test error), exceeding the accuracy of human raters.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Test of Time Honorable Mention</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-52803">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/talk/52803">Variational Inference with Normalizing Flows</a>
+</div>
+<div class="type_display_name_virtual_card">Test of Time Honorable Mention</div>
+<div class="author-str">Danilo Jimenez Rezende &middot; Shakir Mohamed</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-52803"></div>
+
+
+
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            The choice of the approximate posterior distribution is one of the core problems in variational inference. Most applications of variational inference employ simple families of posterior approximations in order to allow for efficient inference, focusing on mean-field or other simple structured approximations. This restriction has a significant impact on the quality of inferences made using variational methods. We introduce a new approach for specifying flexible, arbitrarily complex and scalable approximate posterior distributions. Our approximations are distributions constructed through a normalizing flow, whereby a simple initial density is transformed into a more complex one by applying a sequence of invertible transformations until a desired level of complexity is attained. We use this view of normalizing flows to develop categories of finite and infinitesimal flows and provide a unified view of approaches for constructing rich posterior approximations. We demonstrate that the theoretical advantages of having posteriors that better match the true posterior, combined with the scalability of amortized variational approaches, provides a clear improvement in performance and applicability of variational inference.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Test of Time Honorable Mention</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-52802">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/talk/52802">Trust Region Policy Optimization</a>
+</div>
+<div class="type_display_name_virtual_card">Test of Time Honorable Mention</div>
+<div class="author-str">John Schulman &middot; Sergey Levine &middot; Pieter Abbeel &middot; Michael Jordan &middot; Philipp Moritz</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-52802"></div>
+
+
+
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            In this article, we describe a method for optimizing control policies, with guaranteed monotonic improvement. By making several approximations to the theoretically-justified scheme, we develop a practical algorithm, called Trust Region Policy Optimization (TRPO). This algorithm is effective for optimizing large nonlinear policies such as neural networks. Our experiments demonstrate its robust performance on a wide variety of tasks: learning simulated robotic swimming, hopping, and walking gaits; and playing Atari games using images of the screen as input. Despite its approximations that deviate from the theory, TRPO tends to give monotonic improvement, with little tuning of hyperparameters.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-45988">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/poster/45988">CollabLLM: From Passive Responders to Active Collaborators</a>
+</div>
+<div class="type_display_name_virtual_card">Spotlight Poster</div>
+<div class="author-str">Shirley Wu &middot; Michel Galley &middot; Baolin Peng &middot; Hao Cheng &middot; Gavin Li &middot; Yao Dou &middot; Weixin Cai &middot; James Zou &middot; Jure Leskovec &middot; Jianfeng Gao</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-45988"></div>
+
+
+    <p style="font-size:.9em;">[ East Exhibition Hall A-B ]</p>
+
+
+
+    <img src="/static/core/img/ICML-logo.svg" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            Large Language Models are typically trained with next-turn rewards, limiting their ability to optimize for long-term interaction. As a result, they often respond passively to ambiguous or open-ended user requests, failing to help users reach their ultimate intents and leading to inefficient conversations. To address these limitations, we introduce CollabLLM, a novel and general training framework that enhances multiturn human-LLM collaboration. Its key innovation is a collaborative simulation that estimates the long-term contribution of responsesusing Multiturn-aware Rewards. By reinforcement fine-tuning these rewards, CollabLLM goes beyond responding to user requests, and actively uncovers user intent and offers insightful suggestions—a key step towards more human-centered AI. We also devise a multiturn interaction benchmark with three challenging tasks such as document creation. CollabLLM significantly outperforms our baselines with averages of 18.5% higher task performance and 46.3% improved interactivity by LLM judges. Finally, we conduct a large user study with 201 judges, where CollabLLM increases user satisfaction by 17.6% and reduces user spent time by 10.4%.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-47251">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/oral/47251">Train for the Worst, Plan for the Best: Understanding Token Ordering in Masked Diffusions</a>
+</div>
+<div class="type_display_name_virtual_card">Oral</div>
+<div class="author-str">Jaeyeon Kim &middot; Kulin Shah &middot; Vasilis Kontonis &middot; Sham Kakade &middot; Sitan Chen</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-47251"></div>
+
+
+    <p style="font-size:.9em;">[ West Exhibition Hall C ]</p>
+
+
+
+    <img src="/static/core/img/ICML-logo.svg" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            In recent years, masked diffusion models (MDMs) have emerged as a promising alternative approach for generative modeling over discrete domains. Compared to autoregressive models (ARMs), MDMs trade off complexity at training time with flexibility at inference time. At training time, they must learn to solve an exponentially large number of infilling problems, but at inference time, they can decode tokens in essentially arbitrary order. In this work we closely examine these two competing effects. On the training front, we theoretically and empirically demonstrate that MDMs indeed train on computationally intractable subproblems compared to their autoregressive counterparts. On the inference front, we show that a suitable strategy for adaptively choosing the token decoding order significantly enhances the capabilities of MDMs, allowing them to sidestep hard subproblems. On logic puzzles like Sudoku, we show that adaptive inference can boost solving accuracy in pretrained MDMs from $&lt;7$\% to $\approx 90$\%, even outperforming ARMs that were explicitly trained via teacher forcing to learn the right order of decoding.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-47227">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/oral/47227">Conformal Prediction as Bayesian Quadrature</a>
+</div>
+<div class="type_display_name_virtual_card">Oral</div>
+<div class="author-str">Jake Snell &middot; Thomas Griffiths</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-47227"></div>
+
+
+    <p style="font-size:.9em;">[ West Ballroom B ]</p>
+
+
+
+    <img src="/media/PosterPDFs/ICML%202025/45390-thumb.png?t=1752517426.237787" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            As machine learning-based prediction systems are increasingly used in high-stakes situations, it is important to understand how such predictive models will perform upon deployment. Distribution-free uncertainty quantification techniques such as conformal prediction provide guarantees about the loss black-box models will incur even when the details of the models are hidden. However, such methods are based on frequentist probability, which unduly limits their applicability. We revisit the central aspects of conformal prediction from a Bayesian perspective and thereby illuminate the shortcomings of frequentist guarantees. We propose a practical alternative based on Bayesian quadrature that provides interpretable guarantees and offers a richer representation of the likely range of losses to be observed at test time.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-44169">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/poster/44169">Score Matching with Missing Data</a>
+</div>
+<div class="type_display_name_virtual_card">Spotlight Poster</div>
+<div class="author-str">Josh Givens &middot; Song Liu &middot; Henry Reeve</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-44169"></div>
+
+
+    <p style="font-size:.9em;">[ East Exhibition Hall A-B ]</p>
+
+
+
+    <img src="/media/PosterPDFs/ICML%202025/44169-thumb.png?t=1749904237.0205605" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            Score matching is a vital tool for learning the distribution of data with applications across many areas including diffusion processes, energy based modelling, and graphical model estimation. Despite all these applications, little work explores its use when data is incomplete. We address this by adapting score matching (and its major extensions) to work with missing data in a flexible setting where data can be partially missing over any subset of the coordinates. We provide two separate score matching variations for general use, an importance weighting (IW) approach, and a variational approach. We provide finite sample bounds for our IW approach in finite domain settings and show it to have especially strong performance in small sample lower dimensional cases. Complementing this, we show our variational approach to be strongest in more complex high-dimensional settings which we demonstrate on graphical model estimation tasks on both real and simulated data.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-45769">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/poster/45769">Roll the dice &amp; look before you leap: Going beyond the creative limits of next-token prediction</a>
+</div>
+<div class="type_display_name_virtual_card">Spotlight Poster</div>
+<div class="author-str">Vaishnavh Nagarajan &middot; Chen Wu &middot; Charles Ding &middot; Aditi Raghunathan</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-45769"></div>
+
+
+    <p style="font-size:.9em;">[ East Exhibition Hall A-B ]</p>
+
+
+
+    <img src="/media/PosterPDFs/ICML%202025/45769-thumb.png?t=1752424726.3605804" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            We design a suite of minimal algorithmic tasks that are a loose abstraction of _open-ended_ real-world tasks. This allows us to cleanly and controllably quantify the creative limits of the present-day language model.Much like real-world tasks that require a creative, far-sighted leap of thought, our tasks require an implicit, open-ended _stochastic_ planning step that either (a) discovers new connections in an abstract knowledge graph (like in wordplay, drawing analogies, or research) or (b) constructs new patterns  (like in designing math problems or new proteins). In these tasks, we empirically and conceptually argue how next-token learning is myopic and memorizes excessively; multi-token approaches, namely teacherless training and diffusion models, comparatively excel in producing diverse and original output.  Secondly, to elicit randomness without hurting coherence, we find that injecting noise at the input layer (dubbed _seed-conditioning_) works surprisingly as well as (and in some conditions, better than) temperature sampling from the output layer. Thus, our work offers a principled, minimal test-bed for analyzing open-ended creative skills, and offers new arguments for going beyond next-token learning and temperature sampling. We make part of the code available under https://github.com/chenwu98/algorithmic-creativity
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-47241">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/oral/47241">Roll the dice &amp; look before you leap: Going beyond the creative limits of next-token prediction</a>
+</div>
+<div class="type_display_name_virtual_card">Oral</div>
+<div class="author-str">Vaishnavh Nagarajan &middot; Chen Wu &middot; Charles Ding &middot; Aditi Raghunathan</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-47241"></div>
+
+
+    <p style="font-size:.9em;">[ West Exhibition Hall C ]</p>
+
+
+
+    <img src="/media/PosterPDFs/ICML%202025/45769-thumb.png?t=1752424726.3605804" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            We design a suite of minimal algorithmic tasks that are a loose abstraction of _open-ended_ real-world tasks. This allows us to cleanly and controllably quantify the creative limits of the present-day language model.Much like real-world tasks that require a creative, far-sighted leap of thought, our tasks require an implicit, open-ended _stochastic_ planning step that either (a) discovers new connections in an abstract knowledge graph (like in wordplay, drawing analogies, or research) or (b) constructs new patterns  (like in designing math problems or new proteins). In these tasks, we empirically and conceptually argue how next-token learning is myopic and memorizes excessively; multi-token approaches, namely teacherless training and diffusion models, comparatively excel in producing diverse and original output.  Secondly, to elicit randomness without hurting coherence, we find that injecting noise at the input layer (dubbed _seed-conditioning_) works surprisingly as well as (and in some conditions, better than) temperature sampling from the output layer. Thus, our work offers a principled, minimal test-bed for analyzing open-ended creative skills, and offers new arguments for going beyond next-token learning and temperature sampling. We make part of the code available under https://github.com/chenwu98/algorithmic-creativity
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-45390">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/poster/45390">Conformal Prediction as Bayesian Quadrature</a>
+</div>
+<div class="type_display_name_virtual_card">Spotlight Poster</div>
+<div class="author-str">Jake Snell &middot; Thomas Griffiths</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-45390"></div>
+
+
+    <p style="font-size:.9em;">[ East Exhibition Hall A-B ]</p>
+
+
+
+    <img src="/media/PosterPDFs/ICML%202025/45390-thumb.png?t=1752517426.237787" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            As machine learning-based prediction systems are increasingly used in high-stakes situations, it is important to understand how such predictive models will perform upon deployment. Distribution-free uncertainty quantification techniques such as conformal prediction provide guarantees about the loss black-box models will incur even when the details of the models are hidden. However, such methods are based on frequentist probability, which unduly limits their applicability. We revisit the central aspects of conformal prediction from a Bayesian perspective and thereby illuminate the shortcomings of frequentist guarantees. We propose a practical alternative based on Bayesian quadrature that provides interpretable guarantees and offers a richer representation of the likely range of losses to be observed at test time.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-46605">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/poster/46605">The Value of Prediction in Identifying the Worst-Off</a>
+</div>
+<div class="type_display_name_virtual_card">Spotlight Poster</div>
+<div class="author-str">Unai Fischer Abaigar &middot; Christoph Kern &middot; Juan Perdomo</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-46605"></div>
+
+
+    <p style="font-size:.9em;">[ East Exhibition Hall A-B ]</p>
+
+
+
+    <img src="/static/core/img/ICML-logo.svg" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            Machine learning is increasingly used in government programs to identify and support the most vulnerable individuals, prioritizing assistance for those at greatest risk over optimizing aggregate outcomes. This paper examines the welfare impacts of prediction in equity-driven contexts, and how they compare to other policy levers, such as expanding bureaucratic capacity. Through mathematical models and a real-world case study on long-term unemployment amongst German residents, we develop a comprehensive understanding of the relative effectiveness of prediction in surfacing the worst-off. Our findings provide clear analytical frameworks and practical, data-driven tools that empower policymakers to make principled decisions when designing these systems.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-47250">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/oral/47250">CollabLLM: From Passive Responders to Active Collaborators</a>
+</div>
+<div class="type_display_name_virtual_card">Oral</div>
+<div class="author-str">Shirley Wu &middot; Michel Galley &middot; Baolin Peng &middot; Hao Cheng &middot; Gavin Li &middot; Yao Dou &middot; Weixin Cai &middot; James Zou &middot; Jure Leskovec &middot; Jianfeng Gao</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-47250"></div>
+
+
+    <p style="font-size:.9em;">[ West Exhibition Hall C ]</p>
+
+
+
+    <img src="/static/core/img/ICML-logo.svg" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            Large Language Models are typically trained with next-turn rewards, limiting their ability to optimize for long-term interaction. As a result, they often respond passively to ambiguous or open-ended user requests, failing to help users reach their ultimate intents and leading to inefficient conversations. To address these limitations, we introduce CollabLLM, a novel and general training framework that enhances multiturn human-LLM collaboration. Its key innovation is a collaborative simulation that estimates the long-term contribution of responsesusing Multiturn-aware Rewards. By reinforcement fine-tuning these rewards, CollabLLM goes beyond responding to user requests, and actively uncovers user intent and offers insightful suggestions—a key step towards more human-centered AI. We also devise a multiturn interaction benchmark with three challenging tasks such as document creation. CollabLLM significantly outperforms our baselines with averages of 18.5% higher task performance and 46.3% improved interactivity by LLM judges. Finally, we conduct a large user study with 201 judges, where CollabLLM increases user satisfaction by 17.6% and reduces user spent time by 10.4%.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-47269">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/oral/47269">The Value of Prediction in Identifying the Worst-Off</a>
+</div>
+<div class="type_display_name_virtual_card">Oral</div>
+<div class="author-str">Unai Fischer Abaigar &middot; Christoph Kern &middot; Juan Perdomo</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-47269"></div>
+
+
+    <p style="font-size:.9em;">[ West Ballroom D ]</p>
+
+
+
+    <img src="/static/core/img/ICML-logo.svg" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            Machine learning is increasingly used in government programs to identify and support the most vulnerable individuals, prioritizing assistance for those at greatest risk over optimizing aggregate outcomes. This paper examines the welfare impacts of prediction in equity-driven contexts, and how they compare to other policy levers, such as expanding bureaucratic capacity. Through mathematical models and a real-world case study on long-term unemployment amongst German residents, we develop a comprehensive understanding of the relative effectiveness of prediction in surfacing the worst-off. Our findings provide clear analytical frameworks and practical, data-driven tools that empower policymakers to make principled decisions when designing these systems.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-45990">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/poster/45990">Train for the Worst, Plan for the Best: Understanding Token Ordering in Masked Diffusions</a>
+</div>
+<div class="type_display_name_virtual_card">Spotlight Poster</div>
+<div class="author-str">Jaeyeon Kim &middot; Kulin Shah &middot; Vasilis Kontonis &middot; Sham Kakade &middot; Sitan Chen</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-45990"></div>
+
+
+    <p style="font-size:.9em;">[ East Exhibition Hall A-B ]</p>
+
+
+
+    <img src="/static/core/img/ICML-logo.svg" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            In recent years, masked diffusion models (MDMs) have emerged as a promising alternative approach for generative modeling over discrete domains. Compared to autoregressive models (ARMs), MDMs trade off complexity at training time with flexibility at inference time. At training time, they must learn to solve an exponentially large number of infilling problems, but at inference time, they can decode tokens in essentially arbitrary order. In this work we closely examine these two competing effects. On the training front, we theoretically and empirically demonstrate that MDMs indeed train on computationally intractable subproblems compared to their autoregressive counterparts. On the inference front, we show that a suitable strategy for adaptively choosing the token decoding order significantly enhances the capabilities of MDMs, allowing them to sidestep hard subproblems. On logic puzzles like Sudoku, we show that adaptive inference can boost solving accuracy in pretrained MDMs from $&lt;7$\% to $\approx 90$\%, even outperforming ARMs that were explicitly trained via teacher forcing to learn the right order of decoding.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-47194">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/oral/47194">Score Matching with Missing Data</a>
+</div>
+<div class="type_display_name_virtual_card">Oral</div>
+<div class="author-str">Josh Givens &middot; Song Liu &middot; Henry Reeve</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-47194"></div>
+
+
+    <p style="font-size:.9em;">[ West Ballroom B ]</p>
+
+
+
+    <img src="/media/PosterPDFs/ICML%202025/44169-thumb.png?t=1749904237.0205605" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            Score matching is a vital tool for learning the distribution of data with applications across many areas including diffusion processes, energy based modelling, and graphical model estimation. Despite all these applications, little work explores its use when data is incomplete. We address this by adapting score matching (and its major extensions) to work with missing data in a flexible setting where data can be partially missing over any subset of the coordinates. We provide two separate score matching variations for general use, an importance weighting (IW) approach, and a variational approach. We provide finite sample bounds for our IW approach in finite domain settings and show it to have especially strong performance in small sample lower dimensional cases. Complementing this, we show our variational approach to be strongest in more complex high-dimensional settings which we demonstrate on graphical model estimation tasks on both real and simulated data.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Position Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-40167">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/oral/40167">Position: AI Safety should prioritize the Future of Work</a>
+</div>
+<div class="type_display_name_virtual_card">Oral</div>
+<div class="author-str">Sanchaita Hazra &middot; Bodhisattwa Prasad Majumder &middot; Tuhin Chakrabarty</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-40167"></div>
+
+
+    <p style="font-size:.9em;">[ West Ballroom A ]</p>
+
+
+
+    <img src="/static/core/img/ICML-logo.svg" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            Current efforts in AI safety prioritize filtering harmful content, preventing manipulation of human behavior, and eliminating existential risks in cybersecurity or biosecurity. While pressing, this narrow focus overlooks critical human-centric considerations that shape the long-term trajectory of a society. In this position paper, we identify the risks of overlooking the impact of AI on the future of work and recommend comprehensive transition support towards the evolution of meaningful labor with human agency. Through the lens of economic theories, we highlight the intertemporal impacts of AI on human livelihood and the structural changes in labor markets that exacerbate income inequality. Additionally, the closed-source approach of major stakeholders in AI development resembles rent-seeking behavior through exploiting resources, breeding mediocrity in creative labor, and monopolizing innovation. To address this, we argue in favor of a robust international copyright anatomy supported by implementing collective licensing that ensures fair compensation mechanisms for using data to train AI models. We strongly recommend a pro-worker framework of global AI governance to enhance shared prosperity and economic justice while reducing technical debt.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Position Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-40108">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/poster/40108">Position: The AI Conference Peer Review Crisis Demands Author Feedback and Reviewer Rewards</a>
+</div>
+<div class="type_display_name_virtual_card">Oral Poster</div>
+<div class="author-str">Jaeho Kim &middot; Yunseok Lee &middot; Seulki Lee</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-40108"></div>
+
+
+    <p style="font-size:.9em;">[ East Exhibition Hall A-B ]</p>
+
+
+
+    <img src="/media/PosterPDFs/ICML%202025/40108-thumb.png?t=1751266658.4478543" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            The peer review process in major artificial intelligence (AI) conferences faces unprecedented challenges with the surge of paper submissions (exceeding 10,000 submissions per venue), accompanied by growing concerns over review quality and reviewer responsibility. This position paper argues for **the need to transform the traditional one-way review system into a bi-directional feedback loop where authors evaluate review quality and reviewers earn formal accreditation, creating an accountability framework that promotes a sustainable, high-quality peer review system.** The current review system can be viewed as an interaction between three parties: the authors, reviewers, and system (i.e., conference), where we posit that all three parties share responsibility for the current problems. However, issues with authors can only be addressed through policy enforcement and detection tools, and ethical concerns can only be corrected through self-reflection. As such, this paper focuses on reforming reviewer accountability with systematic rewards through two key mechanisms: (1) a two-stage bi-directional review system that allows authors to evaluate reviews while minimizing retaliatory behavior, (2) a systematic reviewer reward system that incentivizes quality reviewing. We ask for the community&#x27;s strong interest in these problems and the reforms that are needed to enhance the peer review process.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Position Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-40166">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/poster/40166">Position: AI Safety should prioritize the Future of Work</a>
+</div>
+<div class="type_display_name_virtual_card">Oral Poster</div>
+<div class="author-str">Sanchaita Hazra &middot; Bodhisattwa Prasad Majumder &middot; Tuhin Chakrabarty</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-40166"></div>
+
+
+    <p style="font-size:.9em;">[ East Exhibition Hall A-B ]</p>
+
+
+
+    <img src="/static/core/img/ICML-logo.svg" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            Current efforts in AI safety prioritize filtering harmful content, preventing manipulation of human behavior, and eliminating existential risks in cybersecurity or biosecurity. While pressing, this narrow focus overlooks critical human-centric considerations that shape the long-term trajectory of a society. In this position paper, we identify the risks of overlooking the impact of AI on the future of work and recommend comprehensive transition support towards the evolution of meaningful labor with human agency. Through the lens of economic theories, we highlight the intertemporal impacts of AI on human livelihood and the structural changes in labor markets that exacerbate income inequality. Additionally, the closed-source approach of major stakeholders in AI development resembles rent-seeking behavior through exploiting resources, breeding mediocrity in creative labor, and monopolizing innovation. To address this, we argue in favor of a robust international copyright anatomy supported by implementing collective licensing that ensures fair compensation mechanisms for using data to train AI models. We strongly recommend a pro-worker framework of global AI governance to enhance shared prosperity and economic justice while reducing technical debt.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+                    <tr>
+                        <td>
+                            
+                                <div>Outstanding Position Paper</div>
+                            
+                        </td>
+                        <td>
+
+                            <div class="displaycards touchup-date" id="event-40109">
+                                
+
+                                
+
+<div class="virtual-card">
+    <a class="small-title text-underline-hover" href="/virtual/2025/oral/40109">Position: The AI Conference Peer Review Crisis Demands Author Feedback and Reviewer Rewards</a>
+</div>
+<div class="type_display_name_virtual_card">Oral</div>
+<div class="author-str">Jaeho Kim &middot; Yunseok Lee &middot; Seulki Lee</div>
+<div class="author-str higher"></div>
+<div class="text-muted touchup-date-div" id="touchup-date-event-40109"></div>
+
+
+    <p style="font-size:.9em;">[ West Ballroom A ]</p>
+
+
+
+    <img src="/media/PosterPDFs/ICML%202025/40108-thumb.png?t=1751266658.4478543" class="social-img-thumb" alt="thumbnail"/>
+
+
+<details>
+<summary>Abstract</summary>
+    
+        <div class="text-start p-4">
+            The peer review process in major artificial intelligence (AI) conferences faces unprecedented challenges with the surge of paper submissions (exceeding 10,000 submissions per venue), accompanied by growing concerns over review quality and reviewer responsibility. This position paper argues for **the need to transform the traditional one-way review system into a bi-directional feedback loop where authors evaluate review quality and reviewers earn formal accreditation, creating an accountability framework that promotes a sustainable, high-quality peer review system.** The current review system can be viewed as an interaction between three parties: the authors, reviewers, and system (i.e., conference), where we posit that all three parties share responsibility for the current problems. However, issues with authors can only be addressed through policy enforcement and detection tools, and ethical concerns can only be corrected through self-reflection. As such, this paper focuses on reforming reviewer accountability with systematic rewards through two key mechanisms: (1) a two-stage bi-directional review system that allows authors to evaluate reviews while minimizing retaliatory behavior, (2) a systematic reviewer reward system that incentivizes quality reviewing. We ask for the community&#x27;s strong interest in these problems and the reforms that are needed to enhance the peer review process.
+        </div>
+
+    
+</details>
+
+
+
+                            </div>
+                        </td>
+
+                    </tr>
+                
+            </table>
+        
+
+    <form method="POST"><input type="hidden" name="csrfmiddlewaretoken" value="F0DJNq4gJEEW7smoZJRvCR7LCSS6cXrnHllNrRP4hYeU0WQ3wvqd1xeYwtIrzK0j"></form>
+    </div>
+
+<script nonce="aK9lLgNMw6ZnoKoZ43nsrw==">
+
+
+    $(document).ready(function() {
+        $(".abstract-link").on('click', function(e){
+            var target = $(e.target).find("i")
+            target.toggleClass("fa-caret-right");
+            target.toggleClass("fa-caret-up");
+        })
+    })
+
+    $(document).ready(function() {
+        touchup();
+    })
+
+</script>
+
+
+
+
+    
+        </div>
+    
+
+</main>
+<!--END BLOCK CONTENT-->
+
+
+<!--Footer for the edit button-->
+
+
+<script nonce="aK9lLgNMw6ZnoKoZ43nsrw==">
+
+    $(function () {
+        if ($(".editable").length == 0) {
+            $("#editFooter").hide();
+        }
+
+        // Event bindings for edit buttons
+        $('.startEditBtn').on('click', function() {
+            start_edit();
+        });
+        
+        $('.stopEditBtn').on('click', function() {
+            stop_edit();
+        });
+        $('#id_accepted_terms_and_conditions').on('change', function() {
+            this.form.submit();
+        });
+        $('.accepted_terms_and_conditions').on('change', function() {
+            this.form.submit();
+        });
+        $('.workshopstatus').on('change', function() {
+            changeStatus(this);
+        });
+        $('.action-select').on('change', function() {
+            actionChanged(this);
+        });
+        $('.extra').on('change', function() {
+            extraChanged(this);
+        });
+        $('.filter_workshop').on('change', function() {
+            this.form.submit();
+        });
+        $('.volunteer-status, .recommendation-letter-status').on('change', function() {
+            setStatus(this);
+        });
+        $('.status-form-show').on('change', function() {
+            this.form.submit();
+        });
+        $('.download-form-download').on('change', function() {
+            this.form.submit();
+        });
+        $('.presentation-type-form-presentation-type').on('change', function() {
+            this.form.submit();
+        });
+        $('.export-form-resource').on('change', function() {
+            showFieldsForResource(this.value);
+        });
+        $('.import-form-resource').on('change', function() {
+            showFieldsForResource(this.value);
+        });
+        $('.vol-email-form-to, .vol-email-form-template').on('change', function() {
+            this.form.submit();
+        });
+        $('.organizer-alert').on('click', function() {
+            getUserCreateForm(this.href);
+        });
+    })
+</script>
+
+<script src="/static/core/js/fastclick.min.js" ></script>
+
+<!--We don't know if there are editable tags on the page until after the django template engine has rendered the page. So,
+test in javascript for "editable" tags and if present, load the ckeditor engine dynamically. -->
+
+<script nonce="aK9lLgNMw6ZnoKoZ43nsrw==">
+    if (document.getElementsByClassName('editable').length > 0) {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "/static/core/ckeditor/4.18/ckeditor.js";    // use this for linked script
+      script.onload = function () {
+        console.log("ckeditor loaded");
+        // Initial setup when each editor is ready
+        CKEDITOR.on("instanceReady", function (e) {
+          updateToggleDocName(e.editor);
+        });
+
+        // React to any editor entering/leaving read-only
+        CKEDITOR.on("readOnly", function (e) {
+          updateToggleDocName(e.editor);
+        });
+      };
+        document.body.appendChild(script);
+    }
+
+    function updateToggleDocName(editor) {
+      var id = editor && editor.name;
+      if (!id || id.indexOf("id_") !== 0) return;
+
+      var doc_name_element = document.getElementById("document_name_" + id.slice(3));
+      console.log(doc_name_element);
+      if (!doc_name_element) return;
+
+      doc_name_element.style.display = editor.readOnly ? "none" : "block";
+    }
+
+</script>
+
+
+<script nonce="aK9lLgNMw6ZnoKoZ43nsrw==">
+    function fetchContent() {
+        $(".editable").each(function (index) {
+            var myself = this;
+            var docvID = this.getAttribute('id').replace("id_", "");
+            var blurbtext = this.getAttribute("blurbtext");
+            $.ajax({
+                url: "/Admin/RetrieveDocumentVersion",
+                type: "POST",
+                data: {
+                    docvID: docvID,
+                    blurbtext: blurbtext,
+                    csrfmiddlewaretoken: csrftoken,
+                },
+                success: function (data, textStatus, jqXHR) {
+                    myself.setAttribute("contenteditable", "true");
+                    myself.innerHTML = data;
+                    CKEDITOR.inline(myself.id);
+                },
+            });
+        })
+    }
+
+    $("#nopageedit").hide();
+
+    function start_edit() {
+
+        $(".editable").addClass("warning-ring");
+
+        //At the beginning of an edit, we need to replace the content of the
+        //editable div with it's databased content in order to preserve the
+        //template tags. We want the tag, not the rendered tag.
+
+        /* You must remove any countdown.js timers on the page before replacing the page with it's
+        document version otherwise, Javascript will throw an exception.  */
+
+
+        $("[class$='-countdown']").parent().remove();
+        fetchContent();
+        $(".editable").attr("onblur", "ckeditorsave(this)");
+        window.status.bold();
+        window.status = "Click outside the editable area to save. Changes are LIVE!! Refresh page to discard changes.";
+        $("#editpage").hide();
+        $("#noeditpage").show();
+    }
+
+
+    function stop_edit() {
+        ckeditorsave();
+        $("#noeditpage").hide();
+        $("#editpage").show();
+        window.location.reload();
+    }
+
+    function ckeditorsave(event) {
+        for (var name in CKEDITOR.instances) {
+            if (CKEDITOR.instances[name].checkDirty()) {
+                editor = CKEDITOR.instances[name];
+                saveEditable(editor);
+            }
+        }
+    }
+
+    function saveEditable(editor) {
+        var content = editor.getData();
+        var contentId = editor.name;
+        var pageId = window.location.pathname;
+        var originalContent = "N/A";
+        var documentversion = editor.container.getAttribute("id").replace("id_", "");
+        var blurbtext = editor.container.getAttribute("blurbtext");
+        if (contentId.match(/-aloha$/gi)) {
+            contentId = contentId.replace(/-aloha/gi, '');
+        }  /*I'm not sure what this does but it seems like it would matter*/
+        var request = jQuery.ajax({
+            url: "/Admin/SaveDocument",
+            type: "POST",
+            async: false,
+            data: {
+                content: content,
+                originalContent: originalContent,
+                contentId: contentId,
+                pageId: pageId,
+                documentversion: documentversion,
+                blurbtext: blurbtext,
+                csrfmiddlewaretoken: csrftoken
+            },
+            success: function (data) {
+                if (data['message']) {
+                    alert(data['message']);
+                }
+            },
+            error: function (xqXHR, textStatus) {
+                window.status = textStatus;
+                debugger;
+            }
+
+        });
+
+    };
+
+
+</script>
+
+<script nonce="aK9lLgNMw6ZnoKoZ43nsrw==">
+    jQuery(document).ajaxSend(function (event, xhr, settings) {
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function sameOrigin(url) {
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+
+        function safeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    });
+</script>
+
+
+
+
+
+<div id="successful-page-load" class='hidden'>Successful Page Load</div>
+
+
+
+
+
+    
+        <link href="/static/conf_gdpr/css/conf_gdpr.css" rel="stylesheet">
+        <div id="cookie-bar" style="z-index: 8">
+            <table class="gdpr-statement">
+                <col>
+                <col style="width:120px">
+                <tr>
+                    <td style="padding:5px">
+                        ICML uses cookies for essential functions only. We do not sell your personal
+                        information.
+                        <a href="/public/PrivacyPolicy">Our Privacy Policy &raquo;&nbsp;</a>
+                    </td>
+                    <td>
+                        <button float-end class="btn btn-light btn-sm btn btn-outline-dark" id="accept_cookies_button" >Accept</button>
+                           
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <script nonce="aK9lLgNMw6ZnoKoZ43nsrw==">
+            function accept_cookies() {
+
+                $.ajax({
+                    method: "POST",
+                    url: "/conf_gdpr/accept",
+                    data: {
+                        csrfmiddlewaretoken: csrftoken,
+                    },
+                }).done(function (data) {
+                    console.log(data);
+                    $("#cookie-bar").fadeOut();
+                }).fail(function (jqXHR, textStatus) {
+                    alert(textStatus);
+                });
+            }
+            $("#accept_cookies_button").on("click", () => {
+                accept_cookies();
+            });
+        </script>
+
+    
+
+
+
+
+
+
+
+<br>
+<div class="noprint">
+    <footer id="bootstrap-footer" class="text-center text-lg-start bg-light text-muted noprint">
+
+        <div class="text-center p-1 border-top border-dark">
+        </div>
+        <!-- Section: Links  -->
+        <section class="pt-1">
+            <div class="container text-center text-md-start mt-3">
+                <!-- Grid row -->
+                <div class="row mt-3">
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mb-3">
+                        <!-- Content -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <img src="/static/core/img/ICML-logo.svg" alt="ICML logo" height='30'>
+                        </h6>
+                        <p>
+                            The ICML Logo above may be used on presentations. Right-click and choose
+                            download. It is a vector graphic and may be used at any scale.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Grid column -->
+                    <div class="col-md-5 col-lg-4 col-xl-3 mx-auto mb-4" style="max-width: 300px;">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4 text-center">
+                            Useful links
+                        </h6>
+                        <div>
+             <div>
+<p><a href="/About">About ICML</a></p>
+
+<p><a href="https://proceedings.mlr.press">ICML Proceedings at PMLR</a></p>
+
+<p><a href="/yearly-document/CodeOfConduct">Code of Conduct</a></p>
+</div>
+
+            </div>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                        
+                            <p>
+                                <i class="fas fa-home me-3"></i> 1269 Law Street, San Diego CA 92109
+                            </p>
+                        
+                        <p>
+                            <i class="fas fa-envelope me-3"></i> <a href="/Help/Contact">Email</a>
+                        </p>
+                        
+                        
+
+
+                    </div>
+                    <!-- Grid column -->
+                </div>
+                <!-- Grid row -->
+            </div>
+        </section>
+        <!-- Section: Links  -->
+
+        <!-- Copyright -->
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+            <div>
+             <p><a href="https://proceedings.mlr.press">ICML Proceedings at PMLR</a></p>
+
+            </div>
+        </div>
+        <!-- Copyright -->
+    </footer>
+</div>
+<!-- Footer -->
+
+
+<!-- Footer -->
+
+</body>
+</html>

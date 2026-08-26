@@ -4,6 +4,7 @@ from pathlib import Path
 
 import httpx
 import pytest
+import yaml
 
 import conference_overview.pipeline as pipeline_module
 from conference_overview import conference_pipeline
@@ -14,13 +15,14 @@ from conference_overview.conference_pipeline import (
     reconcile_final_scope,
     validate_scope,
 )
-from conference_overview.models import VenueRequest
+from conference_overview.models import PaperRecord, VenueRequest
 from conference_overview.pipeline import (
     export_classification_scope,
     import_semantic_assignments_scope,
 )
 from conference_overview.registry import normalize_request
 from conference_overview.reports import resolve_current_release
+from conference_overview.validate import validate_records
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "icml"
 
@@ -478,3 +480,64 @@ def test_import_audit_decisions_rejects_non_authoritative_icml_samples(
         pipeline_module.import_audit_decisions_scope(request, tmp_path, source)
 
     assert (classification / "audit-decisions.json").read_bytes() == before
+
+
+def test_collect_icml_awards_reconciles_exact_pmlr_titles(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    award_titles = {
+        "train for the worst, plan for the best: understanding token ordering in masked diffusions",
+        "roll the dice & look before you leap: going beyond the creative limits of next-token prediction",
+        "the value of prediction in identifying the worst-off",
+        "score matching with missing data",
+        "conformal prediction as bayesian quadrature",
+        "collabllm: from passive responders to active collaborators",
+        "position: the ai conference peer review crisis demands author feedback and reviewer rewards",
+        "position: ai safety should prioritize the future of work",
+    }
+    records = [
+        PaperRecord.model_validate_json(line)
+        for line in (
+            Path(__file__).parents[1] / "data/normalized/icml/2025-main.jsonl"
+        )
+        .read_text()
+        .splitlines()
+        if json.loads(line)["normalized_title"] in award_titles
+    ]
+    assert len(records) == 8
+    validation = validate_records(records, (), expected_included=8)
+    monkeypatch.setattr(
+        pipeline_module,
+        "_validated_classification_records",
+        lambda _request, _root: (validation, records),
+    )
+    html = (
+        Path(__file__).parent / "fixtures/icml/icml-2025-awards-small.html"
+    ).read_bytes()
+    request = normalize_request("ICML", 2025, "main")
+    transport = httpx.MockTransport(
+        lambda incoming: httpx.Response(
+            200,
+            content=html,
+            headers={"content-length": str(len(html))},
+            request=incoming,
+        )
+    )
+
+    with httpx.Client(transport=transport) as client:
+        inventory = pipeline_module.collect_icml_award_inventory_scope(
+            request, tmp_path, client=client
+        )
+
+    assert len(inventory) == 8
+    assert {item["paper_id"] for item in inventory} == {
+        record.paper_id for record in records
+    }
+    assert {item["award_type"] for item in inventory}.issuperset(
+        {"Outstanding Paper", "Outstanding Position Paper"}
+    )
+    output = yaml.safe_load(
+        (tmp_path / "data/awards/icml/2025-main.yaml").read_text()
+    )
+    assert output["scope"] == {"track": "main", "venue": "ICML", "year": 2025}
+    assert output["status"] == "official_inventory_complete_deep_reads_pending"

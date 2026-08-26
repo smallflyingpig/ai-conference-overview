@@ -6,11 +6,11 @@
 
 - 对 PMLR Volume 267 的 3330 篇论文生成统一 taxonomy 下的主题分布；
 - 总结 ICML 2025 的主要研究热点，但不把单年分布描述为时间趋势；
-- 核对并详细解读 ICML 2025 的 5 篇 Outstanding Paper 和 2 篇 Outstanding Position Paper；
+- 核对并详细解读 ICML 2025 的 6 篇 Outstanding Paper 和 2 篇 Outstanding Position Paper；
 - 在网站中开放主题分布、代表论文、方法说明和获奖论文详情；
 - 任何检查未完成时继续保留现有论文清单版，不覆盖线上可用版本。
 
-本阶段不导入 ICML 2023、ICML 2024，不计算同比变化、Emerging Score 或三年趋势。Test of Time Awards 不属于 2025 年新接收论文，本阶段不纳入主会论文分布和 7 篇当年获奖论文详情。
+本阶段不导入 ICML 2023、ICML 2024，不计算同比变化、Emerging Score 或三年趋势。Test of Time Awards 不属于 2025 年新接收论文，本阶段不纳入主会论文分布和 8 篇当年获奖论文详情。
 
 ## 2. 数据范围与来源
 
@@ -28,10 +28,10 @@
 
 官方依据为 ICML 2025 Awards 页面：`https://icml.cc/virtual/2025/awards_detail`。本阶段只处理能够与 Volume 267 论文记录精确匹配的以下类别：
 
-- Outstanding Paper：5 篇；
+- Outstanding Paper：6 篇；
 - Outstanding Position Paper：2 篇。
 
-每条 award 记录必须同时绑定官方 awards 页面、PMLR landing page 和官方 PDF。Workshop awards、Invited Talk、Test of Time Award 与 Test of Time Honorable Mention 不进入这 7 篇详情。
+每条 award 记录必须同时绑定官方 awards 页面、PMLR landing page 和官方 PDF。Workshop awards、Invited Talk、Test of Time Award 与 Test of Time Honorable Mention 不进入这 8 篇详情。
 
 ## 3. 处理架构
 
@@ -46,7 +46,7 @@
   -> 每主题分层抽样检查
   -> 计算单年主题分布
   -> 生成研究热点与代表论文
-  -> 核对 7 篇官方 awards
+  -> 核对 8 篇官方 awards
   -> PDF 详细阅读与中文解读
   -> 生成 immutable release
   -> Astro 构建与桌面/手机验收
@@ -144,7 +144,7 @@ topic share = 该 primary topic 的论文数 / 3330
 
 ### 6.1 结构
 
-7 篇论文分别生成中文详情页，每页按适合学习的顺序呈现：
+8 篇论文分别生成中文详情页，每页按适合学习的顺序呈现：
 
 1. 三分钟读懂：用简洁中文说明问题、核心做法和主要发现；
 2. 为什么值得关注：说明它解决了什么长期困难；
@@ -174,7 +174,7 @@ topic share = 该 primary topic 的论文数 / 3330
 - 通过检查的主要研究热点；
 - 各主题代表论文；
 - 单年数据无法判断趋势的说明；
-- 7 篇获奖论文入口；
+- 8 篇获奖论文入口；
 - 数据完整度和分类检查状态。
 
 ### 7.2 Trends 页面
@@ -212,8 +212,8 @@ Awards 索引增加 ICML 2025 分组，ACL 2026 与 ICML 2025 不混排。卡片
 - 所有低置信度记录都有明确处理状态；
 - 每个主题的 sample、decision、precision 和 Wilson lower bound 可复算；
 - topic counts 总和为 3330，topic shares 使用同一分母；
-- 7/7 awards 与 official page、PMLR landing page、PDF 精确绑定；
-- 7/7 DeepReads 通过 schema、内容完整性和 locator 检查；
+- 8/8 awards 与 official page、PMLR landing page、PDF 精确绑定；
+- 8/8 DeepReads 通过 schema、内容完整性和 locator 检查；
 - immutable generation 恰好六个文件，current pointer 与文件 hash 一致；
 - `pytest` 与 Ruff 全量通过。
 
@@ -221,7 +221,7 @@ Awards 索引增加 ICML 2025 分组，ACL 2026 与 ICML 2025 不混排。卡片
 
 - ICML 2025 页面展示主题分布、检查状态、代表论文和年份不足说明；
 - Trends 页面不生成 ICML 的伪时间趋势；
-- Awards 索引展示 7 篇 ICML 2025 awards，并能进入 7 个中文详情页；
+- Awards 索引展示 8 篇 ICML 2025 awards，并能进入 8 个中文详情页；
 - ACL 2026 原有分布和 30 篇 award 详情不回归；
 - 空数据构建仍成功，且不生成不存在的会议或 award 详情；
 - Vitest、Astro check/build 和 Playwright 全量通过；
@@ -231,7 +231,7 @@ Awards 索引增加 ICML 2025 分组，ACL 2026 与 ICML 2025 不混排。卡片
 
 - 先在本地 release-backed build 中完成验收；
 - 用户明确授权后才 push `main` 触发 Pages；
-- 部署后核对 workflow head SHA、公开 ICML 页面、Awards 索引、7 个详情路由和静态资源 HTTP 状态。
+- 部署后核对 workflow head SHA、公开 ICML 页面、Awards 索引、8 个详情路由和静态资源 HTTP 状态。
 
 ## 10. 明确不在本阶段处理的内容
 

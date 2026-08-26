@@ -13,6 +13,7 @@ from copy import deepcopy
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from decimal import Decimal
+from difflib import get_close_matches
 from pathlib import Path
 
 import httpx
@@ -21,9 +22,11 @@ import yaml
 from conference_overview.adapters.acl import (
     AclSourceFormatError,
     enrich_acl_abstracts,
+    normalize_title,
     parse_acl_award_badges,
     parse_acl_bibtex,
 )
+from conference_overview.adapters.icml_awards import parse_icml_awards_html
 from conference_overview.awards import (
     AwardRecord,
     AwardStatus,
@@ -82,6 +85,7 @@ _PDF_PROVENANCE_SHA_PATTERN = re.compile(r"[0-9a-f]{64}")
 _AUDIT_SAMPLING_METHOD = (
     "deterministic confidence-stratified sample of up to 50 per primary theme"
 )
+_ICML_2025_AWARDS_URL = "https://icml.cc/virtual/2025/awards_detail"
 
 
 class UnsupportedPipelineRoute(ValueError):
@@ -3144,5 +3148,95 @@ def parse_award_inventory_scope(
     _atomic_write(
         paths.awards,
         yaml.safe_dump(payload, allow_unicode=True, sort_keys=True).encode(),
+    )
+    return inventory
+
+
+def collect_icml_award_inventory_scope(
+    request: VenueRequest,
+    root: Path,
+    *,
+    client: httpx.Client | None = None,
+) -> list[dict[str, object]]:
+    """Fetch and exactly reconcile ICML 2025 current-paper awards to PMLR."""
+    if (request.venue, request.year, request.track, request.adapter) != (
+        "ICML",
+        2025,
+        "main",
+        "pmlr",
+    ):
+        raise UnsupportedPipelineRoute(
+            "ICML award inventory is implemented only for ICML/2025/main"
+        )
+    if "icml.cc" not in request.official_award_hosts:
+        raise ValueError("ICML 2025 official award host is not configured")
+    paths = ScopePaths.for_request(Path(root), request)
+    owns_client = client is None
+    active_client = client or httpx.Client()
+    try:
+        html = fetch_bytes(_ICML_2025_AWARDS_URL, active_client)
+    finally:
+        if owns_client:
+            active_client.close()
+    source = store_snapshot(
+        html, _ICML_2025_AWARDS_URL, paths.snapshots
+    ).model_copy(update={"name": "ICML 2025 Awards"})
+    badges = parse_icml_awards_html(html, source)
+    counts = {
+        award_type: sum(badge.award_type == award_type for badge in badges)
+        for award_type in ("Outstanding Paper", "Outstanding Position Paper")
+    }
+    if counts != {"Outstanding Paper": 6, "Outstanding Position Paper": 2}:
+        raise ValueError(f"ICML 2025 official award count mismatch: {counts}")
+    validation, records = _validated_classification_records(request, root)
+    assert_publishable(validation)
+    records_by_title: dict[str, PaperRecord] = {}
+    duplicate_titles: set[str] = set()
+    for record in records:
+        if record.normalized_title in records_by_title:
+            duplicate_titles.add(record.normalized_title)
+        records_by_title[record.normalized_title] = record
+    inventory: list[dict[str, object]] = []
+    for badge in badges:
+        normalized_title = normalize_title(badge.title)
+        paper = records_by_title.get(normalized_title)
+        if paper is None or normalized_title in duplicate_titles:
+            candidates = get_close_matches(
+                normalized_title, records_by_title, n=3, cutoff=0.75
+            )
+            raise ValueError(
+                "official ICML award title does not have one exact PMLR match: "
+                f"{badge.title!r}; review candidates: {candidates}"
+            )
+        if paper.pdf_url is None:
+            raise ValueError(f"award paper has no official PMLR PDF: {paper.paper_id}")
+        inventory.append(
+            {
+                "award_type": badge.award_type,
+                "evidence_locator": badge.evidence_locator,
+                "evidence_url": _ICML_2025_AWARDS_URL,
+                "event_url": badge.event_url,
+                "landing_url": str(paper.landing_url),
+                "paper_id": paper.paper_id,
+                "pdf_url": str(paper.pdf_url),
+                "title": paper.title,
+            }
+        )
+    inventory.sort(key=lambda item: (str(item["award_type"]), str(item["paper_id"])))
+    if len(inventory) != 8 or len({item["paper_id"] for item in inventory}) != 8:
+        raise ValueError("ICML award inventory must contain eight unique PMLR papers")
+    _atomic_write(
+        paths.awards,
+        yaml.safe_dump(
+            {
+                "awards": inventory,
+                "schema_version": "conference-award-inventory-v1",
+                "scope": {"track": "main", "venue": "ICML", "year": 2025},
+                "source": source.model_dump(mode="json"),
+                "status": "official_inventory_complete_deep_reads_pending",
+            },
+            allow_unicode=True,
+            sort_keys=True,
+        ).encode(),
     )
     return inventory
