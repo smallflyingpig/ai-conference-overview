@@ -165,10 +165,12 @@ describe("conference routes", () => {
     );
   });
 
-  it("does not link to a conference route that an empty build does not emit", () => {
-    expect(conferenceNavigationHref("/ai-conference-overview/", false)).toBeNull();
+  it("links to the conference directory even when no release is available", () => {
+    expect(conferenceNavigationHref("/ai-conference-overview/", false)).toBe(
+      "/ai-conference-overview/conferences/",
+    );
     expect(conferenceNavigationHref("/ai-conference-overview/", true)).toBe(
-      "/ai-conference-overview/conferences/acl/2026/",
+      "/ai-conference-overview/conferences/",
     );
   });
 });

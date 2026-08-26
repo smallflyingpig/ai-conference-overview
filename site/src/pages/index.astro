@@ -97,16 +97,18 @@ const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV
             <p class="eyebrow">已发布分析</p>
             <h2 id="published-title">查看已经完成的<br />单年概览。</h2>
           </div>
-          {conferenceViews.map((conferenceView) => (
-            <ConferenceCard
-              venue={conferenceView.venue}
-              year={conferenceView.year}
-              scope={`${conferenceView.scopeLabel}${conferenceView.publicationStatus === "preliminary" ? " · 预发布" : ""}`}
-              paperCount={conferenceView.includedCount}
-              retrievedAt={conferenceView.retrievedAt}
-              href={projectPath(base, `conferences/${conferenceView.venueSlug}/${conferenceView.year}`)}
-            />
-          ))}
+          <div class="conference-list">
+            {conferenceViews.map((conferenceView) => (
+              <ConferenceCard
+                venue={conferenceView.venue}
+                year={conferenceView.year}
+                scope={`${conferenceView.scopeLabel}${conferenceView.publicationStatus === "preliminary" ? " · 预发布" : ""}`}
+                paperCount={conferenceView.includedCount}
+                retrievedAt={conferenceView.retrievedAt}
+                href={projectPath(base, `conferences/${conferenceView.venueSlug}/${conferenceView.year}`)}
+              />
+            ))}
+          </div>
         </section>
       )}
     </div>

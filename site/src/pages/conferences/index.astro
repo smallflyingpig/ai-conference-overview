@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ConferenceCard from "../../components/ConferenceCard.astro";
+import { loadPublishedOverviews } from "../../lib/data";
+import { projectPath } from "../../lib/paths";
+import { buildConferenceView } from "../../lib/views";
+
+const releases = await loadPublishedOverviews();
+const conferenceViews = releases.map(buildConferenceView);
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout
+  title="会议概览 — AI Conference Overview"
+  description="选择已经收录的 AI 顶会和年份。"
+  conferenceAvailable={conferenceViews.length > 0}
+>
+  <div class="evidence-shell conference-directory-shell">
+    <header class="page-thesis">
+      <p class="eyebrow">会议概览</p>
+      <h1>选择会议和年份</h1>
+      <p>从会议入口查看论文范围、数据来源和当前已经完成的分析。不同年份不会混在同一个统计结果中。</p>
+    </header>
+
+    <section class="paper-index conference-directory" aria-labelledby="conference-list-title">
+      <h2 id="conference-list-title">已收录会议</h2>
+      {conferenceViews.length === 0 ? (
+        <div class="empty-atlas" role="status">
+          <span class="status-mark" aria-hidden="true"></span>
+          <div><h3>暂无已发布会议</h3><p>会议论文完成检查并正式发布后，会显示在这里。</p></div>
+        </div>
+      ) : (
+        <div class="conference-directory-list">
+          {conferenceViews.map((view) => (
+            <ConferenceCard
+              venue={view.venue}
+              year={view.year}
+              scope={`${view.scopeLabel}${view.publicationStatus === "preliminary" ? " · 预发布" : ""}`}
+              paperCount={view.includedCount}
+              retrievedAt={view.retrievedAt}
+              href={projectPath(base, `conferences/${view.venueSlug}/${view.year}`)}
+            />
+          ))}
+        </div>
+      )}
+    </section>
+  </div>
+</BaseLayout>

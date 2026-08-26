@@ -9,7 +9,7 @@ export function projectPath(base: string, route: string): string {
 
 export function conferenceNavigationHref(
   base: string,
-  conferenceAvailable: boolean,
+  _conferenceAvailable: boolean,
 ): string | null {
-  return conferenceAvailable ? projectPath(base, "conferences/acl/2026") : null;
+  return projectPath(base, "conferences");
 }

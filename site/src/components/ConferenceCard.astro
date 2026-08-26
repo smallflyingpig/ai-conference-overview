@@ -6,8 +6,9 @@ interface Props {
   paperCount: number;
   href: string;
   retrievedAt: string;
+  linkLabel?: string;
 }
-const { venue, year, scope, paperCount, href, retrievedAt } = Astro.props;
+const { venue, year, scope, paperCount, href, retrievedAt, linkLabel = `查看 ${venue} ${year}` } = Astro.props;
 ---
 
 <article class="conference-entry">
@@ -20,5 +21,5 @@ const { venue, year, scope, paperCount, href, retrievedAt } = Astro.props;
     <div><dt>论文数</dt><dd>{paperCount} 篇</dd></div>
     <div><dt>数据日期</dt><dd>{retrievedAt.slice(0, 10)}</dd></div>
   </dl>
-  <a href={href}>查看分布 <span aria-hidden="true">→</span></a>
+  <a href={href}>{linkLabel} <span aria-hidden="true">→</span></a>
 </article>

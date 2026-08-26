@@ -43,6 +43,23 @@ test("ICML 2025 正式论文集可以检索并进入英文详情", async ({ page
   expect(consoleErrors).toEqual([]);
 });
 
+test("会议概览菜单进入会议列表而不是单个会议", async ({ page }, testInfo) => {
+  const consoleErrors = watchConsoleErrors(page);
+  await page.goto(basePath);
+  if (testInfo.project.name === "mobile-chromium") {
+    await page.getByRole("button", { name: "打开主导航" }).click();
+  }
+  await page.getByRole("link", { name: "会议概览" }).click();
+
+  await expect(page).toHaveURL(`${basePath}conferences/`);
+  await expect(page.getByRole("heading", { name: "选择会议和年份" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "ACL 2026" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "ICML 2025" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "查看 ACL 2026" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "查看 ICML 2025" })).toBeVisible();
+  expect(consoleErrors).toEqual([]);
+});
+
 test("方法说明页面用中文呈现分类处理记录", async ({ page }, testInfo) => {
   const consoleErrors = watchConsoleErrors(page);
   await page.goto("/ai-conference-overview/methodology/");
@@ -111,6 +128,7 @@ test("获奖论文索引进入中文解读并保留英文原文参考", async ({
 test("公开页面使用自然中文而不是内部工程术语", async ({ page }) => {
   const routes = new Set([
     basePath,
+    `${basePath}conferences/`,
     `${basePath}conferences/acl/2026/`,
     `${basePath}conferences/icml/2025/`,
     `${basePath}trends/`,
@@ -158,6 +176,7 @@ test("internal links stay within the project base path and resolve", async ({ pa
   const consoleErrors = watchConsoleErrors(page);
   const routes = [
     basePath,
+    `${basePath}conferences/`,
     `${basePath}conferences/acl/2026/`,
     `${basePath}conferences/icml/2025/`,
     `${basePath}trends/`,
