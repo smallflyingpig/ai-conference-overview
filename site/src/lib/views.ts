@@ -17,6 +17,7 @@ export interface TopicShareRow {
 }
 
 export interface ConferenceView {
+  mode: "distribution" | "papers-only";
   venue: string;
   venueSlug: string;
   year: number;
@@ -42,6 +43,8 @@ export interface ConferenceView {
   experimentalThemeCount: number;
   withheldThemeCount: number;
   topics: TopicShareRow[];
+  publicationNotice: string | null;
+  finalSourceUrl: string | null;
 }
 
 export interface ConferenceRoute {
@@ -145,13 +148,20 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
     })
     .sort((left, right) => right.paperCount - left.paperCount || left.topic.localeCompare(right.topic));
   const source = release.provenance.sources[0];
+  const publicationContext = release.overview.publication_context;
+  const papersOnly = publicationContext != null;
   return {
+    mode: papersOnly ? "papers-only" : "distribution",
     venue,
     venueSlug: venue.toLowerCase(),
     year,
     track,
-    pageHeading: `${venue} ${year} 长论文`,
-    scopeLabel: `${venue} ${year} · ${track === "long" ? "长论文" : track}`,
+    pageHeading: papersOnly
+      ? `${venue} ${year} 主会论文`
+      : `${venue} ${year} 长论文`,
+    scopeLabel: papersOnly
+      ? `${venue} ${year} · Main Conference`
+      : `${venue} ${year} · ${track === "long" ? "长论文" : track}`,
     analysisLabel: "Distribution",
     periodLabel: `${year} 单年概览`,
     trendEligible: false,
@@ -173,7 +183,9 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
     auditPassedThemeCount: topics.filter((row) => row.auditStatus === "audit-passed").length,
     experimentalThemeCount: topics.filter((row) => row.auditStatus === "experimental").length,
     withheldThemeCount: topics.filter((row) => row.auditStatus === "withheld").length,
-    topics,
+    topics: papersOnly ? [] : topics,
+    publicationNotice: publicationContext?.notice ?? null,
+    finalSourceUrl: publicationContext?.final_source_url ?? null,
   };
 }
 

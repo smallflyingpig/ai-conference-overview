@@ -1,13 +1,14 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ConferenceCard from "../components/ConferenceCard.astro";
-import { loadOverview } from "../lib/data";
+import { loadPublishedOverviews } from "../lib/data";
 import { projectPath } from "../lib/paths";
 import { buildConferenceView } from "../lib/views";
 
-const release = await loadOverview("ACL", 2026);
+const releases = await loadPublishedOverviews();
+const release = releases.find(({ scope }) => scope.venue === "ACL") ?? null;
 const source = release?.provenance.sources[0];
-const conferenceView = release ? buildConferenceView(release) : null;
+const conferenceViews = releases.map(buildConferenceView);
 const base = import.meta.env.BASE_URL;
 const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV"];
 ---
@@ -90,20 +91,22 @@ const scopes = ["ACL", "EMNLP", "ICLR", "ICML", "NeurIPS", "CVPR", "ICCV", "ECCV
         </ul>
       </section>
 
-      {conferenceView && (
+      {conferenceViews.length > 0 && (
         <section class="published-index" aria-labelledby="published-title">
           <div class="section-heading">
             <p class="eyebrow">已发布分析</p>
             <h2 id="published-title">查看已经完成的<br />单年概览。</h2>
           </div>
-          <ConferenceCard
-            venue={conferenceView.venue}
-            year={conferenceView.year}
-            scope={conferenceView.scopeLabel}
-            paperCount={conferenceView.includedCount}
-            retrievedAt={conferenceView.retrievedAt}
-            href={projectPath(base, `conferences/${conferenceView.venueSlug}/${conferenceView.year}`)}
-          />
+          {conferenceViews.map((conferenceView) => (
+            <ConferenceCard
+              venue={conferenceView.venue}
+              year={conferenceView.year}
+              scope={`${conferenceView.scopeLabel}${conferenceView.mode === "papers-only" ? " · 预发布" : ""}`}
+              paperCount={conferenceView.includedCount}
+              retrievedAt={conferenceView.retrievedAt}
+              href={projectPath(base, `conferences/${conferenceView.venueSlug}/${conferenceView.year}`)}
+            />
+          ))}
         </section>
       )}
     </div>

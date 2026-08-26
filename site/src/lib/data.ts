@@ -47,6 +47,11 @@ const defaultReleaseRoot = fileURLToPath(
   new URL("../../../data/releases", import.meta.url),
 );
 
+export const configuredReleaseSelectors: PublishedReleaseSelector[] = [
+  { venue: "ACL", year: 2026, track: "long" },
+  { venue: "ICML", year: 2026, track: "main" },
+];
+
 async function readRegularFile(path: string): Promise<Buffer> {
   const stats = await lstat(path);
   if (!stats.isFile() || stats.isSymbolicLink()) {
@@ -188,8 +193,8 @@ export async function loadOverview(
 }
 
 export async function loadPublishedOverviews(
-  releaseRoot: string,
-  selectors: PublishedReleaseSelector[],
+  releaseRoot = process.env.CONFERENCE_RELEASE_ROOT ?? defaultReleaseRoot,
+  selectors: PublishedReleaseSelector[] = configuredReleaseSelectors,
 ): Promise<LoadedOverview[]> {
   const ordered = [...selectors].sort(
     (left, right) =>

@@ -1,4 +1,7 @@
+import { createHash } from "node:crypto";
+
 import type { LoadedOverview } from "./data";
+import { projectPath } from "./paths";
 import {
   deepReadArtifactSchema,
   type DeepReadArtifact,
@@ -172,31 +175,60 @@ export interface PaperIndexRow {
   paperId: string;
   title: string;
   authors: string[];
-  theme: string;
+  theme: string | null;
+  venue: string;
+  year: number;
+  detailUrl: string | null;
   abstract: string | null;
   officialUrl: string;
   pdfUrl: string | null;
   codeUrl: string | null;
 }
 
-export interface PaperFilters { query: string; theme: string | null }
+export interface PaperFilters {
+  query: string;
+  theme: string | null;
+  venue?: string | null;
+}
 
-export function filterPapers(release: LoadedOverview, filters: PaperFilters): PaperIndexRow[] {
-  const themeByPaper = new Map(
-    release.overview.assignments.map((assignment) => [assignment.paper_id, assignment.primary_topic]),
-  );
+export function paperRouteKey(paperId: string): string {
+  return `paper-${createHash("sha256").update(paperId).digest("hex")}`;
+}
+
+export function filterPapers(
+  releaseOrReleases: LoadedOverview | LoadedOverview[],
+  filters: PaperFilters,
+): PaperIndexRow[] {
+  const releases = Array.isArray(releaseOrReleases)
+    ? releaseOrReleases
+    : [releaseOrReleases];
   const query = filters.query.trim().toLocaleLowerCase();
-  return release.papers
-    .map((paper) => ({
-      paperId: paper.paper_id,
-      title: paper.title,
-      authors: paper.authors,
-      theme: themeByPaper.get(paper.paper_id) ?? "Unassigned",
-      abstract: paper.abstract,
-      officialUrl: paper.landing_url,
-      pdfUrl: paper.pdf_url,
-      codeUrl: paper.code_url,
-    }))
+  return releases
+    .flatMap((release) => {
+      const themeByPaper = new Map(
+        release.overview.assignments.map((assignment) => [
+          assignment.paper_id,
+          assignment.primary_topic,
+        ]),
+      );
+      const hasInternalDetails = release.overview.publication_context != null;
+      return release.papers.map((paper) => ({
+        paperId: paper.paper_id,
+        title: paper.title,
+        authors: paper.authors,
+        theme: themeByPaper.get(paper.paper_id) ?? null,
+        venue: paper.venue,
+        year: paper.year,
+        detailUrl: hasInternalDetails
+          ? projectPath("/ai-conference-overview/", `papers/${paperRouteKey(paper.paper_id)}`)
+          : null,
+        abstract: paper.abstract,
+        officialUrl: paper.landing_url,
+        pdfUrl: paper.pdf_url,
+        codeUrl: paper.code_url,
+      }));
+    })
+    .filter((paper) => filters.venue == null || paper.venue === filters.venue)
     .filter((paper) => filters.theme == null || paper.theme === filters.theme)
     .filter((paper) => {
       if (!query) return true;

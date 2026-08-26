@@ -8,6 +8,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import TopicShareChart from "../src/components/TopicShareChart";
 import TrendExplorer from "../src/components/TrendExplorer";
 import { loadOverview, type LoadedOverview } from "../src/lib/data";
+import { filterPapers, paperRouteKey } from "../src/lib/evidence";
 import { conferenceNavigationHref, projectPath } from "../src/lib/paths";
 import {
   applyTrendFilters,
@@ -51,6 +52,30 @@ function threeYears(): LoadedOverview[] {
   return [releaseForYear(2024), releaseForYear(2025), releaseForYear(2026)];
 }
 
+function preliminaryIcmlRelease(): LoadedOverview {
+  const release = structuredClone(validatedRelease);
+  release.scope = { venue: "ICML", year: 2026, track: "main" };
+  release.papers.forEach((paper, index) => {
+    paper.paper_id = `icml:2026:forum-${index + 1}`;
+    paper.venue = "ICML";
+    paper.year = 2026;
+    paper.track = "main";
+  });
+  release.overview.assignments = [];
+  release.overview.audits = {};
+  release.overview.taxonomy_version = "not-classified";
+  release.overview.publication_context = {
+    status: "preliminary_official_program",
+    final_source_status: "not_published",
+    final_source_url: "https://proceedings.mlr.press/v306/",
+    notice: "来自 ICML 官方会议程序，等待 PMLR 最终对照。",
+    analysis_availability: {
+      papers: true, distribution: false, trends: false, advances: false, awards: false,
+    },
+  };
+  return release;
+}
+
 function changeComparisonContract(
   release: LoadedOverview,
   mutate: (contract: LoadedOverview["overview"]["comparison_contract"]) => void,
@@ -64,6 +89,33 @@ function changeComparisonContract(
 }
 
 describe("conference routes", () => {
+  it("builds a papers-only ICML conference view", () => {
+    const view = buildConferenceView(preliminaryIcmlRelease());
+
+    expect(view.mode).toBe("papers-only");
+    expect(view.pageHeading).toBe("ICML 2026 主会论文");
+    expect(view.scopeLabel).toBe("ICML 2026 · Main Conference");
+    expect(view.publicationNotice).toBe(
+      "来自 ICML 官方会议程序，等待 PMLR 最终对照。",
+    );
+    expect(view.topics).toEqual([]);
+  });
+
+  it("aggregates ACL and ICML paper rows with stable internal routes", () => {
+    const icml = preliminaryIcmlRelease();
+    const rows = filterPapers([validatedRelease, icml], {
+      query: "", theme: null, venue: null,
+    });
+    const icmlPaper = rows.find((paper) => paper.venue === "ICML")!;
+
+    expect(icmlPaper.detailUrl).toBe(
+      `/ai-conference-overview/papers/${paperRouteKey(icmlPaper.paperId)}/`,
+    );
+    expect(icmlPaper.theme).toBeNull();
+    expect(paperRouteKey(icmlPaper.paperId)).toBe(
+      `paper-${createHash("sha256").update(icmlPaper.paperId).digest("hex")}`,
+    );
+  });
   it("creates the ACL 2026 conference route from a schema-validated release", () => {
     expect(conferenceRoutes([validatedRelease])).toContainEqual({
       params: { venue: "acl", year: "2026" },

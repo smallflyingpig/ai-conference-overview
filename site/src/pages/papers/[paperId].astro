@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { loadPublishedOverviews } from "../../lib/data";
+import { paperRouteKey } from "../../lib/evidence";
+import { projectPath } from "../../lib/paths";
+
+export async function getStaticPaths() {
+  const releases = await loadPublishedOverviews();
+  return releases
+    .filter((release) => release.overview.publication_context != null)
+    .flatMap((release) => release.papers.map((paper) => ({
+      params: { paperId: paperRouteKey(paper.paper_id) },
+      props: { paper, notice: release.overview.publication_context!.notice },
+    })));
+}
+
+const { paper, notice } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title={`${paper.title} — AI Conference Overview`} description={`${paper.title} 的官方英文摘要。`} conferenceAvailable={true}>
+  <main class="paper-detail">
+    <p class="eyebrow">{paper.venue} {paper.year} · Main Conference</p>
+    <h1>{paper.title}</h1>
+    <p class="paper-authors">{paper.authors.join(", ")}</p>
+    <p class="preliminary-notice">{notice}</p>
+    <section aria-labelledby="abstract-title">
+      <h2 id="abstract-title">英文摘要</h2>
+      <p data-english-abstract>{paper.abstract ?? "官方数据暂未提供摘要"}</p>
+    </section>
+    <nav class="plate-links" aria-label="论文链接">
+      <a href={paper.landing_url}>官方页面</a>
+      {paper.pdf_url && <a href={paper.pdf_url}>PDF</a>}
+      <a href={projectPath(base, "papers")}>返回论文索引</a>
+    </nav>
+    <p class="paper-id">Paper ID：{paper.paper_id}</p>
+  </main>
+</BaseLayout>

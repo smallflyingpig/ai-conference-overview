@@ -2,12 +2,11 @@
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import DataStatus from "../../../components/DataStatus.astro";
 import TopicShareChart from "../../../components/TopicShareChart";
-import { loadOverview } from "../../../lib/data";
+import { loadPublishedOverviews } from "../../../lib/data";
 import { auditStatusLabel, buildConferenceView, conferenceRoutes, type ConferenceView } from "../../../lib/views";
 
 export async function getStaticPaths() {
-  const release = await loadOverview("ACL", 2026);
-  const releases = release == null ? [] : [release];
+  const releases = await loadPublishedOverviews();
   return conferenceRoutes(releases).map((route, index) => ({
     ...route,
     props: { view: buildConferenceView(releases[index]) },
@@ -45,6 +44,21 @@ const { view } = Astro.props;
       />
     </aside>
 
+    {view.mode === "papers-only" ? (
+      <article class="distribution-plane preliminary-conference">
+        <header class="distribution-header">
+          <p class="eyebrow">预发布论文清单</p>
+          <h2>主会论文已经可以浏览。</h2>
+          <p class="preliminary-notice">{view.publicationNotice}</p>
+        </header>
+        <section class="preliminary-scope" aria-labelledby="included-scope">
+          <div><h3 id="included-scope">本次收录</h3><p>ICML 2026 Main Conference 官方论文记录，以及官网提供的英文摘要和展示信息。</p></div>
+          <div><h3>暂不包含</h3><p>Position Papers、Journal-to-Conference、workshops、主题分布、趋势、Advances 和获奖论文分析。</p></div>
+        </section>
+        <p><a class="primary-link" href="/ai-conference-overview/papers/">浏览 ICML 2026 论文</a></p>
+        <footer class="artifact-trace"><span>等待 PMLR Volume 306 最终对照</span><code>{view.generation}</code></footer>
+      </article>
+    ) : (
     <article class="distribution-plane">
       <header class="distribution-header">
         <p class="eyebrow">主题分布</p>
@@ -92,5 +106,6 @@ const { view } = Astro.props;
         <code>{view.generation}</code>
       </footer>
     </article>
+    )}
   </div>
 </BaseLayout>
