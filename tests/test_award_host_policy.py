@@ -1,3 +1,4 @@
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -23,6 +24,12 @@ def test_generated_award_host_policy_matches_venue_registry() -> None:
         "config/award-host-policy.json drifted; run "
         "python scripts/generate_award_host_policy.py"
     )
+
+
+def test_generated_policy_retains_scopes_with_no_award_hosts() -> None:
+    policy = json.loads(render_policy())
+
+    assert policy["scopes"]["ICML/2026/main"] == []
 
 
 def test_generated_policy_uses_registry_host_canonicalization(tmp_path: Path) -> None:

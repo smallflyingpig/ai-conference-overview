@@ -173,6 +173,23 @@ const classificationReviewSchema = z.object({
   reviewed_low_confidence_ids: z.array(nonBlankSchema),
 });
 
+const publicationContextSchema = z.object({
+  status: z.literal("preliminary_official_program"),
+  final_source_status: z.literal("not_published"),
+  final_source_url: z.string().url().refine(
+    (value) => new URL(value).protocol === "https:",
+    "final source URL must use HTTPS",
+  ),
+  notice: nonBlankSchema,
+  analysis_availability: z.object({
+    papers: z.literal(true),
+    distribution: z.literal(false),
+    trends: z.literal(false),
+    advances: z.literal(false),
+    awards: z.literal(false),
+  }).strict(),
+}).strict();
+
 const fullThemeReviewCorrectionSchema = z.object({
   corrected_primary_topic: nonBlankSchema,
   original_primary_topic: nonBlankSchema,
@@ -822,6 +839,7 @@ export const overviewArtifactSchema = z
     }),
     classification_review: classificationReviewSchema.optional(),
     classification_lineage: classificationLineageSchema.optional(),
+    publication_context: publicationContextSchema.optional(),
     awards: z.array(awardSchema),
     award_state: awardStateSchema,
     award_deep_reads: z.array(deepReadArtifactSchema),
@@ -900,12 +918,32 @@ export const overviewArtifactSchema = z
       });
     }
     const assignmentIds = value.assignments.map((assignment) => assignment.paper_id);
-    if (assignmentIds.length !== value.paper_count) {
+    if (value.publication_context == null && assignmentIds.length !== value.paper_count) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["assignments"],
         message: "every included paper requires exactly one assignment",
       });
+    }
+    if (value.publication_context != null) {
+      const unavailableContent =
+        value.taxonomy_version !== "not-classified" ||
+        value.assignments.length !== 0 ||
+        Object.keys(value.audits).length !== 0 ||
+        Object.keys(value.metrics).length !== 0 ||
+        value.advances.length !== 0 ||
+        value.awards.length !== 0 ||
+        value.award_deep_reads.length !== 0 ||
+        value.theme_disclosures.length !== 0 ||
+        value.evidence_claims.length !== 0 ||
+        value.classification_lineage != null;
+      if (unavailableContent) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["publication_context"],
+          message: "preliminary release contains unavailable analysis",
+        });
+      }
     }
     if (new Set(assignmentIds).size !== assignmentIds.length) {
       context.addIssue({
@@ -1118,6 +1156,7 @@ export const provenanceArtifactSchema = z
     source_sha256: sha256Schema.optional(),
     source_retrieved_at: z.string().datetime({ offset: true }).optional(),
     classification_lineage: classificationLineageSchema.optional(),
+    publication_context: publicationContextSchema.optional(),
   })
   .superRefine((value, context) => {
     const aliases = [value.source_url, value.source_sha256, value.source_retrieved_at];
@@ -1184,6 +1223,16 @@ export const releaseOverviewSchema = z
         code: z.ZodIssueCode.custom,
         path: ["provenance", "classification_lineage"],
         message: "classification lineage differs between overview and provenance",
+      });
+    }
+    if (
+      canonicalJson(value.overview.publication_context ?? null) !==
+      canonicalJson(value.provenance.publication_context ?? null)
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["provenance", "publication_context"],
+        message: "publication context differs between overview and provenance",
       });
     }
   });
@@ -1261,14 +1310,14 @@ export const fullReleaseSchema = releaseOverviewSchema
     const paperIdSet = new Set(paperIds);
     const missing = paperIds.filter((paperId) => !assignmentIds.has(paperId));
     const unknown = [...assignmentIds].filter((paperId) => !paperIdSet.has(paperId));
-    if (missing.length > 0) {
+    if (value.overview.publication_context == null && missing.length > 0) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["overview", "assignments"],
         message: `missing assignments for papers: ${missing.join(", ")}`,
       });
     }
-    if (unknown.length > 0) {
+    if (value.overview.publication_context == null && unknown.length > 0) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["overview", "assignments"],

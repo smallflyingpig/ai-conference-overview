@@ -37,6 +37,12 @@ export interface LoadedOverview extends FullRelease {
   };
 }
 
+export interface PublishedReleaseSelector {
+  venue: string;
+  year: number;
+  track: string;
+}
+
 const defaultReleaseRoot = fileURLToPath(
   new URL("../../../data/releases", import.meta.url),
 );
@@ -179,4 +185,24 @@ export async function loadOverview(
     papersSha256: pointer.artifact_sha256["papers.json"],
     scope: { venue, year, track },
   };
+}
+
+export async function loadPublishedOverviews(
+  releaseRoot: string,
+  selectors: PublishedReleaseSelector[],
+): Promise<LoadedOverview[]> {
+  const ordered = [...selectors].sort(
+    (left, right) =>
+      left.venue.localeCompare(right.venue) ||
+      left.year - right.year ||
+      left.track.localeCompare(right.track),
+  );
+  const releases = await Promise.all(
+    ordered.map(({ venue, year, track }) =>
+      loadOverview(venue, year, releaseRoot, track)
+    ),
+  );
+  return releases.filter(
+    (release): release is LoadedOverview => release != null,
+  );
 }

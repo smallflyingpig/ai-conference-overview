@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { loadOverview } from "../src/lib/data";
+import { loadOverview, loadPublishedOverviews } from "../src/lib/data";
 import { parseOverview } from "../src/lib/schema";
 
 function canonicalJson(value: unknown): string {
@@ -266,6 +266,60 @@ const provenance = {
   source_retrieved_at: "2026-08-24T01:02:03Z",
 };
 
+it("accepts a papers-only preliminary overview without assignments", () => {
+  const publicationContext = {
+    status: "preliminary_official_program",
+    final_source_status: "not_published",
+    final_source_url: "https://proceedings.mlr.press/v306/",
+    notice: "来自 ICML 官方会议程序，等待 PMLR 最终对照。",
+    analysis_availability: {
+      papers: true,
+      distribution: false,
+      trends: false,
+      advances: false,
+      awards: false,
+    },
+  } as const;
+  const preliminaryOverview = {
+    ...structuredClone(overview),
+    paper_count: 1,
+    taxonomy_version: "not-classified",
+    publication_context: publicationContext,
+  };
+  const preliminaryValidation = {
+    ...validation,
+    discovered_count: 1,
+    included_count: 1,
+    expected_included: 1,
+  };
+  const preliminaryProvenance = {
+    ...provenance,
+    taxonomy_version: "not-classified",
+    publication_context: publicationContext,
+  };
+
+  expect(() => parseOverview({
+    overview: preliminaryOverview,
+    validation: preliminaryValidation,
+    provenance: preliminaryProvenance,
+  })).not.toThrow();
+  expect(() => parseOverview({
+    overview: {
+      ...preliminaryOverview,
+      assignments: [{
+        confidence: "0.99",
+        paper_id: "icml:2026:forged",
+        primary_topic: "Evaluation",
+        rationale: "forged",
+        secondary_topics: [],
+        taxonomy_version: "not-classified",
+      }],
+    },
+    validation: preliminaryValidation,
+    provenance: preliminaryProvenance,
+  })).toThrow(/preliminary release/i);
+});
+
 const artifactNames = [
   "papers.json",
   "papers.csv",
@@ -278,6 +332,17 @@ const artifactNames = [
 const task9FixtureRoot = fileURLToPath(
   new URL("./fixtures/task9-release", import.meta.url),
 );
+
+it("loads configured releases in stable order and skips unpublished scopes", async () => {
+  const releases = await loadPublishedOverviews(task9FixtureRoot, [
+    { venue: "ICML", year: 2026, track: "main" },
+    { venue: "ACL", year: 2026, track: "long" },
+  ]);
+
+  expect(releases.map((release) => release.scope)).toEqual([
+    { venue: "ACL", year: 2026, track: "long" },
+  ]);
+});
 const currentReleaseRoot = fileURLToPath(
   new URL("../../data/releases", import.meta.url),
 );

@@ -26,8 +26,7 @@ def render_policy(registry_path: Path = REGISTRY) -> bytes:
                         route.get("official_award_hosts", [])
                     )
                 )
-                if hosts:
-                    scopes[f"{venue}/{year}/{track}"] = hosts
+                scopes[f"{venue}/{year}/{track}"] = hosts
     payload = {"schema_version": "award-host-policy-v1", "scopes": scopes}
     return (json.dumps(payload, indent=2, sort_keys=True) + "\n").encode()
 
