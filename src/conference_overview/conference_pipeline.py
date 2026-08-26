@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections import Counter
 from collections.abc import Mapping
 from dataclasses import asdict
 from datetime import UTC, datetime
+from decimal import Decimal
 from pathlib import Path
 
 import httpx
@@ -25,9 +27,13 @@ from conference_overview.adapters.pmlr import (
     pmlr_volume_paper_ids,
     reconcile_pmlr_records,
 )
+from conference_overview.classification import assert_theme_publishable, load_taxonomy
 from conference_overview.fetch import fetch_bytes
+from conference_overview.metrics import topic_share
 from conference_overview.models import (
     AnalysisAvailability,
+    EvidenceClaim,
+    EvidenceType,
     PaperRecord,
     PublicationContext,
     RecordStatus,
@@ -38,8 +44,13 @@ from conference_overview.pipeline import (
     CollectionResult,
     UnsupportedPipelineRoute,
     _atomic_write,
+    _current_assignment_state,
     _json_bytes,
     _jsonl_bytes,
+    _load_award_deep_reads,
+    _load_award_records,
+    _load_low_confidence_reviews,
+    _load_theme_audits,
     analyze_acl_scope,
     collect_acl_scope,
     validate_acl_scope,
@@ -53,7 +64,9 @@ from conference_overview.reports import (
 )
 from conference_overview.scope import ScopePaths
 from conference_overview.storage import store_snapshot
+from conference_overview.synthesis import build_single_year_advances
 from conference_overview.validate import (
+    PublicationBlocked,
     ValidationReport,
     assert_publishable,
     validate_records,
@@ -516,9 +529,167 @@ def analyze_scope(
     *,
     write_release: bool,
 ) -> dict[str, object]:
+    paths = ScopePaths.for_request(Path(root), request)
+    if request.adapter in {"icml_virtual", "pmlr"} and (
+        paths.classification / "assignments.jsonl"
+    ).exists():
+        return analyze_classified_scope(request, root, write_release=write_release)
     if request.adapter in {"icml_virtual", "pmlr"}:
         return build_preliminary_release(request, root, write_release=write_release)
     return analyze_acl_scope(request, root, write_release=write_release)
+
+
+def analyze_classified_scope(
+    request: VenueRequest,
+    root: Path,
+    *,
+    write_release: bool,
+) -> dict[str, object]:
+    """Publish an audited single-year distribution without temporal metrics."""
+    if (request.venue, request.year, request.track, request.adapter) != (
+        "ICML",
+        2025,
+        "main",
+        "pmlr",
+    ):
+        raise UnsupportedPipelineRoute(
+            "classified single-year analysis is implemented only for ICML/2025/main"
+        )
+    paths, records, assignments, assignments_sha256 = _current_assignment_state(
+        request, root
+    )
+    low_status, _queue_sha256 = _load_low_confidence_reviews(
+        paths,
+        assignments,
+        assignments_sha256=assignments_sha256,
+    )
+    if low_status.pending_ids or low_status.rejected_ids:
+        raise PublicationBlocked(
+            "publication blocked: low-confidence semantic review is incomplete"
+        )
+    audits, disclosures, audit_summary = _load_theme_audits(
+        paths, records, assignments, low_status
+    )
+    for theme, audit in audits.items():
+        assert_theme_publishable(
+            audit,
+            low_confidence_review_complete=True,
+            rejected_low_confidence_count=0,
+        )
+    if disclosures:
+        raise PublicationBlocked(
+            "publication blocked: one or more primary themes failed the audit"
+        )
+    taxonomy = load_taxonomy()
+    taxonomy_topics = {
+        str(item["name"])
+        for item in taxonomy["topics"]  # type: ignore[index]
+    }
+    assigned_topics = {item.primary_topic for item in assignments}
+    if assigned_topics != taxonomy_topics:
+        raise PublicationBlocked(
+            "publication blocked: classified release must cover every taxonomy topic"
+        )
+    awards = _load_award_records(paths)
+    deep_reads = _load_award_deep_reads(paths)
+    award_ids = {award.paper_id for award in awards}
+    if (
+        len(awards) != 8
+        or len(deep_reads) != 8
+        or {item.paper_id for item in deep_reads} != award_ids
+    ):
+        raise PublicationBlocked(
+            "publication blocked: eight official ICML awards require eight deep reads"
+        )
+    counts = Counter(item.primary_topic for item in assignments)
+    metrics: dict[str, Decimal | int] = {"paper_count": len(records)}
+    for theme in sorted(counts):
+        metrics[f"topic_count:{theme}"] = counts[theme]
+        metrics[f"topic_share:{theme}"] = topic_share(counts[theme], len(records))
+    advances = build_single_year_advances(records, assignments, audits)
+    if len(advances) != 5:
+        raise PublicationBlocked(
+            "publication blocked: single-year synthesis requires five research lanes"
+        )
+    validation = validate_scope(request, root)
+    assert_publishable(validation)
+    loaded_records, excluded, sources = load_scope_records(request, root)
+    if [item.paper_id for item in loaded_records] != [
+        item.paper_id for item in records
+    ]:
+        raise PublicationBlocked(
+            "publication blocked: classified records differ from normalized corpus"
+        )
+    context = PublicationContext(
+        status="final_proceedings",
+        final_source_status="available",
+        final_source_url=request.final_source_url,
+        notice=(
+            "ICML 2025 单年主题分布与研究热点；当前年份不足，暂不判断时间趋势。"
+        ),
+        analysis_availability=AnalysisAvailability(
+            papers=True,
+            distribution=True,
+            trends=False,
+            advances=True,
+            awards=True,
+        ),
+    )
+    bundle = ReleaseBundle(
+        records=records,
+        excluded_records=excluded,
+        validation=validation,
+        taxonomy_version=str(taxonomy["version"]),
+        generated_at=datetime.now(UTC),
+        assignments=assignments,
+        audits=audits,
+        low_confidence_ids=low_status.queued_ids,
+        reviewed_low_confidence_ids=low_status.reviewed_ids,
+        rejected_low_confidence_ids=low_status.rejected_ids,
+        metrics=metrics,
+        awards=awards,
+        award_deep_reads=deep_reads,
+        advances=advances,
+        claims=(
+            EvidenceClaim(
+                claim=(
+                    "该主题分布来自 ICML 2025 PMLR Volume 267 的主主题分类。"
+                ),
+                evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
+                source_urls=[request.final_source_url],
+                locator="PMLR Volume 267 complete proceedings",
+            ),
+        ),
+        sources=sources,
+        publication_context=context,
+    )
+    note_lines = [
+        "# ICML 2025 主会论文分析",
+        "",
+        f"- 论文总数：{len(records)}",
+        "- 分析范围：单年主题分布与研究热点，不判断时间趋势。",
+        f"- 获奖论文：{len(awards)}",
+        "",
+        "## 主题分布",
+        "",
+        *[
+            f"- {theme}：{counts[theme]}（{topic_share(counts[theme], len(records)):.2%}）"
+            for theme in sorted(counts)
+        ],
+    ]
+    _atomic_write(paths.notes, ("\n".join(note_lines) + "\n").encode())
+    generation = None
+    if write_release:
+        publish_release(bundle, paths.release)
+        generation = resolve_current_release(paths.release).name
+    return {
+        "audit": audit_summary,
+        "award_count": len(awards),
+        "generation": generation,
+        "included_count": len(records),
+        "language": "single_year_distribution_or_hotspot_not_trend",
+        "theme_counts": dict(sorted(counts.items())),
+    }
 
 
 def reconcile_final_scope(

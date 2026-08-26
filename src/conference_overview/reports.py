@@ -689,6 +689,37 @@ def _validate_preliminary_bundle(bundle: ReleaseBundle) -> None:
     if context is None:
         return
     availability = context.analysis_availability
+    if availability.distribution:
+        if availability.model_dump() != {
+            "papers": True,
+            "distribution": True,
+            "trends": False,
+            "advances": True,
+            "awards": True,
+        }:
+            raise PublicationBlocked(
+                "publication blocked: single-year analysis availability is invalid"
+            )
+        forbidden_metric_terms = (
+            "year_over_year",
+            "yoy",
+            "delta",
+            "growth",
+            "emerging_score",
+            "cross_venue_spread",
+        )
+        if any(
+            any(term in metric_name.casefold() for term in forbidden_metric_terms)
+            for metric_name in bundle.metrics
+        ):
+            raise PublicationBlocked(
+                "publication blocked: single-year release contains trend metrics"
+            )
+        if bundle.taxonomy_version == "not-classified":
+            raise PublicationBlocked(
+                "publication blocked: analyzed release requires a taxonomy"
+            )
+        return
     if bundle.taxonomy_version != "not-classified":
         raise PublicationBlocked(
             "publication blocked: preliminary release must be not-classified"
@@ -766,7 +797,10 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
     _validate_provenance(_bundle_sources(bundle))
     _validate_classification_review_chain(bundle.classification_lineage)
     _validate_preliminary_bundle(bundle)
-    if bundle.publication_context is not None:
+    if (
+        bundle.publication_context is not None
+        and not bundle.publication_context.analysis_availability.distribution
+    ):
         return authoritative_validation
 
     published_emerging_score = bundle.metrics.get("emerging_score")

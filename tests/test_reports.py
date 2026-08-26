@@ -130,6 +130,58 @@ def test_preliminary_release_rejects_analysis_payload(tmp_path: Path) -> None:
         write_release(bundle, tmp_path)
 
 
+def analyzed_single_year_context(*, trends: bool = False) -> PublicationContext:
+    return PublicationContext(
+        status="final_proceedings",
+        final_source_status="available",
+        final_source_url="https://proceedings.mlr.press/v267/",
+        notice="ICML 2025 单年主题分布；年份不足，暂不判断时间趋势。",
+        analysis_availability=AnalysisAvailability(
+            papers=True,
+            distribution=True,
+            trends=trends,
+            advances=True,
+            awards=True,
+        ),
+    )
+
+
+def test_analyzed_single_year_release_keeps_context_without_trend_metrics(
+    tmp_path: Path,
+) -> None:
+    bundle = replace(
+        publishable_bundle(),
+        metrics={"topic_share:Foundation Models": Decimal(1)},
+        publication_context=analyzed_single_year_context(),
+    )
+
+    write_release(bundle, tmp_path)
+    overview = json.loads(
+        (resolve_current_release(tmp_path) / "overview.json").read_text()
+    )
+
+    assert overview["publication_context"]["analysis_availability"] == {
+        "advances": True,
+        "awards": True,
+        "distribution": True,
+        "papers": True,
+        "trends": False,
+    }
+    assert overview["metrics"] == {"topic_share:Foundation Models": "1"}
+
+
+def test_single_year_release_rejects_claimed_trend_availability(
+    tmp_path: Path,
+) -> None:
+    bundle = replace(
+        publishable_bundle(),
+        publication_context=analyzed_single_year_context(trends=True),
+    )
+
+    with pytest.raises(PublicationBlocked, match="single-year"):
+        write_release(bundle, tmp_path)
+
+
 def assignment(paper_id: str) -> Assignment:
     return Assignment(
         paper_id=paper_id,

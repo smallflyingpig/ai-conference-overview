@@ -22,7 +22,7 @@ from conference_overview.pipeline import (
 )
 from conference_overview.registry import normalize_request
 from conference_overview.reports import resolve_current_release
-from conference_overview.validate import validate_records
+from conference_overview.validate import PublicationBlocked, validate_records
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "icml"
 
@@ -541,3 +541,26 @@ def test_collect_icml_awards_reconciles_exact_pmlr_titles(
     )
     assert output["scope"] == {"track": "main", "venue": "ICML", "year": 2025}
     assert output["status"] == "official_inventory_complete_deep_reads_pending"
+
+
+def test_icml_analysis_does_not_replace_papers_only_release_when_reviews_pending(
+    tmp_path: Path,
+) -> None:
+    request = _collect_small_icml_2025(tmp_path)
+    build_preliminary_release(request, tmp_path, write_release=True)
+    pointer = tmp_path / "data/releases/ICML/2025/current.json"
+    before = pointer.read_bytes()
+    first = _write_assignment_source(
+        tmp_path / "review-a.jsonl", ("pmlr:v267:a-mancisidor25a",)
+    )
+    second = _write_assignment_source(
+        tmp_path / "review-b.jsonl", ("pmlr:v267:aamand25a",)
+    )
+    import_semantic_assignments_scope(request, tmp_path, [first, second])
+
+    with pytest.raises(PublicationBlocked, match="audit"):
+        conference_pipeline.analyze_scope(
+            request, tmp_path, write_release=True
+        )
+
+    assert pointer.read_bytes() == before
