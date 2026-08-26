@@ -1,9 +1,11 @@
+import hashlib
 import json
 from pathlib import Path
 
 import httpx
 import pytest
 
+import conference_overview.pipeline as pipeline_module
 from conference_overview import conference_pipeline
 from conference_overview.conference_pipeline import (
     build_preliminary_release,
@@ -209,10 +211,12 @@ def test_icml_2025_classification_export_uses_its_own_scope_paths(
     ]
 
 
-def _write_assignment_source(path: Path, paper_ids: tuple[str, ...]) -> Path:
+def _write_assignment_source(
+    path: Path, paper_ids: tuple[str, ...], *, confidence: str = "0.96"
+) -> Path:
     rows = [
         {
-            "confidence": "0.96",
+            "confidence": confidence,
             "paper_id": paper_id,
             "primary_topic": "Learning and Optimization",
             "rationale": "Semantic review identifies the learning method contribution.",
@@ -316,3 +320,161 @@ def test_import_semantic_assignments_rejects_invalid_icml_union_before_write(
     assert not (
         tmp_path / "data/classification/icml/2025-main/assignments.jsonl"
     ).exists()
+
+
+def _classified_small_icml_2025(root: Path) -> tuple[VenueRequest, Path]:
+    request = _collect_small_icml_2025(root)
+    first = _write_assignment_source(
+        root / "review-a.jsonl",
+        ("pmlr:v267:a-mancisidor25a",),
+        confidence="0.62",
+    )
+    second = _write_assignment_source(
+        root / "review-b.jsonl", ("pmlr:v267:aamand25a",)
+    )
+    import_semantic_assignments_scope(request, root, [first, second])
+    return request, root / "data/classification/icml/2025-main"
+
+
+def test_import_low_confidence_review_binds_exact_icml_queue(tmp_path: Path) -> None:
+    request, classification = _classified_small_icml_2025(tmp_path)
+    queue = classification / "low-confidence-review-queue.json"
+    assignments = classification / "assignments.jsonl"
+    source = tmp_path / "low-review.json"
+    source.write_text(
+        json.dumps(
+            {
+                "assignments_sha256": hashlib.sha256(
+                    assignments.read_bytes()
+                ).hexdigest(),
+                "queue_sha256": hashlib.sha256(queue.read_bytes()).hexdigest(),
+                "reviews": [
+                    {
+                        "decision": "accept",
+                        "paper_id": "pmlr:v267:a-mancisidor25a",
+                        "review_note": "The abstract directly supports the selected topic.",
+                        "reviewed_primary_topic": "Learning and Optimization",
+                    }
+                ],
+                "status": "completed_semantic_review",
+                "taxonomy_version": "2026-08-24-v1",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    status = pipeline_module.import_low_confidence_decisions_scope(
+        request, tmp_path, source
+    )
+
+    assert status.accepted_ids == ("pmlr:v267:a-mancisidor25a",)
+    assert status.pending_ids == ()
+
+
+@pytest.mark.parametrize("mutation", ["stale_hash", "missing_id", "wrong_topic"])
+def test_import_low_confidence_review_rejects_invalid_icml_input(
+    tmp_path: Path, mutation: str
+) -> None:
+    request, classification = _classified_small_icml_2025(tmp_path)
+    queue = classification / "low-confidence-review-queue.json"
+    assignments = classification / "assignments.jsonl"
+    payload = {
+        "assignments_sha256": hashlib.sha256(assignments.read_bytes()).hexdigest(),
+        "queue_sha256": hashlib.sha256(queue.read_bytes()).hexdigest(),
+        "reviews": [
+            {
+                "decision": "accept",
+                "paper_id": "pmlr:v267:a-mancisidor25a",
+                "review_note": "The abstract directly supports the selected topic.",
+                "reviewed_primary_topic": "Learning and Optimization",
+            }
+        ],
+        "status": "completed_semantic_review",
+        "taxonomy_version": "2026-08-24-v1",
+    }
+    if mutation == "stale_hash":
+        payload["assignments_sha256"] = "0" * 64
+    elif mutation == "missing_id":
+        payload["reviews"] = []
+    else:
+        payload["reviews"][0]["reviewed_primary_topic"] = "Evaluation"  # type: ignore[index]
+    source = tmp_path / "invalid-low-review.json"
+    source.write_text(json.dumps(payload), encoding="utf-8")
+    before = (classification / "low-confidence-decisions.json").read_bytes()
+
+    with pytest.raises(ValueError):
+        pipeline_module.import_low_confidence_decisions_scope(
+            request, tmp_path, source
+        )
+
+    assert (classification / "low-confidence-decisions.json").read_bytes() == before
+
+
+def _completed_icml_audit_payload(classification: Path) -> dict[str, object]:
+    sample_path = classification / "audit-samples.json"
+    samples = json.loads(sample_path.read_text())
+    themes = {
+        theme: [
+            {
+                **row,
+                "correct": True,
+                "review_note": "Independent title-and-abstract semantic review.",
+            }
+            for row in rows
+        ]
+        for theme, rows in samples["themes"].items()
+    }
+    return {
+        "method": "independent complete title-and-abstract semantic review",
+        "provenance": {
+            "assignments_sha256": samples["assignments_sha256"],
+            "audit_samples_sha256": hashlib.sha256(
+                sample_path.read_bytes()
+            ).hexdigest(),
+        },
+        "schema_version": "classification-audit-v1",
+        "status": "completed_semantic_review",
+        "taxonomy_version": "2026-08-24-v1",
+        "themes": themes,
+    }
+
+
+def test_import_audit_decisions_binds_exact_icml_samples(tmp_path: Path) -> None:
+    request, classification = _classified_small_icml_2025(tmp_path)
+    payload = _completed_icml_audit_payload(classification)
+    source = tmp_path / "audit-review.json"
+    source.write_text(json.dumps(payload), encoding="utf-8")
+
+    audits = pipeline_module.import_audit_decisions_scope(request, tmp_path, source)
+
+    assert set(audits) == {"Learning and Optimization"}
+    assert audits["Learning and Optimization"].correct_count == 2
+
+
+@pytest.mark.parametrize(
+    "mutation", ["subset", "extra_id", "changed_title", "wrong_topic", "stale_hash"]
+)
+def test_import_audit_decisions_rejects_non_authoritative_icml_samples(
+    tmp_path: Path, mutation: str
+) -> None:
+    request, classification = _classified_small_icml_2025(tmp_path)
+    payload = _completed_icml_audit_payload(classification)
+    rows = payload["themes"]["Learning and Optimization"]  # type: ignore[index]
+    if mutation == "subset":
+        rows.pop()
+    elif mutation == "extra_id":
+        rows[0]["paper_id"] = "pmlr:v267:not-sampled25a"
+    elif mutation == "changed_title":
+        rows[0]["title"] = "Forged title"
+    elif mutation == "wrong_topic":
+        rows[0]["proposed_primary_topic"] = "Evaluation"
+    else:
+        payload["provenance"]["assignments_sha256"] = "0" * 64  # type: ignore[index]
+    source = tmp_path / "invalid-audit.json"
+    source.write_text(json.dumps(payload), encoding="utf-8")
+    before = (classification / "audit-decisions.json").read_bytes()
+
+    with pytest.raises(ValueError):
+        pipeline_module.import_audit_decisions_scope(request, tmp_path, source)
+
+    assert (classification / "audit-decisions.json").read_bytes() == before

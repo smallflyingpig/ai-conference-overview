@@ -2086,6 +2086,247 @@ def _load_theme_audits(
     )
 
 
+def _current_assignment_state(
+    request: VenueRequest, root: Path
+) -> tuple[ScopePaths, list[PaperRecord], list[Assignment], str]:
+    paths = ScopePaths.for_request(Path(root), request)
+    report, records = _validated_classification_records(request, root)
+    assert_publishable(report)
+    assignment_path = paths.classification / "assignments.jsonl"
+    assignment_bytes = assignment_path.read_bytes()
+    assignments_sha256 = hashlib.sha256(assignment_bytes).hexdigest()
+    assignments = load_assignments(
+        assignment_path,
+        load_taxonomy(),
+        expected_paper_ids=(record.paper_id for record in records),
+    )
+    try:
+        manifest = json.loads(
+            (paths.classification / "classification-manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError("invalid classification manifest") from exc
+    if (
+        not isinstance(manifest, Mapping)
+        or manifest.get("assignments_sha256") != assignments_sha256
+    ):
+        raise ValueError("classification manifest does not bind current assignments")
+    return paths, records, assignments, assignments_sha256
+
+
+def import_low_confidence_decisions_scope(
+    request: VenueRequest, root: Path, input_path: Path
+) -> LowConfidenceReviewStatus:
+    """Import an exhaustive review bound to the current low-confidence queue."""
+    paths, _records, assignments, assignments_sha256 = _current_assignment_state(
+        request, root
+    )
+    _current_status, queue_sha256 = _load_low_confidence_reviews(
+        paths,
+        assignments,
+        assignments_sha256=assignments_sha256,
+    )
+    source_path = Path(input_path)
+    try:
+        source_bytes = source_path.read_bytes()
+        payload = json.loads(source_bytes)
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError("invalid low-confidence review import") from exc
+    reviews = payload.get("reviews") if isinstance(payload, Mapping) else None
+    if (
+        not isinstance(payload, Mapping)
+        or payload.get("assignments_sha256") != assignments_sha256
+        or payload.get("queue_sha256") != queue_sha256
+        or payload.get("taxonomy_version") != _TAXONOMY_VERSION
+        or payload.get("status") != "completed_semantic_review"
+        or not isinstance(reviews, list)
+    ):
+        raise ValueError("low-confidence review import contract mismatch")
+    expected_ids = {
+        assignment.paper_id
+        for assignment in assignments
+        if assignment.confidence < Decimal("0.70")
+    }
+    assignments_by_id = {
+        assignment.paper_id: assignment for assignment in assignments
+    }
+    canonical_reviews: list[dict[str, object]] = []
+    seen_ids: set[str] = set()
+    for review in reviews:
+        if not isinstance(review, Mapping):
+            raise TypeError("low-confidence review must be an object")
+        paper_id = review.get("paper_id")
+        decision = review.get("decision")
+        review_note = review.get("review_note")
+        reviewed_topic = review.get("reviewed_primary_topic")
+        if (
+            not isinstance(paper_id, str)
+            or paper_id not in expected_ids
+            or paper_id in seen_ids
+            or decision not in {"accept", "reject"}
+            or not isinstance(review_note, str)
+            or not review_note.strip()
+            or reviewed_topic != assignments_by_id[paper_id].primary_topic
+        ):
+            raise ValueError("invalid or duplicate low-confidence review import")
+        seen_ids.add(paper_id)
+        canonical_reviews.append(
+            {
+                "decision": decision,
+                "paper_id": paper_id,
+                "review_note": review_note.strip(),
+                "reviewed_primary_topic": reviewed_topic,
+            }
+        )
+    if seen_ids != expected_ids:
+        raise ValueError("low-confidence review must cover every exact queued ID")
+    canonical_reviews.sort(key=lambda item: str(item["paper_id"]))
+    _atomic_write(
+        paths.low_confidence_decisions,
+        _json_bytes(
+            {
+                "assignments_sha256": assignments_sha256,
+                "provenance": _input_source_payload(
+                    source_path, source_bytes, "low_confidence_review"
+                ),
+                "queue_sha256": queue_sha256,
+                "reviews": canonical_reviews,
+                "schema_version": "low-confidence-review-decisions-v1",
+                "status": "completed_semantic_review",
+                "taxonomy_version": _TAXONOMY_VERSION,
+            }
+        ),
+    )
+    status, _queue_sha256 = _load_low_confidence_reviews(
+        paths,
+        assignments,
+        assignments_sha256=assignments_sha256,
+    )
+    return status
+
+
+def import_audit_decisions_scope(
+    request: VenueRequest, root: Path, input_path: Path
+) -> dict[str, ThemeAudit]:
+    """Import completed decisions bound to canonical deterministic audit samples."""
+    paths, records, assignments, assignments_sha256 = _current_assignment_state(
+        request, root
+    )
+    sample_path = paths.classification / "audit-samples.json"
+    sample_bytes = sample_path.read_bytes()
+    sample_sha256 = hashlib.sha256(sample_bytes).hexdigest()
+    try:
+        sample_registry = json.loads(sample_bytes)
+    except (UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError("invalid audit sample registry") from exc
+    expected_registry = _build_audit_sample_registry(
+        records,
+        assignments,
+        assignments_sha256=assignments_sha256,
+    )
+    if sample_registry != expected_registry:
+        raise ValueError("audit samples differ from the authoritative sample registry")
+    source_path = Path(input_path)
+    try:
+        source_bytes = source_path.read_bytes()
+        payload = json.loads(source_bytes)
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError("invalid audit decision import") from exc
+    provenance = payload.get("provenance") if isinstance(payload, Mapping) else None
+    themes = payload.get("themes") if isinstance(payload, Mapping) else None
+    method = payload.get("method") if isinstance(payload, Mapping) else None
+    if (
+        not isinstance(payload, Mapping)
+        or payload.get("schema_version") != "classification-audit-v1"
+        or payload.get("status") != "completed_semantic_review"
+        or payload.get("taxonomy_version") != _TAXONOMY_VERSION
+        or not isinstance(method, str)
+        or not method.strip()
+        or not isinstance(provenance, Mapping)
+        or provenance.get("assignments_sha256") != assignments_sha256
+        or provenance.get("audit_samples_sha256") != sample_sha256
+        or not isinstance(themes, Mapping)
+    ):
+        raise ValueError("audit decision import contract mismatch")
+    expected_themes = expected_registry["themes"]
+    if not isinstance(expected_themes, Mapping) or set(themes) != set(expected_themes):
+        raise ValueError("audit decisions must cover the exact theme set")
+    canonical_themes: dict[str, list[dict[str, object]]] = {}
+    for theme in sorted(expected_themes):
+        candidates = expected_themes[theme]
+        submitted = themes[theme]
+        if not isinstance(candidates, list) or not isinstance(submitted, list):
+            raise TypeError(f"audit decisions for {theme} must be a list")
+        candidates_by_id = {
+            str(candidate["paper_id"]): candidate
+            for candidate in candidates
+            if isinstance(candidate, Mapping)
+        }
+        canonical_rows: list[dict[str, object]] = []
+        seen_ids: set[str] = set()
+        for row in submitted:
+            if not isinstance(row, Mapping):
+                raise TypeError(f"audit decision for {theme} must be an object")
+            paper_id = row.get("paper_id")
+            correct = row.get("correct")
+            review_note = row.get("review_note")
+            if (
+                not isinstance(paper_id, str)
+                or paper_id not in candidates_by_id
+                or paper_id in seen_ids
+                or type(correct) is not bool
+                or not isinstance(review_note, str)
+                or not review_note.strip()
+            ):
+                raise ValueError(f"invalid or duplicate audit decision for {theme}")
+            expected_row = {
+                **candidates_by_id[paper_id],
+                "correct": correct,
+                "review_note": review_note,
+            }
+            if dict(row) != expected_row:
+                raise ValueError(
+                    "audit decision differs from authoritative audit samples"
+                )
+            seen_ids.add(paper_id)
+            canonical_rows.append(expected_row)
+        if seen_ids != set(candidates_by_id):
+            raise ValueError(f"completed audit must cover every sample for {theme}")
+        canonical_themes[theme] = sorted(
+            canonical_rows, key=lambda item: str(item["paper_id"])
+        )
+    _atomic_write(
+        paths.classification / "audit-decisions.json",
+        _json_bytes(
+            {
+                "method": method.strip(),
+                "provenance": {
+                    "assignments_sha256": assignments_sha256,
+                    "audit_samples_sha256": sample_sha256,
+                    "sources": [
+                        _input_source_payload(source_path, source_bytes, "audit_review")
+                    ],
+                },
+                "schema_version": "classification-audit-v1",
+                "status": "completed_semantic_review",
+                "taxonomy_version": _TAXONOMY_VERSION,
+                "themes": canonical_themes,
+            }
+        ),
+    )
+    low_status, _queue_sha256 = _load_low_confidence_reviews(
+        paths,
+        assignments,
+        assignments_sha256=assignments_sha256,
+    )
+    audits, _disclosures, _audit_summary = _load_theme_audits(
+        paths, records, assignments, low_status
+    )
+    return audits
+
+
 _ADVANCE_TOPICS: dict[AdvanceCategory, tuple[str, ...]] = {
     AdvanceCategory.TEXT_LLMS: ("Foundation Models",),
     AdvanceCategory.MULTIMODAL_MODELS: ("Multimodal Models",),

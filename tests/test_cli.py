@@ -1,3 +1,4 @@
+import hashlib
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -24,6 +25,8 @@ def test_cli_exposes_all_pipeline_commands() -> None:
         "validate",
         "export-classification",
         "import-classification",
+        "import-low-confidence-review",
+        "import-audit-decisions",
         "export-chinese-content",
         "check-chinese-content-sources",
         "import-chinese-content",
@@ -71,6 +74,69 @@ def test_import_classification_accepts_icml_sources(tmp_path: Path, monkeypatch)
         "paper_count": 2,
         "source_count": 2,
         "status": "imported",
+    }
+
+
+def test_classification_review_import_commands_report_completion(
+    tmp_path: Path, monkeypatch
+) -> None:
+    classification = tmp_path / "data/classification/icml/2025-main"
+    classification.mkdir(parents=True)
+    assignment_bytes = b'{"paper_id":"pmlr:v267:test25a"}\n'
+    (classification / "assignments.jsonl").write_bytes(assignment_bytes)
+    source = tmp_path / "review.json"
+    source.write_text("{}", encoding="utf-8")
+
+    def fake_low(request, root, input_path):
+        assert (request.venue, request.year, request.track) == ("ICML", 2025, "main")
+        assert (root, input_path) == (tmp_path, source)
+        return SimpleNamespace(
+            pending_ids=(), rejected_ids=(), reviewed_ids=("pmlr:v267:test25a",)
+        )
+
+    def fake_audit(request, root, input_path):
+        assert (request.venue, request.year, request.track) == ("ICML", 2025, "main")
+        assert (root, input_path) == (tmp_path, source)
+        return {"Evaluation": SimpleNamespace()}
+
+    monkeypatch.setattr(
+        cli_module, "import_low_confidence_decisions_scope", fake_low
+    )
+    monkeypatch.setattr(cli_module, "import_audit_decisions_scope", fake_audit)
+    common = [
+        "--venue",
+        "ICML",
+        "--year",
+        "2025",
+        "--track",
+        "main",
+        "--input",
+        str(source),
+        "--root",
+        str(tmp_path),
+    ]
+
+    low = runner.invoke(app, ["import-low-confidence-review", *common])
+    audit = runner.invoke(app, ["import-audit-decisions", *common])
+
+    expected_sha = hashlib.sha256(assignment_bytes).hexdigest()
+    assert low.exit_code == 0
+    assert payload(low) == {
+        "assignments_sha256": expected_sha,
+        "command": "import-low-confidence-review",
+        "pending_count": 0,
+        "rejected_count": 0,
+        "review_complete": True,
+        "reviewed_count": 1,
+        "status": "imported",
+    }
+    assert audit.exit_code == 0
+    assert payload(audit) == {
+        "assignments_sha256": expected_sha,
+        "command": "import-audit-decisions",
+        "review_complete": True,
+        "status": "imported",
+        "theme_count": 1,
     }
 
 

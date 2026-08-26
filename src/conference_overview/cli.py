@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Annotated, NoReturn
@@ -25,10 +26,13 @@ from conference_overview.pipeline import (
     analyze_acl_scope,
     build_site_scope,
     export_classification_scope,
+    import_audit_decisions_scope,
+    import_low_confidence_decisions_scope,
     import_semantic_assignments_scope,
     parse_award_inventory_scope,
 )
 from conference_overview.registry import normalize_request
+from conference_overview.scope import ScopePaths
 from conference_overview.validate import PublicationBlocked
 
 app = typer.Typer(
@@ -229,6 +233,72 @@ def import_classification(
         "imported",
         paper_count=len(assignments),
         source_count=len(inputs),
+    )
+
+
+@app.command("import-low-confidence-review")
+def import_low_confidence_review(
+    input_path: Annotated[Path, typer.Option("--input")],
+    venue: str = typer.Option(..., "--venue"),
+    year: str = typer.Option(..., "--year"),
+    track: str | None = typer.Option(None, "--track"),
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
+) -> None:
+    """Import an exhaustive review of every low-confidence assignment."""
+    request = _request(
+        command="import-low-confidence-review",
+        venues=venue,
+        years=year,
+        tracks=track,
+    )
+    status = _run(
+        "import-low-confidence-review",
+        lambda: import_low_confidence_decisions_scope(request, root, input_path),
+    )
+    paths = ScopePaths.for_request(root, request)
+    assignments_sha256 = hashlib.sha256(
+        (paths.classification / "assignments.jsonl").read_bytes()
+    ).hexdigest()
+    _success(
+        "import-low-confidence-review",
+        "imported",
+        assignments_sha256=assignments_sha256,
+        pending_count=len(status.pending_ids),
+        rejected_count=len(status.rejected_ids),
+        reviewed_count=len(status.reviewed_ids),
+        review_complete=not status.pending_ids,
+    )
+
+
+@app.command("import-audit-decisions")
+def import_audit_decisions(
+    input_path: Annotated[Path, typer.Option("--input")],
+    venue: str = typer.Option(..., "--venue"),
+    year: str = typer.Option(..., "--year"),
+    track: str | None = typer.Option(None, "--track"),
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
+) -> None:
+    """Import completed decisions for every authoritative audit sample."""
+    request = _request(
+        command="import-audit-decisions",
+        venues=venue,
+        years=year,
+        tracks=track,
+    )
+    audits = _run(
+        "import-audit-decisions",
+        lambda: import_audit_decisions_scope(request, root, input_path),
+    )
+    paths = ScopePaths.for_request(root, request)
+    assignments_sha256 = hashlib.sha256(
+        (paths.classification / "assignments.jsonl").read_bytes()
+    ).hexdigest()
+    _success(
+        "import-audit-decisions",
+        "imported",
+        assignments_sha256=assignments_sha256,
+        review_complete=True,
+        theme_count=len(audits),
     )
 
 
