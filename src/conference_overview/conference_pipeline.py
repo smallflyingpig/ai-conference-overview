@@ -16,7 +16,12 @@ from conference_overview.adapters.icml import (
     fetch_icml_sources,
     parse_icml_sources,
 )
-from conference_overview.adapters.pmlr import FinalSourceStatus, check_final_source
+from conference_overview.adapters.pmlr import (
+    FinalSourceStatus,
+    fetch_final_source,
+    parse_pmlr_volume,
+    reconcile_pmlr_records,
+)
 from conference_overview.models import (
     AnalysisAvailability,
     PaperRecord,
@@ -405,16 +410,45 @@ def reconcile_final_scope(
     *,
     client: httpx.Client | None = None,
 ) -> dict[str, object]:
-    del root
     if request.adapter != "icml_virtual":
         raise UnsupportedPipelineRoute("final reconciliation is not available for this route")
     owns_client = client is None
     active_client = client or httpx.Client()
     try:
-        status = check_final_source(request, active_client)
+        fetched = fetch_final_source(request, active_client)
     finally:
         if owns_client:
             active_client.close()
-    if status is FinalSourceStatus.NOT_PUBLISHED:
-        return {"status": status.value}
-    return {"status": status.value}
+    if fetched.status is FinalSourceStatus.NOT_PUBLISHED:
+        return {"status": fetched.status.value}
+    if fetched.data is None or fetched.source is None or fetched.source.sha256 is None:
+        raise ValueError("available PMLR response has no verified source payload")
+    report = validate_scope(request, root)
+    assert_publishable(report)
+    preliminary, _excluded, _sources = load_scope_records(request, root)
+    final = parse_pmlr_volume(fetched.data, request, fetched.source)
+    diff = reconcile_pmlr_records(preliminary, final)
+    paths = ScopePaths.for_request(Path(root), request)
+    output = paths.analysis / "pmlr-reconciliation" / fetched.source.sha256
+    snapshot = output / "source.html"
+    diff_path = output / "diff.json"
+    payload = {
+        "schema_version": "pmlr-reconciliation-v1",
+        "scope": {
+            "venue": request.venue,
+            "year": request.year,
+            "track": request.track,
+        },
+        "source": fetched.source.model_dump(mode="json"),
+        **asdict(diff),
+    }
+    _atomic_write(snapshot, fetched.data)
+    _atomic_write(diff_path, _json_bytes(payload))
+    return {
+        "status": fetched.status.value,
+        "source_sha256": fetched.source.sha256,
+        "output": str(diff_path),
+        "matched_count": diff.matched_count,
+        "final_count": diff.final_count,
+        "unresolved_count": len(diff.unresolved_pairs),
+    }

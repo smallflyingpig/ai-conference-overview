@@ -9,6 +9,7 @@ from conference_overview.conference_pipeline import (
     build_preliminary_release,
     collect_scope,
     rebuild_scope_from_snapshots,
+    reconcile_final_scope,
     validate_scope,
 )
 from conference_overview.registry import normalize_request
@@ -121,3 +122,26 @@ def test_build_preliminary_release_selects_exact_six_generation(
         "validation.json",
     ]
     assert summary["publication_status"] == "preliminary_official_program"
+
+
+def test_available_pmlr_writes_snapshot_and_diff_without_selecting_release(
+    tmp_path: Path,
+) -> None:
+    request = normalize_request("ICML", 2026, "main")
+    with icml_client() as client:
+        collect_scope(request, tmp_path, client=client)
+    html = (Path(__file__).parent / "fixtures/pmlr/icml-2026-small.html").read_bytes()
+    transport = httpx.MockTransport(
+        lambda incoming: httpx.Response(200, content=html, request=incoming)
+    )
+
+    with httpx.Client(transport=transport) as client:
+        result = reconcile_final_scope(request, tmp_path, client=client)
+
+    output = Path(result["output"])
+    assert result["status"] == "available"
+    assert output.parent.name == result["source_sha256"]
+    assert output.name == "diff.json"
+    assert json.loads(output.read_text())["matched_count"] == 1
+    assert (output.parent / "source.html").read_bytes() == html
+    assert not (tmp_path / "data/releases/ICML/2026/current.json").exists()

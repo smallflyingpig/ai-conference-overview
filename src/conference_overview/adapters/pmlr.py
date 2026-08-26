@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 from collections import defaultdict
 from collections.abc import Sequence
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from enum import Enum
 from html import unescape
 
@@ -28,6 +30,13 @@ from conference_overview.models import (
 class FinalSourceStatus(str, Enum):
     NOT_PUBLISHED = "not_published"
     AVAILABLE = "available"
+
+
+@dataclass(frozen=True)
+class FetchedPmlrSource:
+    status: FinalSourceStatus
+    data: bytes | None = None
+    source: SourceRef | None = None
 
 
 class PmlrReconciliationError(ValueError):
@@ -108,9 +117,9 @@ def parse_pmlr_volume(
     return tuple(sorted(records, key=lambda record: record.paper_id))
 
 
-def check_final_source(
+def fetch_final_source(
     request: VenueRequest, client: httpx.Client
-) -> FinalSourceStatus:
+) -> FetchedPmlrSource:
     if request.final_source_url is None:
         raise PmlrReconciliationError("request has no configured final source")
     url = str(request.final_source_url)
@@ -124,7 +133,7 @@ def check_final_source(
     except httpx.TransportError as exc:
         raise SourceFetchError(url=url, detail="transport error") from exc
     if response.status_code == 404:
-        return FinalSourceStatus.NOT_PUBLISHED
+        return FetchedPmlrSource(FinalSourceStatus.NOT_PUBLISHED)
     if response.status_code != 200:
         raise SourceFetchError(url=url, status_code=response.status_code)
     text = response.text.casefold()
@@ -135,7 +144,23 @@ def check_final_source(
         raise PmlrReconciliationError(
             "PMLR page does not identify Volume 306 and the 43rd ICML"
         )
-    return FinalSourceStatus.AVAILABLE
+    data = response.content
+    return FetchedPmlrSource(
+        FinalSourceStatus.AVAILABLE,
+        data=data,
+        source=SourceRef(
+            name="PMLR Volume 306",
+            url=url,
+            retrieved_at=datetime.now(UTC),
+            sha256=hashlib.sha256(data).hexdigest(),
+        ),
+    )
+
+
+def check_final_source(
+    request: VenueRequest, client: httpx.Client
+) -> FinalSourceStatus:
+    return fetch_final_source(request, client).status
 
 
 def _match_key(record: PaperRecord) -> tuple[str, str] | None:

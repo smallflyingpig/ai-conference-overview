@@ -22,7 +22,7 @@ AI Conference Overview 是一个面向 AI 顶会的论文研究网站，集中�
 | ACL | 2026 Long Papers | 已完成论文收集、主题分类、人工抽查、研究综述和获奖论文解读 |
 | EMNLP | 待接入 | 已定义数据适配方向 |
 | ICLR | 待接入 | 已定义数据适配方向 |
-| ICML | 待接入 | 已定义数据适配方向 |
+| ICML | 2026 Main Conference | 接入和网页代码已完成；官方分页与 OpenReview 精确查询目前返回 403，因此尚未发布不完整的论文目录，等待官方接口恢复后再导入 |
 | NeurIPS | 待接入 | 已定义数据适配方向 |
 | CVPR | 待接入 | 已定义数据适配方向 |
 | ICCV | 待接入 | 已定义数据适配方向 |
@@ -92,6 +92,32 @@ cd ..
 ```
 
 主题分类、低置信度论文复查、分主题人工抽查、分类修正和获奖论文 PDF 阅读都需要明确的人工或 Agent 判断，不是无人值守的模型调用。当前发布版本由 `data/releases/ACL/2026/current.json` 选择，并使用 SHA-256 记录各文件内容。
+
+### 导入 ICML 2026 Main Conference
+
+ICML 没有 ACL 的 long/short 划分，本项目统一使用 `main`。Poster、Spotlight 和 Oral 只是展示形式，同一篇论文会合并为一条记录，不会被当成三个不同的 Track。
+
+ICML 2026 的预发布数据以 OpenReview 中 `ICML.cc/2026/Conference` 的精确 venue ID 确定主会论文范围，再用 ICML 官网补充 session 和展示形式。Position Papers、Journal-to-Conference、Workshop、Tutorial 和 Expo 不在此范围内。PMLR Volume 306 上线后，项目会先生成差异报告，再决定是否切换到正式论文集版本。
+
+```bash
+# 先保存 ACL 当前版本，导入后用来确认 ACL 数据没有变化。
+.venv/bin/python scripts/verify_icml_live_release.py \
+  --write-acl-baseline /tmp/icml-import-acl-baseline.json --root .
+
+.venv/bin/conference-trends collect \
+  --venues ICML --years 2026 --tracks main
+.venv/bin/conference-trends validate \
+  --venues ICML --years 2026 --tracks main
+.venv/bin/conference-trends analyze \
+  --venues ICML --years 2026 --tracks main --write-release
+.venv/bin/conference-trends reconcile-final \
+  --venues ICML --years 2026 --tracks main
+
+.venv/bin/python scripts/verify_icml_live_release.py \
+  --acl-baseline /tmp/icml-import-acl-baseline.json --root .
+```
+
+只要官方分页、OpenReview 查询或总数对照失败，导入就会停止，也不会生成 `data/releases/ICML/2026/current.json`。项目不会改用第三方列表，也不会根据标题或 session 猜测论文所属 Track。
 
 ## 测试与本地预览
 
