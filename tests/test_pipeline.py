@@ -702,8 +702,12 @@ def test_apply_audit_corrections_guards_old_topics_and_resets_audits(
     assert manifest["reviewed_low_confidence_ids"] == ["acl:2026.acl-long.2"]
 
 
-def _minimal_deep_read(paper_id: str) -> dict[str, object]:
-    pdf_url = f"https://aclanthology.org/{paper_id.removeprefix('acl:')}.pdf"
+def _minimal_deep_read(
+    paper_id: str, *, pdf_url: str | None = None
+) -> dict[str, object]:
+    pdf_url = pdf_url or (
+        f"https://aclanthology.org/{paper_id.removeprefix('acl:')}.pdf"
+    )
     reported = {
         "claim": "The paper reports a bounded contribution.",
         "evidence_type": "paper_reported",
@@ -861,6 +865,151 @@ def test_import_award_deep_reads_applies_guarded_patches_and_binds_inventory(
             [note_source],
             [review_source],
         )
+
+
+def _seed_icml_award_import(tmp_path: Path) -> tuple[object, Path, Path, Path, bytes]:
+    request = normalize_request("ICML", 2025, "main")
+    awards = tmp_path / "data/awards/icml"
+    awards.mkdir(parents=True)
+    paper_id = "pmlr:v267:wu25i"
+    pdf_url = (
+        "https://raw.githubusercontent.com/mlresearch/v267/main/assets/"
+        "wu25i/wu25i.pdf"
+    )
+    (awards / "2025-main.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "awards": [
+                    {
+                        "award_type": "Outstanding Paper",
+                        "evidence_url": "https://icml.cc/virtual/2025/awards_detail",
+                        "landing_url": "https://proceedings.mlr.press/v267/wu25i.html",
+                        "paper_id": paper_id,
+                        "pdf_url": pdf_url,
+                        "title": "CollabLLM: From Passive Responders to Active Collaborators",
+                    }
+                ],
+                "schema_version": "conference-award-inventory-v1",
+            }
+        ),
+        encoding="utf-8",
+    )
+    deep_source = tmp_path / "icml-deep-reads.yaml"
+    deep_source.write_text(
+        yaml.safe_dump(
+            {
+                "deep_reads": [
+                    _minimal_deep_read(paper_id, pdf_url=pdf_url)
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    official_pdf = b"%PDF-1.7\nverified PMLR fixture bytes\n%%EOF\n"
+    note_source = tmp_path / "icml-notes.md"
+    note_source.write_text(
+        "| Paper ID | SHA-256 | Bytes | PDF pages |\n"
+        "|---|---|---:|---:|\n"
+        f"| {paper_id} | `{hashlib.sha256(official_pdf).hexdigest()}` | "
+        f"{len(official_pdf)} | 23 |\n",
+        encoding="utf-8",
+    )
+    review_source = tmp_path / "icml-review.md"
+    review_source.write_text("# Independent review\n\nPASS.\n", encoding="utf-8")
+    return request, deep_source, note_source, review_source, official_pdf
+
+
+def test_import_award_deep_reads_accepts_pmlr_id_and_inventory_pdf(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    request, deep_source, note_source, review_source, official_pdf = (
+        _seed_icml_award_import(tmp_path)
+    )
+    requested_urls: list[str] = []
+
+    def fetched(url, _client):
+        requested_urls.append(url)
+        return official_pdf
+
+    monkeypatch.setattr(pipeline_module, "fetch_bytes", fetched)
+
+    deep_reads = pipeline_module.import_award_deep_reads_scope(
+        request,
+        tmp_path,
+        [deep_source],
+        [],
+        [note_source],
+        [review_source],
+    )
+
+    assert [item.paper_id for item in deep_reads] == ["pmlr:v267:wu25i"]
+    assert requested_urls == [
+        (
+            "https://raw.githubusercontent.com/mlresearch/v267/main/assets/"
+            "wu25i/wu25i.pdf"
+        )
+    ]
+    provenance = json.loads(
+        (tmp_path / "data/awards/icml/2025-main-deep-read-provenance.json").read_text()
+    )
+    assert provenance["schema_version"] == (
+        "conference-award-deep-read-provenance-v1"
+    )
+    assert provenance["pdfs"][0]["paper_id"] == "pmlr:v267:wu25i"
+    output = yaml.safe_load(
+        (tmp_path / "data/awards/icml/2025-main-deep-reads.yaml").read_text()
+    )
+    assert output["schema_version"] == "conference-award-deep-reads-v1"
+
+
+@pytest.mark.parametrize(
+    "mutation", ["not_pdf", "missing_eof", "wrong_hash", "unlisted_url"]
+)
+def test_import_icml_award_deep_reads_rejects_invalid_official_pdf_before_write(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str
+) -> None:
+    request, deep_source, note_source, review_source, official_pdf = (
+        _seed_icml_award_import(tmp_path)
+    )
+    fetched = official_pdf
+    if mutation == "not_pdf":
+        fetched = b"not a PDF"
+    elif mutation == "missing_eof":
+        fetched = b"%PDF-1.7\nincomplete"
+    else:
+        if mutation == "wrong_hash":
+            note_source.write_text(
+                note_source.read_text().replace(
+                    hashlib.sha256(official_pdf).hexdigest(), "0" * 64
+                ),
+                encoding="utf-8",
+            )
+        else:
+            deep_source.write_text(
+                deep_source.read_text().replace(
+                    "https://raw.githubusercontent.com/mlresearch/v267/main/assets/"
+                    "wu25i/wu25i.pdf",
+                    "https://example.com/unlisted.pdf",
+                ),
+                encoding="utf-8",
+            )
+    monkeypatch.setattr(
+        pipeline_module, "fetch_bytes", lambda _url, _client: fetched
+    )
+
+    with pytest.raises(ValueError):
+        pipeline_module.import_award_deep_reads_scope(
+            request,
+            tmp_path,
+            [deep_source],
+            [],
+            [note_source],
+            [review_source],
+        )
+
+    assert not (
+        tmp_path / "data/awards/icml/2025-main-deep-reads.yaml"
+    ).exists()
 
 
 @pytest.mark.parametrize(("decision", "rejected_count"), [("accept", 0), ("reject", 1)])

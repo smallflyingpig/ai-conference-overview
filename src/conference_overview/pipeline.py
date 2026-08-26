@@ -80,7 +80,9 @@ _HTML_PAPER_ID_PATTERN = re.compile(
 )
 _SEMANTIC_PARTITION_PATTERN = re.compile(r"acl2026-reclass-mod([0-7])\.jsonl")
 _DEEP_READ_FIELD_PATTERN = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)(?:\[(\d+)\])?")
-_PDF_PROVENANCE_ID_PATTERN = re.compile(r"(?:acl:)?(2026\.acl-long\.\d+)")
+_PDF_PROVENANCE_ID_PATTERN = re.compile(
+    r"(?:(?:acl:)?2026\.acl-long\.\d+|pmlr:v\d+:[A-Za-z0-9][A-Za-z0-9._-]*)"
+)
 _PDF_PROVENANCE_SHA_PATTERN = re.compile(r"[0-9a-f]{64}")
 _AUDIT_SAMPLING_METHOD = (
     "deterministic confidence-stratified sample of up to 50 per primary theme"
@@ -1389,13 +1391,16 @@ def _parse_pdf_provenance_tables(text: str) -> list[tuple[str, int, int, str]]:
             continue
         if header is None or max(header.values()) >= len(cells):
             continue
-        id_match = _PDF_PROVENANCE_ID_PATTERN.fullmatch(cells[header["paper_id"]])
+        raw_paper_id = cells[header["paper_id"]]
+        id_match = _PDF_PROVENANCE_ID_PATTERN.fullmatch(raw_paper_id)
         sha_match = _PDF_PROVENANCE_SHA_PATTERN.fullmatch(cells[header["sha256"]])
         if id_match is None or sha_match is None:
             continue
         parsed.append(
             (
-                f"acl:{id_match.group(1)}",
+                raw_paper_id
+                if raw_paper_id.startswith(("acl:", "pmlr:"))
+                else f"acl:{raw_paper_id}",
                 int(cells[header["pages"]].replace(",", "")),
                 int(cells[header["byte_size"]].replace(",", "")),
                 sha_match.group(0),
@@ -1420,10 +1425,12 @@ def import_award_deep_reads_scope(
     client: httpx.Client | None = None,
 ) -> list[DeepRead]:
     """Merge, guarded-patch, validate, and bind award-paper DeepReads."""
-    _require_acl(request)
     paths = ScopePaths.for_request(Path(root), request)
     if not paths.awards.exists():
-        parse_award_inventory_scope(request, root)
+        if (request.venue, request.year, request.track) == ("ICML", 2025, "main"):
+            collect_icml_award_inventory_scope(request, root, client=client)
+        else:
+            parse_award_inventory_scope(request, root)
     inventory = yaml.safe_load(paths.awards.read_text(encoding="utf-8"))
     awards = inventory.get("awards") if isinstance(inventory, Mapping) else None
     if not isinstance(awards, list):
@@ -1495,6 +1502,23 @@ def import_award_deep_reads_scope(
     for paper_id in sorted(raw_by_id):
         deep_read = DeepRead.model_validate(raw_by_id[paper_id])
         validate_deep_read(deep_read)
+        serialized = deep_read.model_dump(mode="json")
+        referenced_pdf_urls = {
+            str(url)
+            for value in serialized.values()
+            for claim in (value if isinstance(value, list) else [value])
+            if isinstance(claim, Mapping)
+            for url in claim.get("source_urls", [])
+            if str(url).lower().endswith(".pdf")
+        }
+        official_pdf_url = award_pdf_urls[paper_id]
+        if official_pdf_url not in referenced_pdf_urls or referenced_pdf_urls != {
+            official_pdf_url
+        }:
+            raise ValueError(
+                "award deep read must reference only its inventory-listed PDF: "
+                f"{paper_id}"
+            )
         deep_reads.append(deep_read)
 
     pdfs: dict[str, dict[str, object]] = {}
@@ -1557,7 +1581,7 @@ def import_award_deep_reads_scope(
         yaml.safe_dump(
             {
                 "deep_reads": [item.model_dump(mode="json") for item in deep_reads],
-                "schema_version": "acl-award-deep-reads-v1",
+                "schema_version": "conference-award-deep-reads-v1",
             },
             allow_unicode=True,
             sort_keys=True,
@@ -1575,7 +1599,7 @@ def import_award_deep_reads_scope(
                     "verified_at": verified_at,
                 },
                 "pdfs": [verified_pdfs[paper_id] for paper_id in sorted(verified_pdfs)],
-                "schema_version": "acl-award-deep-read-provenance-v1",
+                "schema_version": "conference-award-deep-read-provenance-v1",
                 "sources": sources,
             }
         ),

@@ -27,6 +27,7 @@ def test_cli_exposes_all_pipeline_commands() -> None:
         "import-classification",
         "import-low-confidence-review",
         "import-audit-decisions",
+        "import-award-deep-reads",
         "export-chinese-content",
         "check-chinese-content-sources",
         "import-chinese-content",
@@ -137,6 +138,53 @@ def test_classification_review_import_commands_report_completion(
         "review_complete": True,
         "status": "imported",
         "theme_count": 1,
+    }
+
+
+def test_import_award_deep_reads_command_reports_verified_pdfs(
+    tmp_path: Path, monkeypatch
+) -> None:
+    deep = tmp_path / "deep.yaml"
+    note = tmp_path / "notes.md"
+    review = tmp_path / "review.md"
+
+    def fake_import(request, root, deep_reads, patches, notes, reviews):
+        assert (request.venue, request.year, request.track) == ("ICML", 2025, "main")
+        assert root == tmp_path
+        assert deep_reads == [deep]
+        assert patches == []
+        assert notes == [note]
+        assert reviews == [review]
+        return [SimpleNamespace() for _ in range(8)]
+
+    monkeypatch.setattr(cli_module, "import_award_deep_reads_scope", fake_import)
+    result = runner.invoke(
+        app,
+        [
+            "import-award-deep-reads",
+            "--venue",
+            "ICML",
+            "--year",
+            "2025",
+            "--track",
+            "main",
+            "--deep-read",
+            str(deep),
+            "--note",
+            str(note),
+            "--review",
+            str(review),
+            "--root",
+            str(tmp_path),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert payload(result) == {
+        "command": "import-award-deep-reads",
+        "deep_read_count": 8,
+        "status": "imported",
+        "verified_pdf_count": 8,
     }
 
 

@@ -25,8 +25,10 @@ from conference_overview.pipeline import (
     UnsupportedPipelineRoute,
     analyze_acl_scope,
     build_site_scope,
+    collect_icml_award_inventory_scope,
     export_classification_scope,
     import_audit_decisions_scope,
+    import_award_deep_reads_scope,
     import_low_confidence_decisions_scope,
     import_semantic_assignments_scope,
     parse_award_inventory_scope,
@@ -470,12 +472,56 @@ def awards(
 ) -> None:
     """Parse an official volume-page award inventory without PDF deep reads."""
     request = _request(command="awards", venues=venue, years=year, tracks=track)
-    inventory = _run("awards", lambda: parse_award_inventory_scope(request, root))
+    inventory = _run(
+        "awards",
+        lambda: (
+            collect_icml_award_inventory_scope(request, root)
+            if (request.venue, request.year, request.track) == ("ICML", 2025, "main")
+            else parse_award_inventory_scope(request, root)
+        ),
+    )
     _success(
         "awards",
         "official_inventory",
         award_count=len(inventory),
         deep_read_count=0,
+    )
+
+
+@app.command("import-award-deep-reads")
+def import_award_deep_reads(
+    deep_reads: Annotated[list[Path], typer.Option("--deep-read")],
+    venue: str = typer.Option(..., "--venue"),
+    year: str = typer.Option(..., "--year"),
+    track: str | None = typer.Option(None, "--track"),
+    patches: Annotated[list[Path] | None, typer.Option("--patch")] = None,
+    notes: Annotated[list[Path] | None, typer.Option("--note")] = None,
+    reviews: Annotated[list[Path] | None, typer.Option("--review")] = None,
+    root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
+) -> None:
+    """Import complete award readings and verify every official PDF byte stream."""
+    request = _request(
+        command="import-award-deep-reads",
+        venues=venue,
+        years=year,
+        tracks=track,
+    )
+    imported = _run(
+        "import-award-deep-reads",
+        lambda: import_award_deep_reads_scope(
+            request,
+            root,
+            deep_reads,
+            patches or [],
+            notes or [],
+            reviews or [],
+        ),
+    )
+    _success(
+        "import-award-deep-reads",
+        "imported",
+        deep_read_count=len(imported),
+        verified_pdf_count=len(imported),
     )
 
 
