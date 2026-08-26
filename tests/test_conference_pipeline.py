@@ -6,11 +6,13 @@ import pytest
 
 from conference_overview import conference_pipeline
 from conference_overview.conference_pipeline import (
+    build_preliminary_release,
     collect_scope,
     rebuild_scope_from_snapshots,
     validate_scope,
 )
 from conference_overview.registry import normalize_request
+from conference_overview.reports import resolve_current_release
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "icml"
 
@@ -98,3 +100,24 @@ def test_validate_rejects_manifest_count_mutation(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="count"):
         validate_scope(request, tmp_path)
+
+
+def test_build_preliminary_release_selects_exact_six_generation(
+    tmp_path: Path,
+) -> None:
+    request = normalize_request("ICML", 2026, "main")
+    with icml_client() as client:
+        collect_scope(request, tmp_path, client=client)
+
+    summary = build_preliminary_release(request, tmp_path, write_release=True)
+    generation = resolve_current_release(tmp_path / "data/releases/ICML/2026")
+
+    assert sorted(path.name for path in generation.iterdir()) == [
+        "overview.json",
+        "overview.md",
+        "papers.csv",
+        "papers.json",
+        "provenance.json",
+        "validation.json",
+    ]
+    assert summary["publication_status"] == "preliminary_official_program"

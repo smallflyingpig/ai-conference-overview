@@ -17,7 +17,9 @@ from conference_overview.adapters.icml import (
     parse_icml_sources,
 )
 from conference_overview.models import (
+    AnalysisAvailability,
     PaperRecord,
+    PublicationContext,
     RecordStatus,
     SourceRef,
     VenueRequest,
@@ -28,12 +30,24 @@ from conference_overview.pipeline import (
     _atomic_write,
     _json_bytes,
     _jsonl_bytes,
+    analyze_acl_scope,
     collect_acl_scope,
     validate_acl_scope,
 )
+from conference_overview.reports import (
+    ReleaseBundle,
+    resolve_current_release,
+)
+from conference_overview.reports import (
+    write_release as publish_release,
+)
 from conference_overview.scope import ScopePaths
 from conference_overview.storage import store_snapshot
-from conference_overview.validate import ValidationReport, validate_records
+from conference_overview.validate import (
+    ValidationReport,
+    assert_publishable,
+    validate_records,
+)
 
 
 def collect_scope(
@@ -310,3 +324,75 @@ def validate_scope(request: VenueRequest, root: Path) -> ValidationReport:
         raise ValueError("collection manifest duplicate count does not match records")
     _atomic_write(paths.analysis / "validation.json", _json_bytes(asdict(report)))
     return report
+
+
+def build_preliminary_release(
+    request: VenueRequest,
+    root: Path,
+    *,
+    write_release: bool,
+) -> dict[str, object]:
+    if request.adapter != "icml_virtual":
+        raise UnsupportedPipelineRoute("preliminary release is not available for this route")
+    paths = ScopePaths.for_request(Path(root), request)
+    report = validate_scope(request, root)
+    assert_publishable(report)
+    records, excluded, sources = load_scope_records(request, root)
+    context = PublicationContext(
+        status="preliminary_official_program",
+        final_source_status="not_published",
+        final_source_url=request.final_source_url,
+        notice="来自 ICML 官方会议程序，等待 PMLR 最终对照。",
+        analysis_availability=AnalysisAvailability(
+            papers=True,
+            distribution=False,
+            trends=False,
+            advances=False,
+            awards=False,
+        ),
+    )
+    note = (
+        "# ICML 2026 Main Conference 预发布说明\n\n"
+        f"- 收录论文：{report.included_count}\n"
+        f"- 排除记录：{report.excluded_count}\n"
+        f"- 待处理记录：{len(report.unresolved_record_ids)}\n"
+        f"- 缺少英文摘要：{len(report.missing_abstract_ids)}\n"
+        f"- 缺少 PDF：{len(report.missing_pdf_ids)}\n"
+        f"- 最终对照：{request.final_source_url}（尚未发布）\n"
+    ).encode()
+    _atomic_write(paths.notes, note)
+    if write_release:
+        write_release_bundle = ReleaseBundle(
+            records=records,
+            excluded_records=excluded,
+            validation=report,
+            taxonomy_version="not-classified",
+            generated_at=max(
+                source.retrieved_at for source in sources if source.retrieved_at is not None
+            ),
+            sources=sources,
+            publication_context=context,
+        )
+        publish_release(write_release_bundle, paths.release)
+        generation = resolve_current_release(paths.release).name
+    else:
+        generation = None
+    return {
+        "generation": generation,
+        "included_count": report.included_count,
+        "excluded_count": report.excluded_count,
+        "missing_abstract_count": len(report.missing_abstract_ids),
+        "missing_pdf_count": len(report.missing_pdf_ids),
+        "publication_status": context.status,
+    }
+
+
+def analyze_scope(
+    request: VenueRequest,
+    root: Path,
+    *,
+    write_release: bool,
+) -> dict[str, object]:
+    if request.adapter == "icml_virtual":
+        return build_preliminary_release(request, root, write_release=write_release)
+    return analyze_acl_scope(request, root, write_release=write_release)

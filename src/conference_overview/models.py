@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import Enum
+from typing import Literal
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 
@@ -29,6 +30,30 @@ class AdvanceCategory(str, Enum):
 class ThemeDisclosureStatus(str, Enum):
     WITHHELD = "withheld"
     EXPERIMENTAL = "experimental"
+
+
+class AnalysisAvailability(BaseModel):
+    papers: bool
+    distribution: bool
+    trends: bool
+    advances: bool
+    awards: bool
+
+
+class PublicationContext(BaseModel):
+    status: Literal["preliminary_official_program"]
+    final_source_status: Literal["not_published"]
+    final_source_url: HttpUrl
+    notice: str = Field(min_length=1)
+    analysis_availability: AnalysisAvailability
+
+    @field_validator("notice")
+    @classmethod
+    def normalize_notice(cls, value: str) -> str:
+        normalized = " ".join(value.split())
+        if not normalized:
+            raise ValueError("publication notice must not be blank")
+        return normalized
 
 
 class SourceRef(BaseModel):

@@ -8,7 +8,11 @@ from typing import Annotated, NoReturn
 
 import typer
 
-from conference_overview.conference_pipeline import collect_scope, validate_scope
+from conference_overview.conference_pipeline import (
+    analyze_scope,
+    collect_scope,
+    validate_scope,
+)
 from conference_overview.content_pipeline import (
     build_chinese_content_scope,
     check_chinese_content_sources_scope,
@@ -354,7 +358,7 @@ def analyze(
     request = _request(command="analyze", venues=venues, years=years, tracks=tracks)
     summary = _run(
         "analyze",
-        lambda: analyze_acl_scope(request, root, write_release=write_release),
+        lambda: analyze_scope(request, root, write_release=write_release),
     )
     _success(
         "analyze",

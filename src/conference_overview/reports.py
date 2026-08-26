@@ -48,6 +48,7 @@ from conference_overview.models import (
     EvidenceClaim,
     EvidenceType,
     PaperRecord,
+    PublicationContext,
     SourceRef,
     ThemeDisclosure,
 )
@@ -117,6 +118,7 @@ class ReleaseBundle:
     excluded_records: Sequence[PaperRecord] = field(default_factory=tuple)
     previous_snapshot: Sequence[PaperRecord] | None = None
     classification_lineage: Mapping[str, object] = field(default_factory=dict)
+    publication_context: PublicationContext | None = None
 
 
 def _json_bytes(payload: object) -> bytes:
@@ -292,6 +294,10 @@ def _provenance_payload(bundle: ReleaseBundle) -> dict[str, object]:
         payload["classification_lineage"] = _decimal_payload(
             bundle.classification_lineage
         )
+    if bundle.publication_context is not None:
+        payload["publication_context"] = bundle.publication_context.model_dump(
+            mode="json"
+        )
     if len(ordered_sources) == 1:
         source = ordered_sources[0]
         payload.update(
@@ -388,6 +394,10 @@ def _overview_payload(bundle: ReleaseBundle) -> dict[str, object]:
     if bundle.classification_lineage:
         payload["classification_lineage"] = _decimal_payload(
             bundle.classification_lineage
+        )
+    if bundle.publication_context is not None:
+        payload["publication_context"] = bundle.publication_context.model_dump(
+            mode="json"
         )
     return payload
 
@@ -674,6 +684,58 @@ def _validate_classification_review_chain(lineage: Mapping[str, object]) -> None
         )
 
 
+def _validate_preliminary_bundle(bundle: ReleaseBundle) -> None:
+    context = bundle.publication_context
+    if context is None:
+        return
+    availability = context.analysis_availability
+    if bundle.taxonomy_version != "not-classified":
+        raise PublicationBlocked(
+            "publication blocked: preliminary release must be not-classified"
+        )
+    if availability.model_dump() != {
+        "papers": True,
+        "distribution": False,
+        "trends": False,
+        "advances": False,
+        "awards": False,
+    }:
+        raise PublicationBlocked(
+            "publication blocked: preliminary release availability is invalid"
+        )
+    forbidden = (
+        bundle.assignments,
+        bundle.audits,
+        bundle.low_confidence_ids,
+        bundle.reviewed_low_confidence_ids,
+        bundle.rejected_low_confidence_ids,
+        bundle.metrics,
+        bundle.awards,
+        bundle.award_deep_reads,
+        bundle.advances,
+        bundle.theme_disclosures,
+        bundle.claims,
+        bundle.classification_lineage,
+    )
+    if any(forbidden):
+        raise PublicationBlocked(
+            "publication blocked: preliminary release contains unavailable analysis"
+        )
+    if bundle.records:
+        expected_scope = (
+            bundle.records[0].venue,
+            bundle.records[0].year,
+            bundle.records[0].track,
+        )
+        if any(
+            (record.venue, record.year, record.track) != expected_scope
+            for record in bundle.records
+        ):
+            raise PublicationBlocked(
+                "publication blocked: records mix venue/year/track scope"
+            )
+
+
 def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
     _reject_non_finite(bundle)
     authoritative_validation = _authoritative_validation(bundle)
@@ -703,6 +765,9 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
         _validate_claims((bundle.award_announcement.claim,))
     _validate_provenance(_bundle_sources(bundle))
     _validate_classification_review_chain(bundle.classification_lineage)
+    _validate_preliminary_bundle(bundle)
+    if bundle.publication_context is not None:
+        return authoritative_validation
 
     published_emerging_score = bundle.metrics.get("emerging_score")
     if published_emerging_score is not None:

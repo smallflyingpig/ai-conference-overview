@@ -30,9 +30,11 @@ from conference_overview.metrics import (
 from conference_overview.models import (
     AdvanceCategory,
     AdvanceRecord,
+    AnalysisAvailability,
     EvidenceClaim,
     EvidenceType,
     PaperRecord,
+    PublicationContext,
     RecordStatus,
     SourceRef,
     ThemeDisclosure,
@@ -68,6 +70,64 @@ def paper(paper_id: str) -> PaperRecord:
         doi=f"10.1000/{paper_id}",
         pdf_url=f"https://aclanthology.org/{paper_id}.pdf",
     )
+
+
+def preliminary_context() -> PublicationContext:
+    return PublicationContext(
+        status="preliminary_official_program",
+        final_source_status="not_published",
+        final_source_url="https://proceedings.mlr.press/v306/",
+        notice="来自 ICML 官方会议程序，等待 PMLR 最终对照。",
+        analysis_availability=AnalysisAvailability(
+            papers=True,
+            distribution=False,
+            trends=False,
+            advances=False,
+            awards=False,
+        ),
+    )
+
+
+def test_preliminary_release_allows_papers_without_classification(
+    tmp_path: Path,
+) -> None:
+    record = paper("icml:2026:forum-main-1").model_copy(
+        update={"venue": "ICML", "track": "main"}
+    )
+    validation = validate_records([record], [], expected_included=1)
+    bundle = ReleaseBundle(
+        records=[record],
+        validation=validation,
+        taxonomy_version="not-classified",
+        generated_at=datetime(2026, 8, 26, tzinfo=UTC),
+        publication_context=preliminary_context(),
+    )
+
+    write_release(bundle, tmp_path)
+    overview = json.loads(
+        (resolve_current_release(tmp_path) / "overview.json").read_text()
+    )
+    assert overview["publication_context"]["status"] == (
+        "preliminary_official_program"
+    )
+    assert overview["assignments"] == []
+
+
+def test_preliminary_release_rejects_analysis_payload(tmp_path: Path) -> None:
+    record = paper("icml:2026:forum-main-1").model_copy(
+        update={"venue": "ICML", "track": "main"}
+    )
+    bundle = ReleaseBundle(
+        records=[record],
+        validation=validate_records([record], [], expected_included=1),
+        taxonomy_version="not-classified",
+        generated_at=datetime(2026, 8, 26, tzinfo=UTC),
+        metrics={"paper_count": 1},
+        publication_context=preliminary_context(),
+    )
+
+    with pytest.raises(PublicationBlocked, match="preliminary release"):
+        write_release(bundle, tmp_path)
 
 
 def assignment(paper_id: str) -> Assignment:
