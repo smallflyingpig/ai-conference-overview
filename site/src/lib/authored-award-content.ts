@@ -12,10 +12,6 @@ const sourceRowSchema = z.object({
   source_pdf_sha256: sha256Schema,
 });
 
-const contentRoot = resolve(process.cwd(), "../data/content/acl/2026-long");
-const authoredPath = resolve(contentRoot, "authored/award-deep-reads.zh.jsonl");
-const sourcePath = resolve(contentRoot, "source-batches/award-deep-read-source.jsonl");
-
 async function readRegularFile(path: string): Promise<Buffer> {
   const stats = await lstat(path);
   if (!stats.isFile() || stats.isSymbolicLink()) {
@@ -41,6 +37,14 @@ function parseJsonLines<T>(bytes: Buffer, parse: (value: unknown) => T, label: s
 export async function loadAuthoredAwardContent(
   release: LoadedOverview,
 ): Promise<{ awardDeepReads: AwardDeepReadZh[] }> {
+  const contentRoot = resolve(
+    process.cwd(),
+    "../data/content",
+    release.scope.venue.toLocaleLowerCase(),
+    `${release.scope.year}-${release.scope.track}`,
+  );
+  const authoredPath = resolve(contentRoot, "authored/award-deep-reads.zh.jsonl");
+  const sourcePath = resolve(contentRoot, "source-batches/award-deep-read-source.jsonl");
   const [authoredBytes, sourceBytes] = await Promise.all([
     readRegularFile(authoredPath),
     readRegularFile(sourcePath),

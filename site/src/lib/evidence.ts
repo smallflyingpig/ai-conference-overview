@@ -71,6 +71,7 @@ export function awardTypeLabel(awardType: string): string {
     "Best Social Impact Paper": "最佳社会影响论文",
     "Best Theme Paper": "最佳主题论文",
     "Outstanding Paper": "杰出论文",
+    "Outstanding Position Paper": "杰出立场论文",
   }[awardType] ?? awardType;
 }
 
@@ -120,25 +121,37 @@ export function awardChineseInsight(paperId: string): string {
 }
 
 export function awardDetailRoutes(
-  release: LoadedOverview | null,
+  releaseOrReleases: LoadedOverview | LoadedOverview[] | null,
 ): AwardRoute[] {
-  if (release == null) return [];
-  const validDeepReads = new Map<string, DeepRead>();
-  for (const candidate of release.overview.award_deep_reads) {
-    const parsed = deepReadSchema.safeParse(candidate);
-    if (parsed.success) validDeepReads.set(parsed.data.paper_id, parsed.data);
-  }
-  const paperById = new Map(release.papers.map((paper) => [paper.paper_id, paper]));
-  return release.overview.awards.flatMap((award) => {
-    if (award.status !== "verified" || award.evidence_url == null) return [];
-    const paper = paperById.get(award.paper_id);
-    const deepRead = validDeepReads.get(award.paper_id);
-    if (paper == null || deepRead == null) return [];
-    return [{
-      params: { paperId: awardRouteKey(award) },
-      props: { detail: { award, paper, deepRead } },
-    }];
+  if (releaseOrReleases == null) return [];
+  const releases = Array.isArray(releaseOrReleases) ? releaseOrReleases : [releaseOrReleases];
+  const routes = releases.flatMap((release) => {
+    if (
+      release.overview.publication_context != null &&
+      !release.overview.publication_context.analysis_availability.awards
+    ) return [];
+    const validDeepReads = new Map<string, DeepRead>();
+    for (const candidate of release.overview.award_deep_reads) {
+      const parsed = deepReadSchema.safeParse(candidate);
+      if (parsed.success) validDeepReads.set(parsed.data.paper_id, parsed.data);
+    }
+    const paperById = new Map(release.papers.map((paper) => [paper.paper_id, paper]));
+    return release.overview.awards.flatMap((award) => {
+      if (award.status !== "verified" || award.evidence_url == null) return [];
+      const paper = paperById.get(award.paper_id);
+      const deepRead = validDeepReads.get(award.paper_id);
+      if (paper == null || deepRead == null) return [];
+      return [{
+        params: { paperId: awardRouteKey(award) },
+        props: { detail: { award, paper, deepRead } },
+      }];
+    });
   });
+  const keys = routes.map((route) => route.params.paperId);
+  if (new Set(keys).size !== keys.length) {
+    throw new Error("Award detail routes collide across published releases");
+  }
+  return routes;
 }
 
 export interface AwardIndexItem {
@@ -169,6 +182,28 @@ export function buildAwardIndex(
     stateLabel: stateLabels[release.overview.award_state.status],
     items,
   };
+}
+
+export interface AwardConferenceIndex {
+  venue: string;
+  year: number;
+  stateLabel: ReturnType<typeof buildAwardIndex>["stateLabel"];
+  items: AwardIndexItem[];
+}
+
+export function buildAwardConferenceIndexes(
+  releases: LoadedOverview[],
+): AwardConferenceIndex[] {
+  return releases
+    .filter((release) => release.overview.publication_context == null ||
+      release.overview.publication_context.analysis_availability.awards)
+    .map((release) => ({
+      venue: release.scope.venue,
+      year: release.scope.year,
+      ...buildAwardIndex(release),
+    }))
+    .sort((left, right) =>
+      right.year - left.year || left.venue.localeCompare(right.venue));
 }
 
 export interface PaperIndexRow {

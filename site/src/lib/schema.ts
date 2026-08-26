@@ -181,13 +181,22 @@ const publicationContextSchema = z.object({
     "final source URL must use HTTPS",
   ),
   notice: nonBlankSchema,
-  analysis_availability: z.object({
-    papers: z.literal(true),
-    distribution: z.literal(false),
-    trends: z.literal(false),
-    advances: z.literal(false),
-    awards: z.literal(false),
-  }).strict(),
+  analysis_availability: z.discriminatedUnion("distribution", [
+    z.object({
+      papers: z.literal(true),
+      distribution: z.literal(false),
+      trends: z.literal(false),
+      advances: z.literal(false),
+      awards: z.literal(false),
+    }).strict(),
+    z.object({
+      papers: z.literal(true),
+      distribution: z.literal(true),
+      trends: z.literal(false),
+      advances: z.literal(true),
+      awards: z.literal(true),
+    }).strict(),
+  ]),
 }).strict().superRefine((value, context) => {
   const expectedFinalSourceStatus = value.status === "final_proceedings"
     ? "available"
@@ -929,14 +938,20 @@ export const overviewArtifactSchema = z
       });
     }
     const assignmentIds = value.assignments.map((assignment) => assignment.paper_id);
-    if (value.publication_context == null && assignmentIds.length !== value.paper_count) {
+    const distributionAvailable =
+      value.publication_context == null ||
+      value.publication_context.analysis_availability.distribution;
+    if (distributionAvailable && assignmentIds.length !== value.paper_count) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["assignments"],
         message: "every included paper requires exactly one assignment",
       });
     }
-    if (value.publication_context != null) {
+    if (
+      value.publication_context != null &&
+      !value.publication_context.analysis_availability.distribution
+    ) {
       const unavailableContent =
         value.taxonomy_version !== "not-classified" ||
         value.assignments.length !== 0 ||
@@ -1321,14 +1336,17 @@ export const fullReleaseSchema = releaseOverviewSchema
     const paperIdSet = new Set(paperIds);
     const missing = paperIds.filter((paperId) => !assignmentIds.has(paperId));
     const unknown = [...assignmentIds].filter((paperId) => !paperIdSet.has(paperId));
-    if (value.overview.publication_context == null && missing.length > 0) {
+    const distributionAvailable =
+      value.overview.publication_context == null ||
+      value.overview.publication_context.analysis_availability.distribution;
+    if (distributionAvailable && missing.length > 0) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["overview", "assignments"],
         message: `missing assignments for papers: ${missing.join(", ")}`,
       });
     }
-    if (value.overview.publication_context == null && unknown.length > 0) {
+    if (distributionAvailable && unknown.length > 0) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["overview", "assignments"],

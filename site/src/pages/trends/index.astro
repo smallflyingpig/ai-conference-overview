@@ -1,19 +1,19 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TrendExplorer from "../../components/TrendExplorer";
-import { loadOverview } from "../../lib/data";
+import { loadPublishedOverviews } from "../../lib/data";
 import { projectPath } from "../../lib/paths";
 import { buildTrendView } from "../../lib/views";
 
-const aclRelease = await loadOverview("ACL", 2026, undefined, "long");
-const view = buildTrendView(aclRelease == null ? [] : [aclRelease]);
+const releases = await loadPublishedOverviews();
+const view = buildTrendView(releases);
 const action = projectPath(import.meta.env.BASE_URL, "trends");
 ---
 
 <BaseLayout
   title="分布与趋势 — AI Conference Overview"
   description="展示已整理的会议论文分布；只有多年数据可直接比较时才展示研究趋势。"
-  conferenceAvailable={aclRelease != null}
+  conferenceAvailable={releases.length > 0}
 >
   <TrendExplorer view={view} action={action} client:load />
 </BaseLayout>

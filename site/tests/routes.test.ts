@@ -95,6 +95,28 @@ function finalIcml2025Release(): LoadedOverview {
   return release;
 }
 
+function analyzedIcml2025Release(): LoadedOverview {
+  const release = structuredClone(validatedRelease);
+  release.scope = { venue: "ICML", year: 2025, track: "main" };
+  release.papers.forEach((paper) => {
+    paper.venue = "ICML";
+    paper.year = 2025;
+    paper.track = "main";
+  });
+  release.overview.comparison_contract.comparison_scope.venue = "ICML";
+  release.overview.comparison_contract.comparison_scope.track = "main";
+  release.overview.publication_context = {
+    status: "final_proceedings",
+    final_source_status: "available",
+    final_source_url: "https://proceedings.mlr.press/v267/",
+    notice: "ICML 2025 单年主题分布；年份不足，暂不判断时间趋势。",
+    analysis_availability: {
+      papers: true, distribution: true, trends: false, advances: true, awards: true,
+    },
+  };
+  return release;
+}
+
 function changeComparisonContract(
   release: LoadedOverview,
   mutate: (contract: LoadedOverview["overview"]["comparison_contract"]) => void,
@@ -132,6 +154,16 @@ describe("conference routes", () => {
     expect(conferenceRoutes([finalIcml2025Release()])).toEqual([
       { params: { venue: "icml", year: "2025" } },
     ]);
+  });
+
+  it("renders an analyzed ICML single-year release as a distribution snapshot", () => {
+    const view = buildConferenceView(analyzedIcml2025Release());
+
+    expect(view.mode).toBe("distribution");
+    expect(view.pageHeading).toBe("ICML 2025 主会论文");
+    expect(view.topics.length).toBeGreaterThan(0);
+    expect(view.hotspots).toHaveLength(1);
+    expect(view.trendEligible).toBe(false);
   });
 
   it("aggregates ACL and ICML paper rows with stable internal routes", () => {
@@ -241,6 +273,15 @@ describe("distribution view", () => {
 });
 
 describe("trend comparability gate", () => {
+  it("includes analyzed ICML as a snapshot without inventing a time trend", () => {
+    const view = buildTrendView([validatedRelease, analyzedIcml2025Release()]);
+
+    expect(view.mode).toBe("snapshot");
+    expect(view.trendWidgetsVisible).toBe(false);
+    expect(view.availableVenues).toEqual(["ACL", "ICML"]);
+    expect(view.snapshots.map((snapshot) => snapshot.venue)).toEqual(["ACL", "ICML"]);
+  });
+
   it("suppresses trend claims until three comparable years exist", () => {
     const view = buildTrendView([validatedRelease]);
     expect(view.mode).toBe("snapshot");
@@ -380,6 +421,8 @@ describe("distribution presentation", () => {
     expect(page).toContain("示例论文");
     expect(page).toContain("各主题中分类置信度最高的一篇论文");
     expect(page).not.toContain("代表论文");
+    expect(page).toContain("当前只有 ICML 2025 单年数据，可以查看主题分布与研究热点，暂不能判断时间趋势。");
+    expect(page).toContain("研究热点");
   });
 
   it("defines a paired chart-table layout with mobile reflow and reduced-motion support", async () => {

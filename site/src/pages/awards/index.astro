@@ -1,42 +1,47 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { loadOverview } from "../../lib/data";
-import { awardRouteKey, awardStatusLabel, awardTypeLabel, buildAwardIndex } from "../../lib/evidence";
+import { loadPublishedOverviews } from "../../lib/data";
+import { awardRouteKey, awardStatusLabel, awardTypeLabel, buildAwardConferenceIndexes } from "../../lib/evidence";
 import { projectPath } from "../../lib/paths";
 
-const release = await loadOverview("ACL", 2026);
-const view = buildAwardIndex(release);
+const releases = await loadPublishedOverviews();
+const groups = buildAwardConferenceIndexes(releases);
 const base = import.meta.env.BASE_URL;
 ---
 
-<BaseLayout title="获奖论文 — AI Conference Overview" description="ACL 2026 官方获奖论文清单与详细解读。" conferenceAvailable={release != null}>
+<BaseLayout title="获奖论文 — AI Conference Overview" description="各会议官方获奖论文清单与详细解读。" conferenceAvailable={releases.length > 0}>
   <div class="evidence-shell awards-shell">
     <header class="page-thesis award-thesis">
       <p class="eyebrow">官方获奖信息</p>
       <h1>先确认获奖信息，<br />再分析论文价值。</h1>
       <p>获奖情况以会议官网或官方论文集为准。每篇论文的详细页面会说明核心问题、主要方法、关键结果，以及这些内容在原文中的具体位置。</p>
-      <strong class="award-state">{view.stateLabel}</strong>
+      <strong class="award-state">{groups.length > 0 ? `已收录 ${groups.length} 届会议` : "暂无可用内容"}</strong>
     </header>
     <section class="award-plates" aria-labelledby="award-records-title">
       <h2 id="award-records-title">获奖记录</h2>
-      {view.items.length === 0 ? (
-        <div class="empty-atlas" role="status"><span class="status-mark" aria-hidden="true"></span><div><h3>{view.stateLabel}</h3><p>当前数据版本中没有官方获奖记录；不会用候选名单代替。</p></div></div>
+      {groups.length === 0 ? (
+        <div class="empty-atlas" role="status"><span class="status-mark" aria-hidden="true"></span><div><h3>暂无可用内容</h3><p>当前数据版本中没有官方获奖记录；不会用候选名单代替。</p></div></div>
       ) : (
-        <ol>
-          {view.items.map(({ award, paper, hasDetail }) => (
-            <li class="award-plate">
-              <span class="data-label">{awardTypeLabel(award.award_type)}</span>
-              <h3>{paper?.title ?? award.paper_id}</h3>
-              <p class="award-status-line">{awardStatusLabel(award.status)}</p>
-              {award.official_citation && <blockquote>{award.official_citation}</blockquote>}
-              <div class="plate-links">
-                {award.evidence_url && <a href={award.evidence_url}>官方获奖页面</a>}
-                {paper && <a href={paper.landing_url}>论文官方页面</a>}
-                {hasDetail ? <a href={projectPath(base, `awards/${awardRouteKey(award)}`)}>查看详细解读</a> : <span>详细解读尚未完成</span>}
-              </div>
-            </li>
-          ))}
-        </ol>
+        groups.map((group) => (
+          <section class="award-conference-group" aria-labelledby={`award-${group.venue}-${group.year}`}>
+            <div class="section-line"><h3 id={`award-${group.venue}-${group.year}`}>{group.venue} {group.year}</h3><span>{group.stateLabel} · {group.items.length} 篇</span></div>
+            <ol>
+              {group.items.map(({ award, paper, hasDetail }) => (
+                <li class="award-plate">
+                  <span class="data-label">{awardTypeLabel(award.award_type)}</span>
+                  <h3>{paper?.title ?? award.paper_id}</h3>
+                  <p class="award-status-line">{awardStatusLabel(award.status)}</p>
+                  {award.official_citation && <blockquote>{award.official_citation}</blockquote>}
+                  <div class="plate-links">
+                    {award.evidence_url && <a href={award.evidence_url}>官方获奖页面</a>}
+                    {paper && <a href={paper.landing_url}>论文官方页面</a>}
+                    {hasDetail ? <a href={projectPath(base, `awards/${awardRouteKey(award)}`)}>查看详细解读</a> : <span>详细解读尚未完成</span>}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))
       )}
     </section>
   </div>

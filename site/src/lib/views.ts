@@ -43,6 +43,13 @@ export interface ConferenceView {
   experimentalThemeCount: number;
   withheldThemeCount: number;
   topics: TopicShareRow[];
+  hotspots: Array<{
+    id: string;
+    label: string;
+    question: string;
+    summary: string;
+    papers: Array<{ paperId: string; title: string; url: string }>;
+  }>;
   publicationNotice: string | null;
   publicationStatus: "preliminary" | "final" | null;
   finalSourceUrl: string | null;
@@ -94,6 +101,14 @@ const topicLabels: Record<string, string> = {
   "Foundation Models": "基础模型",
   "Multilingual and Inclusive NLP": "多语言与包容性 NLP",
   "Unassigned": "未分类",
+};
+
+const hotspotLabels: Record<string, string> = {
+  text_llms: "文本与基础模型",
+  multimodal_models: "多模态模型",
+  reasoning_agents: "推理与 Agents",
+  data_training: "数据、检索与训练",
+  evaluation_trust: "评测、可信与安全",
 };
 
 export function displayTopicLabel(topic: string): string {
@@ -150,19 +165,29 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
     .sort((left, right) => right.paperCount - left.paperCount || left.topic.localeCompare(right.topic));
   const source = release.provenance.sources[0];
   const publicationContext = release.overview.publication_context;
-  const papersOnly = publicationContext != null;
+  const distributionAvailable =
+    publicationContext == null || publicationContext.analysis_availability.distribution;
+  const papersOnly = !distributionAvailable;
+  const trackLabel = track === "long" ? "长论文" : track === "main" ? "主会论文" : `${track} 类论文`;
+  const hotspots = papersOnly ? [] : release.overview.advances.map((advance) => ({
+    id: advance.advance_id,
+    label: hotspotLabels[advance.category] ?? advance.title,
+    question: advance.research_questions?.[0] ?? advance.title,
+    summary: advance.core_problem?.claim ?? advance.claims[0]?.claim ?? "",
+    papers: advance.supporting_paper_ids.map((paperId) => {
+      const paper = paperById.get(paperId);
+      if (paper == null) throw new Error(`Hotspot paper is absent from release: ${paperId}`);
+      return { paperId, title: paper.title, url: paper.landing_url };
+    }),
+  }));
   return {
     mode: papersOnly ? "papers-only" : "distribution",
     venue,
     venueSlug: venue.toLowerCase(),
     year,
     track,
-    pageHeading: papersOnly
-      ? `${venue} ${year} 主会论文`
-      : `${venue} ${year} 长论文`,
-    scopeLabel: papersOnly
-      ? `${venue} ${year} · Main Conference`
-      : `${venue} ${year} · ${track === "long" ? "长论文" : track}`,
+    pageHeading: `${venue} ${year} ${trackLabel}`,
+    scopeLabel: `${venue} ${year} · ${track === "main" ? "Main Conference" : trackLabel}`,
     analysisLabel: "Distribution",
     periodLabel: `${year} 单年概览`,
     trendEligible: false,
@@ -185,6 +210,7 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
     experimentalThemeCount: topics.filter((row) => row.auditStatus === "experimental").length,
     withheldThemeCount: topics.filter((row) => row.auditStatus === "withheld").length,
     topics: papersOnly ? [] : topics,
+    hotspots,
     publicationNotice: publicationContext?.notice ?? null,
     publicationStatus: publicationContext == null
       ? null
@@ -249,12 +275,14 @@ export function buildTrendView(
   releases: ConferenceRelease[],
   filters: TrendFilters = emptyFilters,
 ): TrendView {
-  const allSnapshots = releases.map(buildConferenceView);
+  const allSnapshots = releases
+    .map(buildConferenceView)
+    .filter((snapshot) => snapshot.mode === "distribution");
   const snapshots = filterSnapshots(allSnapshots, filters);
   const availableVenues = [...new Set(allSnapshots.map((snapshot) => snapshot.venue))].sort();
   const availableYears = [...new Set(allSnapshots.map((snapshot) => snapshot.year))].sort((a, b) => a - b);
   const availableThemes = [...new Set(allSnapshots.flatMap((snapshot) => snapshot.topics.map((row) => row.topic)))].sort();
-  if (releases.length === 0) {
+  if (allSnapshots.length === 0) {
     return {
       mode: "empty",
       heading: "尚无已发布的论文分布",

@@ -20,6 +20,7 @@ import {
   awardDetailRoutes,
   awardRouteKey,
   buildAdvances,
+  buildAwardConferenceIndexes,
   buildAwardIndex,
   buildMethodologyView,
   evidenceLabel,
@@ -176,6 +177,32 @@ describe("evidence labels", () => {
 });
 
 describe("award publication gate", () => {
+  it("groups analyzed award releases by conference and excludes papers-only releases", () => {
+    const icml = structuredClone(release);
+    icml.scope = { venue: "ICML", year: 2025, track: "main" };
+    icml.papers[0].paper_id = "pmlr:v267:example25a";
+    icml.papers[0].venue = "ICML";
+    icml.papers[0].year = 2025;
+    icml.papers[0].track = "main";
+    icml.overview.publication_context = {
+      status: "final_proceedings",
+      final_source_status: "available",
+      final_source_url: "https://proceedings.mlr.press/v267/",
+      notice: "ICML 2025 单年分析。",
+      analysis_availability: {
+        papers: true, distribution: true, trends: false, advances: true, awards: true,
+      },
+    };
+    const papersOnly = structuredClone(icml);
+    papersOnly.scope.year = 2026;
+    papersOnly.overview.publication_context!.analysis_availability = {
+      papers: true, distribution: false, trends: false, advances: false, awards: false,
+    };
+
+    expect(buildAwardConferenceIndexes([release, icml, papersOnly]).map((group) =>
+      `${group.venue}-${group.year}`)).toEqual(["ACL-2026", "ICML-2025"]);
+  });
+
   it("requires a completed Chinese insight for every published award detail", () => {
     for (const award of currentRelease.overview.awards) {
       expect(awardChineseInsight(award.paper_id)).not.toMatch(/仍在整理中/);
@@ -190,6 +217,37 @@ describe("award publication gate", () => {
     expect(routes).toHaveLength(1);
     expect(routes[0].params.paperId).toMatch(/^award-[0-9a-f]{64}$/);
     expect(routes[0].params.paperId).not.toContain("paper-a");
+  });
+
+  it("creates safe award routes across releases and ignores papers-only releases", () => {
+    const icml = structuredClone(release);
+    icml.scope = { venue: "ICML", year: 2025, track: "main" };
+    icml.papers[0].paper_id = "pmlr:v267:example25a";
+    icml.papers[0].venue = "ICML";
+    icml.papers[0].year = 2025;
+    icml.papers[0].track = "main";
+    icml.overview.awards[0] = {
+      ...icml.overview.awards[0],
+      paper_id: icml.papers[0].paper_id,
+      ...producerAwardFields(icml.papers[0].paper_id, "outstanding paper"),
+    };
+    icml.overview.award_deep_reads[0].paper_id = icml.papers[0].paper_id;
+    icml.overview.publication_context = {
+      status: "final_proceedings",
+      final_source_status: "available",
+      final_source_url: "https://proceedings.mlr.press/v267/",
+      notice: "ICML 2025 单年分析。",
+      analysis_availability: {
+        papers: true, distribution: true, trends: false, advances: true, awards: true,
+      },
+    };
+    const papersOnly = structuredClone(icml);
+    papersOnly.overview.publication_context!.analysis_availability = {
+      papers: true, distribution: false, trends: false, advances: false, awards: false,
+    };
+
+    expect(awardDetailRoutes([release, icml])).toHaveLength(2);
+    expect(awardDetailRoutes([papersOnly])).toEqual([]);
   });
 
   it("does not create a route for an unverified award candidate", () => {

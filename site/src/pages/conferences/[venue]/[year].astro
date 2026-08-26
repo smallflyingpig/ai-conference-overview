@@ -67,6 +67,9 @@ const { view } = Astro.props;
           每篇论文只归入一个主要主题（primary topic），各主题占比按<strong>{view.denominatorLabel}</strong>计算。
           当前只有一年的数据，因此不展示同比变化，也不判断长期趋势。
         </p>
+        {view.venue === "ICML" && view.year === 2025 && (
+          <p class="single-year-note">当前只有 ICML 2025 单年数据，可以查看主题分布与研究热点，暂不能判断时间趋势。</p>
+        )}
       </header>
 
       <section aria-labelledby="topic-title">
@@ -84,6 +87,25 @@ const { view } = Astro.props;
         )}
         <TopicShareChart rows={view.topics} denominator={view.includedCount} />
       </section>
+
+      {view.hotspots.length > 0 && (
+        <section class="conference-hotspots" aria-labelledby="hotspot-title">
+          <div class="section-line">
+            <h3 id="hotspot-title">研究热点</h3>
+            <span>基于本届论文的单年归纳</span>
+          </div>
+          <ol>
+            {view.hotspots.map((hotspot) => (
+              <li>
+                <span class="data-label">{hotspot.label}</span>
+                <h4>{hotspot.question}</h4>
+                <p>{hotspot.summary}</p>
+                <ul>{hotspot.papers.map((paper) => <li><a href={paper.url}>{paper.title}</a></li>)}</ul>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
 
       <section class="representative-index" aria-labelledby="representative-title">
         <div class="section-line">

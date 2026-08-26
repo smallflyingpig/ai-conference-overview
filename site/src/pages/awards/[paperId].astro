@@ -6,22 +6,28 @@ import AwardEvidenceSections from "../../components/AwardEvidenceSections";
 import AwardChineseReading from "../../components/AwardChineseReading.astro";
 import { loadAuthoredAwardContent } from "../../lib/authored-award-content";
 import { loadChineseContent } from "../../lib/content-data";
-import { loadOverview } from "../../lib/data";
+import { loadPublishedOverviews } from "../../lib/data";
 import { awardChineseInsight, awardDetailRoutes, awardTypeLabel, type AwardDetailView } from "../../lib/evidence";
 import { buildAwardChineseReading, type AwardChineseReading as AwardChineseReadingView } from "../../lib/paper-reading";
 
 export async function getStaticPaths() {
-  const release = await loadOverview("ACL", 2026);
-  if (release == null) return [];
-  const content = await loadChineseContent(release);
-  const awardContent = content ?? await loadAuthoredAwardContent(release);
-  return awardDetailRoutes(release).map((route) => ({
-    ...route,
-    props: {
-      ...route.props,
-      reading: buildAwardChineseReading(release, awardContent, route.props.detail.paper.paper_id),
-    },
+  const releases = await loadPublishedOverviews();
+  const routeGroups = await Promise.all(releases.map(async (release) => {
+    if (
+      release.overview.publication_context != null &&
+      !release.overview.publication_context.analysis_availability.awards
+    ) return [];
+    const content = await loadChineseContent(release);
+    const awardContent = content ?? await loadAuthoredAwardContent(release);
+    return awardDetailRoutes(release).map((route) => ({
+      ...route,
+      props: {
+        ...route.props,
+        reading: buildAwardChineseReading(release, awardContent, route.props.detail.paper.paper_id),
+      },
+    }));
   }));
+  return routeGroups.flat();
 }
 
 interface Props { detail: AwardDetailView; reading: AwardChineseReadingView | null }
