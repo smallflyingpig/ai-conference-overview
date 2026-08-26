@@ -35,6 +35,45 @@ def test_cli_exposes_all_pipeline_commands() -> None:
         assert command in result.stdout
 
 
+def test_import_classification_accepts_icml_sources(tmp_path: Path, monkeypatch) -> None:
+    first = tmp_path / "review-a.jsonl"
+    second = tmp_path / "review-b.jsonl"
+
+    def fake_import(request, root, inputs):
+        assert (request.venue, request.year, request.track) == ("ICML", 2025, "main")
+        assert root == tmp_path
+        assert inputs == [first, second]
+        return [SimpleNamespace(), SimpleNamespace()]
+
+    monkeypatch.setattr(cli_module, "import_semantic_assignments_scope", fake_import)
+    result = runner.invoke(
+        app,
+        [
+            "import-classification",
+            "--venues",
+            "ICML",
+            "--years",
+            "2025",
+            "--tracks",
+            "main",
+            "--input",
+            str(first),
+            "--input",
+            str(second),
+            "--root",
+            str(tmp_path),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert payload(result) == {
+        "command": "import-classification",
+        "paper_count": 2,
+        "source_count": 2,
+        "status": "imported",
+    }
+
+
 def test_export_chinese_content_routes_to_scope_orchestration(
     tmp_path: Path, monkeypatch
 ) -> None:

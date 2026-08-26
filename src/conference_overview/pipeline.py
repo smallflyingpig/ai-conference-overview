@@ -426,19 +426,7 @@ def export_classification_scope(
 ) -> list[Path]:
     """Write deterministic title-and-abstract exchange batches."""
     paths = ScopePaths.for_request(Path(root), request)
-    if request.adapter in {"icml_virtual", "pmlr"}:
-        from conference_overview.conference_pipeline import (
-            load_scope_records as load_conference_records,
-        )
-        from conference_overview.conference_pipeline import (
-            validate_scope as validate_conference_scope,
-        )
-
-        report = validate_conference_scope(request, root)
-        included, _excluded, _sources = load_conference_records(request, root)
-    else:
-        report = validate_acl_scope(request, root)
-        included, _excluded, _sources = load_scope_records(request, root)
+    report, included = _validated_classification_records(request, root)
     assert_publishable(report)
     batches = export_batches(included, load_taxonomy(), size=batch_size)
     output = paths.classification / "batches"
@@ -459,6 +447,25 @@ def export_classification_scope(
         ),
     )
     return batch_paths
+
+
+def _validated_classification_records(
+    request: VenueRequest, root: Path
+) -> tuple[ValidationReport, list[PaperRecord]]:
+    if request.adapter in {"icml_virtual", "pmlr"}:
+        from conference_overview.conference_pipeline import (
+            load_scope_records as load_conference_records,
+        )
+        from conference_overview.conference_pipeline import (
+            validate_scope as validate_conference_scope,
+        )
+
+        report = validate_conference_scope(request, root)
+        included, _excluded, _sources = load_conference_records(request, root)
+        return report, included
+    report = validate_acl_scope(request, root)
+    included, _excluded, _sources = load_scope_records(request, root)
+    return report, included
 
 
 _TOPIC_PHRASES: dict[str, tuple[str, ...]] = {
@@ -656,60 +663,83 @@ def import_semantic_assignments_scope(
     root: Path,
     input_paths: Sequence[Path],
 ) -> list[Assignment]:
-    """Merge eight explicit agent-reviewed partitions into the canonical corpus."""
-    _require_acl(request)
+    """Merge reviewed assignment files into the exact normalized corpus."""
     paths = ScopePaths.for_request(Path(root), request)
-    included, _excluded, _sources = load_scope_records(request, root)
+    report, included = _validated_classification_records(request, root)
+    assert_publishable(report)
     expected_ids = {record.paper_id for record in included}
     taxonomy = load_taxonomy()
 
-    partition_paths: dict[int, Path] = {}
-    for raw_path in input_paths:
-        path = Path(raw_path)
-        match = _SEMANTIC_PARTITION_PATTERN.fullmatch(path.name)
-        if match is None:
+    ordered_inputs: list[tuple[int | None, Path]]
+    if request.venue == "ACL" and request.year == 2026 and request.track == "long":
+        partition_paths: dict[int, Path] = {}
+        for raw_path in input_paths:
+            path = Path(raw_path)
+            match = _SEMANTIC_PARTITION_PATTERN.fullmatch(path.name)
+            if match is None:
+                raise ValueError(
+                    "semantic assignment inputs must be named "
+                    "acl2026-reclass-mod0.jsonl through acl2026-reclass-mod7.jsonl"
+                )
+            partition = int(match.group(1))
+            if partition in partition_paths:
+                raise ValueError(
+                    f"duplicate semantic assignment partition: {partition}"
+                )
+            partition_paths[partition] = path
+        if set(partition_paths) != set(range(8)):
             raise ValueError(
-                "semantic assignment inputs must be named "
-                "acl2026-reclass-mod0.jsonl through acl2026-reclass-mod7.jsonl"
+                "semantic assignment import requires exact partitions 0 through 7"
             )
-        partition = int(match.group(1))
-        if partition in partition_paths:
-            raise ValueError(f"duplicate semantic assignment partition: {partition}")
-        partition_paths[partition] = path
-    if set(partition_paths) != set(range(8)):
-        raise ValueError(
-            "semantic assignment import requires exact partitions 0 through 7"
-        )
+        ordered_inputs = [
+            (partition, path) for partition, path in sorted(partition_paths.items())
+        ]
+    else:
+        if not input_paths:
+            raise ValueError("semantic assignment import requires input files")
+        resolved = [Path(raw_path).resolve() for raw_path in input_paths]
+        if len(set(resolved)) != len(resolved):
+            raise ValueError("duplicate semantic assignment source")
+        ordered_inputs = [(None, path) for path in sorted(resolved)]
 
     assignments_by_id: dict[str, Assignment] = {}
     source_batches: list[dict[str, object]] = []
-    for partition, path in sorted(partition_paths.items()):
+    for partition, path in ordered_inputs:
         raw_bytes = path.read_bytes()
-        partition_assignments = load_assignments(path, taxonomy)
-        for assignment in partition_assignments:
-            try:
-                numeric_id = int(assignment.paper_id.rsplit(".", maxsplit=1)[-1])
-            except ValueError as exc:
-                raise ValueError(
-                    f"semantic assignment has nonnumeric ACL ID: {assignment.paper_id}"
-                ) from exc
-            if numeric_id % 8 != partition:
-                raise ValueError(
-                    f"semantic assignment {assignment.paper_id} is in partition "
-                    f"{partition}, expected {numeric_id % 8}"
-                )
+        source_assignments = load_assignments(path, taxonomy)
+        for assignment in source_assignments:
+            if partition is not None:
+                try:
+                    numeric_id = int(
+                        assignment.paper_id.rsplit(".", maxsplit=1)[-1]
+                    )
+                except ValueError as exc:
+                    raise ValueError(
+                        "semantic assignment has nonnumeric ACL ID: "
+                        f"{assignment.paper_id}"
+                    ) from exc
+                if numeric_id % 8 != partition:
+                    raise ValueError(
+                        f"semantic assignment {assignment.paper_id} is in partition "
+                        f"{partition}, expected {numeric_id % 8}"
+                    )
             if assignment.paper_id in assignments_by_id:
                 raise ValueError(f"duplicate paper_id: {assignment.paper_id}")
             assignments_by_id[assignment.paper_id] = assignment
-        source_batches.append(
-            {
-                "paper_count": len(partition_assignments),
-                "partition": partition,
-                "partition_rule": "ACL numeric paper ID modulo 8",
-                "sha256": hashlib.sha256(raw_bytes).hexdigest(),
-                "source_file": path.name,
-            }
-        )
+        source_payload: dict[str, object] = {
+            "byte_size": len(raw_bytes),
+            "paper_count": len(source_assignments),
+            "sha256": hashlib.sha256(raw_bytes).hexdigest(),
+            "source_file": path.name,
+        }
+        if partition is not None:
+            source_payload.update(
+                {
+                    "partition": partition,
+                    "partition_rule": "ACL numeric paper ID modulo 8",
+                }
+            )
+        source_batches.append(source_payload)
 
     seen_ids = set(assignments_by_id)
     missing_ids = sorted(expected_ids - seen_ids)

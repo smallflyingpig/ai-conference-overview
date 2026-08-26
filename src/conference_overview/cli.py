@@ -213,7 +213,7 @@ def import_classification(
     tracks: str | None = typer.Option(None, "--tracks"),
     root: Annotated[Path, typer.Option("--root")] = _DEFAULT_ROOT,
 ) -> None:
-    """Import eight explicit agent semantic-labeling partitions."""
+    """Import exact semantic-labeling files for the requested conference."""
     request = _request(
         command="import-classification",
         venues=venues,

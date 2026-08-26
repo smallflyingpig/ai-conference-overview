@@ -12,7 +12,11 @@ from conference_overview.conference_pipeline import (
     reconcile_final_scope,
     validate_scope,
 )
-from conference_overview.pipeline import export_classification_scope
+from conference_overview.models import VenueRequest
+from conference_overview.pipeline import (
+    export_classification_scope,
+    import_semantic_assignments_scope,
+)
 from conference_overview.registry import normalize_request
 from conference_overview.reports import resolve_current_release
 
@@ -203,3 +207,112 @@ def test_icml_2025_classification_export_uses_its_own_scope_paths(
         tmp_path / "data/classification/icml/2025-main/batches/batch-0001.json",
         tmp_path / "data/classification/icml/2025-main/batches/batch-0002.json",
     ]
+
+
+def _write_assignment_source(path: Path, paper_ids: tuple[str, ...]) -> Path:
+    rows = [
+        {
+            "confidence": "0.96",
+            "paper_id": paper_id,
+            "primary_topic": "Learning and Optimization",
+            "rationale": "Semantic review identifies the learning method contribution.",
+            "secondary_topics": [],
+            "taxonomy_version": "2026-08-24-v1",
+        }
+        for paper_id in paper_ids
+    ]
+    path.write_text(
+        "".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8"
+    )
+    return path
+
+
+def _collect_small_icml_2025(root: Path) -> VenueRequest:
+    fixture_root = Path(__file__).parent / "fixtures/pmlr"
+    payloads = {
+        "volume": (fixture_root / "icml-2025-volume-small.html").read_bytes(),
+        "metadata": (fixture_root / "icml-2025-citeproc-small.yaml").read_bytes(),
+    }
+    request = normalize_request("ICML", 2025, "main")
+
+    def handler(incoming: httpx.Request) -> httpx.Response:
+        kind = next(
+            key
+            for key, url in request.source_urls.items()
+            if str(incoming.url) == str(url)
+        )
+        return httpx.Response(200, content=payloads[kind], request=incoming)
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        collect_scope(request, root, client=client)
+    return request
+
+
+def test_import_semantic_assignments_accepts_exact_icml_membership_and_is_stable(
+    tmp_path: Path,
+) -> None:
+    request = _collect_small_icml_2025(tmp_path)
+    first = _write_assignment_source(
+        tmp_path / "review-a.jsonl", ("pmlr:v267:a-mancisidor25a",)
+    )
+    second = _write_assignment_source(
+        tmp_path / "review-b.jsonl", ("pmlr:v267:aamand25a",)
+    )
+
+    imported = import_semantic_assignments_scope(request, tmp_path, [second, first])
+    classification = tmp_path / "data/classification/icml/2025-main"
+    first_bytes = (classification / "assignments.jsonl").read_bytes()
+    first_manifest = json.loads(
+        (classification / "classification-manifest.json").read_text()
+    )
+    import_semantic_assignments_scope(request, tmp_path, [first, second])
+
+    assert [item.paper_id for item in imported] == [
+        "pmlr:v267:a-mancisidor25a",
+        "pmlr:v267:aamand25a",
+    ]
+    assert (classification / "assignments.jsonl").read_bytes() == first_bytes
+    second_manifest = json.loads(
+        (classification / "classification-manifest.json").read_text()
+    )
+    assert second_manifest["semantic_labeling"] == first_manifest["semantic_labeling"]
+    assert [
+        source["source_file"]
+        for source in first_manifest["semantic_labeling"]["source_batches"]
+    ] == ["review-a.jsonl", "review-b.jsonl"]
+    assert all(
+        source["byte_size"] > 0
+        for source in first_manifest["semantic_labeling"]["source_batches"]
+    )
+
+
+@pytest.mark.parametrize(
+    "case", ["missing", "extra", "duplicate", "duplicate_source", "taxonomy"]
+)
+def test_import_semantic_assignments_rejects_invalid_icml_union_before_write(
+    tmp_path: Path, case: str
+) -> None:
+    request = _collect_small_icml_2025(tmp_path)
+    first_ids = ("pmlr:v267:a-mancisidor25a",)
+    second_ids = ("pmlr:v267:aamand25a",)
+    if case == "missing":
+        second_ids = ()
+    elif case == "extra":
+        second_ids += ("pmlr:v267:not-in-volume25a",)
+    elif case == "duplicate":
+        second_ids = first_ids
+    first = _write_assignment_source(tmp_path / "review-a.jsonl", first_ids)
+    second = _write_assignment_source(tmp_path / "review-b.jsonl", second_ids)
+    if case == "taxonomy":
+        second.write_text(
+            second.read_text().replace("2026-08-24-v1", "wrong-version"),
+            encoding="utf-8",
+        )
+
+    inputs = [first, first] if case == "duplicate_source" else [first, second]
+    with pytest.raises(ValueError):
+        import_semantic_assignments_scope(request, tmp_path, inputs)
+
+    assert not (
+        tmp_path / "data/classification/icml/2025-main/assignments.jsonl"
+    ).exists()
