@@ -15,12 +15,25 @@ def _safe_segment(value: str) -> str:
 
 @dataclass(frozen=True)
 class ScopePaths:
+    root: Path
     manifest: Path
     normalized: Path
     snapshots: Path
     analysis: Path
+    classification: Path
+    awards: Path
+    award_deep_reads: Path
+    award_deep_read_provenance: Path
     release: Path
     notes: Path
+
+    @property
+    def low_confidence_queue(self) -> Path:
+        return self.classification / "low-confidence-review-queue.json"
+
+    @property
+    def low_confidence_decisions(self) -> Path:
+        return self.classification / "low-confidence-decisions.json"
 
     @classmethod
     def for_request(cls, root: Path, request: VenueRequest) -> "ScopePaths":
@@ -34,6 +47,7 @@ class ScopePaths:
         note_name = f"{data_venue}-{scope_name}-overview.md"
 
         return cls(
+            root=root,
             manifest=root / "data" / "manifests" / data_venue / f"{scope_name}.json",
             normalized=root
             / "data"
@@ -42,6 +56,22 @@ class ScopePaths:
             / f"{scope_name}.jsonl",
             snapshots=root / "data" / "snapshots" / data_venue / scope_name,
             analysis=root / "data" / "analysis" / data_venue / scope_name,
+            classification=root
+            / "data"
+            / "classification"
+            / data_venue
+            / scope_name,
+            awards=root / "data" / "awards" / data_venue / f"{scope_name}.yaml",
+            award_deep_reads=root
+            / "data"
+            / "awards"
+            / data_venue
+            / f"{scope_name}-deep-reads.yaml",
+            award_deep_read_provenance=root
+            / "data"
+            / "awards"
+            / data_venue
+            / f"{scope_name}-deep-read-provenance.json",
             release=root / "data" / "releases" / venue / year,
             notes=root / "notes" / note_name,
         )

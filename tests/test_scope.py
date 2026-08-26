@@ -15,6 +15,26 @@ def test_icml_paths_are_isolated_from_acl(tmp_path: Path) -> None:
     assert paths.normalized == tmp_path / "data/normalized/icml/2026-main.jsonl"
     assert paths.snapshots == tmp_path / "data/snapshots/icml/2026-main"
     assert paths.analysis == tmp_path / "data/analysis/icml/2026-main"
+    assert paths.classification == tmp_path / "data/classification/icml/2026-main"
+    assert paths.awards == tmp_path / "data/awards/icml/2026-main.yaml"
+    assert (
+        paths.award_deep_reads
+        == tmp_path / "data/awards/icml/2026-main-deep-reads.yaml"
+    )
+    assert (
+        paths.award_deep_read_provenance
+        == tmp_path / "data/awards/icml/2026-main-deep-read-provenance.json"
+    )
+    assert (
+        paths.low_confidence_queue
+        == tmp_path
+        / "data/classification/icml/2026-main/low-confidence-review-queue.json"
+    )
+    assert (
+        paths.low_confidence_decisions
+        == tmp_path
+        / "data/classification/icml/2026-main/low-confidence-decisions.json"
+    )
     assert paths.release == tmp_path / "data/releases/ICML/2026"
     assert paths.notes == tmp_path / "notes/icml-2026-main-overview.md"
 

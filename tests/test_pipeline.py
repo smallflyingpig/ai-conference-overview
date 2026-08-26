@@ -1126,7 +1126,7 @@ def test_audit_registry_rejects_rehashed_equal_size_cherry_pick(
         ),
         encoding="utf-8",
     )
-    paths = pipeline_module.ScopePaths(tmp_path)
+    paths = pipeline_module.ScopePaths.for_request(tmp_path, request)
     pipeline_module._write_audit_samples(
         paths,
         records,

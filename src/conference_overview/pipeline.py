@@ -60,6 +60,7 @@ from conference_overview.reports import (
 from conference_overview.reports import (
     write_release as publish_release,
 )
+from conference_overview.scope import ScopePaths
 from conference_overview.storage import store_snapshot
 from conference_overview.validate import (
     PublicationBlocked,
@@ -85,59 +86,6 @@ _AUDIT_SAMPLING_METHOD = (
 
 class UnsupportedPipelineRoute(ValueError):
     """Raised when a venue route has no implemented adapter orchestration."""
-
-
-@dataclass(frozen=True)
-class ScopePaths:
-    root: Path
-
-    @property
-    def manifest(self) -> Path:
-        return self.root / "data/manifests/acl/2026-long.json"
-
-    @property
-    def normalized(self) -> Path:
-        return self.root / "data/normalized/acl/2026-long.jsonl"
-
-    @property
-    def snapshots(self) -> Path:
-        return self.root / "data/snapshots/acl/2026-long"
-
-    @property
-    def analysis(self) -> Path:
-        return self.root / "data/analysis/acl/2026-long"
-
-    @property
-    def classification(self) -> Path:
-        return self.root / "data/classification/acl/2026-long"
-
-    @property
-    def awards(self) -> Path:
-        return self.root / "data/awards/acl/2026-long.yaml"
-
-    @property
-    def award_deep_reads(self) -> Path:
-        return self.root / "data/awards/acl/2026-long-deep-reads.yaml"
-
-    @property
-    def award_deep_read_provenance(self) -> Path:
-        return self.root / "data/awards/acl/2026-long-deep-read-provenance.json"
-
-    @property
-    def low_confidence_queue(self) -> Path:
-        return self.classification / "low-confidence-review-queue.json"
-
-    @property
-    def low_confidence_decisions(self) -> Path:
-        return self.classification / "low-confidence-decisions.json"
-
-    @property
-    def release(self) -> Path:
-        return self.root / "data/releases/ACL/2026"
-
-    @property
-    def notes(self) -> Path:
-        return self.root / "notes/acl-2026-long-overview.md"
 
 
 @dataclass(frozen=True)
@@ -232,7 +180,7 @@ def collect_acl_scope(
 ) -> CollectionResult:
     """Fetch, content-check, normalize, and persist the official ACL scope."""
     _require_acl(request)
-    paths = ScopePaths(Path(root))
+    paths = ScopePaths.for_request(Path(root), request)
     owns_client = client is None
     active_client = client or httpx.Client()
     try:
@@ -338,7 +286,7 @@ def _normalize_acl_payloads(
 
 def _load_manifest(request: VenueRequest, root: Path) -> dict[str, object]:
     _require_acl(request)
-    paths = ScopePaths(Path(root))
+    paths = ScopePaths.for_request(Path(root), request)
     try:
         manifest = json.loads(paths.manifest.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
@@ -352,7 +300,7 @@ def rebuild_acl_scope_from_snapshots(
     request: VenueRequest, root: Path
 ) -> CollectionResult:
     """Re-normalize only from hash-verified immutable source snapshots."""
-    paths = ScopePaths(Path(root))
+    paths = ScopePaths.for_request(Path(root), request)
     manifest = _load_manifest(request, root)
     raw_sources = manifest.get("sources")
     if not isinstance(raw_sources, list):
@@ -398,7 +346,7 @@ def load_scope_records(
     request: VenueRequest, root: Path
 ) -> tuple[list[PaperRecord], list[PaperRecord], tuple[SourceRef, ...]]:
     """Load normalized records only after rechecking immutable hashes and scope."""
-    paths = ScopePaths(Path(root))
+    paths = ScopePaths.for_request(Path(root), request)
     manifest = _load_manifest(request, root)
     normalized = manifest.get("normalized")
     if not isinstance(normalized, Mapping):
@@ -453,7 +401,7 @@ def load_scope_records(
 
 def validate_acl_scope(request: VenueRequest, root: Path) -> ValidationReport:
     """Recompute source-count reconciliation from the persisted normalized corpus."""
-    paths = ScopePaths(Path(root))
+    paths = ScopePaths.for_request(Path(root), request)
     manifest = _load_manifest(request, root)
     included, excluded, _sources = load_scope_records(request, root)
     counts = manifest.get("counts")
@@ -477,10 +425,21 @@ def export_classification_scope(
     batch_size: int = 40,
 ) -> list[Path]:
     """Write deterministic title-and-abstract exchange batches."""
-    paths = ScopePaths(Path(root))
-    report = validate_acl_scope(request, root)
+    paths = ScopePaths.for_request(Path(root), request)
+    if request.adapter in {"icml_virtual", "pmlr"}:
+        from conference_overview.conference_pipeline import (
+            load_scope_records as load_conference_records,
+        )
+        from conference_overview.conference_pipeline import (
+            validate_scope as validate_conference_scope,
+        )
+
+        report = validate_conference_scope(request, root)
+        included, _excluded, _sources = load_conference_records(request, root)
+    else:
+        report = validate_acl_scope(request, root)
+        included, _excluded, _sources = load_scope_records(request, root)
     assert_publishable(report)
-    included, _excluded, _sources = load_scope_records(request, root)
     batches = export_batches(included, load_taxonomy(), size=batch_size)
     output = paths.classification / "batches"
     batch_paths: list[Path] = []
@@ -651,7 +610,7 @@ def _assisted_assignment(record: PaperRecord) -> Assignment:
 
 def assisted_classify_scope(request: VenueRequest, root: Path) -> list[Assignment]:
     """Create explicit deterministic proposals from every title and abstract."""
-    paths = ScopePaths(Path(root))
+    paths = ScopePaths.for_request(Path(root), request)
     included, _excluded, _sources = load_scope_records(request, root)
     assignments = [
         _assisted_assignment(record)
@@ -699,7 +658,7 @@ def import_semantic_assignments_scope(
 ) -> list[Assignment]:
     """Merge eight explicit agent-reviewed partitions into the canonical corpus."""
     _require_acl(request)
-    paths = ScopePaths(Path(root))
+    paths = ScopePaths.for_request(Path(root), request)
     included, _excluded, _sources = load_scope_records(request, root)
     expected_ids = {record.paper_id for record in included}
     taxonomy = load_taxonomy()
@@ -882,7 +841,7 @@ def import_full_theme_reviews_scope(
 ) -> list[Assignment]:
     """Apply exhaustive theme reviews against one hash-bound assignment base."""
     _require_acl(request)
-    paths = ScopePaths(Path(root))
+    paths = ScopePaths.for_request(Path(root), request)
     records, _excluded, _sources = load_scope_records(request, root)
     assignment_path = paths.classification / "assignments.jsonl"
     base_bytes = assignment_path.read_bytes()
@@ -1136,7 +1095,7 @@ def apply_audit_corrections_scope(
 ) -> list[Assignment]:
     """Apply independently reviewed primary-topic corrections with old-value guards."""
     _require_acl(request)
-    paths = ScopePaths(Path(root))
+    paths = ScopePaths.for_request(Path(root), request)
     records, _excluded, _sources = load_scope_records(request, root)
     assignment_path = paths.classification / "assignments.jsonl"
     assignments = load_assignments(
@@ -1428,7 +1387,7 @@ def import_award_deep_reads_scope(
 ) -> list[DeepRead]:
     """Merge, guarded-patch, validate, and bind award-paper DeepReads."""
     _require_acl(request)
-    paths = ScopePaths(Path(root))
+    paths = ScopePaths.for_request(Path(root), request)
     if not paths.awards.exists():
         parse_award_inventory_scope(request, root)
     inventory = yaml.safe_load(paths.awards.read_text(encoding="utf-8"))
@@ -2650,7 +2609,7 @@ def analyze_acl_scope(
     write_release: bool = False,
 ) -> dict[str, object]:
     """Validate topic labels, audits, awards, and write preliminary synthesis."""
-    paths = ScopePaths(Path(root))
+    paths = ScopePaths.for_request(Path(root), request)
     validation = validate_acl_scope(request, root)
     assert_publishable(validation)
     records, excluded, sources = load_scope_records(request, root)
@@ -2834,7 +2793,11 @@ def build_site_scope(
     site_dir: Path | None = None,
 ) -> Path:
     """Build the Astro site only from the selected validated ACL release."""
-    paths = ScopePaths(Path(root).resolve())
+    from conference_overview.registry import normalize_request
+
+    paths = ScopePaths.for_request(
+        Path(root).resolve(), normalize_request("ACL", 2026, "long")
+    )
     selected_release = (
         Path(release_dir).resolve() if release_dir is not None else paths.release
     )
@@ -2867,7 +2830,7 @@ def parse_award_inventory_scope(
     request: VenueRequest, root: Path
 ) -> list[dict[str, object]]:
     """Parse only official volume-page award badges; never inspect paper PDFs."""
-    paths = ScopePaths(Path(root))
+    paths = ScopePaths.for_request(Path(root), request)
     manifest = _load_manifest(request, root)
     included, _excluded, sources = load_scope_records(request, root)
     source_payloads = manifest["sources"]

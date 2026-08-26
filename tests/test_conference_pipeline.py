@@ -12,6 +12,7 @@ from conference_overview.conference_pipeline import (
     reconcile_final_scope,
     validate_scope,
 )
+from conference_overview.pipeline import export_classification_scope
 from conference_overview.registry import normalize_request
 from conference_overview.reports import resolve_current_release
 
@@ -175,3 +176,30 @@ def test_icml_2025_collects_final_pmlr_records_and_builds_papers_only_release(
     assert overview["publication_context"]["final_source_status"] == "available"
     assert overview["paper_count"] == 2
     assert "- 缺少 DOI：2" in note
+
+
+def test_icml_2025_classification_export_uses_its_own_scope_paths(
+    tmp_path: Path,
+) -> None:
+    fixture_root = Path(__file__).parent / "fixtures/pmlr"
+    volume = (fixture_root / "icml-2025-volume-small.html").read_bytes()
+    metadata = (fixture_root / "icml-2025-citeproc-small.yaml").read_bytes()
+    request = normalize_request("ICML", 2025, "main")
+
+    def handler(incoming: httpx.Request) -> httpx.Response:
+        payload = (
+            volume
+            if str(incoming.url) == str(request.source_urls["volume"])
+            else metadata
+        )
+        return httpx.Response(200, content=payload, request=incoming)
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        collect_scope(request, tmp_path, client=client)
+
+    batches = export_classification_scope(request, tmp_path, batch_size=1)
+
+    assert batches == [
+        tmp_path / "data/classification/icml/2025-main/batches/batch-0001.json",
+        tmp_path / "data/classification/icml/2025-main/batches/batch-0002.json",
+    ]
