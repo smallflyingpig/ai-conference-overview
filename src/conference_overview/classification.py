@@ -361,6 +361,7 @@ def assert_theme_publishable(
     *,
     low_confidence_review_complete: bool = True,
     rejected_low_confidence_count: int = 0,
+    complete_population_review: bool = False,
 ) -> None:
     """Block publication unless both declared audit thresholds are satisfied."""
     reasons: list[str] = []
@@ -372,12 +373,18 @@ def assert_theme_publishable(
         )
     if audit.sample_size == 0:
         reasons.append("empty audit sample")
-    if audit.observed_precision < _MINIMUM_PRECISION:
+    required_precision = (
+        Decimal(1) if complete_population_review else _MINIMUM_PRECISION
+    )
+    if audit.observed_precision < required_precision:
         reasons.append(
             "observed precision "
-            f"{audit.observed_precision} is below {_MINIMUM_PRECISION}"
+            f"{audit.observed_precision} is below {required_precision}"
         )
-    if audit.wilson_lower_95 < _MINIMUM_WILSON_LOWER_95:
+    if (
+        not complete_population_review
+        and audit.wilson_lower_95 < _MINIMUM_WILSON_LOWER_95
+    ):
         reasons.append(
             "Wilson 95% lower bound "
             f"{audit.wilson_lower_95} is below {_MINIMUM_WILSON_LOWER_95}"

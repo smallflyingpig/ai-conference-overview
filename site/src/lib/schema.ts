@@ -1089,10 +1089,16 @@ export const overviewArtifactSchema = z
           assignment.primary_topic === theme &&
           (pending.has(assignment.paper_id) || rejected.has(assignment.paper_id)),
       );
+      const populationSize = value.assignments.filter(
+        (assignment) => assignment.primary_topic === theme,
+      ).length;
+      const completePopulationReview = audit.sample_size === populationSize;
       const passes =
         audit.sample_size > 0 &&
-        compareExactDecimals(audit.observed_precision, "0.90") >= 0 &&
-        compareExactDecimals(audit.wilson_lower_95, "0.80") >= 0 &&
+        ((completePopulationReview && audit.correct_count === populationSize) || (!completePopulationReview && (
+          compareExactDecimals(audit.observed_precision, "0.90") >= 0 &&
+          compareExactDecimals(audit.wilson_lower_95, "0.80") >= 0
+        ))) &&
         themeLowConfidenceComplete;
       if (!passes && !disclosedThemes.has(theme)) {
         context.addIssue({

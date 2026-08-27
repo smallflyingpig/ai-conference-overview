@@ -13,12 +13,12 @@ const lanes = release == null ? advanceCategories.map((category) => ({ ...catego
     <header class="page-thesis">
       <p class="eyebrow">研究进展综述</p>
       <h1>从已收录论文中，<br />梳理值得关注的研究进展。</h1>
-      <p>每条研究主线都附有论文官方页面，并明确区分论文原文、多篇论文呈现的共同方向和我们的进一步分析。只有通过人工抽查的主题才用于概括会议的主要方向，其余内容仅作初步观察。</p>
+      <p>每条研究主线都附有论文官方页面，并明确区分论文原文、多篇论文呈现的共同方向和我们的进一步分析。只有通过 AI 辅助复核的主题才用于概括会议的主要方向，其余内容仅作初步观察。</p>
     </header>
     <div class="advance-ledger" aria-label="研究进展类别">
       {lanes.map((category) => (
         <section id={category.id} class="advance-lane">
-          <p class="data-label">{category.advances.length === 0 ? "可用材料有限" : category.advances.some((advance) => advance.audited) ? "主题分类已通过人工抽查 · 代表论文已单独确认" : "初步观察 · 暂不判断长期趋势"}</p>
+          <p class="data-label">{category.advances.length === 0 ? "可用材料有限" : category.advances.some((advance) => advance.audited) ? "主题分类已通过 AI 辅助复核 · 代表论文已单独确认" : "初步观察 · 暂不判断长期趋势"}</p>
           <h2>{category.label}</h2>
           {category.advances.length === 0 ? <p>{release == null ? "当前没有可用的数据版本。" : "该主线尚未完成逐篇综合分析。"}</p> : <div class="advance-entries">{category.advances.map((advance) => <article><h3>{advance.title}</h3><h4>核心研究问题</h4><ul>{advance.researchQuestions.map((question) => <li>{question}</li>)}</ul>{advance.coreProblem != null && <div><EvidenceBadge type={advance.coreProblem.evidence_type} /><strong>核心问题</strong><p>{advance.coreProblem.claim}</p><small>{advance.coreProblem.locator}</small></div>}{advance.technicalChange != null && <div><EvidenceBadge type={advance.technicalChange.evidence_type} /><strong>技术变化</strong><p>{advance.technicalChange.claim}</p><small>{advance.technicalChange.locator}</small></div>}<p class="data-label">相关论文</p><ul>{advance.supportingPapers.map((paper) => <li><a href={paper.officialUrl}>{paper.title}</a></li>)}</ul>{advance.evidenceBoundary != null && <div><EvidenceBadge type={advance.evidenceBoundary.evidence_type} /><strong>适用范围</strong><p>{advance.evidenceBoundary.claim}</p><small>{advance.evidenceBoundary.locator}</small></div>}{advance.implications.map((claim) => <div><EvidenceBadge type={claim.evidence_type} /><strong>对后续研究的启发</strong><p>{claim.claim}</p><small>{claim.locator}</small></div>)}</article>)}</div>}
         </section>

@@ -2078,6 +2078,9 @@ def _load_theme_audits(
                 audit,
                 low_confidence_review_complete=not theme_pending,
                 rejected_low_confidence_count=len(theme_rejected),
+                complete_population_review=(
+                    candidate_counts[theme] == population_counts[theme]
+                ),
             )
         except PublicationBlocked:
             disclosures.append(
@@ -2754,14 +2757,15 @@ def _overview_note(
             (
                 "分类采用 agent semantic batch review：逐篇读取官方 title + abstract，给出单一 "
                 "primary topic；随后经历独立审计修正和全主题复核。最终认证对每个主题使用固定、"
-                "确定性的置信度分层样本（最多 50 篇），门槛同时要求 observed precision ≥ 0.90 "
-                "且双侧 Wilson 95% 下界 ≥ 0.80。审计中的 false 只测量标签精度，不回写 topic。"
+                "确定性的置信度分层样本（最多 50 篇）。主题不足 50 篇时复核全部论文并要求全部正确；"
+                "其余主题同时要求 observed precision ≥ 0.90 且双侧 Wilson 95% 下界 ≥ 0.80。"
+                "复核中的 false 只测量标签精度，不回写 topic。"
             ),
             (
                 "限制：taxonomy 是分析框架而非 ACL 官方 track；一篇论文只能有一个 primary topic，"
                 "会压缩跨主题贡献，因此 primary-assignment share 不等于研究问题的真实 prevalence；"
-                "摘要审计不替代全文复核。该审计是确定性的置信度分层 precision 检查，不估计 recall，"
-                "也不是随机总体抽样置信区间；样本较小的主题仍受 Wilson 下界约束。"
+                "摘要复核不替代全文阅读。该复核是确定性的置信度分层 precision 检查，不估计 recall，"
+                "也不是随机总体抽样置信区间；不足 50 篇的主题采用全量结果，不外推总体区间。"
             ),
             "",
             "## 主要研究问题",
@@ -2787,10 +2791,14 @@ def _overview_note(
         raise TypeError("audit metadata is missing candidate or review counts")
     for theme, count in sorted(counts.items(), key=lambda item: (-item[1], item[0])):
         audit = audits[theme]
-        passes = (
-            audit.sample_size > 0
-            and audit.observed_precision >= Decimal("0.90")
-            and audit.wilson_lower_95 >= Decimal("0.80")
+        complete_population_review = audit.sample_size == count
+        passes = audit.sample_size > 0 and (
+            (complete_population_review and audit.correct_count == count)
+            or (
+                not complete_population_review
+                and audit.observed_precision >= Decimal("0.90")
+                and audit.wilson_lower_95 >= Decimal("0.80")
+            )
         )
         lines.append(
             f"| {theme} | {count} | {count / validation.included_count:.2%} | "
@@ -2801,8 +2809,14 @@ def _overview_note(
         theme
         for theme, audit in audits.items()
         if audit.sample_size > 0
-        and audit.observed_precision >= Decimal("0.90")
-        and audit.wilson_lower_95 >= Decimal("0.80")
+        and (
+            (audit.sample_size == counts[theme] and audit.correct_count == counts[theme])
+            or (
+                audit.sample_size != counts[theme]
+                and audit.observed_precision >= Decimal("0.90")
+                and audit.wilson_lower_95 >= Decimal("0.80")
+            )
+        )
     ]
     withheld_themes = [theme for theme in sorted(counts) if theme not in passed_themes]
     withheld_summary = "；".join(

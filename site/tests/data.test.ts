@@ -158,6 +158,85 @@ it("retains a failed assisted-classification audit only when the theme is experi
   })).not.toThrow();
 });
 
+it("accepts a perfect audit that covers a small theme's complete population", () => {
+  const onePaper = {
+    ...structuredClone(overview),
+    paper_count: 1,
+    assignments: [{
+      confidence: "0.94",
+      paper_id: "pmlr:v267:paper25a",
+      primary_topic: "Multilingual and Inclusive NLP",
+      rationale: "AI-assisted title-first semantic classification.",
+      secondary_topics: [],
+      taxonomy_version: "2026-08-24-v1",
+    }],
+    audits: {
+      "Multilingual and Inclusive NLP": {
+        correct_count: 1,
+        observed_precision: "1",
+        sample_size: 1,
+        thresholds: {
+          minimum_observed_precision: "0.90",
+          minimum_wilson_lower_95: "0.80",
+        },
+        wilson_lower_95: "0.2065",
+      },
+    },
+  };
+  const onePaperValidation = {
+    ...validation,
+    discovered_count: 1,
+    included_count: 1,
+    expected_included: 1,
+  };
+
+  expect(() => parseOverview({
+    overview: onePaper,
+    validation: onePaperValidation,
+    provenance,
+  })).not.toThrow();
+});
+
+it("rejects an imperfect audit that covers a theme's complete population", () => {
+  const assignments = Array.from({ length: 50 }, (_, index) => ({
+    confidence: "0.99",
+    paper_id: `pmlr:v267:paper${index}a`,
+    primary_topic: "Learning and Optimization",
+    rationale: "AI-assisted title-first semantic classification.",
+    secondary_topics: [],
+    taxonomy_version: "2026-08-24-v1",
+  }));
+  const completePopulation = {
+    ...structuredClone(overview),
+    paper_count: assignments.length,
+    assignments,
+    audits: {
+      "Learning and Optimization": {
+        correct_count: 49,
+        observed_precision: "0.98",
+        sample_size: 50,
+        thresholds: {
+          minimum_observed_precision: "0.90",
+          minimum_wilson_lower_95: "0.80",
+        },
+        wilson_lower_95: "0.8950",
+      },
+    },
+  };
+  const completePopulationValidation = {
+    ...validation,
+    discovered_count: assignments.length,
+    included_count: assignments.length,
+    expected_included: assignments.length,
+  };
+
+  expect(() => parseOverview({
+    overview: completePopulation,
+    validation: completePopulationValidation,
+    provenance,
+  })).toThrow(/audit/i);
+});
+
 it("requires exhaustive low-confidence review before an audit-passed theme is final", () => {
   const lowConfidence = {
     ...structuredClone(overview),

@@ -118,8 +118,7 @@ def collect_icml_scope(
             active_client.close()
     corpus = IcmlRawCorpus(
         event_pages=tuple(
-            _persist_source(source, paths.snapshots)
-            for source in fetched.event_pages
+            _persist_source(source, paths.snapshots) for source in fetched.event_pages
         ),
         abstracts=_persist_source(fetched.abstracts, paths.snapshots),
         openreview_pages=tuple(
@@ -158,7 +157,11 @@ def collect_pmlr_scope(
     try:
         sources = tuple(
             _persist_source(
-                _fetched_pmlr(kind, str(request.source_urls[kind]), fetch_bytes(str(request.source_urls[kind]), active_client)),
+                _fetched_pmlr(
+                    kind,
+                    str(request.source_urls[kind]),
+                    fetch_bytes(str(request.source_urls[kind]), active_client),
+                ),
                 paths.snapshots,
             )
             for kind in ("volume", "metadata")
@@ -303,7 +306,9 @@ def _normalize_icml_corpus(
     return CollectionResult(paths.manifest, paths.normalized, validation)
 
 
-def _load_icml_manifest(request: VenueRequest, root: Path) -> tuple[ScopePaths, dict[str, object]]:
+def _load_icml_manifest(
+    request: VenueRequest, root: Path
+) -> tuple[ScopePaths, dict[str, object]]:
     paths = ScopePaths.for_request(Path(root), request)
     try:
         manifest = json.loads(paths.manifest.read_text(encoding="utf-8"))
@@ -345,7 +350,9 @@ def _load_manifest_sources(
         if not snapshot.is_file():
             raise ValueError("snapshot is missing or not a regular file")
         data = snapshot.read_bytes()
-        if len(data) != raw.get("byte_size") or hashlib.sha256(data).hexdigest() != raw.get("sha256"):
+        if len(data) != raw.get("byte_size") or hashlib.sha256(
+            data
+        ).hexdigest() != raw.get("sha256"):
             raise ValueError("immutable source snapshot disagrees with its manifest")
         loaded.append(
             FetchedIcmlSource(
@@ -380,11 +387,11 @@ def _load_manifest_sources(
     return loaded
 
 
-def rebuild_scope_from_snapshots(
-    request: VenueRequest, root: Path
-) -> CollectionResult:
+def rebuild_scope_from_snapshots(request: VenueRequest, root: Path) -> CollectionResult:
     if request.adapter not in {"icml_virtual", "pmlr"}:
-        raise UnsupportedPipelineRoute("snapshot rebuild is not available for this route")
+        raise UnsupportedPipelineRoute(
+            "snapshot rebuild is not available for this route"
+        )
     paths, manifest = _load_icml_manifest(request, root)
     loaded = _load_manifest_sources(request, paths, manifest)
     if request.adapter == "pmlr":
@@ -415,7 +422,9 @@ def load_scope_records(
         for line in data.decode("utf-8").splitlines()
         if line.strip()
     ]
-    included = [record for record in records if record.status is not RecordStatus.EXCLUDED]
+    included = [
+        record for record in records if record.status is not RecordStatus.EXCLUDED
+    ]
     excluded = [record for record in records if record.status is RecordStatus.EXCLUDED]
     return included, excluded, tuple(source.source for source in sources)
 
@@ -463,7 +472,9 @@ def build_preliminary_release(
     write_release: bool,
 ) -> dict[str, object]:
     if request.adapter not in {"icml_virtual", "pmlr"}:
-        raise UnsupportedPipelineRoute("papers-only release is not available for this route")
+        raise UnsupportedPipelineRoute(
+            "papers-only release is not available for this route"
+        )
     paths = ScopePaths.for_request(Path(root), request)
     report = validate_scope(request, root)
     assert_publishable(report)
@@ -504,7 +515,9 @@ def build_preliminary_release(
             validation=report,
             taxonomy_version="not-classified",
             generated_at=max(
-                source.retrieved_at for source in sources if source.retrieved_at is not None
+                source.retrieved_at
+                for source in sources
+                if source.retrieved_at is not None
             ),
             sources=sources,
             publication_context=context,
@@ -530,9 +543,10 @@ def analyze_scope(
     write_release: bool,
 ) -> dict[str, object]:
     paths = ScopePaths.for_request(Path(root), request)
-    if request.adapter in {"icml_virtual", "pmlr"} and (
-        paths.classification / "assignments.jsonl"
-    ).exists():
+    if (
+        request.adapter in {"icml_virtual", "pmlr"}
+        and (paths.classification / "assignments.jsonl").exists()
+    ):
         return analyze_classified_scope(request, root, write_release=write_release)
     if request.adapter in {"icml_virtual", "pmlr"}:
         return build_preliminary_release(request, root, write_release=write_release)
@@ -570,11 +584,13 @@ def analyze_classified_scope(
     audits, disclosures, audit_summary = _load_theme_audits(
         paths, records, assignments, low_status
     )
+    population_counts = Counter(item.primary_topic for item in assignments)
     for theme, audit in audits.items():
         assert_theme_publishable(
             audit,
             low_confidence_review_complete=True,
             rejected_low_confidence_count=0,
+            complete_population_review=(audit.sample_size == population_counts[theme]),
         )
     if disclosures:
         raise PublicationBlocked(
@@ -624,9 +640,7 @@ def analyze_classified_scope(
         status="final_proceedings",
         final_source_status="available",
         final_source_url=request.final_source_url,
-        notice=(
-            "ICML 2025 单年主题分布与研究热点；当前年份不足，暂不判断时间趋势。"
-        ),
+        notice=("ICML 2025 单年主题分布与研究热点；当前年份不足，暂不判断时间趋势。"),
         analysis_availability=AnalysisAvailability(
             papers=True,
             distribution=True,
@@ -652,9 +666,7 @@ def analyze_classified_scope(
         advances=advances,
         claims=(
             EvidenceClaim(
-                claim=(
-                    "该主题分布来自 ICML 2025 PMLR Volume 267 的主主题分类。"
-                ),
+                claim=("该主题分布来自 ICML 2025 PMLR Volume 267 的主主题分类。"),
                 evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
                 source_urls=[request.final_source_url],
                 locator="PMLR Volume 267 complete proceedings",
@@ -699,7 +711,9 @@ def reconcile_final_scope(
     client: httpx.Client | None = None,
 ) -> dict[str, object]:
     if request.adapter != "icml_virtual":
-        raise UnsupportedPipelineRoute("final reconciliation is not available for this route")
+        raise UnsupportedPipelineRoute(
+            "final reconciliation is not available for this route"
+        )
     owns_client = client is None
     active_client = client or httpx.Client()
     try:

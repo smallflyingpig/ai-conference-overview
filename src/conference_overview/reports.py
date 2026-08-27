@@ -992,6 +992,9 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
         assignment.paper_id: assignment.primary_topic
         for assignment in bundle.assignments
     }
+    theme_population_counts: dict[str, int] = {}
+    for theme in assignment_theme.values():
+        theme_population_counts[theme] = theme_population_counts.get(theme, 0) + 1
     disclosed_primary_themes = {
         disclosure.theme for disclosure in bundle.theme_disclosures
     }
@@ -1013,6 +1016,9 @@ def _validate_bundle(bundle: ReleaseBundle) -> ValidationReport:
                     theme_low_confidence_ids.intersection(
                         rejected_low_confidence_ids
                     )
+                ),
+                complete_population_review=(
+                    audit.sample_size == theme_population_counts.get(theme, 0)
                 ),
             )
         except PublicationBlocked:

@@ -116,7 +116,7 @@ export function displayTopicLabel(topic: string): string {
 }
 
 export function auditStatusLabel(status: TopicShareRow["auditStatus"]): string {
-  return { "audit-passed": "已通过人工抽查", experimental: "仅展示初步结果", withheld: "暂不纳入主要分析" }[status];
+  return { "audit-passed": "已通过 AI 辅助复核", experimental: "仅展示初步结果", withheld: "暂不纳入主要分析" }[status];
 }
 
 export function buildConferenceView(release: ConferenceRelease): ConferenceView {

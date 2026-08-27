@@ -62,7 +62,7 @@ const { view } = Astro.props;
     <article class="distribution-plane">
       <header class="distribution-header">
         <p class="eyebrow">主题分布</p>
-        <h2>{view.auditPassedThemeCount > 0 ? "经过人工抽查的主题分布。" : "初步主题分布。"}</h2>
+        <h2>{view.auditPassedThemeCount > 0 ? "经过 AI 辅助复核的主题分布。" : "初步主题分布。"}</h2>
         <p>
           每篇论文只归入一个主要主题（primary topic），各主题占比按<strong>{view.denominatorLabel}</strong>计算。
           当前只有一年的数据，因此不展示同比变化，也不判断长期趋势。
@@ -76,13 +76,13 @@ const { view } = Astro.props;
         <div class="section-line">
           <h3 id="topic-title">主要主题占比</h3>
           <span>
-            {view.auditPassedThemeCount} 个主题通过人工抽查 · {view.experimentalThemeCount} 个主题仅展示初步结果
+            {view.auditPassedThemeCount} 个主题通过 AI 辅助复核 · {view.experimentalThemeCount} 个主题仅展示初步结果
             {view.withheldThemeCount > 0 ? ` · ${view.withheldThemeCount} 个暂不纳入主要分析` : ""}
           </span>
         </div>
         {view.auditPassedThemeCount === 0 && (
           <p>
-            所有主题分类仍在等待独立人工抽查，目前只展示初步分布。
+            所有主题分类仍未完成 AI 辅助复核，目前只展示初步分布。
           </p>
         )}
         <TopicShareChart rows={view.topics} denominator={view.includedCount} />

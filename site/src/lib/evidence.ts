@@ -310,7 +310,7 @@ const advanceNarratives: Record<string, {
     researchQuestions: ["Agent 应如何协调任务规划、工具调用、记忆选择、浏览器状态、策略分支和停止条件？"],
     coreProblem: "Agent 需要把高层规划与具体执行结合起来，同时管理外部工具、长期状态、不同策略分支和停止时机。",
     technicalChange: "OctoTools 统一描述工具能力，并分离规划与执行角色；MoEC 根据子目标选择专家记忆；SPIO 生成并筛选多条数据科学方案；NestBrowse 则把浏览器操作与高层信息检索分开学习。",
-    evidenceBoundary: "“推理与 Agents”主题在最终人工抽查中没有达到精度标准，因此这些论文只用于初步观察，不能据此判断该主题的整体占比或长期趋势。",
+    evidenceBoundary: "“推理与 Agents”主题在最终 AI 辅助复核中没有达到精度标准，因此这些论文只用于初步观察，不能据此判断该主题的整体占比或长期趋势。",
     implication: "评估 Agent 时，应分别衡量规划质量、工具和状态变化、策略选择、失败恢复与停止行为，而不能只报告最终任务成功率。",
   },
   "audited-evidence-data_training": {
@@ -442,7 +442,7 @@ function displayReviewMethod(method: string): string {
 
 function displaySampleMethod(method: string): string {
   if (method.startsWith("deterministic confidence-stratified precision audit")) {
-    return "按置信度分层并确定性抽取样本，每个主要主题（primary topic）最多 50 篇。该检查用于估计分类准确率，不估计召回率，也不能把 Wilson 区间理解为总体随机抽样区间。";
+    return "AI 辅助复核按置信度分层，每个主要主题（primary topic）最多检查 50 篇。主题不足 50 篇时检查全部论文，并要求全部分类正确；其余主题要求抽查准确率不低于 90%，且 Wilson 95% 下界不低于 0.80。该检查只衡量主主题分类的准确率，不衡量召回率。";
   }
   return method;
 }
@@ -457,6 +457,9 @@ function displayClassifier(classifier: string): string {
 function displayClassificationMethod(method: string): string {
   if (method === "explicit_agent_semantic_labeling") {
     return "逐篇阅读标题和摘要后明确标注主要主题";
+  }
+  if (method === "embedding_assisted_semantic_labeling") {
+    return "AI 辅助主题分类：标题决定主要研究问题，摘要用于消除歧义";
   }
   return method;
 }
@@ -580,7 +583,7 @@ export function buildMethodologyView(release: LoadedOverview): MethodologyView {
       items: release.overview.theme_disclosures.map((item) => ({
         theme: item.theme,
         status: item.status,
-        claim: "该主题尚未同时达到分层人工抽查和低置信度逐篇复查的标准，因此暂不用于概括会议的主要研究方向。",
+        claim: "该主题尚未同时达到分层 AI 辅助复核和低置信度逐篇复查的标准，因此暂不用于概括会议的主要研究方向。",
         evidenceType: item.reason.evidence_type,
         sourceUrls: item.reason.source_urls,
         locator: item.reason.locator ?? null,

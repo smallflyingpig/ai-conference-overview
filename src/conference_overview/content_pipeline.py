@@ -84,6 +84,20 @@ def _numeric_suffix(paper_id: str) -> int:
     return int(match.group(1))
 
 
+def _paper_order_key(paper_id: str) -> tuple[int, int | str]:
+    match = _ACL_NUMERIC_SUFFIX.search(paper_id)
+    if match is not None:
+        return (0, int(match.group(1)))
+    return (1, paper_id)
+
+
+def _paper_shard_index(paper_id: str, shard_count: int) -> int:
+    match = _ACL_NUMERIC_SUFFIX.search(paper_id)
+    if match is not None:
+        return int(match.group(1)) % shard_count
+    return int(_sha256(paper_id.encode("utf-8"))[:16], 16) % shard_count
+
+
 def extract_official_pdf_source(
     pdf_bytes: bytes, *, expected_length: int
 ) -> OfficialPdfSource:
@@ -138,17 +152,20 @@ class _ReleaseContentContext:
     papers_sha256: str
 
 
-def _require_acl_scope(request) -> None:
+def _require_supported_scope(request) -> None:
     scope = (request.venue, request.year, request.track, request.source_key)
-    if scope != ("ACL", 2026, "long", "2026.acl-long"):
+    if scope not in {
+        ("ACL", 2026, "long", "2026.acl-long"),
+        ("ICML", 2025, "main", "pmlr-v267"),
+    }:
         raise ContentPublicationBlocked(
-            "Chinese content currently supports ACL/2026/long only"
+            "Chinese content is not implemented for this conference scope"
         )
 
 
 def _load_release_content_context(request, root: Path) -> _ReleaseContentContext:
-    _require_acl_scope(request)
-    release_root = root / "data/releases/ACL/2026"
+    _require_supported_scope(request)
+    release_root = root / f"data/releases/{request.venue}/{request.year}"
     generation = resolve_current_release(release_root)
     pointer = json.loads((release_root / "current.json").read_text(encoding="utf-8"))
     papers_bytes = (generation / "papers.json").read_bytes()
@@ -171,11 +188,12 @@ def _load_release_content_context(request, root: Path) -> _ReleaseContentContext
         if isinstance(item, Mapping) and isinstance(item.get("paper_id"), str)
     }
     try:
-        provenance = json.loads(
-            (root / "data/awards/acl/2026-long-deep-read-provenance.json").read_text(
-                encoding="utf-8"
-            )
+        provenance_path = (
+            root / "data/awards/acl/2026-long-deep-read-provenance.json"
+            if request.venue == "ACL"
+            else root / "data/awards/icml/2025-main-deep-read-provenance.json"
         )
+        provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise ContentPublicationBlocked("award PDF provenance is unavailable") from exc
     pdfs = provenance.get("pdfs") if isinstance(provenance, Mapping) else None
@@ -206,8 +224,8 @@ def _load_release_content_context(request, root: Path) -> _ReleaseContentContext
     )
 
 
-def _content_root(root: Path) -> Path:
-    return root / "data/content/acl/2026-long"
+def _content_root(root: Path, request) -> Path:
+    return root / f"data/content/{request.venue.lower()}/{request.year}-{request.track}"
 
 
 def export_chinese_content_scope(
@@ -232,7 +250,7 @@ def export_chinese_content_scope(
         award_deep_reads=context.award_deep_reads,
         award_pdf_provenance=context.award_pdf_provenance,
         ordinary_pdf_sources=ordinary_pdf_sources,
-        output_dir=_content_root(root) / "source-batches",
+        output_dir=_content_root(root, request) / "source-batches",
         shard_count=shard_count,
     )
 
@@ -240,7 +258,7 @@ def export_chinese_content_scope(
 def check_chinese_content_sources_scope(request, root: Path) -> ContentSourceCoverage:
     """Check exact source-shard membership against the selected release."""
     context = _load_release_content_context(request, root)
-    source_root = _content_root(root) / "source-batches"
+    source_root = _content_root(root, request) / "source-batches"
     ordinary_paths = sorted(source_root.glob("paper-summary-source-*.jsonl"))
     award_path = source_root / "award-deep-read-source.jsonl"
     if len(ordinary_paths) != 16 or not award_path.is_file():
@@ -302,7 +320,7 @@ def export_chinese_content_sources(
     ordinary_pdf_sources = ordinary_pdf_sources or {}
     output = _safe_output_directory(output_dir)
     shards: list[list[dict[str, object]]] = [[] for _ in range(shard_count)]
-    for paper in sorted(papers, key=lambda item: _numeric_suffix(item.paper_id)):
+    for paper in sorted(papers, key=lambda item: _paper_order_key(item.paper_id)):
         if paper.paper_id in award_ids:
             continue
         normalized_abstract = (
@@ -339,7 +357,7 @@ def export_chinese_content_sources(
                     "source_text": pdf_source.text,
                 }
             )
-        shards[_numeric_suffix(paper.paper_id) % shard_count].append(row)
+        shards[_paper_shard_index(paper.paper_id, shard_count)].append(row)
 
     paths: list[Path] = []
     width = max(2, len(str(shard_count - 1)))
@@ -349,7 +367,7 @@ def export_chinese_content_sources(
         paths.append(path)
 
     award_rows: list[dict[str, object]] = []
-    for paper_id in sorted(award_ids, key=_numeric_suffix):
+    for paper_id in sorted(award_ids, key=_paper_order_key):
         deep_read = award_deep_reads.get(paper_id)
         provenance = award_pdf_provenance.get(paper_id)
         if deep_read is None or provenance is None:
@@ -494,7 +512,7 @@ def load_authored_content(
 
 
 def _source_bindings(
-    root: Path, context: _ReleaseContentContext
+    root: Path, request, context: _ReleaseContentContext
 ) -> tuple[dict[str, str], dict[str, str], dict[str, str], dict[str, str]]:
     award_pdf_sha256 = {
         paper_id: str(value["sha256"])
@@ -507,7 +525,7 @@ def _source_bindings(
     ordinary_pdf_sha256: dict[str, str] = {}
     ordinary_pdf_source_text: dict[str, str] = {}
     for path in sorted(
-        (_content_root(root) / "source-batches").glob(
+        (_content_root(root, request) / "source-batches").glob(
             "paper-summary-source-*.jsonl"
         )
     ):
@@ -548,7 +566,7 @@ def import_chinese_content_scope(
         award_source_text,
         ordinary_pdf_sha256,
         ordinary_pdf_source_text,
-    ) = _source_bindings(root, context)
+    ) = _source_bindings(root, request, context)
     return load_authored_content(
         summary_files=summary_files,
         award_path=award_path,
@@ -566,7 +584,7 @@ def import_chinese_content_scope(
 
 def build_chinese_content_scope(request, root: Path) -> Path:
     """Validate all authored content and select one immutable generation."""
-    authored = _content_root(root) / "authored"
+    authored = _content_root(root, request) / "authored"
     summaries = sorted(authored.glob("paper-summaries-*.zh.jsonl"))
     award_path = authored / "award-deep-reads.zh.jsonl"
     bundle = import_chinese_content_scope(
@@ -578,7 +596,7 @@ def build_chinese_content_scope(request, root: Path) -> Path:
     )
     return write_chinese_content_bundle(
         bundle,
-        _content_root(root),
+        _content_root(root, request),
         generated_at=datetime.now(UTC),
     )
 

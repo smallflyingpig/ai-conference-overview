@@ -171,6 +171,36 @@ def test_export_partitions_non_awards_by_numeric_suffix(tmp_path: Path) -> None:
     }
 
 
+def test_export_supports_stable_pmlr_paper_ids(tmp_path: Path) -> None:
+    papers = [
+        paper(index).model_copy(
+            update={
+                "paper_id": f"pmlr:v267:paper{index}a",
+                "venue": "ICML",
+                "year": 2025,
+                "track": "main",
+            }
+        )
+        for index in range(1, 4)
+    ]
+
+    paths = export_chinese_content_sources(
+        papers=papers,
+        award_ids=set(),
+        award_deep_reads={},
+        award_pdf_provenance={},
+        output_dir=tmp_path,
+        shard_count=2,
+    )
+
+    assert {
+        row["paper_id"]
+        for path in paths
+        if "paper-summary-source" in path.name
+        for row in read_jsonl(path)
+    } == {paper.paper_id for paper in papers}
+
+
 def test_export_keeps_awards_out_of_ordinary_shards(tmp_path: Path) -> None:
     deep_read = award(2)
     paths = export_chinese_content_sources(

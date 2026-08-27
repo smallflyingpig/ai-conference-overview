@@ -245,7 +245,9 @@ def test_theme_gate_requires_precision_and_lower_bound_at_the_fifty_item_cap() -
     assert_theme_publishable(audit)
 
 
-def test_theme_gate_blocks_a_passing_audit_until_every_low_confidence_id_is_reviewed() -> None:
+def test_theme_gate_blocks_a_passing_audit_until_every_low_confidence_id_is_reviewed() -> (
+    None
+):
     audit = audit_theme([True] * 50)
 
     with pytest.raises(PublicationBlocked, match="low-confidence.*incomplete"):
@@ -283,3 +285,17 @@ def test_wilson_lower_accepts_a_finite_float_z_and_rejects_non_finite_values() -
     for z in (float("nan"), float("inf"), Decimal("NaN")):
         with pytest.raises(ValueError, match="z"):
             wilson_lower(46, 50, z=z)
+
+
+def test_small_complete_population_review_requires_perfect_precision() -> None:
+    complete = audit_theme([True] * 6)
+    assert_theme_publishable(complete, complete_population_review=True)
+
+    with pytest.raises(PublicationBlocked, match="observed precision"):
+        assert_theme_publishable(
+            audit_theme([True] * 5 + [False]),
+            complete_population_review=True,
+        )
+
+    with pytest.raises(PublicationBlocked, match="Wilson"):
+        assert_theme_publishable(complete)

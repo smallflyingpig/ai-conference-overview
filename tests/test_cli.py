@@ -43,10 +43,11 @@ def test_import_classification_accepts_icml_sources(tmp_path: Path, monkeypatch)
     first = tmp_path / "review-a.jsonl"
     second = tmp_path / "review-b.jsonl"
 
-    def fake_import(request, root, inputs):
+    def fake_import(request, root, inputs, *, labeling_method):
         assert (request.venue, request.year, request.track) == ("ICML", 2025, "main")
         assert root == tmp_path
         assert inputs == [first, second]
+        assert labeling_method == "explicit_agent_semantic_labeling"
         return [SimpleNamespace(), SimpleNamespace()]
 
     monkeypatch.setattr(cli_module, "import_semantic_assignments_scope", fake_import)

@@ -108,3 +108,56 @@ def test_text_lane_uses_the_configured_core_task_taxonomy_name() -> None:
 
     assert len(advances) == 5
     assert records[0].paper_id in advances[0].supporting_paper_ids
+
+
+def test_icml_curated_advances_explain_concrete_technical_changes() -> None:
+    curated = [
+        ("kim25ah", "Foundation Models"),
+        ("nagarajan25a", "Foundation Models"),
+        ("wu25i", "Reasoning and Agents"),
+        ("jain25b", "Multimodal Models"),
+        ("sun25x", "Multimodal Models"),
+        ("wang25av", "Multimodal Models"),
+        ("patil25a", "Evaluation"),
+        ("zhou25t", "Reasoning and Agents"),
+        ("givens25a", "Learning and Optimization"),
+        ("xie25i", "Foundation Models"),
+        ("li25dp", "Data and Retrieval"),
+        ("fischer-abaigar25a", "Applications"),
+        ("snell25a", "Trustworthiness"),
+        ("hazra25a", "Trustworthiness"),
+    ]
+    records = []
+    assignments = []
+    for index, (suffix, topic) in enumerate(curated):
+        record = _paper(index, topic).model_copy(
+            update={
+                "paper_id": f"pmlr:v267:{suffix}",
+                "title": suffix,
+                "normalized_title": suffix,
+                "landing_url": f"https://proceedings.mlr.press/v267/{suffix}.html",
+                "pdf_url": f"https://proceedings.mlr.press/v267/{suffix}.pdf",
+            }
+        )
+        records.append(record)
+        assignments.append(
+            Assignment(
+                paper_id=record.paper_id,
+                primary_topic=topic,
+                secondary_topics=(),
+                confidence=Decimal("0.95"),
+                rationale="Curated ICML 2025 representative.",
+                taxonomy_version="2026-08-24-v1",
+            )
+        )
+    audits = {topic: audit_theme([True] * 50) for _, topic in curated}
+
+    advances = build_single_year_advances(records, assignments, audits)
+    rendered = " ".join(item.technical_change.claim for item in advances)
+
+    assert len(advances) == 5
+    assert "masked diffusion" in rendered
+    assert "2D 与 3D" in rendered
+    assert "function calling" in rendered
+    assert "missing data" in rendered
+    assert "worst-off" in rendered

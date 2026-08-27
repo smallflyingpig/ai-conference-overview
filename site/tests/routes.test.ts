@@ -12,6 +12,7 @@ import { filterPapers, paperRouteKey } from "../src/lib/evidence";
 import { conferenceNavigationHref, projectPath } from "../src/lib/paths";
 import {
   applyTrendFilters,
+  auditStatusLabel,
   buildConferenceView,
   buildTrendView,
   conferenceRoutes,
@@ -164,6 +165,7 @@ describe("conference routes", () => {
     expect(view.topics.length).toBeGreaterThan(0);
     expect(view.hotspots).toHaveLength(1);
     expect(view.trendEligible).toBe(false);
+    expect(auditStatusLabel("audit-passed")).toBe("已通过 AI 辅助复核");
   });
 
   it("aggregates ACL and ICML paper rows with stable internal routes", () => {

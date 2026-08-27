@@ -170,6 +170,24 @@ def test_analyzed_single_year_release_keeps_context_without_trend_metrics(
     assert overview["metrics"] == {"topic_share:Foundation Models": "1"}
 
 
+def test_release_accepts_a_perfect_small_theme_population_review(tmp_path: Path) -> None:
+    records = (paper("paper-a"), *(paper(f"paper-{index}") for index in range(5)))
+    bundle = replace(
+        publishable_bundle(),
+        records=records,
+        validation=validate_records(records, [], expected_included=6),
+        assignments=tuple(assignment(record.paper_id) for record in records),
+        audits={"Foundation Models": audit_theme([True] * 6)},
+    )
+
+    write_release(bundle, tmp_path)
+
+    overview = json.loads(
+        (resolve_current_release(tmp_path) / "overview.json").read_text()
+    )
+    assert overview["audits"]["Foundation Models"]["sample_size"] == 6
+
+
 def test_single_year_release_rejects_claimed_trend_availability(
     tmp_path: Path,
 ) -> None:
