@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 
 import type { LoadedOverview } from "./data";
 import { projectPath } from "./paths";
+export { awardFilterHref, parseAwardFilter } from "./award-filter";
 import {
   deepReadArtifactSchema,
   type DeepReadArtifact,

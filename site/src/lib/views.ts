@@ -1,4 +1,5 @@
 import type { LoadedOverview } from "./data";
+import { conferenceAdvanceNarrative } from "./advance-copy";
 
 export type ConferenceRelease = LoadedOverview;
 
@@ -50,6 +51,7 @@ export interface ConferenceView {
     summary: string;
     papers: Array<{ paperId: string; title: string; url: string }>;
   }>;
+  awardCount: number;
   publicationNotice: string | null;
   publicationStatus: "preliminary" | "final" | null;
   finalSourceUrl: string | null;
@@ -169,17 +171,26 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
     publicationContext == null || publicationContext.analysis_availability.distribution;
   const papersOnly = !distributionAvailable;
   const trackLabel = track === "long" ? "长论文" : track === "main" ? "主会论文" : `${track} 类论文`;
-  const hotspots = papersOnly ? [] : release.overview.advances.map((advance) => ({
-    id: advance.advance_id,
-    label: hotspotLabels[advance.category] ?? advance.title,
-    question: advance.research_questions?.[0] ?? advance.title,
-    summary: advance.core_problem?.claim ?? advance.claims[0]?.claim ?? "",
-    papers: advance.supporting_paper_ids.map((paperId) => {
-      const paper = paperById.get(paperId);
-      if (paper == null) throw new Error(`Hotspot paper is absent from release: ${paperId}`);
-      return { paperId, title: paper.title, url: paper.landing_url };
-    }),
-  }));
+  const hotspots = papersOnly ? [] : release.overview.advances.map((advance) => {
+    const displayed = conferenceAdvanceNarrative(advance.advance_id);
+    return {
+      id: advance.advance_id,
+      label: hotspotLabels[advance.category] ?? advance.title,
+      question: displayed?.question ?? advance.research_questions?.[0] ?? advance.title,
+      summary: displayed?.summary ?? advance.core_problem?.claim ?? advance.claims[0]?.claim ?? "",
+      papers: advance.supporting_paper_ids.map((paperId) => {
+        const paper = paperById.get(paperId);
+        if (paper == null) throw new Error(`Hotspot paper is absent from release: ${paperId}`);
+        return { paperId, title: paper.title, url: paper.landing_url };
+      }),
+    };
+  });
+  const deepReadPaperIds = new Set(
+    release.overview.award_deep_reads.map((deepRead) => deepRead.paper_id),
+  );
+  const awardCount = papersOnly ? 0 : release.overview.awards.filter(
+    (award) => award.status === "verified" && deepReadPaperIds.has(award.paper_id),
+  ).length;
   return {
     mode: papersOnly ? "papers-only" : "distribution",
     venue,
@@ -211,6 +222,7 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
     withheldThemeCount: topics.filter((row) => row.auditStatus === "withheld").length,
     topics: papersOnly ? [] : topics,
     hotspots,
+    awardCount,
     publicationNotice: publicationContext?.notice ?? null,
     publicationStatus: publicationContext == null
       ? null

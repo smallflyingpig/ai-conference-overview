@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { awardFilterHref } from "../../lib/award-filter";
 import { loadPublishedOverviews } from "../../lib/data";
 import { awardRouteKey, awardStatusLabel, awardTypeLabel, buildAwardConferenceIndexes } from "../../lib/evidence";
 import { projectPath } from "../../lib/paths";
@@ -22,27 +23,61 @@ const base = import.meta.env.BASE_URL;
       {groups.length === 0 ? (
         <div class="empty-atlas" role="status"><span class="status-mark" aria-hidden="true"></span><div><h3>暂无可用内容</h3><p>当前数据版本中没有官方获奖记录；不会用候选名单代替。</p></div></div>
       ) : (
-        groups.map((group) => (
-          <section class="award-conference-group" aria-labelledby={`award-${group.venue}-${group.year}`}>
-            <div class="section-line"><h3 id={`award-${group.venue}-${group.year}`}>{group.venue} {group.year}</h3><span>{group.stateLabel} · {group.items.length} 篇</span></div>
-            <ol>
-              {group.items.map(({ award, paper, hasDetail }) => (
-                <li class="award-plate">
-                  <span class="data-label">{awardTypeLabel(award.award_type)}</span>
-                  <h3>{paper?.title ?? award.paper_id}</h3>
-                  <p class="award-status-line">{awardStatusLabel(award.status)}</p>
-                  {award.official_citation && <blockquote>{award.official_citation}</blockquote>}
-                  <div class="plate-links">
-                    {award.evidence_url && <a href={award.evidence_url}>官方获奖页面</a>}
-                    {paper && <a href={paper.landing_url}>论文官方页面</a>}
-                    {hasDetail ? <a href={projectPath(base, `awards/${awardRouteKey(award)}`)}>查看详细解读</a> : <span>详细解读尚未完成</span>}
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </section>
-        ))
+        <>
+          <nav class="award-filter" aria-label="按会议筛选获奖论文">
+            <a href={projectPath(base, "awards")} data-award-filter="all">全部会议 · {groups.reduce((sum, group) => sum + group.items.length, 0)} 篇</a>
+            {groups.map((group) => (
+              <a href={awardFilterHref(base, group.venue, group.year)} data-award-filter={`${group.venue}-${group.year}`}>
+                {group.venue} {group.year} · {group.items.length} 篇
+              </a>
+            ))}
+          </nav>
+          <p class="award-filter-status" aria-live="polite">当前显示全部会议</p>
+          {groups.map((group) => (
+            <section class="award-conference-group" data-award-group={`${group.venue}-${group.year}`} aria-labelledby={`award-${group.venue}-${group.year}`}>
+              <div class="section-line"><h3 id={`award-${group.venue}-${group.year}`}>{group.venue} {group.year}</h3><span>{group.stateLabel} · {group.items.length} 篇</span></div>
+              <ol>
+                {group.items.map(({ award, paper, hasDetail }) => (
+                  <li class="award-plate">
+                    <span class="data-label">{awardTypeLabel(award.award_type)}</span>
+                    <h3>{paper?.title ?? award.paper_id}</h3>
+                    <p class="award-status-line">{awardStatusLabel(award.status)}</p>
+                    {award.official_citation && <blockquote>{award.official_citation}</blockquote>}
+                    <div class="plate-links">
+                      {award.evidence_url && <a href={award.evidence_url}>官方获奖页面</a>}
+                      {paper && <a href={paper.landing_url}>论文官方页面</a>}
+                      {hasDetail ? <a href={projectPath(base, `awards/${awardRouteKey(award)}`)}>查看详细解读</a> : <span>详细解读尚未完成</span>}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ))}
+        </>
       )}
     </section>
   </div>
 </BaseLayout>
+
+<script>
+  import { parseAwardFilter } from "../../lib/award-filter";
+
+  const selected = parseAwardFilter(window.location.search);
+  const selectedKey = selected == null ? "all" : `${selected.venue}-${selected.year}`;
+  const groups = [...document.querySelectorAll<HTMLElement>("[data-award-group]")];
+  const available = selectedKey === "all" || groups.some((group) => group.dataset.awardGroup === selectedKey);
+  const activeKey = available ? selectedKey : "all";
+  groups.forEach((group) => {
+    group.hidden = activeKey !== "all" && group.dataset.awardGroup !== activeKey;
+  });
+  document.querySelectorAll<HTMLAnchorElement>("[data-award-filter]").forEach((link) => {
+    if (link.dataset.awardFilter === activeKey) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+  const status = document.querySelector<HTMLElement>(".award-filter-status");
+  if (status) {
+    status.textContent = activeKey === "all"
+      ? "当前显示全部会议"
+      : `当前只显示 ${activeKey.replace("-", " ")} 的获奖论文`;
+  }
+</script>

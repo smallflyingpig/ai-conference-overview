@@ -131,6 +131,21 @@ function changeComparisonContract(
 }
 
 describe("conference routes", () => {
+  it("builds a shareable award filter and ignores incomplete filter state", async () => {
+    const evidence = await import("../src/lib/evidence");
+    expect("awardFilterHref" in evidence).toBe(true);
+    expect("parseAwardFilter" in evidence).toBe(true);
+
+    const awardFilterHref = (evidence as any).awardFilterHref;
+    const parseAwardFilter = (evidence as any).parseAwardFilter;
+    expect(awardFilterHref("/ai-conference-overview/", "ICML", 2025)).toBe(
+      "/ai-conference-overview/awards/?venue=ICML&year=2025#award-ICML-2025",
+    );
+    expect(parseAwardFilter("?venue=ICML&year=2025")).toEqual({ venue: "ICML", year: 2025 });
+    expect(parseAwardFilter("?venue=ICML")).toBeNull();
+    expect(parseAwardFilter("?venue=icml&year=2025")).toBeNull();
+  });
+
   it("builds a papers-only ICML conference view", () => {
     const view = buildConferenceView(preliminaryIcmlRelease());
 
@@ -158,14 +173,36 @@ describe("conference routes", () => {
   });
 
   it("renders an analyzed ICML single-year release as a distribution snapshot", () => {
-    const view = buildConferenceView(analyzedIcml2025Release());
+    const release = analyzedIcml2025Release();
+    const view = buildConferenceView(release);
 
     expect(view.mode).toBe("distribution");
     expect(view.pageHeading).toBe("ICML 2025 主会论文");
     expect(view.topics.length).toBeGreaterThan(0);
     expect(view.hotspots).toHaveLength(1);
+    expect(view.awardCount).toBe(release.overview.awards.length);
     expect(view.trendEligible).toBe(false);
     expect(auditStatusLabel("audit-passed")).toBe("已通过 AI 辅助复核");
+  });
+
+  it("uses the curated Chinese narrative in conference research highlights", () => {
+    const release = analyzedIcml2025Release();
+    const advance = release.overview.advances[0];
+    advance.advance_id = "audited-evidence-multimodal_models";
+    advance.category = "multimodal_models";
+    advance.research_questions = ["How should we study joint-modal safety?"];
+    if (advance.core_problem != null) {
+      advance.core_problem.claim = "Raw English narrative that should not reach the page.";
+    }
+
+    const [hotspot] = buildConferenceView(release).hotspots;
+
+    expect(hotspot.question).toBe(
+      "多模态系统如何同时处理组合概念、流式交互状态、结构化检索、评测偏差和跨模态安全问题？",
+    );
+    expect(hotspot.summary).toBe(
+      "多模态系统既要理解不同模态之间的组合关系，也要维持流式交互状态、使用结构化记忆，并抵御多种模态共同构成的攻击。",
+    );
   });
 
   it("aggregates ACL and ICML paper rows with stable internal routes", () => {

@@ -23,14 +23,15 @@ test("ACL 2026 中文页面保留数据来源与表格 fallback", async ({ page 
   expect(consoleErrors).toEqual([]);
 });
 
-test("ICML 2025 正式论文集可以检索并进入英文详情", async ({ page }) => {
+test("ICML 2025 单年分析可以检索并进入英文详情", async ({ page }) => {
   const consoleErrors = watchConsoleErrors(page);
   await page.goto(`${basePath}conferences/icml/2025/`);
 
   await expect(page.getByRole("heading", { name: "ICML 2025 主会论文" })).toBeVisible();
-  await expect(page.getByText("正式论文集", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "主题分布" })).toBeVisible();
   await expect(page.getByText("3330", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("预发布论文清单", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "查看本届 8 篇获奖论文解读" })).toBeVisible();
 
   await page.getByRole("link", { name: "浏览 ICML 2025 论文" }).click();
   await page.getByLabel("会议").selectOption("ICML");
@@ -98,7 +99,7 @@ test("获奖论文索引进入中文解读并保留英文原文参考", async ({
   }
   await page.goto("/ai-conference-overview/awards/");
 
-  await expect(page.locator(".award-plate")).toHaveCount(30);
+  await expect(page.locator(".award-plate")).toHaveCount(38);
   const detailLink = page.getByRole("link", { name: "查看详细解读" }).first();
   await expect(detailLink).toHaveAttribute("href", new RegExp(`^${basePath}awards/award-[0-9a-f]{64}/$`));
   await detailLink.click();
@@ -123,6 +124,32 @@ test("获奖论文索引进入中文解读并保留英文原文参考", async ({
   expect(pageOverflow, "展开方法流程后页面不应出现横向溢出").toBeLessThanOrEqual(1);
   await expect(page.getByRole("link", { name: "官方获奖页面" })).toBeVisible();
   expect(consoleErrors).toEqual([]);
+});
+
+test("ICML 2025 概览可以直接进入本届获奖论文并保留筛选地址", async ({ page }) => {
+  await page.goto("/ai-conference-overview/conferences/icml/2025/");
+
+  const awardEntry = page.getByRole("link", { name: "查看本届 8 篇获奖论文解读" });
+  await expect(awardEntry).toHaveAttribute(
+    "href",
+    `${basePath}awards/?venue=ICML&year=2025#award-ICML-2025`,
+  );
+  await awardEntry.click();
+
+  await expect(page).toHaveURL(/\/awards\/\?venue=ICML&year=2025#award-ICML-2025$/);
+  await expect(page.getByRole("heading", { name: "ICML 2025", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "ACL 2026", exact: true })).toBeHidden();
+  await expect(page.getByRole("link", { name: "ICML 2025 · 8 篇" })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
+});
+
+test("主导航使用明确的获奖论文解读名称", async ({ page }) => {
+  await page.goto("/ai-conference-overview/papers/");
+  const menuButton = page.getByRole("button", { name: "打开主导航" });
+  if (await menuButton.isVisible()) await menuButton.click();
+  await expect(page.getByRole("link", { name: "获奖论文解读", exact: true })).toBeVisible();
 });
 
 test("公开页面使用自然中文而不是内部工程术语", async ({ page }) => {

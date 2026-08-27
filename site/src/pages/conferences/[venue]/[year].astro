@@ -2,6 +2,7 @@
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import DataStatus from "../../../components/DataStatus.astro";
 import TopicShareChart from "../../../components/TopicShareChart";
+import { awardFilterHref } from "../../../lib/award-filter";
 import { loadPublishedOverviews } from "../../../lib/data";
 import { auditStatusLabel, buildConferenceView, conferenceRoutes, type ConferenceView } from "../../../lib/views";
 
@@ -15,6 +16,7 @@ export async function getStaticPaths() {
 
 interface Props { view: ConferenceView }
 const { view } = Astro.props;
+const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout
@@ -72,6 +74,10 @@ const { view } = Astro.props;
         )}
       </header>
 
+      <p class="conference-paper-entry">
+        <a class="primary-link" href="/ai-conference-overview/papers/">浏览 {view.venue} {view.year} 论文</a>
+      </p>
+
       <section aria-labelledby="topic-title">
         <div class="section-line">
           <h3 id="topic-title">主要主题占比</h3>
@@ -104,6 +110,17 @@ const { view } = Astro.props;
               </li>
             ))}
           </ol>
+        </section>
+      )}
+
+      {view.awardCount > 0 && (
+        <section class="conference-award-entry" aria-labelledby="conference-award-title">
+          <div>
+            <p class="eyebrow">获奖论文解读</p>
+            <h3 id="conference-award-title">本届共有 {view.awardCount} 篇获奖论文解读。</h3>
+            <p>每篇解读按研究问题、核心方法、主要发现和适用范围组织，并附论文官方页面。</p>
+          </div>
+          <a href={awardFilterHref(base, view.venue, view.year)}>查看本届 {view.awardCount} 篇获奖论文解读</a>
         </section>
       )}
 
