@@ -115,10 +115,11 @@ a:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 4px; }
 .conference-hotspots p { color: #53617a; }
 .conference-hotspots ul { margin: 1rem 0 0; padding-left: 1.1rem; }
 .conference-hotspots a { font-size: .82rem; font-weight: 650; text-underline-offset: .2rem; }
-.conference-award-entry { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; align-items: center; padding-left: 1.25rem !important; border-left: 5px solid var(--amber); }
-.conference-award-entry h3 { margin: 0; font-family: var(--display); font-size: clamp(1.55rem, 2.8vw, 2.8rem); line-height: 1.05; }
-.conference-award-entry p:not(.eyebrow) { max-width: 45rem; margin-bottom: 0; color: #53617a; }
-.conference-award-entry > a { padding: .75rem 1rem; border: 1px solid var(--midnight); background: var(--midnight); color: var(--paper); font-size: .82rem; font-weight: 700; text-align: center; text-decoration: none; }
+.conference-award-entry, .conference-advance-entry { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; align-items: center; padding-left: 1.25rem !important; border-left: 5px solid var(--amber); }
+.conference-advance-entry { border-left-color: var(--cobalt); }
+.conference-award-entry h3, .conference-advance-entry h3 { margin: 0; font-family: var(--display); font-size: clamp(1.55rem, 2.8vw, 2.8rem); line-height: 1.05; }
+.conference-award-entry p:not(.eyebrow), .conference-advance-entry p:not(.eyebrow) { max-width: 45rem; margin-bottom: 0; color: #53617a; }
+.conference-award-entry > a, .conference-advance-entry > a { padding: .75rem 1rem; border: 1px solid var(--midnight); background: var(--midnight); color: var(--paper); font-size: .82rem; font-weight: 700; text-align: center; text-decoration: none; }
 .artifact-trace { max-width: none; margin: 2rem 0 0; padding: 1rem 0; display: flex; justify-content: space-between; border-top: 1px solid var(--midnight); color: #53617a; font-size: .68rem; }
 .artifact-trace code { font-family: var(--mono); }
 
@@ -152,10 +153,21 @@ a:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 4px; }
 .evidence-badge--inference { color: #9a5c00; }
 
 .advance-ledger { counter-reset: lane; }
+.advance-filter { display: flex; flex-wrap: wrap; gap: .65rem; margin-bottom: 1rem; }
+.advance-filter a { padding: .55rem .8rem; border: 1px solid var(--midnight); font: 700 .72rem var(--mono); text-decoration: none; }
+.advance-filter a[aria-current="page"] { background: var(--midnight); color: var(--paper); }
+.advance-filter-status { margin: 0 0 2.5rem; color: #53617a; font-size: .82rem; }
+.advance-conference-index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); }
+.advance-conference-index article { min-width: 0; padding: 1.6rem; background: var(--paper); }
+.advance-conference-index h2 { margin: .35rem 0; font-family: var(--display); font-size: clamp(2rem, 4vw, 4rem); }
+.advance-conference-index ul { columns: 2; padding-left: 1.1rem; color: #53617a; }
+.advance-conference-index a { font-weight: 750; text-underline-offset: .2rem; }
+.advance-conference-heading { padding: 2rem 0 1rem; border-bottom: 1px solid var(--line); }
+.advance-conference-heading h2 { margin: .35rem 0; font-family: var(--display); font-size: clamp(2rem, 4vw, 4.2rem); line-height: 1; }
 .advance-lane { counter-increment: lane; min-height: 12rem; padding: 2rem 0; display: grid; grid-template-columns: 9rem minmax(220px, .8fr) 1.2fr; gap: 2rem; border-bottom: 1px solid var(--line); align-items: start; }
 .advance-lane::before { content: "LANE " counter(lane, decimal-leading-zero); color: var(--cobalt); font: 700 .65rem var(--mono); letter-spacing: .1em; }
 .advance-lane .data-label { display: none; }
-.advance-lane h2 { margin: 0; font-family: var(--display); font-size: clamp(1.9rem, 3vw, 3.2rem); line-height: .95; text-transform: uppercase; }
+.advance-lane h3 { margin: 0; font-family: var(--display); font-size: clamp(1.9rem, 3vw, 3.2rem); line-height: .95; text-transform: uppercase; }
 .advance-lane p:last-child { max-width: 560px; margin: 0; padding-left: 1rem; border-left: 5px solid var(--amber); }
 
 .award-thesis { position: relative; }
@@ -199,7 +211,8 @@ a:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 4px; }
 .deep-read-core > article { padding: 1rem 0; display: grid; grid-template-columns: minmax(150px, .45fr) 1.55fr; gap: 1.5rem; border-top: 1px solid var(--line); }
 .deep-read-core h3, .deep-read-core p { margin: 0 0 .4rem; }
 .advance-entries article { padding-bottom: 1.2rem; border-bottom: 1px solid var(--line); }
-.advance-entries h3 { margin: 0 0 .7rem; }
+.advance-entries h4 { margin: 0 0 .7rem; }
+.advance-entries h5 { margin: 1rem 0 .4rem; font-size: .82rem; }
 .advance-entries article > div { margin-top: 1rem; }
 .result-ledger, .why-ledger { padding: 3rem 0; border-top: 1px solid var(--line); }
 .result-ledger > article, .why-ledger > article { padding: 1.3rem 0; display: grid; grid-template-columns: minmax(150px, .45fr) 1.15fr minmax(180px, .65fr); gap: 1.5rem; border-top: 1px solid var(--line); }
@@ -288,7 +301,8 @@ footer .data-label { margin: 0; }
   .hero h1 { font-size: clamp(2.1rem, 10vw, 2.75rem); line-height: 1; letter-spacing: -.03em; }
   .lede { margin-top: 1.1rem; font-size: 1rem; }
   .hero-note { margin-top: 1rem; grid-template-columns: 4.5rem 1fr; gap: .75rem; }
-  .release-state, .scope-index, .published-index, .conference-shell, .trends-shell, .distribution-pair, .evidence-shell, .methodology-shell, .page-thesis, .advance-lane, .award-plate, .paper-rows li, .result-ledger > article, .why-ledger > article, .award-learning-section, .quick-read-grid, .preliminary-scope, .conference-award-entry { grid-template-columns: 1fr; gap: 1.5rem; }
+  .release-state, .scope-index, .published-index, .conference-shell, .trends-shell, .distribution-pair, .evidence-shell, .methodology-shell, .page-thesis, .advance-lane, .award-plate, .paper-rows li, .result-ledger > article, .why-ledger > article, .award-learning-section, .quick-read-grid, .preliminary-scope, .conference-award-entry, .conference-advance-entry, .advance-conference-index { grid-template-columns: 1fr; gap: 1.5rem; }
+  .advance-conference-index ul { columns: 1; }
   .conference-shell, .trends-shell, .evidence-shell { padding: 1.25rem 1rem 3rem; }
   .evidence-shell { display: block; }
   .page-thesis { min-height: 0; padding-bottom: 1.75rem; gap: .65rem; }

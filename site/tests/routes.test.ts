@@ -9,6 +9,7 @@ import TopicShareChart from "../src/components/TopicShareChart";
 import TrendExplorer from "../src/components/TrendExplorer";
 import { loadOverview, type LoadedOverview } from "../src/lib/data";
 import { filterPapers, paperRouteKey } from "../src/lib/evidence";
+import { advanceFilterHref, parseAdvanceFilter } from "../src/lib/advance-filter";
 import { conferenceNavigationHref, projectPath } from "../src/lib/paths";
 import {
   applyTrendFilters,
@@ -131,6 +132,15 @@ function changeComparisonContract(
 }
 
 describe("conference routes", () => {
+  it("builds and parses a shareable research-advance filter", () => {
+    expect(advanceFilterHref("/ai-conference-overview/", "ICML", 2025)).toBe(
+      "/ai-conference-overview/advances/?venue=ICML&year=2025#advance-ICML-2025",
+    );
+    expect(parseAdvanceFilter("?venue=ICML&year=2025")).toEqual({ venue: "ICML", year: 2025 });
+    expect(parseAdvanceFilter("?venue=ICML")).toBeNull();
+    expect(parseAdvanceFilter("?venue=icml&year=2025")).toBeNull();
+  });
+
   it("builds a shareable award filter and ignores incomplete filter state", async () => {
     const evidence = await import("../src/lib/evidence");
     expect("awardFilterHref" in evidence).toBe(true);

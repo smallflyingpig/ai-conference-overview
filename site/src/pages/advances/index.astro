@@ -1,28 +1,99 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { loadOverview } from "../../lib/data";
 import EvidenceBadge from "../../components/EvidenceBadge.astro";
-import { advanceCategories, buildAdvances } from "../../lib/evidence";
+import { advanceFilterHref } from "../../lib/advance-filter";
+import { loadPublishedOverviews } from "../../lib/data";
+import { buildAdvanceConferenceIndexes } from "../../lib/evidence";
+import { projectPath } from "../../lib/paths";
 
-const release = await loadOverview("ACL", 2026);
-const lanes = release == null ? advanceCategories.map((category) => ({ ...category, advances: [] })) : buildAdvances(release);
+const releases = await loadPublishedOverviews();
+const groups = buildAdvanceConferenceIndexes(releases);
+const base = import.meta.env.BASE_URL;
+const advanceTotal = groups.reduce((sum, group) => sum + group.advanceCount, 0);
 ---
 
-<BaseLayout title="研究进展 — AI Conference Overview" description="区分论文原文、多篇论文综合和进一步判断的大模型研究进展。" conferenceAvailable={release != null}>
+<BaseLayout title="研究进展 — AI Conference Overview" description="按会议梳理大模型研究进展，并区分论文原文、多篇论文综合和进一步判断。" conferenceAvailable={groups.length > 0}>
   <div class="evidence-shell advances-shell">
     <header class="page-thesis">
       <p class="eyebrow">研究进展综述</p>
-      <h1>从已收录论文中，<br />梳理值得关注的研究进展。</h1>
-      <p>每条研究主线都附有论文官方页面，并明确区分论文原文、多篇论文呈现的共同方向和我们的进一步分析。只有通过 AI 辅助复核的主题才用于概括会议的主要方向，其余内容仅作初步观察。</p>
+      <h1>按会议阅读，<br />再比较研究方向。</h1>
+      <p>先查看每届会议自己的研究主线，再比较不同会议关注的问题。不同会议和年份的分析不会直接合并，也不会被当作时间趋势。</p>
+      <strong class="award-state">{groups.length > 0 ? `已收录 ${groups.length} 届会议 · ${advanceTotal} 条研究主线` : "暂无可用内容"}</strong>
     </header>
-    <div class="advance-ledger" aria-label="研究进展类别">
-      {lanes.map((category) => (
-        <section id={category.id} class="advance-lane">
-          <p class="data-label">{category.advances.length === 0 ? "可用材料有限" : category.advances.some((advance) => advance.audited) ? "主题分类已通过 AI 辅助复核 · 代表论文已单独确认" : "初步观察 · 暂不判断长期趋势"}</p>
-          <h2>{category.label}</h2>
-          {category.advances.length === 0 ? <p>{release == null ? "当前没有可用的数据版本。" : "该主线尚未完成逐篇综合分析。"}</p> : <div class="advance-entries">{category.advances.map((advance) => <article><h3>{advance.title}</h3><h4>核心研究问题</h4><ul>{advance.researchQuestions.map((question) => <li>{question}</li>)}</ul>{advance.coreProblem != null && <div><EvidenceBadge type={advance.coreProblem.evidence_type} /><strong>核心问题</strong><p>{advance.coreProblem.claim}</p><small>{advance.coreProblem.locator}</small></div>}{advance.technicalChange != null && <div><EvidenceBadge type={advance.technicalChange.evidence_type} /><strong>技术变化</strong><p>{advance.technicalChange.claim}</p><small>{advance.technicalChange.locator}</small></div>}<p class="data-label">相关论文</p><ul>{advance.supportingPapers.map((paper) => <li><a href={paper.officialUrl}>{paper.title}</a></li>)}</ul>{advance.evidenceBoundary != null && <div><EvidenceBadge type={advance.evidenceBoundary.evidence_type} /><strong>适用范围</strong><p>{advance.evidenceBoundary.claim}</p><small>{advance.evidenceBoundary.locator}</small></div>}{advance.implications.map((claim) => <div><EvidenceBadge type={claim.evidence_type} /><strong>对后续研究的启发</strong><p>{claim.claim}</p><small>{claim.locator}</small></div>)}</article>)}</div>}
+
+    {groups.length === 0 ? (
+      <div class="empty-atlas" role="status"><span class="status-mark" aria-hidden="true"></span><div><h2>暂无可用内容</h2><p>当前数据版本还没有完成研究进展分析。</p></div></div>
+    ) : (
+      <>
+        <nav class="advance-filter" aria-label="按会议筛选研究进展">
+          <a href={projectPath(base, "advances")} data-advance-filter="all">全部会议 · {groups.length} 届</a>
+          {groups.map((group) => (
+            <a href={advanceFilterHref(base, group.venue, group.year)} data-advance-filter={`${group.venue}-${group.year}`}>
+              {group.venue} {group.year} · {group.advanceCount} 条主线
+            </a>
+          ))}
+        </nav>
+        <p class="advance-filter-status" aria-live="polite">当前按会议分别展示，不合并研究判断。</p>
+
+        <section class="advance-conference-index" aria-label="已收录会议">
+          {groups.map((group) => (
+            <article data-advance-card={`${group.venue}-${group.year}`}>
+              <p class="data-label">{group.track === "long" ? "长论文" : "主会论文"}</p>
+              <h2>{group.venue} {group.year}</h2>
+              <p>{group.advanceCount} 条研究主线，其中 {group.auditedCount} 条来自已通过 AI 辅助复核的主题。</p>
+              <ul>
+                {group.lanes.filter((lane) => lane.advances.length > 0).map((lane) => <li>{lane.label}</li>)}
+              </ul>
+              <a href={advanceFilterHref(base, group.venue, group.year)}>查看 {group.venue} {group.year} 研究进展</a>
+            </article>
+          ))}
         </section>
-      ))}
-    </div>
+
+        {groups.map((group) => (
+          <section class="advance-conference-detail" data-advance-group={`${group.venue}-${group.year}`} aria-labelledby={`advance-${group.venue}-${group.year}`} hidden>
+            <header class="advance-conference-heading">
+              <p class="eyebrow">{group.track === "long" ? "长论文" : "主会论文"}</p>
+              <h2 id={`advance-${group.venue}-${group.year}`}>{group.venue} {group.year} 研究进展</h2>
+              <p>以下内容只概括本届会议论文，不代表跨会议趋势。</p>
+            </header>
+            <div class="advance-ledger" aria-label={`${group.venue} ${group.year} 研究进展类别`}>
+              {group.lanes.map((category) => (
+                <section id={`${group.venue.toLowerCase()}-${group.year}-${category.id}`} class="advance-lane">
+                  <p class="data-label">{category.advances.length === 0 ? "可用材料有限" : category.advances.some((advance) => advance.audited) ? "主题分类已通过 AI 辅助复核 · 代表论文已单独确认" : "初步观察 · 暂不判断长期趋势"}</p>
+                  <h3>{category.label}</h3>
+                  {category.advances.length === 0 ? <p>该主线尚未完成逐篇综合分析。</p> : <div class="advance-entries">{category.advances.map((advance) => <article><h4>{advance.title}</h4><h5>核心研究问题</h5><ul>{advance.researchQuestions.map((question) => <li>{question}</li>)}</ul>{advance.coreProblem != null && <div><EvidenceBadge type={advance.coreProblem.evidence_type} /><strong>核心问题</strong><p>{advance.coreProblem.claim}</p><small>{advance.coreProblem.locator}</small></div>}{advance.technicalChange != null && <div><EvidenceBadge type={advance.technicalChange.evidence_type} /><strong>技术变化</strong><p>{advance.technicalChange.claim}</p><small>{advance.technicalChange.locator}</small></div>}<p class="data-label">相关论文</p><ul>{advance.supportingPapers.map((paper) => <li><a href={paper.officialUrl}>{paper.title}</a></li>)}</ul>{advance.evidenceBoundary != null && <div><EvidenceBadge type={advance.evidenceBoundary.evidence_type} /><strong>适用范围</strong><p>{advance.evidenceBoundary.claim}</p><small>{advance.evidenceBoundary.locator}</small></div>}{advance.implications.map((claim) => <div><EvidenceBadge type={claim.evidence_type} /><strong>对后续研究的启发</strong><p>{claim.claim}</p><small>{claim.locator}</small></div>)}</article>)}</div>}
+                </section>
+              ))}
+            </div>
+          </section>
+        ))}
+      </>
+    )}
   </div>
 </BaseLayout>
+
+<script>
+  import { parseAdvanceFilter } from "../../lib/advance-filter";
+
+  const selected = parseAdvanceFilter(window.location.search);
+  const selectedKey = selected == null ? "all" : `${selected.venue}-${selected.year}`;
+  const groups = [...document.querySelectorAll<HTMLElement>("[data-advance-group]")];
+  const available = selectedKey === "all" || groups.some((group) => group.dataset.advanceGroup === selectedKey);
+  const activeKey = available ? selectedKey : "all";
+  document.querySelectorAll<HTMLElement>("[data-advance-card]").forEach((card) => {
+    card.hidden = activeKey !== "all";
+  });
+  groups.forEach((group) => {
+    group.hidden = activeKey === "all" || group.dataset.advanceGroup !== activeKey;
+  });
+  document.querySelectorAll<HTMLAnchorElement>("[data-advance-filter]").forEach((link) => {
+    if (link.dataset.advanceFilter === activeKey) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+  const status = document.querySelector<HTMLElement>(".advance-filter-status");
+  if (status) {
+    status.textContent = activeKey === "all"
+      ? "当前按会议分别展示，不合并研究判断。"
+      : `当前显示 ${activeKey.replace("-", " ")} 的研究进展。`;
+  }
+</script>

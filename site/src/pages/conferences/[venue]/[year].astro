@@ -3,6 +3,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import DataStatus from "../../../components/DataStatus.astro";
 import TopicShareChart from "../../../components/TopicShareChart";
 import { awardFilterHref } from "../../../lib/award-filter";
+import { advanceFilterHref } from "../../../lib/advance-filter";
 import { loadPublishedOverviews } from "../../../lib/data";
 import { auditStatusLabel, buildConferenceView, conferenceRoutes, type ConferenceView } from "../../../lib/views";
 
@@ -110,6 +111,17 @@ const base = import.meta.env.BASE_URL;
               </li>
             ))}
           </ol>
+        </section>
+      )}
+
+      {view.hotspots.length > 0 && (
+        <section class="conference-advance-entry" aria-labelledby="conference-advance-title">
+          <div>
+            <p class="eyebrow">研究进展</p>
+            <h3 id="conference-advance-title">继续阅读本届会议的完整研究进展。</h3>
+            <p>五条研究主线分别整理核心问题、技术变化、相关论文和适用范围。</p>
+          </div>
+          <a href={advanceFilterHref(base, view.venue, view.year)}>查看 {view.venue} {view.year} 研究进展</a>
         </section>
       )}
 

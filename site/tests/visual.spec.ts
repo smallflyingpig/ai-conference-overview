@@ -73,10 +73,21 @@ test("方法说明页面用中文呈现分类处理记录", async ({ page }, tes
   expect(consoleErrors).toEqual([]);
 });
 
-test("研究进展页面用中文叙述并保留五条英文关键词 lane", async ({ page }) => {
+test("研究进展页面按会议分开浏览并保留可分享地址", async ({ page }) => {
   const consoleErrors = watchConsoleErrors(page);
   await page.goto("/ai-conference-overview/advances/");
 
+  await expect(page.getByRole("heading", { name: "ACL 2026", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "ICML 2025", exact: true })).toBeVisible();
+  await expect(page.locator(".advance-conference-detail:visible")).toHaveCount(0);
+  await page.getByRole("link", { name: "ICML 2025 · 5 条主线", exact: true }).click();
+  await expect(page).toHaveURL(/\/advances\/\?venue=ICML&year=2025#advance-ICML-2025$/);
+  await expect(page.getByRole("link", { name: "ICML 2025 · 5 条主线", exact: true })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
+  await expect(page.getByRole("heading", { name: "ICML 2025 研究进展", exact: true })).toBeVisible();
+  await expect(page.locator(".advance-conference-detail:visible .advance-lane")).toHaveCount(5);
   for (const heading of [
     "文本 LLM",
     "多模态模型",
@@ -86,9 +97,6 @@ test("研究进展页面用中文叙述并保留五条英文关键词 lane", asy
   ]) {
     await expect(page.getByRole("heading", { name: heading, exact: true })).toBeVisible();
   }
-  await expect(
-    page.getByRole("link", { name: /KoCo: Conditioning Language Model Pre-training/ }).first(),
-  ).toBeVisible();
   expect(consoleErrors).toEqual([]);
 });
 
@@ -142,6 +150,15 @@ test("ICML 2025 概览可以直接进入本届获奖论文并保留筛选地址"
   await expect(page.getByRole("link", { name: "ICML 2025 · 8 篇" })).toHaveAttribute(
     "aria-current",
     "page",
+  );
+});
+
+test("ICML 2025 概览可以直接进入本届研究进展", async ({ page }) => {
+  await page.goto("/ai-conference-overview/conferences/icml/2025/");
+
+  await expect(page.getByRole("link", { name: "查看 ICML 2025 研究进展" })).toHaveAttribute(
+    "href",
+    `${basePath}advances/?venue=ICML&year=2025#advance-ICML-2025`,
   );
 });
 

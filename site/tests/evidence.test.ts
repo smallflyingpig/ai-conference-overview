@@ -20,6 +20,7 @@ import {
   awardDetailRoutes,
   awardRouteKey,
   buildAdvances,
+  buildAdvanceConferenceIndexes,
   buildAwardConferenceIndexes,
   buildAwardIndex,
   buildMethodologyView,
@@ -657,6 +658,35 @@ describe("methodology audit ledger", () => {
       supportingPaperIds: ["paper-a"],
       supportingPapers: [{ paperId: "paper-a", officialUrl: "https://aclanthology.org/paper-a/" }],
     });
+  });
+
+  it("keeps each conference's research advances in a separate group", () => {
+    const icml = structuredClone(release);
+    icml.scope = { venue: "ICML", year: 2025, track: "main" };
+    icml.papers.forEach((paper) => {
+      paper.venue = "ICML";
+      paper.year = 2025;
+      paper.track = "main";
+    });
+    icml.overview.publication_context = {
+      status: "final_proceedings",
+      final_source_status: "available",
+      final_source_url: "https://proceedings.mlr.press/v267/",
+      notice: "ICML 2025 已完成单年研究进展分析。",
+      analysis_availability: {
+        papers: true, distribution: true, trends: false, advances: true, awards: true,
+      },
+    };
+    const papersOnly = structuredClone(icml);
+    papersOnly.scope.year = 2026;
+    papersOnly.overview.publication_context!.analysis_availability.advances = false;
+
+    const groups = buildAdvanceConferenceIndexes([release, papersOnly, icml]);
+
+    expect(groups.map(({ venue, year, advanceCount }) => ({ venue, year, advanceCount }))).toEqual([
+      { venue: "ACL", year: 2026, advanceCount: 1 },
+      { venue: "ICML", year: 2025, advanceCount: 1 },
+    ]);
   });
 });
 

@@ -372,6 +372,38 @@ export function buildAdvances(release: LoadedOverview) {
   }));
 }
 
+export interface AdvanceConferenceIndex {
+  venue: string;
+  year: number;
+  track: string;
+  lanes: ReturnType<typeof buildAdvances>;
+  advanceCount: number;
+  auditedCount: number;
+}
+
+export function buildAdvanceConferenceIndexes(
+  releases: LoadedOverview[],
+): AdvanceConferenceIndex[] {
+  return releases
+    .filter((release) => {
+      const availability = release.overview.publication_context?.analysis_availability;
+      return release.overview.advances.length > 0 && (availability == null || availability.advances);
+    })
+    .map((release) => {
+      const lanes = buildAdvances(release);
+      const advances = lanes.flatMap((lane) => lane.advances);
+      return {
+        venue: release.scope.venue,
+        year: release.scope.year,
+        track: release.scope.track,
+        lanes,
+        advanceCount: advances.length,
+        auditedCount: advances.filter((advance) => advance.audited).length,
+      };
+    })
+    .sort((left, right) => left.venue.localeCompare(right.venue) || right.year - left.year);
+}
+
 export interface MethodologyView {
   build: { generatedAt: string; producer: string; schemaVersion: string };
   sources: Array<{ name: string; url: string; sha256: string; retrievedAt: string }>;
