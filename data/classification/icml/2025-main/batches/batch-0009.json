@@ -1,0 +1,747 @@
+{
+  "batch_index": 9,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Recently, federated multi-view clustering (FedMVC) has gained attention for its ability to mine complementary clustering structures from multiple clients without exposing private data. Existing methods mainly focus on addressing the feature heterogeneity problem brought by views on different clients and mitigating it using shared client information. Although these methods have achieved performance improvements, the information they choose to share, such as model parameters or intermediate outputs, inevitably raises privacy concerns. In this paper, we propose an Effective and Secure Federated Multi-view Clustering method, ESFMC, to alleviate the dilemma between privacy protection and performance improvement. This method leverages the information-theoretic perspective to split the features extracted locally by clients, retaining sensitive information locally and only sharing features that are highly relevant to the task. This can be viewed as a form of privacy-preserving information sharing, reducing privacy risks for clients while ensuring that the server can mine high-quality global clustering structures. Theoretical analysis and extensive experiments demonstrate that the proposed method more effectively mitigates the trade-off between privacy protection and performance improvement compared to state-of-the-art methods.",
+      "paper_id": "pmlr:v267:chen25az",
+      "title": "An Effective and Secure Federated Multi-View Clustering Method with Information-Theoretic Perspective",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "8871-8889",
+          "pmlr_id": "chen25az",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) have emerged as powerful tools but pose significant safety risks through harmful outputs and vulnerability to adversarial attacks. We propose SaP–short for Safety Polytope–a geometric approach to LLM safety, that learns and enforces multiple safety constraints directly in the model’s representation space. We develop a framework that identifies safe and unsafe regions via the polytope’s facets, enabling both detection and correction of unsafe outputs through geometric steering. Unlike existing approaches that modify model weights, SaP operates post-hoc in the representation space, preserving model capabilities while enforcing safety constraints. Experiments across multiple LLMs demonstrate that our method can effectively detect unethical inputs, reduce adversarial attack success rates while maintaining performance on standard tasks, thus highlighting the importance of having an explicit geometric model for safety. Analysis of the learned polytope facets reveals emergence of specialization in detecting different semantic notions of safety, providing interpretable insights into how safety is captured in LLMs’ representation space.",
+      "paper_id": "pmlr:v267:chen25b",
+      "title": "Learning Safety Constraints for Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "7664-7685",
+          "pmlr_id": "chen25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The rapid advancement of code large language models (Code LLMs) underscores the critical need for effective and transparent benchmarking methods. However, current benchmarking predominantly relies on publicly available, human-created datasets. The widespread use of these static benchmark datasets makes the evaluation process particularly susceptible to data contamination—an unavoidable consequence of the extensive data collection processes employed during LLM training. Existing methods for addressing data contamination typically face significant limitations, including reliance on substantial human effort and difficulty in managing class imbalances. To overcome these challenges, we propose DyCodeEval, a novel benchmarking suite specifically designed to evaluate Code LLMs under realistic contamination scenarios. Given an initial seed programming problem, DyCodeEval utilizes multiple agents to systematically extract and modify contextual information without changing the core logic, generating semantically equivalent variations. We introduce a dynamic data generation method and conduct extensive empirical studies on two seed datasets involving 18 Code LLMs. The results demonstrate that DyCodeEval effectively assesses the reasoning capabilities of Code LLMs under contamination conditions while producing diverse problem variants, thereby ensuring robust and consistent benchmarking outcomes.",
+      "paper_id": "pmlr:v267:chen25ba",
+      "title": "DyCodeEval: Dynamic Benchmarking of Reasoning Capabilities in Code Large Language Models Under Data Contamination",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "8890-8909",
+          "pmlr_id": "chen25ba",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Long-tailed learning has garnered increasing attention due to its practical significance. Among the various approaches, the fine-tuning paradigm has gained considerable interest with the advent of foundation models. However, most existing methods primarily focus on leveraging knowledge from these models, overlooking the inherent biases introduced by the imbalanced training data they rely on. In this paper, we examine how such imbalances from pre-training affect long-tailed downstream tasks. Specifically, we find the imbalance biases inherited in foundation models on downstream task as parameter imbalance and data imbalance. During fine-tuning, we observe that parameter imbalance plays a more critical role, while data imbalance can be mitigated using existing re-balancing strategies. Moreover, we find that parameter imbalance cannot be effectively addressed by current re-balancing techniques, such as adjusting the logits, during training, unlike data imbalance. To tackle both imbalances simultaneously, we build our method on causal learning and view the incomplete semantic factor as the confounder, which brings spurious correlations between input samples and labels. To resolve the negative effects of this, we propose a novel backdoor adjustment method that learns the true causal effect between input samples and labels, rather than merely fitting the correlations in the data. Notably, we achieve an average performance increase of about 1.67% on each dataset.",
+      "paper_id": "pmlr:v267:chen25bb",
+      "title": "Rethinking the Bias of Foundation Model under Long-tailed Distribution",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "8910-8930",
+          "pmlr_id": "chen25bb",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Transformer models encounter inefficiency when scaling hidden dimensions due to the uniform expansion of parameters. When delving into the sparsity of hidden dimensions, we observe that only a small subset of dimensions are highly activated, where some dimensions are commonly activated across tokens, and some others uniquely activated for individual tokens. To leverage this, we propose MoHD (Mixture of Hidden Dimensions), a sparse architecture that combines shared sub-dimensions for common features and dynamically routes specialized sub-dimensions per token. To address the potential information loss from sparsity, we introduce activation scaling and group fusion mechanisms. MoHD efficiently expands hidden dimensions with minimal computational increases, outperforming vanilla Transformers in both parameter efficiency and task performance across 10 NLP tasks. MoHD achieves 1.7% higher performance with 50% fewer activatied parameters and 3.7% higher performance with 3$\\times$ total parameters expansion at constant activated parameters cost. MoHD offers a new perspective for scaling the model, showcasing the potential of hidden dimension sparsity.",
+      "paper_id": "pmlr:v267:chen25bc",
+      "title": "Mixture of Hidden-Dimensions: Not All Hidden-States’ Dimensions are Needed in Transformer",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "8931-8954",
+          "pmlr_id": "chen25bc",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent developments in large language models (LLMs) have led to their widespread usage for various tasks. The prevalence of LLMs in society implores the assurance on the reliability of their performance. In particular, risk-sensitive applications demand meticulous attention to unexpectedly poor outcomes, i.e., tail events, for instance, toxic answers, humiliating language, and offensive outputs. Due to the costly nature of acquiring human annotations, general-purpose scoring models have been created to automate the process of quantifying these tail events. This phenomenon introduces potential human-machine misalignment between the respective scoring mechanisms. In this work, we present a lightweight calibration framework for blackbox models that ensures the alignment of humans and machines with provable guarantees. Our framework provides a rigorous approach to controlling any distortion risk measure that is characterized by a weighted average of quantiles of the loss incurred by the LLM with high confidence. The theoretical foundation of our method relies on the connection between conformal risk control and a traditional family of statistics, i.e., L-statistics. To demonstrate the utility of our framework, we conduct comprehensive experiments that address the issue of human-machine misalignment.",
+      "paper_id": "pmlr:v267:chen25bd",
+      "title": "Conformal Tail Risk Control for Large Language Model Alignment",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "8955-8978",
+          "pmlr_id": "chen25bd",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Foundation models have emerged as a promising approach in time series forecasting (TSF). Existing approaches either repurpose large language models (LLMs) or build large-scale time series datasets to develop TSF foundation models for universal forecasting. However, these methods face challenges due to the severe cross-domain gap or in-domain heterogeneity. This paper explores a new road to building a TSF foundation model from rich, high-quality natural images. Our key insight is that a visual masked autoencoder, pre-trained on the ImageNet dataset, can naturally be a numeric series forecaster. By reformulating TSF as an image reconstruction task, we bridge the gap between image pre-training and TSF downstream tasks. Surprisingly, without further adaptation in the time series domain, the proposed VisionTS could achieve better zero-shot forecast performance than existing TSF foundation models. With fine-tuning for one epoch, VisionTS could further improve the forecasting and achieve state-of-the-art performance in most cases. Extensive experiments reveal intrinsic similarities between images and real-world time series, suggesting that visual models may offer a \"free lunch\" for TSF and highlight the potential for future cross-modality research. Our code is available in the https://github.com/Keytoyze/VisionTS.",
+      "paper_id": "pmlr:v267:chen25be",
+      "title": "VisionTS: Visual Masked Autoencoders Are Free-Lunch Zero-Shot Time Series Forecasters",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "8979-9007",
+          "pmlr_id": "chen25be",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) have exhibited exceptional performance across a spectrum of natural language processing tasks. However, their substantial sizes pose considerable challenges, particularly in computational demands and inference speed, due to their quadratic complexity. In this work, we have identified a key pattern: certain seemingly meaningless separator tokens (i.e., punctuations) contribute disproportionately to attention scores compared to semantically meaningful tokens. This observation suggests that information of the segments between these separator tokens can be effectively condensed into the separator tokens themselves without significant information loss. Guided by this insight, we introduce SepLLM, a plug-and-play framework that accelerates inference by compressing these segments and eliminating redundant tokens. Additionally, we implement efficient kernels for training acceleration. Experimental results across training-free, training-from-scratch, and post-training settings demonstrate SepLLM’s effectiveness. Notably, using the Llama-3-8B backbone, SepLLM achieves over 50% reduction in KV cache on the GSM8K-CoT benchmark while maintaining comparable performance. Furthermore, in streaming settings, SepLLM effectively processes sequences of up to 4 million tokens or more while maintaining consistent language modeling capabilities.",
+      "paper_id": "pmlr:v267:chen25bf",
+      "title": "SepLLM: Accelerate Large Language Models by Compressing One Segment into One Separator",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9008-9028",
+          "pmlr_id": "chen25bf",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Although large language models (LLMs) have shown promise in biomolecule optimization problems, they incur heavy computational costs and struggle to satisfy precise constraints. On the other hand, specialized solvers like LaMBO-2 offer efficiency and fine-grained control but require more domain expertise. Comparing these approaches is challenging due to expensive laboratory validation and inadequate synthetic benchmarks. We address this by introducing Ehrlich functions, a synthetic test suite that captures the geometric structure of biophysical sequence optimization problems. With prompting alone, off-the-shelf LLMs struggle to optimize Ehrlich functions. In response, we propose LLOME (Language Model Optimization with Margin Expectation), a bilevel optimization routine for online black-box optimization. When combined with a novel preference learning loss, we find LLOME can not only learn to solve some Ehrlich functions, but can even perform as well as or better than LaMBO-2 on moderately difficult Ehrlich variants. However, LLMs also exhibit some likelihood-reward miscalibration and struggle without explicit rewards. Our results indicate LLMs can occasionally provide significant benefits, but specialized solvers are still competitive and incur less overhead.",
+      "paper_id": "pmlr:v267:chen25bg",
+      "title": "Generalists vs. Specialists: Evaluating LLMs on Highly-Constrained Biophysical Sequence Optimization Tasks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9029-9072",
+          "pmlr_id": "chen25bg",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Effectively modeling time information and incorporating it into applications or models involving chronologically occurring events is crucial. Real-world scenarios often involve diverse and complex time patterns, which pose significant challenges for time encoding methods. While previous methods focus on capturing time patterns, many rely on specific inductive biases, such as using trigonometric functions to model periodicity. This narrow focus on single-pattern modeling makes them less effective in handling the diversity and complexities of real-world time patterns. In this paper, we investigate to improve the existing commonly used time encoding methods and introduce Learnable Transformation-based Generalized Time Encoding (LeTE) . We propose using deep function learning techniques to parameterize nonlinear transformations in time encoding, making them learnable and capable of modeling generalized time patterns, including diverse and complex temporal dynamics. By enabling learnable transformations, LeTE encompasses previous methods as specific cases and allows seamless integration into a wide range of tasks. Through extensive experiments across diverse domains, we demonstrate the versatility and effectiveness of LeTE.",
+      "paper_id": "pmlr:v267:chen25bh",
+      "title": "Rethinking Time Encoding via Learnable Transformation Functions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9073-9104",
+          "pmlr_id": "chen25bh",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Benchmark contamination has become a significant concern in the LLM evaluation community. Previous Agents-as-an-Evaluator address this issue by involving agents in the generation of questions. Despite their success, the biases in Agents-as-an-Evaluator methods remain largely unexplored. In this paper, we present a theoretical formulation of evaluation bias, providing valuable insights into designing unbiased evaluation protocols. Furthermore, we identify two type of bias in Agents-as-an-Evaluator through carefully designed probing tasks on a minimal Agents-as-an-Evaluator setup. To address these issues, we propose the Unbiased Evaluator, an evaluation protocol that delivers a more comprehensive, unbiased, and interpretable assessment of LLMs. Extensive experiments reveal significant room for improvement in current LLMs. Additionally, we demonstrate that the Unbiased Evaluator not only offers strong evidence of benchmark contamination but also provides interpretable evaluation results.",
+      "paper_id": "pmlr:v267:chen25bi",
+      "title": "Unbiased Evaluation of Large Language Models from a Causal Perspective",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9105-9120",
+          "pmlr_id": "chen25bi",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Neural scaling laws offer valuable insights for designing robust sequence processing architectures. While these laws have been extensively characterized in other modalities, their behavior in speech remains comparatively underexplored. In this work, we introduce OWLS, an open-access, reproducible suite of multilingual speech recognition and translation models spanning 0.25B to 18B parameters, with the 18B version being the largest speech model, to the best of our knowledge. OWLS leverages up to 360K hours of public speech data across 150 languages, enabling a systematic investigation into how data, model, and compute scaling each influence performance in multilingual speech tasks. We use OWLS to derive neural scaling laws, showing how final performance can be reliably predicted when scaling. Scaling to larger models can improve ASR performance across the board, in both low and high resource languages, improving the accessibility of speech technologies. Finally, we show how OWLS can be used to power new research directions by discovering emergent abilities in large-scale speech models. Model checkpoints will be released on https://huggingface.co/collections/espnet/owls-scaling-laws-for-speech-recognition-and-translation-67ab7f991c194065f057ce8d for future studies.",
+      "paper_id": "pmlr:v267:chen25bj",
+      "title": "OWLS: Scaling Laws for Multilingual Speech Recognition and Translation Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9121-9145",
+          "pmlr_id": "chen25bj",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Artificial intelligence will play a significant role in decision making in numerous aspects of society. Numerous fairness criteria have been proposed in the machine learning community, but there remains limited investigation into fairness as defined through specified attributes in a sequential decision-making framework. In this paper, we focus on causal logistic bandit problems where the learner seeks to make fair decisions, under a notion of fairness that accounts for counterfactual reasoning. We propose and analyze an algorithm by leveraging primal-dual optimization for constrained causal logistic bandits where the non-linear constraints are a priori unknown and must be learned in time. We obtain sub-linear regret guarantees with leading term similar to that for unconstrained logistic bandits (Lee et al., 2024) while guaranteeing sub-linear constraint violations. We show how to achieve zero cumulative constraint violations with a small increase in the regret bound.",
+      "paper_id": "pmlr:v267:chen25bk",
+      "title": "Causal Logistic Bandits with Counterfactual Fairness Constraints",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9146-9175",
+          "pmlr_id": "chen25bk",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph generation is a critical task in numerous domains, including molecular design and social network analysis, due to its ability to model complex relationships and structured data. While most modern graph generative models utilize adjacency matrix representations, this work revisits an alternative approach that represents graphs as sequences of node set and edge set. We advocate for this approach due to its efficient encoding of graphs and propose a novel representation. Based on this representation, we introduce the Graph Generative Pre-trained Transformer (G2PT), an auto-regressive model that learns graph structures via next-token prediction. To further exploit G2PT’s capabilities as a general-purpose foundation model, we explore fine-tuning strategies for two downstream applications: goal-oriented generation and graph property prediction. We conduct extensive experiments across multiple datasets. Results indicate that G2PT achieves superior generative performance on both generic graph and molecule datasets. Furthermore, G2PT exhibits strong adaptability and versatility in downstream tasks from molecular design to property prediction.",
+      "paper_id": "pmlr:v267:chen25bl",
+      "title": "Graph Generative Pre-trained Transformer",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9176-9197",
+          "pmlr_id": "chen25bl",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The emergence of multimodal large models has advanced artificial intelligence, introducing unprecedented levels of performance and functionality. However, optimizing these models remains challenging due to historically isolated paths of model-centric and data-centric developments, leading to suboptimal outcomes and inefficient resource utilization. In response, we present a new sandbox suite tailored for integrated data-model co-development. This sandbox provides a feedback-driven experimental platform, enabling cost-effective iteration and guided refinement of both data and models. Our proposed “Probe-Analyze-Refine” workflow, validated through practical use cases on multimodal tasks such as image-text pre-training with CLIP, image-to-text generation with LLaVA-like models, and text-to-video generation with DiT-based models, yields transferable and notable performance boosts, such as topping the VBench leaderboard. A comprehensive set of over 100 experiments demonstrated the suite’s usability and extensibility, while also uncovering insights into the interplay between data quality, diversity, model behavior, and computational costs. All codes, datasets, and models are open-sourced to foster future research and applications that would otherwise be infeasible due to the lack of a dedicated co-development infrastructure.",
+      "paper_id": "pmlr:v267:chen25bm",
+      "title": "Data-Juicer Sandbox: A Feedback-Driven Suite for Multimodal Data-Model Co-development",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9198-9230",
+          "pmlr_id": "chen25bm",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Developing algorithms to differentiate between machine-generated texts and human-written texts has garnered substantial attention in recent years. Existing methods in this direction typically concern an offline setting where a dataset containing a mix of real and machine-generated texts is given upfront, and the task is to determine whether each sample in the dataset is from a large language model (LLM) or a human. However, in many practical scenarios, sources such as news websites, social media accounts, and online forums publish content in a streaming fashion. Therefore, in this online scenario, how to quickly and accurately determine whether the source is an LLM with strong statistical guarantees is crucial for these media or platforms to function effectively and prevent the spread of misinformation and other potential misuse of LLMs. To tackle the problem of online detection, we develop an algorithm based on the techniques of sequential hypothesis testing by betting that not only builds upon and complements existing offline detection techniques but also enjoys statistical guarantees, which include a controlled false positive rate and the expected time to correctly identify a source as an LLM. Experiments were conducted to demonstrate the effectiveness of our method.",
+      "paper_id": "pmlr:v267:chen25bn",
+      "title": "Online Detection of LLM-Generated Texts via Sequential Hypothesis Testing by Betting",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9231-9276",
+          "pmlr_id": "chen25bn",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In-Context Learning (ICL) empowers Large Language Models (LLMs) to tackle diverse tasks by incorporating multiple input-output examples, known as demonstrations, into the input of LLMs. More recently, advancements in the expanded context windows of LLMs have led to many-shot ICL, which uses hundreds of demonstrations and outperforms few-shot ICL, which relies on fewer examples. However, this approach is often hindered by the high cost of obtaining large amounts of labeled data. To address this challenge, we propose M any-Shot A daptive P seudo- L ab E ling, namely MAPLE , a novel influence-based many-shot ICL framework that utilizes pseudo-labeled samples to compensate for the lack of label information. We first identify a subset of impactful unlabeled samples and perform pseudo-labeling on them by querying LLMs. These pseudo-labeled samples are then adaptively selected and tailored to each test query as input to improve the performance of many-shot ICL, without significant labeling costs. Extensive experiments on real-world datasets demonstrate the effectiveness of our framework, showcasing its ability to enhance LLM adaptability and performance with limited labeled data. Our code is provided at https://github.com/Chen-1031/MAPLE_ICL.",
+      "paper_id": "pmlr:v267:chen25bo",
+      "title": "MAPLE: Many-Shot Adaptive Pseudo-Labeling for In-Context Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9277-9294",
+          "pmlr_id": "chen25bo",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph foundation models (GFMs) aim to share graph knowledge across diverse domains and tasks to boost graph machine learning. However, existing GFMs rely on hand-designed and fixed graph neural network (GNN) architectures, failing to utilize optimal architectures w.r.t. specific domains and tasks, inevitably leading to suboptimal performance in diverse graph domains and tasks. In this paper, we explore graph neural architecture search (GNAS) for GFMs for the first time, which suffers from the problem of architecture inconsistency , i.e., the optimal architectures for different tasks and domains vary. We tackle this problem by discovering an invariant graph-architecture relationship across domains and tasks, which imposes three challenges: i) how to capture invariant and variant patterns; ii) how to customize architectures to adapt to diverse domains and tasks; iii) how to mitigate the data domination phenomenon during the architecture search process. To address these challenges, we propose Auto mated G raph F oundation M odel with Adaptive Architecture Customization ( AutoGFM ), providing a theoretical analysis to demonstrate the limitations of existing GNAS. Specifically, we first propose a disentangled contrastive graph encoder to learn invariant and variant patterns. Then, we design an invariant-guided architecture customization strategy to customize architectures for data from diverse domains and tasks. Finally, we propose a curriculum architecture customization mechanism to mitigate the phenomenon of particular data dominating the search process. Extensive experiments demonstrate that AutoGFM outperforms baselines, achieving state-of-the-art performance.",
+      "paper_id": "pmlr:v267:chen25bp",
+      "title": "AutoGFM: Automated Graph Foundation Model with Adaptive Architecture Customization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9295-9315",
+          "pmlr_id": "chen25bp",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Watermarking techniques offer a promising way to identify machine-generated content via embedding covert information into the contents generated from language models (LMs). However, the robustness of the watermarking schemes has not been well explored. In this paper, we present De-mark, an advanced framework designed to remove n-gram-based watermarks effectively. Our method utilizes a novel querying strategy, termed random selection probing, which aids in assessing the strength of the watermark and identifying the red-green list within the n-gram watermark. Experiments on popular LMs, such as Llama3 and ChatGPT, demonstrate the efficiency and effectiveness of De-mark in watermark removal and exploitation tasks.",
+      "paper_id": "pmlr:v267:chen25bq",
+      "title": "De-mark: Watermark Removal in Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9316-9333",
+          "pmlr_id": "chen25bq",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Multi-objective optimization (MOO) exists extensively in machine learning, and aims to find a set of Pareto-optimal solutions, called the Pareto front, e.g., it is fundamental for multiple avenues of research in federated learning (FL). Pareto-Front Learning (PFL) is a powerful method implemented using Hypernetworks (PHNs) to approximate the Pareto front. This method enables the acquisition of a mapping function from a given preference vector to the solutions on the Pareto front. However, most existing PFL approaches still face two challenges: (a) sampling rays in high-dimensional spaces; (b) failing to cover the entire Pareto Front which has a convex shape. Here, we introduce a novel PFL framework, called as PHN-HVVS, which decomposes the design space into Voronoi grids and deploys a genetic algorithm (GA) for Voronoi grid partitioning within high-dimensional space. We put forward a new loss function, which effectively contributes to more extensive coverage of the resultant Pareto front and maximizes the HV Indicator. Experimental results on multiple MOO machine learning tasks demonstrate that PHN-HVVS outperforms the baselines significantly in generating Pareto front. Also, we illustrate that PHN-HVVS advances the methodologies of several recent problems in the FL field. The code is available at https://github.com/buptcmm/phnhvvs.",
+      "paper_id": "pmlr:v267:chen25br",
+      "title": "Voronoi-grid-based Pareto Front Learning and Its Application to Collaborative Federated Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9334-9353",
+          "pmlr_id": "chen25br",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Group fairness based on adversarial training has gained significant attention on graph data, which was implemented by masking sensitive attributes to generate fair feature views. However, existing models suffer from training instability due to uncertainty of the generated masks and the trade-off between fairness and utility. In this work, we propose a stable fair Graph Neural Network (SFG) to maintain training stability while preserving accuracy and fairness performance. Specifically, we first theoretically derive a tight upper Lipschitz bound to control the stability of existing adversarial-based models and employ a stochastic projected subgradient algorithm to constrain the bound, which operates in a block-coordinate manner. Additionally, we construct the uncertainty set to train the model, which can prevent unstable training by dropping some overfitting nodes caused by chasing fairness. Extensive experiments conducted on three real-world datasets demonstrate that SFG is stable and outperforms other state-of-the-art adversarial-based methods in terms of both fairness and utility performance. Codes are available at https://github.com/sh-qiangchen/SFG.",
+      "paper_id": "pmlr:v267:chen25bs",
+      "title": "Stable Fair Graph Representation Learning with Lipschitz Constraint",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9354-9376",
+          "pmlr_id": "chen25bs",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Deep networks are prone to catastrophic forgetting during sequential task learning, i.e., losing the knowledge about old tasks upon learning new tasks. To this end, continual learning (CL) has emerged, whose existing methods focus mostly on regulating or protecting the parameters associated with the previous tasks. However, parameter protection is often impractical, since the size of parameters for storing the old-task knowledge increases linearly with the number of tasks, otherwise it is hard to preserve the parameters related to the old-task knowledge. In this work, we bring a dual opinion from neuroscience and physics to CL: in the whole networks, the pathways matter more than the parameters when concerning the knowledge acquired from the old tasks. Following this opinion, we propose a novel CL framework, learning without isolation (LwI), where model fusion is formulated as graph matching and the pathways occupied by the old tasks are protected without being isolated. Thanks to the sparsity of activation channels in a deep network, LwI can adaptively allocate available pathways for a new task, realizing pathway protection and addressing catastrophic forgetting in a parameter-effcient manner. Experiments on popular benchmark datasets demonstrate the superiority of the proposed LwI.",
+      "paper_id": "pmlr:v267:chen25bt",
+      "title": "Learning without Isolation: Pathway Protection for Continual Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9377-9399",
+          "pmlr_id": "chen25bt",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Pre-training Transformers in FP4 precision is becoming a promising approach to gain substantial speedup, but it comes with a considerable loss of accuracy. Microscaling (MX) data format provides a fine-grained per-group quantization method to improve the representation ability of the FP4 format and is supported by the next-generation Blackwell GPU architecture. However, training with MXFP4 data format still results in significant degradation and there is a lack of systematic research on the reason. In this work, we propose a novel training method TetraJet for a more accurate FP4 training. We comprehensively evaluate all of the quantizers involved in the training, and identify the weight oscillation problem in the forward pass as the main source of the degradation in MXFP4 training. Therefore, we introduce two novel methods, EMA Quantizer (Q-EMA) and Adaptive Ramping Optimizer (Q-Ramping), to resolve the oscillation problem. Extensive experiments on Vision Transformers demonstrate that TetraJet consistently outperforms the existing 4-bit training methods, and Q-EMA & Q-Ramping can provide additional enhancement by effectively reducing oscillation. We decreased the accuracy degradation by more than 50% compared to the baseline, and can even achieve competitive performance compared to full precision training.",
+      "paper_id": "pmlr:v267:chen25bu",
+      "title": "Oscillation-Reduced MXFP4 Training for Vision Transformers",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9400-9414",
+          "pmlr_id": "chen25bu",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study the problem of learning discrete latent variable causal structures from mixed-type observational data. Traditional methods, such as those based on the tensor rank condition, are designed to identify discrete latent structure models and provide robust identification bounds for discrete causal models. However, when observed variables—specifically, those representing the children of latent variables—are collected at various levels with continuous data types, the tensor rank condition is not applicable, limiting further causal structure learning for latent variables. In this paper, we consider a more general case where observed variables can be either continuous or discrete, and further allow for scenarios where multiple latent parents cause the same set of observed variables. We show that, under the completeness condition, it is possible to discretize the data in a way that satisfies the full-rank assumption required by the tensor rank condition. This enables the identifiability of discrete latent structure models within mixed-type observational data. Moreover, we introduce the two-sufficient measurement condition, a more general structural assumption under which the tensor rank condition holds and the underlying latent causal structure is identifiable by a proposed two-stage identification algorithm. Extensive experiments on both simulated and real-world data validate the effectiveness of our method.",
+      "paper_id": "pmlr:v267:chen25bv",
+      "title": "Identification of Latent Confounders via Investigating the Tensor Ranks of the Nonlinear Observations",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9415-9442",
+          "pmlr_id": "chen25bv",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Multi-objective learning under user-specified preference is common in real-world problems such as multi-lingual speech recognition under fairness. In this work, we frame such a problem as a semivectorial bilevel optimization problem, whose goal is to optimize a pre-defined preference function, subject to the constraint that the model parameters are weakly Pareto optimal. To solve this problem, we convert the multi-objective constraints to a single-objective constraint through a merit function with an easy-to-evaluate gradient, and then, we use a penalty-based reformulation of the bilevel optimization problem. We theoretically establish the properties of the merit function, and the relations of solutions for the penalty reformulation and the constrained formulation. Then we propose algorithms to solve the reformulated single-level problem, and establish its convergence guarantees. We test the method on various synthetic and real-world problems. The results demonstrate the effectiveness of the proposed method in finding preference-guided optimal solutions to the multi-objective problem.",
+      "paper_id": "pmlr:v267:chen25bw",
+      "title": "Efficient First-Order Optimization on the Pareto Set for Multi-Objective Learning under Preference Guidance",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9443-9486",
+          "pmlr_id": "chen25bw",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The remarkable performance of long reasoning models can be attributed to their ability to emulate human-like long-time thinking during inference. These models employ extended chain-of-thought (CoT) processes, exploring multiple strategies to enhance problem-solving capabilities. However, a critical question remains: How to intelligently and efficiently scale computational resources during testing. This paper presents the first comprehensive study on the prevalent issue of overthinking in these models, where long reasoning models generate redundant solutions that contribute minimally to accuracy and diversity, thereby wasting computational resources on simple problems with minimal benefit. We introduce novel efficiency metrics from both outcome and process perspectives to evaluate the rational use of computational resources by long reasoning models. Using a self-training paradigm, we propose strategies to mitigate overthinking, simplifying reasoning processes without compromising accuracy. Experimental results show that our approach successfully reduces computational overhead while preserving model performance across a range of testsets with varying difficulty levels, such as GSM8K, MATH500, GPQA, and AIME. Our code is open-source and available at https://github.com/galaxyChen/overthinking.",
+      "paper_id": "pmlr:v267:chen25bx",
+      "title": "Do NOT Think That Much for 2+3=? On the Overthinking of Long Reasoning Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9487-9499",
+          "pmlr_id": "chen25bx",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Batch Normalisation (BN) is widely used in conventional deep neural network training to harmonise the input-output distributions for each batch of data. However, federated learning, a distributed learning paradigm, faces the challenge of dealing with non-independent and identically distributed data among the client nodes. Due to the lack of a coherent methodology for updating BN statistical parameters, standard BN degrades the federated learning performance. To this end, it is urgent to explore an alternative normalisation solution for federated learning. In this work, we resolve the dilemma of the BN layer in federated learning by developing a customised normalisation approach, Hybrid Batch Normalisation (HBN). HBN separates the update of statistical parameters ( i.e. , means and variances used for evaluation) from that of learnable parameters ( i.e. , parameters that require gradient updates), obtaining unbiased estimates of global statistical parameters in distributed scenarios. In contrast with the existing solutions, we emphasise the supportive power of global statistics for federated learning. The HBN layer introduces a learnable hybrid distribution factor, allowing each computing node to adaptively mix the statistical parameters of the current batch with the global statistics. Our HBN can serve as a powerful plugin to advance federated learning performance. It reflects promising merits across a wide range of federated learning settings, especially for small batch sizes and heterogeneous data. Code is available at https://github.com/Hongyao-Chen/HybridBN.",
+      "paper_id": "pmlr:v267:chen25by",
+      "title": "Hybrid Batch Normalisation: Resolving the Dilemma of Batch Normalisation in Federated Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9500-9515",
+          "pmlr_id": "chen25by",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Proteins typically exist in complexes, interacting with other proteins or biomolecules to perform their specific biological roles. Research on single-chain protein modeling has been extensively and deeply explored, with advancements seen in models like the series of ESM and AlphaFold2. Despite these developments, the study and modeling of multi-chain proteins remain largely uncharted, though they are vital for understanding biological functions. Recognizing the importance of these interactions, we introduce APM (all-Atom Protein generative Model), a model specifically designed for modeling multi-chain proteins. By integrating atom-level information and leveraging data on multi-chain proteins, APM is capable of precisely modeling inter-chain interactions and designing protein complexes with binding capabilities from scratch. It also performs folding and inverse-folding tasks for multi-chain proteins. Moreover, APM demonstrates versatility in downstream applications: it achieves enhanced performance through supervised fine-tuning (SFT) while also supporting zero-shot sampling in certain tasks, achieving state-of-the-art results. We released our code at https://github.com/bytedance/apm.",
+      "paper_id": "pmlr:v267:chen25bz",
+      "title": "An All-Atom Generative Model for Designing Protein Complexes",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9516-9545",
+          "pmlr_id": "chen25bz",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Designing learning agents that explore efficiently in a complex environment has been widely recognized as a fundamental challenge in reinforcement learning. While a number of works have demonstrated the effectiveness of techniques based on randomized value functions on a single agent, it remains unclear, from a theoretical point of view, whether injecting randomization can help a society of agents concurently explore an environment. The theoretical results established in this work tender an affirmative answer to this question. We adapt the concurrent learning framework to randomized least-squares value iteration (RLSVI) with aggregated state representation. We demonstrate polynomial worst-case regret bounds in both finite- and infinite-horizon environments. In both setups the per-agent regret decreases at an optimal rate of $\\Theta\\left(\\frac{1}{\\sqrt{N}}\\right)$, highlighting the advantage of concurent learning. Our algorithm exhibits significantly lower space complexity compared to Russo (2019) and Agrawal et. al (2021). We reduce the space complexity by a factor of $K$ while incurring only a $\\sqrt{K}$ increase in the worst-case regret bound, compared to Russo (2019) and Agrawal et. al (2021). Interestingly, our algorithm improves the worst-case regret bound of Russo (2019) by a factor of $H^{1/2}$, matching the improvement in Agrawal et. al (2021). However, this result is achieved through a fundamentally different algorithmic enhancement and proof technique. Additionally, we conduct numerical experiments to demonstrate our theoretical findings.",
+      "paper_id": "pmlr:v267:chen25c",
+      "title": "Concurrent Reinforcement Learning with Aggregated States via Randomized Least Squares Value Iteration",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "7686-7718",
+          "pmlr_id": "chen25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Process reward models (PRMs) provide more nuanced supervision compared to outcome reward models (ORMs) for optimizing policy models, positioning them as a promising approach to enhancing the capabilities of LLMs in complex reasoning tasks. Recent efforts have advanced PRMs from step-level to token-level granularity by integrating reward modeling into the training of generative models, with reward scores derived from token generation probabilities. However, the conflict between generative language modeling and reward modeling may introduce instability and lead to inaccurate credit assignments. To address this challenge, we revisit token-level reward assignment by decoupling reward modeling from language generation and derive a token-level reward model through the optimization of a discriminative policy, termed the Q-function Reward Model (Q-RM). We theoretically demonstrate that Q-RM explicitly learns token-level Q-functions from preference data without relying on fine-grained annotations. In our experiments, Q-RM consistently outperforms all baseline methods across various benchmarks. For example, when integrated into PPO/REINFORCE algorithms, Q-RM enhances the average Pass@1 score by 5.85/4.70 points on mathematical reasoning tasks compared to the ORM baseline, and by 4.56/5.73 points compared to the token-level PRM counterpart. Moreover, reinforcement learning with Q-RM significantly enhances training efficiency, achieving convergence 12$\\times$ faster than ORM on GSM8K and 11$\\times$ faster than step-level PRM on MATH. Code and data are available at https://github.com/homzer/Q-RM.",
+      "paper_id": "pmlr:v267:chen25ca",
+      "title": "Discriminative Policy Optimization for Token-Level Reward Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9546-9565",
+          "pmlr_id": "chen25ca",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Low-Dimension-to-High-Dimension (LDHD) generalization, a subset of Out-of-Distribution (OOD) generalization, involves training on a low-dimensional subspace and testing in a high-dimensional space. Assuming instances are generated from latent variables reflecting problem scale, LDHD generalization captures the inherent scaling challenge of length generalization. We theoretically show that LDHD generalization is unattainable without appropriate inductive bias. Focusing on Boolean functions, we demonstrate that different architectures trained with (S)GD converge to min-degree interpolators w.r.t. different linearly independent sets , achieving LDHD generalization only when the target function aligns with this bias. From the perspective of LDHD generalization for length generalization, we explain the success of CoT in restructuring latent space for improved LDHD generalization. We further propose a principle for designing position embeddings to address both LDHD generalization and data format nuisances separately. Following the principle, we introduce RPE-Square, a novel embedding that enhances RPE to better handle data formats.",
+      "paper_id": "pmlr:v267:chen25cb",
+      "title": "Low-Dimension-to-High-Dimension Generalization and Its Implications for Length Generalization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9566-9589",
+          "pmlr_id": "chen25cb",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Solving partial differential equations (PDEs) using neural networks has become a central focus in scientific machine learning. Training neural networks for singularly perturbed problems is particularly challenging due to certain parameters in the PDEs that introduce near-singularities in the loss function. In this study, we overcome this challenge by introducing a novel method based on homotopy dynamics to effectively manipulate these parameters. From a theoretical perspective, we analyze the effects of these parameters on training difficulty in these singularly perturbed problems and establish the convergence of the proposed homotopy dynamics method. Experimentally, we demonstrate that our approach significantly accelerates convergence and improves the accuracy of these singularly perturbed problems. These findings present an efficient optimization strategy leveraging homotopy dynamics, offering a robust framework to extend the applicability of neural networks for solving singularly perturbed differential equations.",
+      "paper_id": "pmlr:v267:chen25cc",
+      "title": "Learn Singularly Perturbed Solutions via Homotopy Dynamics",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9590-9613",
+          "pmlr_id": "chen25cc",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Despite deep neural networks’ powerful representation learning capabilities, theoretical understanding of how networks can simultaneously achieve meaningful feature learning and global convergence remains elusive. Existing approaches like the neural tangent kernel (NTK) are limited because features stay close to their initialization in this parametrization, leaving open questions about feature properties during substantial evolution. In this paper, we investigate the training dynamics of infinitely wide, $L$-layer neural networks using the tensor program (TP) framework. Specifically, we show that, when trained with stochastic gradient descent (SGD) under the Maximal Update parametrization ($\\mu$P) and mild conditions on the activation function, SGD enables these networks to learn linearly independent features that substantially deviate from their initial values. This rich feature space captures relevant data information and ensures that any convergent point of the training process is a global minimum. Our analysis leverages both the interactions among features across layers and the properties of Gaussian random variables, providing new insights into deep representation learning. We further validate our theoretical findings through experiments on real-world datasets.",
+      "paper_id": "pmlr:v267:chen25cd",
+      "title": "Global Convergence and Rich Feature Learning in $L$-Layer Infinite-Width Neural Networks under $μ$ Parametrization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9614-9641",
+          "pmlr_id": "chen25cd",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Multi-objective optimization problems arise widely in various fields. In practice, multi-objective optimization is generally solved by heuristics with tunable parameters that are highly application-specific. Tuning parameters based on real-world instances (a.k.a. algorithm configuration) are generally empirical without theoretical guarantees. In this work, we establish the theoretical foundation of data-driven multi-objective optimization through the lens of machine learning theory. We provide generalization guarantees on selecting parameters for multi-objective optimization algorithms based on sampled problem instances. Moreover, if the performance metric of the algorithm is the Pareto volume, we can PAC-learn the approximately optimal configuration in polynomial time. We apply our framework to various algorithms, including approximation algorithms, local search, and linear programming. Experiments on multiple problems verify our theoretical findings.",
+      "paper_id": "pmlr:v267:chen25ce",
+      "title": "Learning Configurations for Data-Driven Multi-Objective Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9642-9663",
+          "pmlr_id": "chen25ce",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recently, there has been a surge of interest in extending the success of large language models (LLMs) from texts to molecules. Most existing approaches adopt a graph neural network to represent a molecule as a series of node tokens for molecule-language alignment, which, however, have overlooked the inherent hierarchical structures in molecules. Notably, higher-order molecular structures contain rich semantics of functional groups, which encode crucial biochemical functionalities of the molecules. We show that neglecting the hierarchical information in tokenization will lead to subpar molecule-language alignment and severe hallucination. To address this limitation, we propose HIerarchical GrapH Tokenization (HIGHT). HIGHT employs a hierarchical graph tokenizer that encodes the hierarchy of atom, motif, and molecular levels of informative tokens to improve the molecular perception of LLMs. HIGHT also adopts an augmented instruction tuning dataset, enriched with the hierarchical graph information, to further enhance the molecule-language alignment. Extensive experiments on 14 real-world benchmarks verify the effectiveness of HIGHT in reducing hallucination by 40%, and significant improvements in various molecule-language downstream tasks. The project is available at https: //higraphllm.github.io/.",
+      "paper_id": "pmlr:v267:chen25cf",
+      "title": "Hierarchical Graph Tokenization for Molecule-Language Alignment",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9664-9690",
+          "pmlr_id": "chen25cf",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Transformer-based Large Language Models (LLMs) have exhibited remarkable success in extensive tasks primarily attributed to self-attention mechanism, which requires a token to consider all preceding tokens as its context to compute attention. However, when the context length L becomes very large (e.g., 128K), the amount of potentially redundant information in the context tends to increase. The redundant context not only hampers the modeling representation performance but also incurs unnecessary computational and storage overhead. In this paper, we propose a plug-and-play Core Context Aware (CCA) Attention for efficient long-context modeling, comprising two complementary modules: 1) Globality-aware pooling module groups input tokens and dynamically compresses each group into one core token based on their significance. In this way, our method automatically focuses and strengthens core context while diminishing redundancy during the learning process, leading to effective long-term dependency modeling. 2) Locality-preserving module incorporates neighboring tokens to preserve local context for detailed representation. Notably, our CCA-Attention is able to replace the self-attention module in existing LLMs with minimal fine-tuning cost. Extensive experimental results show the superiority of our method in both long-context modeling and computational efficiency over state-of-the-art methods.",
+      "paper_id": "pmlr:v267:chen25cg",
+      "title": "Core Context Aware Transformers for Long Context Language Modeling",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9691-9710",
+          "pmlr_id": "chen25cg",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Modern machine learning applications are characterized by the increasing size of deep models and the growing diversity of data modalities. This trend underscores the importance of efficiently adapting pre-trained multi-modal models to the test distribution in real time, i.e., multi-modal test-time adaptation. In practice, the magnitudes of multi-modal shifts vary because multiple data sources interact with the impact factor in diverse manners. In this research, we investigate the the under-explored practical scenario uni-modal distribution shift , where the distribution shift influences only one modality, leaving the others unchanged. Through theoretical and empirical analyses, we demonstrate that the presence of such shift impedes multi-modal fusion and leads to the negative transfer phenomenon in existing test-time adaptation techniques. To flexibly combat this unique shift, we propose a selective adaptation schema that incorporates multiple modality-specific adapters to accommodate potential shifts and a “router” module that determines which modality requires adaptation. Finally, we validate the effectiveness of our proposed method through extensive experimental evaluations. Code available at https://github.com/chenmc1996/Uni-Modal-Distribution-Shift.",
+      "paper_id": "pmlr:v267:chen25ch",
+      "title": "Test-Time Selective Adaptation for Uni-Modal Distribution Shift in Multi-Modal Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9711-9727",
+          "pmlr_id": "chen25ch",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Quantized large language models (LLMs) have gained increasing attention and significance for enabling deployment in resource-constrained environments. However, emerging studies on a few calibration dataset-free quantization methods suggest that quantization may compromise the safety capabilities of LLMs, underscoring the urgent need for systematic safety evaluations and effective mitigation strategies. In this paper, we present comprehensive safety evaluations across various mainstream quantization techniques and diverse calibration datasets, utilizing widely accepted safety benchmarks. To address the identified safety vulnerabilities, we propose a quantization-aware safety patching framework, Q-resafe, to efficiently restore the safety capabilities of quantized LLMs while minimizing any adverse impact on utility. Extensive experiment results demonstrate that Q-resafe successfully re-aligns the safety of quantized LLMs with their pre-quantization counterparts, even under challenging evaluation scenarios. Project page: https://github.com/Thecommonirin/Qresafe.",
+      "paper_id": "pmlr:v267:chen25ci",
+      "title": "Assessing Safety Risks and Quantization-aware Safety Patching for Quantized Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9728-9746",
+          "pmlr_id": "chen25ci",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The memory challenges associated with training Large Language Models (LLMs) have become a critical concern, particularly when using the Adam optimizer. To address this issue, numerous memory-efficient techniques have been proposed, with GaLore standing out as a notable example designed to reduce the memory footprint of optimizer states. However, these approaches do not alleviate the memory burden imposed by activations, rendering them unsuitable for scenarios involving long context sequences or large mini-batches. Moreover, their convergence properties are still not well-understood in the literature. In this work, we introduce a Randomized Subspace Optimization framework for pre-training and fine-tuning LLMs. Our approach decomposes the high-dimensional training problem into a series of lower-dimensional subproblems. At each iteration, a random subspace is selected, and the parameters within that subspace are optimized. This structured reduction in dimensionality allows our method to simultaneously reduce memory usage for both activations and optimizer states. We establish comprehensive convergence guarantees and derive rates for various scenarios, accommodating different optimization strategies to solve the subproblems. Extensive experiments validate the superior memory and communication efficiency of our method, achieving performance comparable to GaLore and Adam.",
+      "paper_id": "pmlr:v267:chen25cj",
+      "title": "A Memory Efficient Randomized Subspace Optimization Method for Training Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9747-9763",
+          "pmlr_id": "chen25cj",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Diffusion models accomplish remarkable success in data generation tasks across various domains. However, the iterative sampling process is computationally expensive. Consistency models are proposed to learn consistency functions to map from noise to data directly, which allows one-step fast data generation and multistep sampling to improve sample quality. In this paper, we study the convergence of consistency models when the self-consistency property holds approximately under the training distribution. Our analysis requires only mild data assumption and applies to a family of forward processes. When the target data distribution has bounded support or has tails that decay sufficiently fast, we show that the samples generated by the consistency model are close to the target distribution in Wasserstein distance; when the target distribution satisfies some smoothness assumption, we show that with an additional perturbation step for smoothing, the generated samples are close to the target distribution in total variation distance. We provide two case studies with commonly chosen forward processes to demonstrate the benefit of multistep sampling.",
+      "paper_id": "pmlr:v267:chen25ck",
+      "title": "Convergence of Consistency Model with Multistep Sampling under General Data Assumptions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "9764-9782",
+          "pmlr_id": "chen25ck",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

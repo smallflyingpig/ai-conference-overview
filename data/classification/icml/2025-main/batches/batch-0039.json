@@ -1,0 +1,747 @@
+{
+  "batch_index": 39,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Binary Spiking Neural Networks (BSNNs) offer promising efficiency advantages for resource-constrained computing. However, their training algorithms often require substantial memory overhead due to latent weights storage and temporal processing requirements. To address this issue, we propose Binary Spiking Online (BSO) optimization algorithm, a novel online training algorithm that significantly reduces training memory. BSO directly updates weights through flip signals under the online training framework. These signals are triggered when the product of gradient momentum and weights exceeds a threshold, eliminating the need for latent weights during training. To enhance performance, we propose T-BSO, a temporal-aware variant that leverages the inherent temporal dynamics of BSNNs by capturing gradient information across time steps for adaptive threshold adjustment. Theoretical analysis establishes convergence guarantees for both BSO and T-BSO, with formal regret bounds characterizing their convergence rates. Extensive experiments demonstrate that both BSO and T-BSO achieve superior optimization performance compared to existing training methods for BSNNs. The codes are available at https://github.com/hamingsi/BSO.",
+      "paper_id": "pmlr:v267:liang25r",
+      "title": "BSO: Binary Spiking Online Optimization Algorithm",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37442-37455",
+          "pmlr_id": "liang25r",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Neural Combinatorial Optimization (NCO) has emerged as a promising approach for NP-hard problems. However, prevailing RL-based methods suffer from low sample efficiency due to sparse rewards and underused solutions. We propose Best-anchored and Objective-guided Preference Optimization (BOPO) , a training paradigm that leverages solution preferences via objective values. It introduces: (1) a best-anchored preference pair construction for better explore and exploit solutions, and (2) an objective-guided pairwise loss function that adaptively scales gradients via objective differences, removing reliance on reward models or reference policies. Experiments on Job-shop Scheduling Problem (JSP), Traveling Salesman Problem (TSP), and Flexible Job-shop Scheduling Problem (FJSP) show BOPO outperforms state-of-the-art neural methods, reducing optimality gaps impressively with efficient inference. BOPO is architecture-agnostic, enabling seamless integration with existing NCO models, and establishes preference optimization as a principled framework for combinatorial optimization.",
+      "paper_id": "pmlr:v267:liao25a",
+      "title": "BOPO: Neural Combinatorial Optimization via Best-anchored and Objective-guided Preference Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37456-37475",
+          "pmlr_id": "liao25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Deep models have recently achieved remarkable performances in solving partial differential equations (PDEs). The previous methods are mostly focused on PDEs arising in Euclidean spaces with less emphasis on the general manifolds with rich geometry. Several proposals attempt to account for the geometry by exploiting the spatial coordinates but overlook the underlying intrinsic geometry of manifolds. In this paper, we propose a Curvature-aware Graph Attention for PDEs on manifolds by exploring the important intrinsic geometric quantities such as curvature and discrete gradient operator. It is realized via parallel transport and tensor field on manifolds. To accelerate computation, we present three curvature-oriented graph embedding approaches and derive closed-form parallel transport equations, and a subtree partition method is also developed to promote parameter-sharing. Our proposed curvature-aware attention can be used as a replacement for vanilla attention, and experiments show that it significantly improves the performance of the existing methods for solving PDEs on manifolds. Our code is available at https://github.com/Supradax/CurvGT.",
+      "paper_id": "pmlr:v267:liao25b",
+      "title": "Curvature-aware Graph Attention for PDEs on Manifolds",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37476-37494",
+          "pmlr_id": "liao25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Federated learning provides an efficient privacy-preserving distributed training framework for large language models, addressing the growing scarcity of publicly available training data while enabling the utilization of private datasets. While integrating large language model fine-tuning with federated learning emerges as a promising research direction, researchers pay limited attention to non-IID instruction-following scenarios. Our key insight is decomposing client updates into consensus and divergence components, enabling the model to maintain core capabilities while adapting to domain-specific knowledge. We propose a novel federated learning framework called FedICU (Splitting with I mportan C e-aware U pdating for Heterogeneous Fed erated Learning with Large Language Models), which introduces an aggregation mechanism that dynamically balances these components based on their contribution to global model performance, while implementing an importance-aware parameter updating strategy to prevent catastrophic forgetting and domain overfitting. Extensive experiments across diverse domains demonstrate that FedICU significantly outperforms existing federated learning approaches in terms of both generalization performance and domain adaptation. Our code is available at https://github.com/liaosunny123/FedICU.",
+      "paper_id": "pmlr:v267:liao25c",
+      "title": "Splitting with Importance-aware Updating for Heterogeneous Federated Learning with Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37495-37510",
+          "pmlr_id": "liao25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Video Question-Answering (VideoQA) remains challenging in achieving advanced cognitive reasoning due to the uncontrollable and opaque reasoning processes in existing Multimodal Large Language Models (MLLMs). To address this issue, we propose a novel Language-centric Tree Reasoning (LTR) framework that targets on enhancing the reasoning ability of models. In detail, it recursively divides the original question into logically manageable parts and conquers them piece by piece, enhancing the reasoning capabilities and interpretability of existing MLLMs. Specifically, in the first stage, the LTR focuses on language to recursively generate a language-centric logical tree, which gradually breaks down the complex cognitive question into simple perceptual ones and plans the reasoning path through a RAG-based few-shot approach. In the second stage, with the aid of video content, the LTR performs bottom-up logical reasoning within the tree to derive the final answer along with the traceable reasoning path. Experiments across 11 VideoQA benchmarks demonstrate that our LTR framework significantly improves both accuracy and interpretability compared to state-of-the-art MLLMs. To our knowledge, this is the first work to implement a language-centric logical tree to guide MLLM reasoning in VideoQA, paving the way for language-centric video understanding from perception to cognition.",
+      "paper_id": "pmlr:v267:liao25d",
+      "title": "Divide and Conquer: Exploring Language-centric Tree Reasoning for Video Question-Answering",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37511-37527",
+          "pmlr_id": "liao25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Federated prompt learning (FPL) for vision-language models is a powerful approach to collaboratively adapt models across distributed clients while preserving data privacy. However, existing FPL approaches suffer from a trade-off between performance and robustness, particularly in out-of-distribution (OOD) shifts, limiting their reliability in real-world scenarios. The inherent in-distribution (ID) data heterogeneity among different clients makes it more challenging to maintain this trade-off. To fill this gap, we introduce a Federated OOD-aware Context Optimization (FOCoOp) framework, which captures diverse distributions among clients using ID global prompts, local prompts, and OOD prompts. Specifically, FOCoOp leverages three sets of prompts to create both class-level and distribution-level separations, which adapt to OOD shifts through bi-level distributionally robust optimization. Additionally, FOCoOp improves the discrimination consistency among clients, i.e., calibrating global prompts, seemly OOD prompts, and OOD prompts by Semi-unbalanced optimal transport. The extensive experiments on real-world datasets demonstrate that FOCoOp effectively captures decentralized heterogeneous distributions and enhances robustness of different OOD shifts. The project is available at GitHub.",
+      "paper_id": "pmlr:v267:liao25e",
+      "title": "FOCoOp: Enhancing Out-of-Distribution Robustness in Federated Prompt Learning for Vision-Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37528-37554",
+          "pmlr_id": "liao25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce Reward-Guided Speculative Decoding (RSD), a novel framework aimed at improving the efficiency of inference in large language models (LLMs). RSD synergistically combines a lightweight draft model with a more powerful target model, incorporating a controlled bias to prioritize high-reward outputs, in contrast to existing speculative decoding methods that enforce strict unbiasedness. RSD employs a process reward model to evaluate intermediate decoding steps and dynamically decide whether to invoke the target model, optimizing the trade-off between computational cost and output quality. We theoretically demonstrate that a threshold-based mixture strategy achieves an optimal balance between resource utilization and performance. Extensive evaluations on challenging reasoning benchmarks, including Olympiad-level tasks, show that RSD delivers significant efficiency gains against decoding with the target model only (up to 4.4X fewer FLOPs), while achieving significant better accuracy than parallel decoding method on average (up to +3.5). These results highlight RSD as a robust and cost-effective approach for deploying LLMs in resource-intensive scenarios.",
+      "paper_id": "pmlr:v267:liao25f",
+      "title": "Reward-Guided Speculative Decoding for Efficient LLM Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37555-37572",
+          "pmlr_id": "liao25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Harnessing the power of diffusion models to synthesize auxiliary training data based on latent space features has proven effective in enhancing out-of-distribution (OOD) detection performance. However, extracting effective features outside the in-distribution (ID) boundary in latent space remains challenging due to the difficulty of identifying decision boundaries between classes. This paper proposes a novel framework called Boundary-based Out-Of-Distribution data generation (BOOD), which synthesizes high-quality OOD features and generates human-compatible outlier images using diffusion models. BOOD first learns a text-conditioned latent feature space from the ID dataset, selects ID features closest to the decision boundary, and perturbs them to cross the decision boundary to form OOD features. These synthetic OOD features are then decoded into images in pixel space by a diffusion model. Compared to previous works, BOOD provides a more training efficient strategy for synthesizing informative OOD features, facilitating clearer distinctions between ID and OOD data. Extensive experimental results on common benchmarks demonstrate that BOOD surpasses the state-of-the-art method significantly, achieving a 29.64% decrease in average FPR95 (40.31% vs. 10.67%) and a 7.27% improvement in average AUROC (90.15% vs. 97.42%) on the Cifar-100 dataset.",
+      "paper_id": "pmlr:v267:liao25g",
+      "title": "BOOD: Boundary-based Out-Of-Distribution Data Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37573-37586",
+          "pmlr_id": "liao25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph Neural Networks (GNNs) have shown promising performance, but at the cost of resource-intensive operations on graph-scale matrices. To reduce computational overhead, previous studies attempt to sparsify the graph or network parameters, but with limited flexibility and precision boundaries. In this work, we propose Unifews, a joint sparsification technique to unify graph and weight matrix operations and enhance GNN learning efficiency. The Unifews design enables adaptive compression across GNN layers with progressively increased sparsity, and is applicable to a variety of architectures with on-the-fly simplification. Theoretically, we establish a novel framework to characterize sparsified GNN learning in view of the graph optimization process, showing that Unifews effectively approximates the learning objective with bounded error and reduced computational overhead. Extensive experiments demonstrate that Unifews achieves efficiency improvements with comparable or better accuracy, including 10-20x matrix operation reduction and up to 100x acceleration on graphs up to billion-edge scale.",
+      "paper_id": "pmlr:v267:liao25h",
+      "title": "Unifews: You Need Fewer Operations for Efficient Graph Neural Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37587-37609",
+          "pmlr_id": "liao25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Estimating the unknown reward functions driving agents’ behavior is a central challenge in inverse games and reinforcement learning. This paper introduces a unified framework for reward function recovery in two-player zero-sum matrix games and Markov games with entropy regularization. Given observed player strategies and actions, we aim to reconstruct the underlying reward functions. This task is challenging due to the inherent ambiguity of inverse problems, the non-uniqueness of feasible rewards, and limited observational data coverage. To address these challenges, we establish reward function identifiability using the quantal response equilibrium (QRE) under linear assumptions. Building on this theoretical foundation, we propose an algorithm to learn reward from observed actions, designed to capture all plausible reward parameters by constructing confidence sets. Our algorithm works in both static and dynamic settings and is adaptable to incorporate other methods, such as Maximum Likelihood Estimation (MLE). We provide strong theoretical guarantees for the reliability and sample-efficiency of our algorithm. Empirical results demonstrate the framework’s effectiveness in accurately recovering reward functions across various scenarios, offering new insights into decision-making in competitive environments.",
+      "paper_id": "pmlr:v267:liao25i",
+      "title": "Decoding Rewards in Competitive Games: Inverse Game Theory with Entropy Regularization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37610-37622",
+          "pmlr_id": "liao25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Characterizing quantum states is essential for advancing many quantum technologies. Recently, deep neural networks have been applied to learn quantum states by generating compressed implicit representations. Despite their success in predicting properties of the states, these representations remain a black box, lacking insights into strategies for experimental reconstruction. In this work, we aim to open this black box by developing explicit representations through generating surrogate state preparation circuits for property estimation. We design a reinforcement learning agent equipped with a Transformer-based architecture and a local fidelity reward function. Relying solely on measurement data from a few neighboring qubits, our agent accurately recovers properties of target states. We also theoretically analyze the global fidelity the agent can achieve when it learns a good local approximation. Extensive experiments demonstrate the effectiveness of our framework in learning various states of up to 100 qubits, including those generated by shallow Instantaneous Quantum Polynomial circuits, evolved by Ising Hamiltonians, and many-body ground states. Furthermore, the learned circuit representations can be applied to Hamiltonian learning as a downstream task utilizing a simple linear model.",
+      "paper_id": "pmlr:v267:liao25j",
+      "title": "Reinforced Learning Explicit Circuit Representations for Quantum State Characterization from Local Measurements",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37623-37641",
+          "pmlr_id": "liao25j",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Federated Learning (FL) emerged as a decentralized paradigm to train models while preserving privacy. However, conventional FL struggles with data heterogeneity and class imbalance, which degrade model performance. Clustered FL balances personalization and decentralized training by grouping clients with analogous data distributions, enabling improved accuracy while adhering to privacy constraints. This approach effectively mitigates the adverse impact of heterogeneity in FL. In this work, we propose a novel clustering method for FL, FedGWC (Federated Gaussian Weighting Clustering), which groups clients based on their data distribution, allowing training of a more robust and personalized model on the identified clusters. FedGWC identifies homogeneous clusters by transforming individual empirical losses to model client interactions with a Gaussian reward mechanism. Additionally, we introduce the Wasserstein Adjusted Score , a new clustering metric for FL to evaluate cluster cohesion with respect to the individual class distribution. Our experiments on benchmark datasets show that FedGWC outperforms existing FL algorithms in cluster quality and classification accuracy, validating the efficacy of our approach.",
+      "paper_id": "pmlr:v267:licciardi25a",
+      "title": "Interaction-Aware Gaussian Weighting for Clustered Federated Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37642-37666",
+          "pmlr_id": "licciardi25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "State space models are emerging as a dominant model class for sequence problems with many relying on the HiPPO framework to initialize their dynamics. However, HiPPO fundamentally assumes data to be noise-free; an assumption often violated in practice. We extend the HiPPO theory with measurement noise and derive an uncertainty-aware initialization for state space model dynamics. In our analysis, we interpret HiPPO as a linear stochastic control problem where the data enters as a noise-free control signal. We then reformulate the problem so that the data become noisy outputs of a latent system and arrive at an alternative dynamics initialization that infers the posterior of this latent system from the data without increasing runtime. Our experiments show that our initialization improves the resistance of state-space models to noise both at training and inference time.",
+      "paper_id": "pmlr:v267:lienen25a",
+      "title": "UnHiPPO: Uncertainty-aware Initialization for State Space Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37667-37681",
+          "pmlr_id": "lienen25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Pretraining large language models (LLMs) is resource-intensive, often requiring months of training time even with high-end GPU clusters. There are two approaches of mitigating such computational demands: reusing smaller models to train larger ones (upcycling), and training computationally efficient models like mixture-of-experts (MoE). In this paper, we study the upcycling of LLMs to MoE models, of which the scaling behavior remains underexplored. Through extensive experiments, we identify empirical scaling laws that describe how performance depends on dataset size and model configuration. Particularly, we show that, while scaling these factors improves performance, there is a novel interaction term between the dense and upcycled training dataset that limits the efficiency of upcycling at large computational budgets. Based on these findings, we provide guidance to scale upcycling, and establish conditions under which upcycling outperforms from-scratch trainings within budget constraints.",
+      "paper_id": "pmlr:v267:liew25a",
+      "title": "Scaling Laws for Upcycling Mixture-of-Experts Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37682-37704",
+          "pmlr_id": "liew25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Data imbalance remains a fundamental challenge in real-world machine learning. However, most existing work has focused on classification, leaving imbalanced regression underexplored despite its importance in many applications. To address this gap, we propose PRIME, a framework that leverages learnable proxies to construct a balanced and well-ordered feature space for imbalanced regression. At its core, PRIME arranges proxies to be uniformly distributed in the feature space while preserving the ordinal structure of regression targets, and then aligns each sample feature to its corresponding proxy. By using proxies as reference points, PRIME induces the desired structure of learned representations, promoting better generalization, especially in underrepresented target regions. Moreover, since proxy-based alignment resembles classification, PRIME enables the seamless application of class imbalance techniques to regression, facilitating more balanced feature learning. Extensive experiments demonstrate the effectiveness and broad applicability of PRIME, achieving state-of-the-art performance on four real-world regression benchmark datasets across diverse target domains.",
+      "paper_id": "pmlr:v267:lim25a",
+      "title": "PRIME: Deep Imbalanced Regression with Proxies",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37705-37729",
+          "pmlr_id": "lim25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Applying Gaussian processes (GPs) to very large datasets remains a challenge due to limited computational scalability. Matrix structures, such as the Kronecker product, can accelerate operations significantly, but their application commonly entails approximations or unrealistic assumptions. In particular, the most common path to creating a Kronecker-structured kernel matrix is by evaluating a product kernel on gridded inputs that can be expressed as a Cartesian product. However, this structure is lost if any observation is missing, breaking the Cartesian product structure, which frequently occurs in real-world data such as time series. To address this limitation, we propose leveraging latent Kronecker structure, by expressing the kernel matrix of observed values as the projection of a latent Kronecker product. In combination with iterative linear system solvers and pathwise conditioning, our method facilitates inference of exact GPs while requiring substantially fewer computational resources than standard iterative methods. We demonstrate that our method outperforms state-of-the-art sparse and variational GPs on real-world datasets with up to five million examples, including robotics, automated machine learning, and climate applications.",
+      "paper_id": "pmlr:v267:lin25a",
+      "title": "Scalable Gaussian Processes with Latent Kronecker Structure",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37730-37744",
+          "pmlr_id": "lin25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph contrastive learning (GCL) aims at narrowing positives while dispersing negatives, often causing a minority of samples with great similarities to gather as a small group. It results in two latent shortcomings in GCL: 1) local cohesion that a class cluster contains numerous independent small groups, and 2) global sparseness that these small groups (or isolated samples) dispersedly distribute among all clusters. These shortcomings make the learned distribution only focus on local similarities among partial samples, which hinders the ability to capture the ideal global structural properties among real clusters, especially high intra-cluster compactness and inter-cluster separateness . Considering this, we design a novel fuzzy boundary by extending the original cluster boundary with fuzzy set theory, which involves fuzzy boundary construction and fuzzy boundary contraction to address these shortcomings. The fuzzy boundary construction dilates the original boundaries to bridge the local groups, and the fuzzy boundary contraction forces the dispersed samples or groups within the fuzzy boundary to gather tightly, jointly mitigating local cohesion and global sparseness while forming the ideal global structural distribution. Extensive experiments demonstrate that a graph auto-encoder with the fuzzy boundary significantly outperforms current state-of-the-art GCL models in both downstream tasks and quantitative analysis.",
+      "paper_id": "pmlr:v267:lin25b",
+      "title": "Mitigating Local Cohesion and Global Sparseness in Graph Contrastive Learning with Fuzzy Boundaries",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37745-37761",
+          "pmlr_id": "lin25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Bloom filters (BF) are space-efficient probabilistic data structures for approximate membership testing. Boosted by the proliferation of machine learning, learned Bloom filters (LBF) were recently proposed by augmenting the canonical BFs with a learned oracle as a pre-filter, the size of which is crucial to the compactness of the overall system. In this paper, inspired by ensemble learning, we depart from the state-of-the-art single-oracle LBF structure by demonstrating that, by leveraging multiple learning oracles of smaller size and carefully optimizing the accompanied backup filters, we can significantly boost the performance of LBF under the same space budget. We then design and optimize ensemble learned Bloom filters for mutually independent and correlated learning oracles respectively. We also empirically demonstrate the performance improvement of our propositions under three practical data analysis tasks.",
+      "paper_id": "pmlr:v267:lin25c",
+      "title": "Ensemble Learned Bloom Filters: Two Oracles are Better than One",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37762-37779",
+          "pmlr_id": "lin25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This work highlights a semantics misalignment in 3D human pose estimation. For the task of test-time adaptation, the misalignment manifests as overly smoothed and unguided predictions. The smoothing settles predictions towards some average pose. Furthermore, when there are occlusions or truncations, the adaptation becomes fully unguided. To this end, we pioneer the integration of a semantics-aware motion prior for the test-time adaptation of 3D pose estimation. We leverage video understanding and a well-structured motion-text space to adapt the model motion prediction to adhere to video semantics during test time. Additionally, we incorporate a missing 2D pose completion based on the motion-text similarity. The pose completion strengthens the motion prior’s guidance for occlusions and truncations. Our method significantly improves state-of-the-art 3D human pose estimation TTA techniques, with more than 12% decrease in PA-MPJPE on 3DPW and 3DHP.",
+      "paper_id": "pmlr:v267:lin25d",
+      "title": "Semantics-aware Test-time Adaptation for 3D Human Pose Estimation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37780-37796",
+          "pmlr_id": "lin25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Sufficiently modeling the correlations among variables (aka channels) is crucial for achieving accurate multivariate time series forecasting (MTSF). In this paper, we propose a novel technique called Temporal Query (TQ) to more effectively capture multivariate correlations, thereby improving model performance in MTSF tasks. Technically, the TQ technique employs periodically shifted learnable vectors as queries in the attention mechanism to capture global inter-variable patterns, while the keys and values are derived from the raw input data to encode local, sample-level correlations. Building upon the TQ technique, we develop a simple yet efficient model named Temporal Query Network (TQNet), which employs only a single-layer attention mechanism and a lightweight multi-layer perceptron (MLP). Extensive experiments demonstrate that TQNet learns more robust multivariate correlations, achieving state-of-the-art forecasting accuracy across 12 challenging real-world datasets. Furthermore, TQNet achieves high efficiency comparable to linear-based methods even on high-dimensional datasets, balancing performance and computational cost. The code is available at: https://github.com/ACAT-SCUT/TQNet.",
+      "paper_id": "pmlr:v267:lin25e",
+      "title": "Temporal Query Network for Efficient Multivariate Time Series Forecasting",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37797-37814",
+          "pmlr_id": "lin25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Causal estimands can vary significantly depending on the relationship between outcomes in treatment and control groups, leading to wide partial identification (PI) intervals that impede decision making. Incorporating covariates can substantially tighten these bounds, but requires determining the range of PI over probability models consistent with the joint distributions of observed covariates and outcomes in treatment and control groups. This problem is known to be equivalent to a conditional optimal transport (COT) optimization task, which is more challenging than standard optimal transport (OT) due to the additional conditioning constraints. In this work, we study a tight relaxation of COT that effectively reduces it to standard OT, leveraging its well-established computational and theoretical foundations. Our relaxation incorporates covariate information and ensures narrower PI intervals for any value of the penalty parameter, while becoming asymptotically exact as a penalty increases to infinity. This approach preserves the benefits of covariate adjustment in PI and results in a data-driven estimator for the PI set that is easy to implement using existing OT packages. We analyze the convergence rate of our estimator and demonstrate the effectiveness of our approach through extensive simulations, highlighting its practical use and superior performance compared to existing methods.",
+      "paper_id": "pmlr:v267:lin25f",
+      "title": "Tightening Causal Bounds via Covariate-Aware Optimal Transport",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37815-37845",
+          "pmlr_id": "lin25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We revisit the Bayesian Black–Litterman (BL) portfolio model and remove its reliance on subjective investor views. Classical BL requires an investor “view”: a forecast vector $q$ and its uncertainty matrix $\\Omega$ that describe how much a chosen portfolio should outperform the market. Our key idea is to treat $(q,\\Omega)$ as latent variables and learn them from market data within a single Bayesian network. Consequently, the resulting posterior estimation admits closed-form expression, enabling fast inference and stable portfolio weights. Building on these, we propose two mechanisms to capture how features interact with returns: shared-latent parametrization and feature-influenced views; both recover classical BL and Markowitz portfolios as special cases. Empirically, on 30-year Dow-Jones and 20-year sector-ETF data, we improve Sharpe ratios by 50% and cut turnover by 55% relative to Markowitz and the index baselines. This work turns BL into a fully data-driven, view-free, and coherent Bayesian framework for portfolio optimization.",
+      "paper_id": "pmlr:v267:lin25g",
+      "title": "Latent Variable Estimation in Bayesian Black-Litterman Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37846-37873",
+          "pmlr_id": "lin25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Multi-objective test-time alignment aims to adapt large language models (LLMs) to diverse multi-dimensional user preferences during inference while keeping LLMs frozen. Recently, GenARM (Xu et al., 2025) first independently trains Autoregressive Reward Models (ARMs) for each preference dimension without awareness of each other, then combines their outputs based on user-specific preference vectors during inference to achieve multi-objective test-time alignment, leading to two key limitations: the need for multiple ARMs increases the inference cost, and the separate training of ARMs causes the misalignment between the guided generation and the user preferences. To address these issues, we propose Preference-aware ARM (PARM), a single unified ARM trained across all preference dimensions. PARM uses our proposed Preference-Aware Bilinear Low-Rank Adaptation (PBLoRA), which employs a bilinear form to condition the ARM on preference vectors, enabling it to achieve precise control over preference trade-offs during inference. Experiments demonstrate that PARM reduces inference costs and achieves better alignment with preference vectors compared with existing methods. Additionally, PARM enables weak-to-strong guidance, allowing a smaller PARM to guide a larger frozen LLM without expensive training, making multi-objective alignment accessible with limited computing resources. The code is available at https://github.com/Baijiong-Lin/PARM.",
+      "paper_id": "pmlr:v267:lin25h",
+      "title": "PARM: Multi-Objective Test-Time Alignment via Preference-Aware Autoregressive Reward Model",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37874-37888",
+          "pmlr_id": "lin25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We investigate the logical reasoning capabilities of Large Language Models (LLMs) and their scalability across complex deductive tasks. Using ZebraLogic, a newly developed benchmark dataset of logic grid puzzles derived from constraint satisfaction problems (CSPs), we systematically evaluate LLM performance. ZebraLogic spans a broad range of search space complexities and incorporates diverse logical constraints, providing a controlled environment to assess reasoning abilities. Our results reveal a significant decline in accuracy as problem complexity increases—a phenomenon we term the “curse of complexity.” Notably, this limitation persists even with scaling model size and inference-time computation, suggesting fundamental constraints in current LLM reasoning capabilities. Additionally, we explore strategies such as Best-of-N sampling, backtracking mechanisms, and self-verification prompts to enhance logical reasoning performance. Our findings provide critical insights into the scaling behavior of LLMs, highlight their limitations, and outline potential directions for advancing their reasoning capabilities.",
+      "paper_id": "pmlr:v267:lin25i",
+      "title": "ZebraLogic: On the Scaling Limits of LLMs for Logical Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37889-37905",
+          "pmlr_id": "lin25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Mathematical reasoning tasks pose significant challenges for large language models (LLMs) because they require precise logical deduction and sequence analysis. In this work, we introduce the concept of critical tokens – elements within reasoning trajectories that significantly influence incorrect outcomes. We present a novel framework for identifying these tokens through rollout sampling and demonstrate their substantial divergence from traditional error tokens. Through extensive experiments on datasets such as GSM8K and MATH500, we show that identifying and replacing critical tokens significantly improves model accuracy. We propose an efficient methodology for pinpointing these tokens in large-scale datasets using contrastive estimation and extend this framework to enhance model training processes with direct preference optimization (DPO). Experimental results on GSM8K and MATH500 benchmarks with the widely used models Llama-3 (8B and 70B) and Deepseek-math (7B) demonstrate the effectiveness of the proposed approach, cDPO. Our results underscore the potential of leveraging critical tokens to reduce errors in reasoning tasks, advancing the development of AI systems capable of robust logical deduction.",
+      "paper_id": "pmlr:v267:lin25j",
+      "title": "Critical Tokens Matter: Token-Level Contrastive Estimation Enhances LLM’s Reasoning Capability",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37906-37918",
+          "pmlr_id": "lin25j",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "As language technologies become widespread, it is important to understand how changes in language affect reader perceptions and behaviors. These relationships may be formalized as the isolated causal effect of some focal language-encoded intervention (e.g., factual inaccuracies) on an external outcome (e.g., readers’ beliefs). In this paper, we introduce a formal estimation framework for isolated causal effects of language. We show that a core challenge of estimating isolated effects is the need to approximate all non-focal language outside of the intervention. Drawing on the principle of omitted variable bias , we provide measures for evaluating the quality of both non-focal language approximations and isolated effect estimates themselves. We find that poor approximation of non-focal language can lead to bias in the corresponding isolated effect estimates due to omission of relevant variables, and we show how to assess the sensitivity of effect estimates to such bias along the two key axes of fidelity and overlap . In experiments on semi-synthetic and real-world data, we validate the ability of our framework to correctly recover isolated effects and demonstrate the utility of our proposed measures.",
+      "paper_id": "pmlr:v267:lin25k",
+      "title": "Isolated Causal Effects of Natural Language",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37919-37941",
+          "pmlr_id": "lin25k",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Language agents have become a promising solution to complex interactive tasks. One of the key ingredients to the success of language agents is the reward model on the trajectory of the agentic workflow, which provides valuable guidance during training or inference. However, due to the lack of annotations of intermediate interactions, most existing works use an outcome reward model to optimize policies across entire trajectories. This may lead to sub-optimal policies and hinder the overall performance. To address this, we propose QLASS (Q-guided Language Agent Stepwise Search), to automatically generate annotations by estimating Q-values in a stepwise manner for open language agents. By introducing a reasoning tree and performing process reward modeling, QLASS provides effective intermediate guidance for each step. With the stepwise guidance, we propose a Q-guided generation strategy to enable language agents to better adapt to long-term value, resulting in significant performance improvement during model inference on complex interactive agent tasks. Notably, even with almost half the annotated data, QLASS retains strong performance, demonstrating its efficiency in handling limited supervision. We also empirically demonstrate that QLASS can lead to more effective decision making through qualitative analysis.",
+      "paper_id": "pmlr:v267:lin25l",
+      "title": "QLASS: Boosting Language Agent Inference via Q-Guided Stepwise Search",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37942-37958",
+          "pmlr_id": "lin25l",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The diffusion models are widely used for image and video generation, but their iterative generation process is slow and expansive. While existing distillation approaches have demonstrated the potential for one-step generation in the image domain, they still suffer from significant quality degradation. In this work, we propose Adversarial Post-Training (APT) against real data following diffusion pre-training for one-step video generation. To improve the training stability and quality, we introduce several improvements to the model architecture and training procedures, along with an approximated R1 regularization objective. Empirically, our experiments show that our adversarial post-trained model can generate two-second, 1280x720, 24fps videos in real-time using a single forward evaluation step. Additionally, our model is capable of generating 1024px images in a single step, achieving quality comparable to state-of-the-art methods.",
+      "paper_id": "pmlr:v267:lin25m",
+      "title": "Diffusion Adversarial Post-Training for One-Step Video Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37959-37974",
+          "pmlr_id": "lin25m",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We present HealthGPT , a powerful Medical Large Vision-Language Model (Med-LVLM) that integrates medical visual comprehension and generation capabilities within a unified autoregressive paradigm. Our bootstrapping philosophy is to progressively adapt heterogeneous comprehension and generation knowledge to pre-trained Large Language Models (LLMs). This is achieved through a novel heterogeneous low-rank adaptation (H-LoRA) technique, which is complemented by a tailored hierarchical visual perception (HVP) approach and a three-stage learning strategy (TLS) . To effectively learn the HealthGPT, we devise a comprehensive medical domain-specific comprehension and generation dataset called VL-Health . Experimental results demonstrate exceptional performance and scalability of HealthGPT in medical visual unified tasks. Our project can be accessed at https://github.com/DCDmllm/HealthGPT.",
+      "paper_id": "pmlr:v267:lin25n",
+      "title": "HealthGPT: A Medical Large Vision-Language Model for Unifying Comprehension and Generation via Heterogeneous Knowledge Adaptation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37975-37995",
+          "pmlr_id": "lin25n",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "K-nearest neighbors (KNN) classification plays a significant role in various applications due to its interpretability. The accuracy of KNN classification relies heavily on large amounts of high-quality data, which are often distributed among different parties and contain sensitive information. Dozens of privacy-preserving frameworks have been proposed for performing KNN classification with data from different parties while preserving data privacy. However, existing privacy-preserving frameworks for KNN classification demonstrate communication inefficiency in the online phase due to two main issues: (1) They suffer from huge communication size for secure Euclidean square distance computations. (2) They require numerous communication rounds to select the $k$ nearest neighbors. In this paper, we present $\\texttt{Kona}$, an efficient privacy-preserving framework for KNN classification. We resolve the above communication issues by (1) designing novel Euclidean triples, which eliminate the online communication for secure Euclidean square distance computations, (2) proposing a divide-and-conquer bubble protocol, which significantly reduces communication rounds for selecting the $k$ nearest neighbors. Experimental results on eight real-world datasets demonstrate that $\\texttt{Kona}$ significantly outperforms the state-of-the-art framework by $1.1\\times \\sim 3121.2\\times$ in communication size, $16.7\\times \\sim 5783.2\\times$ in communication rounds, and $1.1\\times \\sim 232.6\\times$ in runtime.",
+      "paper_id": "pmlr:v267:lin25o",
+      "title": "Kona: An Efficient Privacy-Preservation Framework for KNN Classification by Communication Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "37996-38012",
+          "pmlr_id": "lin25o",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We consider explainability in equivariant graph neural networks for 3D geometric graphs. While many XAI methods have been developed for analyzing graph neural networks, they predominantly target 2D graph structures. The complex nature of 3D data and the sophisticated architectures of equivariant GNNs present unique challenges. Current XAI techniques either struggle to adapt to equivariant GNNs or fail to effectively handle positional data and evaluate the significance of geometric features adequately. To address these challenges, we introduce a novel method, known as EquiGX, which uses the Deep Taylor decomposition framework to extend the layer-wise relevance propagation rules tailored for spherical equivariant GNNs. Our approach decomposes prediction scores and back-propagates the relevance scores through each layer to the input space. Our decomposition rules provide a detailed explanation of each layer’s contribution to the network’s predictions, thereby enhancing our understanding of how geometric and positional data influence the model’s outputs. Through experiments on both synthetic and real-world datasets, our method demonstrates its capability to identify critical geometric structures and outperform alternative baselines. These results indicate that our method provides significantly enhanced explanations for equivariant GNNs. Our code has been released as part of the AIRS library (https://github.com/divelab/AIRS/).",
+      "paper_id": "pmlr:v267:ling25a",
+      "title": "On Explaining Equivariant Graph Networks via Improved Relevance Propagation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38013-38028",
+          "pmlr_id": "ling25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Uncovering the inner mechanisms of Transformer models offers insights into how they process and represent information. In this work, we analyze the computation performed by Transformers in the layers after the top-1 prediction remains fixed, known as the “saturation event”. We expand this concept to top-k tokens, demonstrating that similar saturation events occur across language, vision, and speech models. We find that these events occur in order of the corresponding tokens’ ranking, i.e., the model first decides on the top ranking token, then the second highest ranking token, and so on. This phenomenon seems intrinsic to the Transformer architecture, occurring across different variants, and even in untrained Transformers. We propose that these events reflect task transitions, where determining each token corresponds to a discrete task. We show that it is possible to predict the current task from hidden layer embedding, and demonstrate that we can cause the model to switch to the next task via intervention. Leveraging our findings, we introduce a token-level early-exit strategy, surpassing existing methods in balancing performance and efficiency and show how to exploit saturation events for better language modeling.",
+      "paper_id": "pmlr:v267:lioubashevski25a",
+      "title": "Looking Beyond the Top-1: Transformers Determine Top Tokens in Order",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38029-38048",
+          "pmlr_id": "lioubashevski25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graphics rendering applications increasingly leverage neural networks in tasks such as denoising, supersampling, and frame extrapolation to improve image quality while maintaining frame rates. The temporal coherence inherent in these tasks presents an opportunity to reuse intermediate results from previous frames and avoid redundant computations. Recent work has shown that caching intermediate features to be reused in subsequent inferences is an effective method to reduce latency in diffusion models. We extend this idea to real-time rendering and present ReFrame, which explores different caching policies to optimize trade-offs between quality and performance in rendering workloads. ReFrame can be applied to a variety of encoder-decoder style networks commonly found in rendering pipelines. Experimental results show that we achieve 1.4$\\times$ speedup on average with negligible quality loss in three real-time rendering tasks. Code available: https://ubc-aamodt-group.github.io/reframe-layer-caching/",
+      "paper_id": "pmlr:v267:liu25a",
+      "title": "ReFrame: Layer Caching for Accelerated Inference in Real-Time Rendering",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38049-38065",
+          "pmlr_id": "liu25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Score-based generative models are essential in various machine learning applications, with strong capabilities in generation quality. In particular, high-order derivatives (scores) of data density offer deep insights into data distributions, building on the proven effectiveness of first-order scores for modeling and generating synthetic data, unlocking new possibilities for applications. However, learning them typically requires complete data, which is often unavailable in domains such as healthcare and finance due to data corruption, acquisition constraints, or incomplete records. To tackle this challenge, we introduce MissScore, a novel framework for estimating high-order scores in the presence of missing data. We derive objective functions for estimating high-order scores under different missing data mechanisms and propose a new algorithm specifically designed to handle missing data effectively. Our empirical results demonstrate that MissScore accurately and efficiently learns the high-order scores from incomplete data and generates high-quality samples, resulting in strong performance across a range of downstream tasks.",
+      "paper_id": "pmlr:v267:liu25aa",
+      "title": "MissScore: High-Order Score Estimation in the Presence of Missing Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38664-38691",
+          "pmlr_id": "liu25aa",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Although large language models (LLMs) show promise in solving complex mathematical tasks, existing evaluation paradigms rely solely on a coarse measure of overall answer accuracy, which are insufficient for assessing their authentic capabilities. In this paper, we propose CogMath , which comprehensively assesses LLMs’ mathematical abilities through the lens of human cognition. Specifically, inspired by psychological theories, CogMath formalizes human reasoning process into 3 stages: problem comprehension , problem solving , and solution summarization . Within these stages, we investigate perspectives such as numerical calculation, knowledge, and counterfactuals, and design a total of 9 fine-grained evaluation dimensions. In each dimension, we develop an “ Inquiry - Judge - Reference ” multi-agent system to generate inquiries that assess LLMs’ mastery from this dimension. An LLM is considered to truly master a problem only when excelling in all inquiries from the 9 dimensions. By applying CogMath on three benchmarks, we reveal that the mathematical capabilities of 7 mainstream LLMs are overestimated by 30%-40%. Moreover, we locate their strengths and weaknesses across specific stages/dimensions, offering in-depth insights to further enhance their reasoning abilities.",
+      "paper_id": "pmlr:v267:liu25ab",
+      "title": "CogMath: Assessing LLMs’ Authentic Mathematical Ability from a Human Cognitive Perspective",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38692-38707",
+          "pmlr_id": "liu25ab",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Owing to the capability of in-context learning, large language models (LLMs) have shown impressive performance across diverse mathematical reasoning benchmarks. However, we find that few-shot demonstrations can sometimes bring negative performance and their effectiveness on LLMs’ reasoning abilities remains unreliable. To this end, in this paper, we aim to theoretically analyze the impact of in-context demonstrations on LLMs’ reasoning performance. We prove that the reasoning efficacy (measured by empirical prediction loss) can be bounded by an LLM-oriented semantic similarity and an inference stability of demonstrations , which is general for both one-shot and few-shot scenarios. Based on this finding, we propose a straightforward, generalizable, and low-complexity demonstration selection method named LMS3. It facilitates to select the most pertinent samples for different LLMs and includes a novel demonstration rejection mechanism to automatically filter out samples that are unsuitable for few-shot learning. Through experiments on three representative benchmarks, two LLM backbones, and multiple few-shot settings, we verify that our LMS3 has superiority and achieves consistent improvements on all datasets, which existing methods have been unable to accomplish. Our code is available at https://github.com/Ljyustc/LMS3.",
+      "paper_id": "pmlr:v267:liu25ac",
+      "title": "What Makes In-context Learning Effective for Mathematical Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38708-38721",
+          "pmlr_id": "liu25ac",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In Amazon robotic warehouses, the destination-to-chute mapping problem is crucial for efficient package sorting. Often, however, this problem is complicated by uncertain and dynamic package induction rates, which can lead to increased package recirculation. To tackle this challenge, we introduce a Distributionally Robust Multi-Agent Reinforcement Learning (DRMARL) framework that learns a destination-to-chute mapping policy that is resilient to adversarial variations in induction rates. Specifically, DRMARL relies on group distributionally robust optimization (DRO) to learn a policy that performs well not only on average but also on each individual subpopulation of induction rates within the group that capture, for example, different seasonality or operation modes of the system. This approach is then combined with a novel contextual bandit-based estimator of the worst-case induction distribution for each state-action pair, significantly reducing the cost of exploration and thereby increasing the learning efficiency and scalability of our framework. Extensive simulations demonstrate that DRMARL achieves robust chute mapping in the presence of varying induction distributions, reducing package recirculation by an average of 80% in the simulation scenario.",
+      "paper_id": "pmlr:v267:liu25ad",
+      "title": "Distributionally Robust Multi-Agent Reinforcement Learning for Dynamic Chute Mapping",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38722-38743",
+          "pmlr_id": "liu25ad",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) have achieved remarkable performance on various natural language tasks. However, they are trained on static corpora and their knowledge can become outdated quickly in the fast-changing world. This motivates the development of knowledge editing (KE) to update specific knowledge in LLMs without changing unrelated others or compromising their pre-trained capabilities. Previous efforts sought to update a small amount of parameters of a LLM and proved effective for making selective updates. Nonetheless, the edited LLM often exhibits degraded ability to reason about the new knowledge. In this work, we identify a key issue: heterogeneous token overfitting (HTO), where the LLM overfits different tokens in the provided knowledge at varying rates. To tackle this, we propose OVERTONE, a token-level smoothing method that mitigates HTO by adaptively refining the target distribution. Theoretically, OVERTONE offers better parameter updates with negligible computation overhead. It also induces an implicit DPO but does not require preference data pairs. Extensive experiments across four editing methods, two LLMs, and diverse scenarios demonstrate the effectiveness and versatility of our method.",
+      "paper_id": "pmlr:v267:liu25ae",
+      "title": "Mitigating Heterogeneous Token Overfitting in LLM Knowledge Editing",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38744-38766",
+          "pmlr_id": "liu25ae",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Cooperative multi-agent reinforcement learning faces significant challenges in effectively organizing agent relationships and facilitating information exchange, particularly when agents need to adapt their coordination patterns dynamically. This paper presents a novel framework that integrates dynamic spectral clustering with hypergraph neural networks to enable adaptive group formation and efficient information processing in multi-agent systems. The proposed framework dynamically constructs and updates hypergraph structures through spectral clustering on agents’ state histories, enabling higher-order relationships to emerge naturally from agent interactions. The hypergraph structure is enhanced with attention mechanisms for selective information processing, providing an expressive and efficient way to model complex agent relationships. This architecture can be implemented in both value-based and policy-based paradigms through a unified objective combining task performance with structural regularization. Extensive experiments on challenging cooperative tasks demonstrate that our method significantly outperforms state-of-the-art approaches in both sample efficiency and final performance. The code is available at: https://github.com/mysteryelder/HYGMA.",
+      "paper_id": "pmlr:v267:liu25af",
+      "title": "HYGMA: Hypergraph Coordination Networks with Dynamic Grouping for Multi-Agent Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38767-38788",
+          "pmlr_id": "liu25af",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Although Multi-Vector Retrieval (MVR) has achieved the state of the art on many information retrieval (IR) tasks, its performance highly depends on how to decompose queries into smaller pieces, say phrases or tokens. However, optimizing query decomposition for MVR performance is not end-to-end differentiable. Even worse, jointly solving this problem and training the downstream retrieval-based systems, say RAG systems could be highly inefficient. To overcome these challenges, we propose Performance-Oriented Query Decomposer (POQD), a novel query decomposition framework for MVR. POQD leverages one LLM for query decomposition and searches the optimal prompt with an LLM-based optimizer. We further propose an end-to-end training algorithm to alternatively optimize the prompt for query decomposition and the downstream models. This algorithm can achieve superior MVR performance at a reasonable training cost as our theoretical analysis suggests. POQD can be integrated seamlessly into arbitrary retrieval-based systems such as Retrieval-Augmented Generation (RAG) systems. Extensive empirical studies on representative RAG-based QA tasks show that POQD outperforms existing query decomposition strategies in both retrieval performance and end-to-end QA accuracy. POQD is available at https://github.com/PKU-SDS-lab/POQD-ICML25.",
+      "paper_id": "pmlr:v267:liu25ag",
+      "title": "POQD: Performance-Oriented Query Decomposer for Multi-vector retrieval",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38789-38808",
+          "pmlr_id": "liu25ag",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

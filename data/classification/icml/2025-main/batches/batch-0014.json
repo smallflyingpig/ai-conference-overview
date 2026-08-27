@@ -1,0 +1,747 @@
+{
+  "batch_index": 14,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Influence function, a technique rooted in robust statistics, has been adapted in modern machine learning for a novel application: data attribution—quantifying how individual training data points affect a model’s predictions. However, the common derivation of influence functions in the data attribution literature is limited to loss functions that decompose into a sum of individual data point losses, with the most prominent examples known as M-estimators. This restricts the application of influence functions to more complex learning objectives, which we refer to as non-decomposable losses, such as contrastive or ranking losses, where a unit loss term depends on multiple data points and cannot be decomposed further. In this work, we bridge this gap by revisiting the general formulation of influence function from robust statistics, which extends beyond M-estimators. Based on this formulation, we propose a novel method, the Versatile Influence Function (VIF), that can be straightforwardly applied to machine learning models trained with any non-decomposable loss. In comparison to the classical approach in statistics, the proposed VIF is designed to fully leverage the power of auto-differentiation, hereby eliminating the need for case-specific derivations of each loss function. We demonstrate the effectiveness of VIF across three examples: Cox regression for survival analysis, node embedding for network analysis, and listwise learning-to-rank for information retrieval. In all cases, the influence estimated by VIF closely resembles the results obtained by brute-force leave-one-out retraining, while being up to 1000 times faster to compute. We believe VIF represents a significant advancement in data attribution, enabling efficient influence-function-based attribution across a wide range of machine learning paradigms, with broad potential for practical use cases.",
+      "paper_id": "pmlr:v267:deng25h",
+      "title": "A Versatile Influence Function for Data Attribution with Non-Decomposable Loss",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13256-13276",
+          "pmlr_id": "deng25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Rehearsal-based methods have shown superior performance in addressing catastrophic forgetting in continual learning (CL) by storing and training on a subset of past data alongside new data in current task. While such a concurrent rehearsal strategy is widely used, it remains unclear if this approach is always optimal. Inspired by human learning, where sequentially revisiting tasks helps mitigate forgetting, we explore whether sequential rehearsal can offer greater benefits for CL compared to standard concurrent rehearsal. To address this question, we conduct a theoretical analysis of rehearsal-based CL in overparameterized linear models, comparing two strategies: 1) Concurrent Rehearsal, where past and new data are trained together, and 2) Sequential Rehearsal, where new data is trained first, followed by revisiting past data sequentially. By explicitly characterizing forgetting and generalization error, we show that sequential rehearsal performs better when tasks are less similar. These insights further motivate a novel Hybrid Rehearsal method, which trains similar tasks concurrently and revisits dissimilar tasks sequentially. We characterize its forgetting and generalization performance, and our experiments with deep neural networks further confirm that the hybrid approach outperforms standard concurrent rehearsal. This work provides the first comprehensive theoretical analysis of rehearsal-based CL.",
+      "paper_id": "pmlr:v267:deng25i",
+      "title": "Unlocking the Power of Rehearsal in Continual Learning: A Theoretical Perspective",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13277-13326",
+          "pmlr_id": "deng25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph neural networks have been a powerful tool for mesh-based physical simulation. To efficiently model large-scale systems, existing methods mainly employ hierarchical graph structures to capture multi-scale node relations. However, these graph hierarchies are typically manually designed and fixed, limiting their ability to adapt to the evolving dynamics of complex physical systems. We propose EvoMesh, a fully differentiable framework that jointly learns graph hierarchies and physical dynamics, adaptively guided by physical inputs. EvoMesh introduces anisotropic message passing, which enables direction-specific aggregation of dynamic features between nodes within each hierarchy, while simultaneously learning node selection probabilities for the next hierarchical level based on physical context. This design creates more flexible message shortcuts and enhances the model’s capacity to capture long-range dependencies. Extensive experiments on five benchmark physical simulation datasets show that EvoMesh outperforms recent fixed-hierarchy message passing networks by large margins. The project page is available at https://hbell99.github.io/evo-mesh/.",
+      "paper_id": "pmlr:v267:deng25j",
+      "title": "EvoMesh: Adaptive Physical Simulation with Hierarchical Graph Evolutions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13327-13346",
+          "pmlr_id": "deng25j",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "As machine learning models grow increasingly competent, their predictions can supplement scarce or expensive data in various important domains. In support of this paradigm, algorithms have emerged to combine a small amount of high-fidelity observed data with a much larger set of imputed model outputs to estimate some quantity of interest. Yet current hybrid-inference tools target only means or single quantiles, limiting their applicability for many critical domains and use cases. We present QuEst, a principled framework to merge observed and imputed data to deliver point estimates and rigorous confidence intervals for a wide family of quantile-based distributional measures. QuEst covers a range of measures, from tail risk (CVaR) to population segments such as quartiles, that are central to fields such as economics, sociology, education, medicine, and more. We extend QuEst to multidimensional metrics, and introduce an additional optimization technique to further reduce variance in this and other hybrid estimators. We demonstrate the utility of our framework through experiments in economic modeling, opinion polling, and language model auto-evaluation.",
+      "paper_id": "pmlr:v267:deng25k",
+      "title": "QuEst: Enhancing Estimates of Quantile-Based Distributional Measures Using Model Predictions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13347-13368",
+          "pmlr_id": "deng25k",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Classic ensembles generalize better than any single component model. In contrast, recent empirical studies find that modern ensembles of (overparameterized) neural networks may not provide any inherent generalization advantage over single but larger neural networks. This paper clarifies how modern overparameterized ensembles differ from their classic underparameterized counterparts, using ensembles of random feature (RF) regressors as a basis for developing theory. In contrast to the underparameterized regime, where ensembling typically induces regularization and increases generalization, we prove with minimal assumptions that infinite ensembles of overparameterized RF regressors become pointwise equivalent to (single) infinite-width RF regressors, and finite width ensembles rapidly converge to single models with the same parameter budget. These results, which are exact for ridgeless models and approximate for small ridge penalties, imply that overparameterized ensembles and single large models exhibit nearly identical generalization. We further characterize the predictive variance amongst ensemble members, demonstrating that it quantifies the expected effects of increasing capacity rather than capturing any conventional notion of uncertainty. Our results challenge common assumptions about the advantages of ensembles in overparameterized settings, prompting a reconsideration of how well intuitions from underparameterized ensembles transfer to deep ensembles and the overparameterized regime.",
+      "paper_id": "pmlr:v267:dern25a",
+      "title": "Theoretical Limitations of Ensembles in the Age of Overparameterization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13369-13401",
+          "pmlr_id": "dern25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Leveraging long contexts is crucial for advanced AI systems, but attention computation poses a scalability challenge. While scaled dot-product attention (SDPA) exhibits token sparsity, i.e. only a few pivotal tokens significantly contribute to output, exploiting this sparsity remains challenging. Existing methods either suffer from quality degradation or require substantial additional resources. We show that identifying pivotal tokens is a Maximum Inner Product Search (MIPS) problem. However, existing MIPS solutions are not well-suited for SDPA, as they are not GPU-friendly and often underperform due to the separated query and key distributions. This paper introduces HashAttention, framing pivotal token identification as a recommendation problem. Given a query, HashAttention encodes keys and queries in Hamming space, capturing the required semantic similarity, using learned mapping functions. HashAttention efficiently identifies pivotal tokens for a given query using bitwise operations and computes attention using only these tokens, improving the overall attention efficiency. Trained on generic data, HashAttention reduces tokens used by up to $16\\times$ with minimal quality loss, requiring only 32 bits of auxiliary memory per token. Sparsity can be further improved to $32\\times$ through task-specific fine-tuning. On A100 GPU, at $32\\times$ sparsity, incorporating HashAttention reduces attention latency by up to $4.3\\times$ in GPT-FAST and $2.54\\times$ in FlashDecode, and achieves up to $3.12\\times$ higher throughput for GPT-FAST.",
+      "paper_id": "pmlr:v267:desai25a",
+      "title": "HashAttention: Semantic Sparsity for Faster Inference",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13402-13418",
+          "pmlr_id": "desai25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Tree ensembles (e.g., gradient boosting decision trees) are often used in practice because they offer excellent predictive performance while still being easy and efficient to learn. In some contexts, it is important to additionally optimize their size: this is specifically the case when models need to have verifiable properties (verification of fairness, robustness, etc. is often exponential in the ensemble’s size), or when models run on battery-powered devices (smaller ensembles consume less energy, increasing battery autonomy). For this reason, compression of tree ensembles is worth studying. This paper presents LOP, a method for compressing a given tree ensemble by pruning or entirely removing trees in it, while updating leaf predictions in such a way that predictive accuracy is mostly unaffected. Empirically, LOP achieves compression factors that are often 10 to 100 times better than that of competing methods.",
+      "paper_id": "pmlr:v267:devos25a",
+      "title": "Compressing tree ensembles through Level-wise Optimization and Pruning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13419-13443",
+          "pmlr_id": "devos25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Conformal prediction provides a powerful framework for constructing distribution-free prediction regions with finite-sample coverage guarantees. While extensively studied in univariate settings, its extension to multi-output problems presents additional challenges, including complex output dependencies and high computational costs, and remains relatively underexplored. In this work, we present a unified comparative study of nine conformal methods with different multivariate base models for constructing multivariate prediction regions within the same framework. This study highlights their key properties while also exploring the connections between them. Additionally, we introduce two novel classes of conformity scores for multi-output regression that generalize their univariate counterparts. These scores ensure asymptotic conditional coverage while maintaining exact finite-sample marginal coverage. One class is compatible with any generative model, offering broad applicability, while the other is computationally efficient, leveraging the properties of invertible generative models. Finally, we conduct a comprehensive empirical evaluation across 13 tabular datasets, comparing all the multi-output conformal methods explored in this work. To ensure a fair and consistent comparison, all methods are implemented within a unified code base.",
+      "paper_id": "pmlr:v267:dheur25a",
+      "title": "A Unified Comparative Study with Generalized Conformity Scores for Multi-Output Conformal Regression",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13444-13485",
+          "pmlr_id": "dheur25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Current causal discovery approaches require restrictive model assumptions in the absence of interventional data to ensure structure identifiability. These assumptions often do not hold in real-world applications leading to a loss of guarantees and poor performance in practice. Recent work has shown that, in the bivariate case, Bayesian model selection can greatly improve performance by exchanging restrictive modelling for more flexible assumptions, at the cost of a small probability of making an error. Our work shows that this approach is useful in the important multivariate case as well. We propose a scalable algorithm leveraging a continuous relaxation of the discrete model selection problem. Specifically, we employ the Causal Gaussian Process Conditional Density Estimator (CGP-CDE) as a Bayesian non-parametric model, using its hyperparameters to construct an adjacency matrix. This matrix is then optimised using the marginal likelihood and an acyclicity regulariser, giving the maximum a posteriori causal graph. We demonstrate the competitiveness of our approach, showing it is advantageous to perform multivariate causal discovery without infeasible assumptions using Bayesian model selection.",
+      "paper_id": "pmlr:v267:dhir25a",
+      "title": "Continuous Bayesian Model Selection for Multivariate Causal Discovery",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13486-13512",
+          "pmlr_id": "dhir25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Learning from human feedback plays an important role in aligning generative models, such as large language models (LLM). However, the effectiveness of this approach can be influenced by adversaries, who may intentionally provide misleading preferences to manipulate the output in an undesirable or harmful direction. To tackle this challenge, we study a specific model within this problem domain–contextual dueling bandits with adversarial feedback, where the true preference label can be flipped by an adversary. We propose an algorithm namely robust contextual dueling bandits ($\\texttt{RCDB}$), which is based on uncertainty-weighted maximum likelihood estimation. Our algorithm achieves an $\\tilde O(d\\sqrt{T}/\\kappa+dC/\\kappa)$ regret bound, where $T$ is the number of rounds, $d$ is the dimension of the context, $\\kappa$ is the lower bound of the derivative of the link function, and $ 0 \\le C \\le T$ is the total number of adversarial feedback. We also prove a lower bound to show that our regret bound is nearly optimal, both in scenarios with and without ($C=0$) adversarial feedback. Our work is the first to achieve nearly minimax optimal regret for dueling bandits in the presence of adversarial preference feedback. Additionally, for the sigmoid link function, we develop a novel algorithm that takes into account the effect of local derivatives into maximum likelihood estimation (MLE) analysis through a refined method for estimating the link function’s derivative. This method helps us to eliminate the $\\kappa$ dependence in the leading term with respect to $T$, which reduces the exponential dependence on the parameter radius $B$ to a polynomial dependence. We conduct experiments to evaluate our proposed algorithm $\\texttt{RCDB}$ against various types of adversarial feedback. Experimental results demonstrate its superiority over the state-of-the-art dueling bandit algorithms in the presence of adversarial feedback.",
+      "paper_id": "pmlr:v267:di25a",
+      "title": "Nearly Optimal Algorithms for Contextual Dueling Bandits from Adversarial Feedback",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13513-13545",
+          "pmlr_id": "di25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) can be misused to spread unwanted content at scale. Content watermarking deters misuse by hiding messages in content, enabling its detection using a secret watermarking key . Robustness is a core security property, stating that evading detection requires (significant) degradation of the content’s quality. Many LLM watermarking methods have been proposed, but robustness is tested only against non-adaptive attackers who lack knowledge of the watermarking method and can find only suboptimal attacks. We formulate watermark robustness as an objective function and use preference-based optimization to tune adaptive attacks against the specific watermarking method. Our evaluation shows that (i) adaptive attacks evade detection against all surveyed watermarks, (ii) training against any watermark succeeds in evading unseen watermarks, and (iii) optimization-based attacks are cost-effective. Our findings underscore the need to test robustness against adaptively tuned attacks. We release our adaptively tuned paraphrasers at https://github.com/nilslukas/ada-wm-evasion.",
+      "paper_id": "pmlr:v267:diaa25a",
+      "title": "Optimizing Adaptive Attacks against Watermarks for Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13546-13569",
+          "pmlr_id": "diaa25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study the algorithmic problem of robust mean estimation of an identity covariance Gaussian in the presence of mean-shift contamination. In this contamination model, we are given a set of points in $\\mathbb{R}^d$ generated i.i.d. via the following process. For a parameter $\\alpha<1/2$, the $i$-th sample $x_i$ is obtained as follows: with probability $1-\\alpha$, $x_i$ is drawn from $\\mathcal{N}(\\mu, I)$, where $\\mu \\in \\mathbb{R}^d$ is the target mean; and with probability $\\alpha$, $x_i$ is drawn from $\\mathcal{N}(z_i, I)$, where $z_i$ is unknown and potentially arbitrary. Prior work characterized the information-theoretic limits of this task. Specifically, it was shown that— in contrast to Huber contamination— in the presence of mean-shift contamination consistent estimation is possible. On the other hand, all known robust estimators in the mean-shift model have running times exponential in the dimension. Here we give the first computationally efficient algorithm for high-dimensional robust mean estimation with mean-shift contamination that can tolerate a constant fraction of outliers. In particular, our algorithm has near-optimal sample complexity, runs in sample-polynomial time, and approximates the target mean to any desired accuracy. Conceptually, our result contributes to a growing body of work that studies inference with respect to natural noise models lying in between fully adversarial and random settings.",
+      "paper_id": "pmlr:v267:diakonikolas25a",
+      "title": "Efficient Multivariate Robust Mean Estimation Under Mean-Shift Contamination",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13570-13600",
+          "pmlr_id": "diakonikolas25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study the complexity of learning $k$-mixtures of Gaussians ($k$-GMMs) on $\\mathbb R^d$. This task is known to have complexity $d^{\\Omega(k)}$ in full generality. To circumvent this exponential lower bound on the number of components, research has focused on learning families of GMMs satisfying additional structural properties. A natural assumption posits that the component weights are not exponentially small and that the components have the same unknown covariance. Recent work gave a $d^{O(\\log(1/w_{\\min}))}$-time algorithm for this class of GMMs, where $w_{\\min}$ is the minimum weight. Our first main result is a Statistical Query (SQ) lower bound showing that this quasi-polynomial upper bound is essentially best possible, even for the special case of uniform weights. Specifically, we show that it is SQ-hard to distinguish between such a mixture and the standard Gaussian. We further explore how the distribution of weights affects the complexity of this task. Our second main result is a quasi-polynomial upper bound for the aforementioned testing task when most of the weights are uniform while a small fraction of the weights are potentially arbitrary.",
+      "paper_id": "pmlr:v267:diakonikolas25b",
+      "title": "On Learning Parallel Pancakes with Mostly Uniform Weights",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13601-13621",
+          "pmlr_id": "diakonikolas25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study the task of list-decodable linear regression using batches, recently introduced by Das et al. 2023.. In this setting, we are given $m$ batches with each batch containing $n$ points in $\\mathbb R^d$. A batch is called clean if the points it contains are i.i.d. samples from an unknown linear regression distribution. For a parameter $\\alpha \\in (0, 1/2)$, an unknown $\\alpha$-fraction of the batches are clean and no assumptions are made on the remaining batches. The goal is to output a small list of vectors at least one of which is close to the true regressor vector in $\\ell_2$-norm. Das et al. 2023 gave an efficient algorithm for this task, under natural distributional assumptions, with the following guarantee. Under the assumption that the batch size satisfies $n \\geq \\tilde{\\Omega}(\\alpha^{-1})$ and the total number of batches is $m = \\text{poly}(d, n, 1/\\alpha)$, their algorithm runs in polynomial time and outputs a list of $O(1/\\alpha^2)$ vectors at least one of which is $\\tilde{O}(\\alpha^{-1/2}/\\sqrt{n})$ close to the target regressor. Here we design a new polynomial-time algorithm for this task with significantly stronger guarantees under the assumption that the low-degree moments of the covariates distribution are Sum-of-Squares (SoS) certifiably bounded. Specifically, for any constant $\\delta>0$, as long as the batch size is $n \\geq \\Omega_{\\delta}(\\alpha^{-\\delta})$ and the degree-$\\Theta(1/\\delta)$ moments of the covariates are SoS certifiably bounded, our algorithm uses $m = \\text{poly}((dn)^{1/\\delta}, 1/\\alpha)$ batches, runs in polynomial-time, and outputs an $O(1/\\alpha)$-sized list of vectors one of which is $O(\\alpha^{-\\delta/2}/\\sqrt{n})$ close to the target. That is, our algorithm substantially improves both the minimum batch size and the final error guarantee, while achieving the optimal list size. Our approach leverages higher-order moment information by carefully combining the SoS paradigm interleaved with an iterative method and a novel list pruning procedure for this setting. In the process, we give an SoS proof of the Marcinkiewicz-Zygmund inequality that may be of broader applicability.",
+      "paper_id": "pmlr:v267:diakonikolas25c",
+      "title": "Batch List-Decodable Linear Regression via Higher Moments",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13622-13642",
+          "pmlr_id": "diakonikolas25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study the problem of distributed distinct element estimation, where $\\alpha$ servers each receive a subset of a universe $[n]$ and aim to compute a $(1+\\varepsilon)$-approximation to the number of distinct elements using minimal communication. While prior work establishes a worst-case bound of $\\Theta\\left(\\alpha\\log n+\\frac{\\alpha}{\\varepsilon^2}\\right)$ bits, these results rely on assumptions that may not hold in practice. We introduce a new parameterization based on the number $C = \\frac{\\beta}{\\varepsilon^2}$ of pairwise collisions, i.e., instances where the same element appears on multiple servers, and design a protocol that uses only $O\\left(\\alpha\\log n\\log\\log n+\\frac{\\sqrt{\\beta}}{\\varepsilon^2} \\log n\\right)$ bits, breaking previous lower bounds when $C$ is small. We further improve our algorithm under assumptions on the number of distinct elements or collisions and provide matching lower bounds in all regimes, establishing $C$ as a tight complexity measure for the problem. Finally, we consider streaming algorithms for distinct element estimation parameterized by the number of items with frequency larger than $1$. Overall, our results offer insight into why statistical problems with known hardness results can be efficiently solved in practice.",
+      "paper_id": "pmlr:v267:diakonikolas25d",
+      "title": "On Fine-Grained Distinct Element Estimation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13643-13678",
+          "pmlr_id": "diakonikolas25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study the task of online learning in the presence of Massart noise. Specifically, instead of assuming that the online adversary chooses an arbitrary sequence of labels, we assume that the context $\\boldsymbol{x}$ is selected adversarially but the label $y$ presented to the learner disagrees with the ground-truth label of $\\boldsymbol{x}$ with unknown probability at most $\\eta$. We focus on the fundamental class of $\\gamma$-margin linear classifiers and present the first computationally efficient algorithm that achieves mistake bound $\\eta T + o(T)$. We point out that the mistake bound achieved by our algorithm is qualitatively tight for computationally efficient algorithms; this follows from the fact that, even in the offline setting, achieving 0-1 error better than $\\eta$ requires super-polynomial time under standard complexity assumptions. We extend our online learning model to a $k$-arm contextual bandit setting where the rewards—instead of satisfying commonly used realizability assumptions—are consistent, in expectation, with some linear ranking function with weight vector $\\boldsymbol{w}^\\ast$. Given a list of contexts $\\boldsymbol{x}_1,\\ldots \\boldsymbol{x}_k$, if $\\boldsymbol{w}^*\\cdot \\boldsymbol{x}_i > \\boldsymbol{w}^* \\cdot \\boldsymbol{x}_j$, the expected reward of action $i$ must be larger than that of $j$ by at least $\\Delta$. We use our Massart online learner to design an efficient bandit algorithm that obtains expected reward at least $(1-1/k) \\Delta T - o(T)$ bigger than choosing a random action at every round.",
+      "paper_id": "pmlr:v267:diakonikolas25e",
+      "title": "Online Linear Classification with Massart Noise",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13679-13692",
+          "pmlr_id": "diakonikolas25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study the task of Multiclass Linear Classification (MLC) in the distribution-free PAC model with Random Classification Noise (RCN). Specifically, the learner is given a set of labeled examples $(x, y)$, where $x$ is drawn from an unknown distribution on $R^d$ and the labels are generated by a multiclass linear classifier corrupted with RCN. That is, the label $y$ is flipped from $i$ to $j$ with probability $H_{ij}$ according to a known noise matrix $H$ with non-negative separation $\\sigma: = \\min_{i \\neq j} H_{ii}-H_{ij}$. The goal is to compute a hypothesis with small 0-1 error. For the special case of two labels, prior work has given polynomial-time algorithms achieving the optimal error. Surprisingly, little is known about the complexity of this task even for three labels. As our main contribution, we show that the complexity of MLC with RCN becomes drastically different in the presence of three or more labels. Specifically, we prove super-polynomial Statistical Query (SQ) lower bounds for this problem. In more detail, even for three labels and constant separation, we give a super-polynomial lower bound on the complexity of any SQ algorithm achieving optimal error. For a larger number of labels and smaller separation, we show a super-polynomial SQ lower bound even for the weaker goal of achieving any constant factor approximation to the optimal loss or even beating the trivial hypothesis.",
+      "paper_id": "pmlr:v267:diakonikolas25f",
+      "title": "Statistical Query Hardness of Multiclass Linear Classification with Random Classification Noise",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13693-13712",
+          "pmlr_id": "diakonikolas25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "LLaMA-Adapter has recently emerged as an efficient fine-tuning technique for LLaMA models, leveraging zero-initialized attention to stabilize training and enhance performance. However, despite its empirical success, the theoretical foundations of zero-initialized attention remain largely unexplored. In this paper, we provide a rigorous theoretical analysis, establishing a connection between zero-initialized attention and mixture-of-expert models. We prove that both linear and non-linear prompts, along with gating functions, can be optimally estimated, with non-linear prompts offering greater flexibility for future applications. Empirically, we validate our findings on the open LLM benchmarks, demonstrating that non-linear prompts outperform linear ones. Notably, even with limited training data, both prompt types consistently surpass vanilla attention, highlighting the robustness and adaptability of zero-initialized attention.",
+      "paper_id": "pmlr:v267:diep25a",
+      "title": "On Zero-Initialized Attention: Optimal Prompt and Gating Factor Estimation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13713-13745",
+          "pmlr_id": "diep25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Data-driven Riemannian geometry has emerged as a powerful tool for interpretable representation learning, offering improved efficiency in downstream tasks. Moving forward, it is crucial to balance cheap manifold mappings with efficient training algorithms. In this work, we integrate concepts from pullback Riemannian geometry and generative models to propose a framework for data-driven Riemannian geometry that is scalable in both geometry and learning: score-based pullback Riemannian geometry. Focusing on unimodal distributions as a first step, we propose a score-based Riemannian structure with closed-form geodesics that pass through the data probability density. With this structure, we construct a Riemannian autoencoder (RAE) with error bounds for discovering the correct data manifold dimension. This framework can naturally be used with anisotropic normalizing flows by adopting isometry regularization during training. Through numerical experiments on diverse datasets, including image data, we demonstrate that the proposed framework produces high-quality geodesics passing through the data support, reliably estimates the intrinsic dimension of the data manifold, and provides a global chart of the manifold. To the best of our knowledge, this is the first scalable framework for extracting the complete geometry of the data manifold.",
+      "paper_id": "pmlr:v267:diepeveen25a",
+      "title": "Score-based Pullback Riemannian Geometry: Extracting the Data Manifold Geometry using Anisotropic Flows",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13746-13773",
+          "pmlr_id": "diepeveen25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advancements in foundation models have improved autonomous tool usage and reasoning, but their capabilities in map-based reasoning remain underexplored. To address this, we introduce MapEval, a benchmark designed to assess foundation models across three distinct tasks—textual, API-based, and visual reasoning—through 700 multiple-choice questions spanning 180 cities and 54 countries, covering spatial relationships, navigation, travel planning, and real-world map interactions. Unlike prior benchmarks that focus on simple location queries, MapEval requires models to handle long-context reasoning, API interactions and visual map analysis, making it the most comprehensive evaluation framework for geospatial AI. On evaluation of 30 foundation models, including Claude-3.5-Sonnet, GPT-4o, Gemini-1.5-Pro, none surpasses 67% accuracy, with open-source models performing significantly worse and all models lagging over 20% behind human performance. These results expose critical gaps in spatial inference, as models struggle with distances, directions, route planning, and place-specific reasoning, highlighting the need for better geospatial AI to bridge the gap between foundation models and real-world navigation.",
+      "paper_id": "pmlr:v267:dihan25a",
+      "title": "MapEval: A Map-Based Evaluation of Geo-Spatial Reasoning in Foundation Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13774-13813",
+          "pmlr_id": "dihan25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Equivariant diffusion models have achieved impressive performance in 3D molecule generation. These models incorporate Euclidean symmetries of 3D molecules by utilizing an SE(3)-equivariant denoising network. However, specialized equivariant architectures limit the scalability and efficiency of diffusion models. In this paper, we propose an approach that relaxes such equivariance constraints. Specifically, our approach learns a sample-dependent SO(3) transformation for each molecule to construct an aligned latent space. A non-equivariant diffusion model is then trained over the aligned representations. Experimental results demonstrate that our approach performs significantly better than previously reported non-equivariant models. It yields sample quality comparable to state-of-the-art equivariant diffusion models and offers improved training and sampling efficiency. Our code is available at: https://github.com/skeletondyh/RADM",
+      "paper_id": "pmlr:v267:ding25a",
+      "title": "Scalable Non-Equivariant 3D Molecule Generation via Rotational Alignment",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13814-13824",
+          "pmlr_id": "ding25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Text-to-visual retrieval often struggles with semantic redundancy and granularity mismatches between textual queries and visual content. Unlike existing methods that address these challenges during training, we propose VISual Abstraction (VISA), a test-time approach that enhances retrieval by transforming visual content into textual descriptions using off-the-shelf large models. The generated text descriptions, with their dense semantics, naturally filter out low-level redundant visual information. To further address granularity issues, VISA incorporates a question-answering process, enhancing the text description with the specific granularity information requested by the user. Extensive experiments demonstrate that VISA brings substantial improvements in text-to-image and text-to-video retrieval for both short- and long-context queries, offering a plug-and-play enhancement to existing retrieval systems.",
+      "paper_id": "pmlr:v267:ding25b",
+      "title": "Visual Abstraction: A Plug-and-Play Approach for Text-Visual Retrieval",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13825-13844",
+          "pmlr_id": "ding25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Mental disorders are among the most widespread diseases globally. Analyzing functional brain networks through functional magnetic resonance imaging (fMRI) is crucial for understanding mental disorder behaviors. Although existing fMRI-based graph neural networks (GNNs) have demonstrated significant potential in brain network feature extraction, they often fail to characterize complex relationships between brain regions and demographic information in mental disorders. To overcome these limitations, we propose a learnable NeuroTree framework that integrates a $k$-hop AGE-GCN with neural ordinary differential equations (ODEs) and contrastive masked functional connectivity (CMFC) to enhance similarities and dissimilarities of brain region distance. Furthermore, NeuroTree effectively decodes fMRI network features into tree structures, which improves the capture of high-order brain regional pathway features and enables the identification of hierarchical neural behavioral patterns essential for understanding disease-related brain subnetworks. Our empirical evaluations demonstrate that NeuroTree achieves state-of-the-art performance across two distinct mental disorder datasets. It provides valuable insights into age-related deterioration patterns, elucidating their underlying neural mechanisms. The code and datasets are available at https://github.com/Ding1119/NeuroTree.",
+      "paper_id": "pmlr:v267:ding25c",
+      "title": "NeuroTree: Hierarchical Functional Brain Pathway Decoding for Mental Health Disorders",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13845-13869",
+          "pmlr_id": "ding25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) are powerful tools but are often expensive to deploy at scale. LLM query routing mitigates this by dynamically assigning queries to models of varying cost and quality to obtain a desired tradeoff. Prior query routing approaches generate only one response from the selected model and a single response from a small (inexpensive) model was often not good enough to beat a response from a large (expensive) model due to which they end up overusing the large model and missing out on potential cost savings. However, it is well known that for small models, generating multiple responses and selecting the best can enhance quality while remaining cheaper than a single large-model response. We leverage this idea to propose BEST-Route, a novel routing framework that chooses a model and the number of responses to sample from it based on query difficulty and the quality thresholds. Experiments on real-world datasets demonstrate that our method reduces costs by up to 60% with less than 1% performance drop.",
+      "paper_id": "pmlr:v267:ding25d",
+      "title": "BEST-Route: Adaptive LLM Routing with Test-Time Optimal Compute",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13870-13884",
+          "pmlr_id": "ding25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Federated learning (FL) is greatly challenged by the communication bottleneck and computation limitation on clients. Existing methods based on quantization for FL cannot simultaneously reduce the uplink and downlink communication cost and mitigate the computation burden on clients. To address this problem, in this paper, we propose the first low-bit integerized federated learning (LBI-FL) framework that quantizes the weights, activations, and gradients to lower than INT8 precision to evidently reduce the communication and computational costs. Specifically, we achieve dynamical temporal bit-width allocation for weights, activations, and gradients along the training trajectory via reinforcement learning. An agent is trained to determine bit-width allocation by comprehensively considering the states like current bit-width, training stage, and quantization loss as the state. The agent efficiently trained on small-scale datasets can be well generalized to train varying network architectures on non-independent and identically distributed datasets. Furthermore, we demonstrated in theory that federated learning with gradient quantization achieves an equivalent convergence rate to FedAvg. The proposed LBI-FL can reduce the communication costs by 8 times compared to full-precision FL. Extensive experiments show that the proposed LBI-FL achieves a reduction of more than 50% BitOPs per client on average for FL with less than 2% accuracy loss compared to low-bit training with INT8 precision.",
+      "paper_id": "pmlr:v267:ding25e",
+      "title": "LBI-FL: Low-Bit Integerized Federated Learning with Temporally Dynamic Bit-Width Allocation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13885-13899",
+          "pmlr_id": "ding25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Achieving seamless coordination between AI agents and humans is crucial for real-world applications, yet it remains a significant open challenge. Hanabi is a cooperative card game featuring imperfect information, constrained communication, theory of mind requirements, and coordinated action – making it an ideal testbed for human-AI coordination. However, its use for human-AI interaction has been limited by the challenges of human evaluation. In this work, we introduce the Ad-Hoc Human-AI Coordination Challenge (AH2AC2) to overcome the constraints of costly and difficult-to-reproduce human evaluations. We develop human proxy agents on a large-scale human dataset that serve as robust, cheap, and reproducible human-like evaluation partners in AH2AC2. To encourage the development of data-efficient methods, we open-source a dataset of 3,079 games, deliberately limiting the amount of available human gameplay data. We present baseline results for both two- and three- player Hanabi scenarios. To ensure fair evaluation, we host the proxy agents through a controlled evaluation system rather than releasing them publicly. The code is available at https://github.com/FLAIROx/ah2ac2.",
+      "paper_id": "pmlr:v267:dizdarevic25a",
+      "title": "Ad-Hoc Human-AI Coordination Challenge",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13900-13937",
+          "pmlr_id": "dizdarevic25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This position paper critiques the reliance on rigid racial taxonomies in machine learning, exposing their U.S.-centric nature and lack of global applicability—particularly in Europe, where race categories are not commonly used. These classifications oversimplify racial identity, erasing the experiences of mixed-race individuals and reinforcing outdated essentialist views that contradict the social construction of race. We suggest research agendas in machine learning that move beyond categorical variables to better address discrimination and social inequality.",
+      "paper_id": "pmlr:v267:doh25a",
+      "title": "Position: The Categorization of Race in ML is a Flawed Premise",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "81211-81232",
+          "pmlr_id": "doh25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study how inherent randomness in the training process—where each sample (or client in federated learning) contributes only to a randomly selected portion of training—can be leveraged for privacy amplification. This includes (1) data partitioning, where a sample participates in only a subset of training iterations, and (2) model partitioning, where a sample updates only a subset of the model parameters. We apply our framework to model parallelism in federated learning, where each client updates a randomly selected subnetwork to reduce memory and computational overhead, and show that existing methods, e.g. model splitting or dropout, provide a significant privacy amplification gain not captured by previous privacy analysis techniques. Additionally, we introduce balanced iteration subsampling, a new data partitioning method where each sample (or client) participates in a fixed number of training iterations. We show that in certain regimes, this method yields stronger privacy amplification than Poisson (i.i.d.) sampling of data (or clients). Our results demonstrate that randomness in the training process, which is structured rather than i.i.d. and interacts with data in complex ways, can be systematically leveraged for nontrivial privacy amplification.",
+      "paper_id": "pmlr:v267:dong25a",
+      "title": "Leveraging Randomness in Model and Data Partitioning for Privacy Amplification",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13938-13962",
+          "pmlr_id": "dong25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The Soft Actor-Critic (SAC) algorithm with a Gaussian policy has become a mainstream implementation for realizing the Maximum Entropy Reinforcement Learning (MaxEnt RL) objective, which incorporates entropy maximization to encourage exploration and enhance policy robustness. While the Gaussian policy performs well on simpler tasks, its exploration capacity and potential performance in complex multi-goal RL environments are limited by its inherent unimodality. In this paper, we employ the diffusion model, a powerful generative model capable of capturing complex multimodal distributions, as the policy representation to fulfill the MaxEnt RL objective, developing a method named MaxEnt RL with Diffusion Policy (MaxEntDP). Our method enables efficient exploration and brings the policy closer to the optimal MaxEnt policy. Experimental results on Mujoco benchmarks show that MaxEntDP outperforms the Gaussian policy and other generative models within the MaxEnt RL framework, and performs comparably to other state-of-the-art diffusion-based online RL algorithms. Our code is available at https://github.com/diffusionyes/MaxEntDP.",
+      "paper_id": "pmlr:v267:dong25b",
+      "title": "Maximum Entropy Reinforcement Learning with Diffusion Policy",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13963-13983",
+          "pmlr_id": "dong25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) have achieved remarkable advancements in natural language processing tasks, yet they encounter challenges in complex decision-making scenarios that require long-term reasoning and alignment with high-level objectives. Existing methods either rely on short-term auto-regressive action generation or face limitations in accurately simulating rollouts and assessing outcomes, leading to sub-optimal decisions. This paper introduces a novel LLM-based Actor-Critic framework, termed LAC, that effectively improves LLM policies with long-term action evaluations in a principled and scalable way. Our approach addresses two key challenges: (1) extracting robust action evaluations by computing Q-values via token logits associated with positive/negative outcomes, enhanced by future trajectory rollouts and reasoning; and (2) enabling efficient policy improvement through a gradient-free mechanism. Experiments across diverse environments – including high-level decision-making (ALFWorld), low-level action spaces (BabyAI-Text), and large action spaces (WebShop) – demonstrate the framework’s generality and superiority over state-of-the-art methods. Notably, our approach achieves competitive performance using 7B/8B parameter LLMs, even outperforming baseline methods employing GPT-4 in complex tasks. These results underscore the potential of integrating structured policy optimization with LLMs’ intrinsic knowledge to advance decision-making capabilities in multi-step environments.",
+      "paper_id": "pmlr:v267:dong25c",
+      "title": "Enhancing Decision-Making of Large Language Models via Actor-Critic",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "13984-14020",
+          "pmlr_id": "dong25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Transformer models have achieved remarkable empirical successes, largely due to their in-context learning capabilities. Inspired by this, we explore training an autoregressive transformer for in-context reinforcement learning (ICRL). In this setting, we initially train a transformer on an offline dataset consisting of trajectories collected from various RL tasks, and then fix and use this transformer to create an action policy for new RL tasks. Notably, we consider the setting where the offline dataset contains trajectories sampled from suboptimal behavioral policies. In this case, standard autoregressive training corresponds to imitation learning and results in suboptimal performance. To address this, we propose the Decision Importance Transformer (DIT) framework, which emulates the actor-critic algorithm in an in-context manner. In particular, we first train a transformer-based value function that estimates the advantage functions of the behavior policies that collected the suboptimal trajectories. Then we train a transformer-based policy via a weighted maximum likelihood estimation loss, where the weights are constructed based on the trained value function to steer the suboptimal policies to the optimal ones. We conduct extensive experiments to test the performance of DIT on both bandit and Markov Decision Process problems. Our results show that DIT achieves superior performance, particularly when the offline dataset contains suboptimal historical data.",
+      "paper_id": "pmlr:v267:dong25d",
+      "title": "In-Context Reinforcement Learning From Suboptimal Historical Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "14021-14039",
+          "pmlr_id": "dong25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Information-theoretic bounds, while achieving significant success in analyzing the generalization of randomized learning algorithms, have been criticized for their slow convergence rates and overestimation. This paper presents novel bounds that bridge the expected empirical and population risks through a binarized variant of the Jensen-Shannon divergence. Leveraging our foundational lemma that characterizes the interaction between an arbitrary and a binary variable, we derive hypothesis-based bounds that enhance existing conditional mutual information bounds by reducing the number of conditioned samples from $2$ to $1$. We additionally establish prediction-based bounds that surpass prior bounds based on evaluated loss mutual information measures. Thereafter, through a new binarization technique for the evaluated loss variables, we obtain exactly tight generalization bounds broadly applicable to general randomized learning algorithms for any bounded loss functions. Our results effectively address key limitations of previous results in analyzing certain stochastic convex optimization problems, without requiring additional stability or compressibility assumptions about the learning algorithm.",
+      "paper_id": "pmlr:v267:dong25e",
+      "title": "Exactly Tight Information-theoretic Generalization Bounds via Binary Jensen-Shannon Divergence",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "14040-14060",
+          "pmlr_id": "dong25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Vision-Language Models (VLMs) such as CLIP excel at zero-shot classification due to large-scale pre-training but are vulnerable to adversarial examples. Adversarial fine-tuning robustifies zero-shot models by aligning prediction scores of individual adversaries with their clean counterparts, which typically overlooks intermediate adversarial samples along the adversarial trajectory crossing the decision boundary. Such intermediate adversaries and their vicinity produce informative representations capturing the decision boundary in detail. They can be improved by sampling adversarial candidates from simplices formed by joining two consecutive vertices on the adversarial trajectory and their clean counterpart. However, sampling simplices for adversaries is very costly. To train robust VLM, we overcome these limitations by Taylor expansion and formulating an upper-bound of alignment loss that depends on the Jacobian/Hessian obtained at clean samples. As regions between clean and intermediate adversarial samples capture a larger decision landscape, we robustify VLM by plausible adversaries from simplices by our closed-form formulation equivalent to infinite uniform sampling of the simplex. We obtain state-of-the-art robustness across 15 datasets and diverse vision-language tasks.",
+      "paper_id": "pmlr:v267:dong25f",
+      "title": "Improving Zero-Shot Adversarial Robustness in Vision-Language Models by Closed-form Alignment of Adversarial Path Simplices",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "14061-14078",
+          "pmlr_id": "dong25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Weak-to-strong (W2S) generalization is a type of finetuning (FT) where a strong (large) student model is trained on pseudo-labels generated by a weak teacher. Surprisingly, W2S FT often outperforms the weak teacher. We seek to understand this phenomenon through the observation that FT often occurs in intrinsically low-dimensional spaces. Leveraging the low intrinsic dimensionality of FT, we analyze W2S in the ridgeless regression setting from a variance reduction perspective. For a strong student-weak teacher pair with sufficiently expressive low-dimensional feature subspaces $\\mathcal{V}_s, \\mathcal{V}_w$, we provide an exact characterization of the variance that dominates the generalization error of W2S. This unveils a virtue of discrepancy between the strong and weak models in W2S: the variance of the weak teacher is inherited by the strong student in $\\mathcal{V}_s \\cap \\mathcal{V}_w$, while reduced by a factor of $\\mathrm{dim}(\\mathcal{V}_s)/N$ in the subspace of discrepancy $\\mathcal{V}_w \\setminus \\mathcal{V}_s$ with $N$ pseudo-labels for W2S. Our analysis further casts light on the sample complexities and the scaling of performance gap recovery in W2S. The analysis is supported by experiments on synthetic regression problems, as well as real vision and NLP tasks.",
+      "paper_id": "pmlr:v267:dong25g",
+      "title": "Discrepancies are Virtue: Weak-to-Strong Generalization through Lens of Intrinsic Dimension",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "14079-14113",
+          "pmlr_id": "dong25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "A fundamental challenge in formal theorem proving by LLMs is the lack of high-quality training data. Although reinforcement learning or expert iteration partially mitigates this issue by alternating between LLM generating proofs and finetuning them on correctly generated ones, performance quickly plateaus due to the scarcity of correct proofs (sparse rewards). To keep improving the models with limited data, we draw inspiration from mathematicians, who continuously develop new results, partly by proposing novel conjectures or exercises (which are often variants of known results) and attempting to solve them. We design the Self-play Theorem Prover (STP) that simultaneously takes on two roles, conjecturer and prover, each providing training signals to the other. The conjecturer is trained iteratively on previously generated conjectures that are barely provable by the current prover, which incentivizes it to generate increasingly challenging conjectures over time. The prover attempts to prove the conjectures with standard expert iteration. We evaluate STP with both Lean and Isabelle formal versifiers. With 51.3 billion tokens generated during the training in Lean, STP proves 28.5% of the statements in the LeanWorkbook dataset, doubling the previous best result of 13.1% achieved through expert iteration. The final model achieves state-of-the-art performance among whole-proof generation methods on miniF2F-test (65.0%), ProofNet-test (23.9%) and PutnamBench (8/644) with pass@3200.",
+      "paper_id": "pmlr:v267:dong25h",
+      "title": "STP: Self-play LLM Theorem Provers with Iterative Conjecturing and Proving",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "14114-14136",
+          "pmlr_id": "dong25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advances have shown that statistical tests for the rank of cross-covariance matrices play an important role in causal discovery. These rank tests include partial correlation tests as special cases and provide further graphical information about latent variables. Existing rank tests typically assume that all the continuous variables can be perfectly measured, and yet, in practice many variables can only be measured after discretization. For example, in psychometric studies, the continuous level of certain personality dimensions of a person can only be measured after being discretized into order-preserving options such as disagree, neutral, and agree. Motivated by this, we propose Mixed data Permutation-based Rank Test (MPRT), which properly controls the statistical errors even when some or all variables are discretized. Theoretically, we establish the exchangeability and estimate the asymptotic null distribution by permutations; as a consequence, MPRT can effectively control the Type I error in the presence of discretization while previous methods cannot. Empirically, our method is validated by extensive experiments on synthetic data and real-world data to demonstrate its effectiveness as well as applicability in causal discovery (code will be available at https://github.com/dongxinshuai/scm-identify).",
+      "paper_id": "pmlr:v267:dong25i",
+      "title": "Permutation-based Rank Test in the Presence of Discretization and Application in Causal Discovery with Mixed Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "14137-14151",
+          "pmlr_id": "dong25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Multiwinner voting is the study of electing a fixed-size committee given individual agents’ preferences over candidates. Most research in this field has been limited to a static setting, with only one election over a fixed set of candidates. However, this approach overlooks the dynamic nature of applications, where candidate sets are subject to change. We extend the study of proportionality in multiwinner voting to dynamic settings, allowing candidates to join or leave the election and demanding that each chosen committee satisfies proportionality without differing too much from the previously selected committee. We consider approval preferences, ranked preferences, and the proportional clustering setting. In these settings, we either give algorithms making few changes or show that such algorithms cannot exist for various proportionality axioms. In particular, we show that such algorithms cannot exist for ranked preferences and provide amortized and exact algorithms for several proportionality notions in the other two settings.",
+      "paper_id": "pmlr:v267:dong25j",
+      "title": "Maintaining Proportional Committees with Dynamic Candidate Sets",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "14152-14168",
+          "pmlr_id": "dong25j",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Post-training compression reduces the computational and memory costs of large language models (LLMs), enabling resource-efficient deployment. However, existing compression benchmarks focus narrowly on language modeling (e.g., perplexity) and natural language understanding tasks (e.g., GLUE accuracy), ignoring the agentic capabilities—workflow, tool use/function call, long-context understanding and real-world application. We introduce the Agent Compression Benchmark (ACBench), the first comprehensive benchmark for evaluating how compression impacts LLMs’ agentic abilities. ACBench spans (1) 12 tasks across 4 capabilities (e.g., WorfBench for workflow generation, Needle-in-Haystack for long-context retrieval), (2) 4-bit quantization (GPTQ, AWQ) and 50% pruning (Wanda, SparseGPT), and (3) 15 models, including small (Gemma-2B), standard (Qwen2.5-7B), and distilled reasoning LLMs (DeepSeek-R1-Distill). Our experiments reveal compression tradeoffs: 4-bit quantization preserves workflow generation and tool use (1%–3% drop) but degrades real-world application accuracy by 10%–15%. We introduce ERank, Top-k Ranking Correlation and Energy to systematize analysis. ACBench provides actionable insights for optimizing LLM compression in agentic scenarios, bridging the gap between algorithmic efficiency and real-world applicability.",
+      "paper_id": "pmlr:v267:dong25k",
+      "title": "Can Compressed LLMs Truly Act? An Empirical Evaluation of Agentic Capabilities in LLM Compression",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "14169-14202",
+          "pmlr_id": "dong25k",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Type inference for dynamic languages like Python is a persistent challenge in software engineering. While large language models (LLMs) have shown promise in code understanding, their type inference capabilities remain underexplored. We introduce TypyBench, a benchmark designed to evaluate LLMs’ type inference across entire Python repositories. TypyBench features two novel metrics: TypeSim, which captures nuanced semantic relationships between predicted and ground truth types, and TypeCheck, which assesses type consistency across codebases. Our evaluation of various LLMs on a curated dataset of 50 high-quality Python repositories reveals that, although LLMs achieve decent TypeSim scores, they struggle with complex nested types and exhibit significant type consistency errors. These findings suggest that future research should shift focus from improving type similarity to addressing repository-level consistency. TypyBench provides a foundation for this new direction, offering insights into model performance across different type complexities and usage contexts. Our code and data are available at https://github.com/typybench/typybench",
+      "paper_id": "pmlr:v267:dong25l",
+      "title": "TypyBench: Evaluating LLM Type Inference for Untyped Python Repositories",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "14203-14230",
+          "pmlr_id": "dong25l",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Bilevel optimization is a powerful tool for many machine learning problems, such as hyperparameter optimization and meta-learning. Estimating hypergradients (also known as implicit gradients) is crucial for developing gradient-based methods for bilevel optimization. In this work, we propose a computationally efficient technique for incorporating curvature information into the approximation of hypergradients and present a novel algorithmic framework based on the resulting enhanced hypergradient computation. We provide convergence rate guarantees for the proposed framework in both deterministic and stochastic scenarios, particularly showing improved computational complexity over popular gradient-based methods in the deterministic setting. This improvement in complexity arises from a careful exploitation of the hypergradient structure and the inexact Newton method. In addition to the theoretical speedup, numerical experiments demonstrate the significant practical performance benefits of incorporating curvature information.",
+      "paper_id": "pmlr:v267:dong25m",
+      "title": "Efficient Curvature-Aware Hypergradient Approximation for Bilevel Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "14231-14259",
+          "pmlr_id": "dong25m",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

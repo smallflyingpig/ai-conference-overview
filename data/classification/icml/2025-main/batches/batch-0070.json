@@ -1,0 +1,747 @@
+{
+  "batch_index": 70,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Class-incremental learning (CIL) seeks to enable a model to sequentially learn new classes while retaining knowledge of previously learned ones. Balancing flexibility and stability remains a significant challenge, particularly when the task ID is unknown. To address this, our study reveals that the gap in feature distribution between novel and existing tasks is primarily driven by differences in mean and covariance moments. Building on this insight, we propose a novel semantic drift calibration method that incorporates mean shift compensation and covariance calibration. Specifically, we calculate each class’s mean by averaging its sample embeddings and estimate task shifts using weighted embedding changes based on their proximity to the previous mean, effectively capturing mean shifts for all learned classes with each new task. We also apply Mahalanobis distance constraint for covariance calibration, aligning class-specific embedding covariances between old and current networks to mitigate the covariance shift. Additionally, we integrate a feature-level self-distillation approach to enhance generalization. Comprehensive experiments on commonly used datasets demonstrate the effectiveness of our approach. The source code is available at https://github.com/fwu11/MACIL.git.",
+      "paper_id": "pmlr:v267:wu25f",
+      "title": "Navigating Semantic Drift in Task-Agnostic Class-Incremental Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67172-67183",
+          "pmlr_id": "wu25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) have gained significant popularity due to their remarkable capabilities in text understanding and generation. However, despite their widespread deployment in inference services such as ChatGPT, concerns about the potential leakage of sensitive user data have arisen. Existing solutions primarily rely on privacy-enhancing technologies to mitigate such risks, facing the trade-off among efficiency, privacy, and utility. To narrow this gap, we propose Cape, a context-aware prompt perturbation mechanism based on differential privacy, to enable efficient inference with an improved privacy-utility trade-off. Concretely, we introduce a hybrid utility function that better captures the token similarity. Additionally, we propose a bucketized sampling mechanism to handle large sampling space, which might lead to long-tail phenomenons. Extensive experiments across multiple datasets, along with ablation studies, demonstrate that Cape achieves a better privacy-utility trade-off compared to prior state-of-the-art works.",
+      "paper_id": "pmlr:v267:wu25g",
+      "title": "Cape: Context-Aware Prompt Perturbation Mechanism with Differential Privacy",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67184-67201",
+          "pmlr_id": "wu25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Bivariate causal discovery is challenging when unmeasured confounders exist. To adjust for the bias, previous methods employed the proxy variable ( i.e. , negative control outcome (NCO)) to test the treatment-outcome relationship through integral equations – and assumed that violation of this equation indicates the causal relationship. Upon this, they could establish asymptotic properties for causal hypothesis testing. However, these methods either relied on parametric assumptions or required discretizing continuous variables, which may lead to information loss. Moreover, it is unclear when this underlying integral-related assumption holds, making it difficult to justify the utility in practice. To address these problems, we first consider the scenario where only NCO is available. We propose a novel non-parametric procedure, which enjoys asymptotic properties and preserves more information. Moreover, we find that when NCO affects the outcome, the above integral-related assumption may not hold, rendering the causal relation unidentifiable. Informed by this, we further consider the scenario when the negative control exposure (NCE) is also available. In this scenario, we construct another integral restriction aided by this proxy, which can discover causation when NCO affects the outcome. We demonstrate these findings and the effectiveness of our proposals through comprehensive numerical studies.",
+      "paper_id": "pmlr:v267:wu25h",
+      "title": "Bivariate Causal Discovery with Proxy Variables: Integral Solving and Beyond",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67202-67259",
+          "pmlr_id": "wu25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models are typically trained with next-turn rewards, limiting their ability to optimize for long-term interaction. As a result, they often respond passively to ambiguous or open-ended user requests, failing to help users reach their ultimate intents and leading to inefficient conversations. To address these limitations, we introduce CollabLLM, a novel and general training framework that enhances multiturn human-LLM collaboration. Its key innovation is a collaborative simulation that estimates the long-term contribution of responses using Multiturn-aware Rewards. By reinforcement fine-tuning these rewards, CollabLLM goes beyond responding to user requests, and actively uncovers user intent and offers insightful suggestions—a key step towards more human-centered AI. We also devise a multiturn interaction benchmark with three challenging tasks such as document creation. CollabLLM significantly outperforms our baselines with averages of 18.5% higher task performance and 46.3% improved interactivity by LLM judges. Finally, we conduct a large user study with 201 judges, where CollabLLM increases user satisfaction by 17.6% and reduces user spent time by 10.4%.",
+      "paper_id": "pmlr:v267:wu25i",
+      "title": "CollabLLM: From Passive Responders to Active Collaborators",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67260-67283",
+          "pmlr_id": "wu25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Variable binding—the ability to associate variables with values—is fundamental to symbolic computation and cognition. Although classical architectures typically implement variable binding via addressable memory, it is not well understood how modern neural networks lacking built-in binding operations may acquire this capacity. We investigate this by training a Transformer to dereference queried variables in symbolic programs where variables are assigned either numerical constants or other variables. Each program requires following chains of variable assignments up to four steps deep to find the queried value, and also contains irrelevant chains of assignments acting as distractors. Our analysis reveals a developmental trajectory with three distinct phases during training: (1) random prediction of numerical constants, (2) a shallow heuristic prioritizing early variable assignments, and (3) the emergence of a systematic mechanism for dereferencing assignment chains. Using causal interventions, we find that the model learns to exploit the residual stream as an addressable memory space, with specialized attention heads routing information across token positions. This mechanism allows the model to dynamically track variable bindings across layers, resulting in accurate dereferencing. Our results show how Transformer models can learn to implement systematic variable binding without explicit architectural support, bridging connectionist and symbolic approaches.",
+      "paper_id": "pmlr:v267:wu25j",
+      "title": "How Do Transformers Learn Variable Binding in Symbolic Programs?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67284-67299",
+          "pmlr_id": "wu25j",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We provide an exactly solvable example for interpreting In-Context Learning (ICL) with one-layer attention models as conditional retrieval of dense associative memory models. Our main contribution is to interpret ICL as memory reshaping in the modern Hopfield model from a conditional memory set (in-context examples). Specifically, we show that the in-context sequential examples induce an effective reshaping of the energy landscape of a Hopfield model. We integrate this in-context memory reshaping phenomenon into the existing Bayesian model averaging view of ICL [Zhang et al., AISTATS 2025] via the established equivalence between the modern Hopfield model and transformer attention. Under this unique perspective, we not only characterize how in-context examples shape predictions in the Gaussian linear regression case, but also recover the known $\\epsilon$-stability generalization bound of the ICL for the one-layer attention model. We also give explanations for three key behaviors of ICL and validate them through experiments.",
+      "paper_id": "pmlr:v267:wu25k",
+      "title": "In-Context Learning as Conditioned Associative Memory Retrieval",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67300-67325",
+          "pmlr_id": "wu25k",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Subgraph representation learning has attracted growing interest due to its wide applications in various domains. However, existing methods primarily focus on local neighborhood structures while overlooking the significant impact of global structural information, in particular the influence of multi-hop neighbors beyond immediate neighborhoods. This presents two key challenges: how to effectively capture the structural relationships between distant nodes, and how to prevent excessive aggregation of global structural information from weakening the discriminative ability of subgraph representations. To address these challenges, we propose GPEN (Global Position Encoding Network). GPEN leverages a hierarchical tree structure to encode each node’s global position based on its path distance to the root node, enabling a systematic way to capture relationships between distant nodes. Furthermore, we introduce a boundary-aware convolution module that selectively integrates global structural information while maintaining the unique structural patterns of each subgraph. Extensive experiments on eight public datasets identify that GPEN significantly outperforms state-of-the-art methods in subgraph representation learning.",
+      "paper_id": "pmlr:v267:wu25l",
+      "title": "GPEN: Global Position Encoding Network for Enhanced Subgraph Representation Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67326-67341",
+          "pmlr_id": "wu25l",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Spiking Neural Networks (SNNs) have demonstrated remarkable potential across many domains, including computer vision and natural language processing, owing to their energy efficiency and biological plausibility. However, their application in long-term prediction tasks remains underexplored, which is primarily due to two critical challenges: (1) current SNN encoding methods are unable to effectively encode long temporal information, leading to increased computational complexity and energy consumption; (2) though Transformer-based models have achieved state-of-the-art accuracy in temporal prediction tasks, the absence of proper positional encoding for spiking self-attention restricts Spiking Transformer from effectively utilizing positional information, resulting in performance degradation. To address these challenges, we introduce an attention-free framework, Spik ing F ourier Network ( SpikF ), that encodes input sequences in patches and employs an innovative frequency domain selection mechanism to effectively utilize the sequential properties of time-series data. Extensive evaluations on eight well-established long-term prediction datasets demonstrate that SpikF achieves an averaged $1.9\\%$ reduction in Mean Absolute Error (MAE) compared to state-of-the-art models, while lowering total energy consumption by $3.16\\times$. Our code is available at https://github.com/WWJ-creator/SpikF.",
+      "paper_id": "pmlr:v267:wu25m",
+      "title": "SpikF: Spiking Fourier Network for Efficient Long-term Prediction",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67342-67368",
+          "pmlr_id": "wu25m",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In real-world crowdsourcing scenarios, most workers often annotate a few instances only, which results in a significantly sparse crowdsourced label matrix and subsequently harms the performance of label integration algorithms. Recent work called worker similarity-based label completion (WSLC) has been proven to be an effective algorithm to addressing this issue. However, WSLC considers solely the correlation of the labels annotated by different workers on per individual instance while totally ignoring the correlation of the labels annotated by different workers among similar instances. To fill this gap, we propose a novel label distribution propagation-based label completion (LDPLC) algorithm. At first, we use worker similarity weighted majority voting to initialize a label distribution for each missing label. Then, we design a label distribution propagation algorithm to enable each missing label of each instance to iteratively absorb its neighbors’ label distributions. Finally, we complete each missing label based on its converged label distribution. Experimental results on both real-world and simulated crowdsourced datasets show that LDPLC significantly outperforms WSLC in enhancing the performance of label integration algorithms. Our codes and datasets are available at https://github.com/jiangliangxiao/LDPLC.",
+      "paper_id": "pmlr:v267:wu25n",
+      "title": "Label Distribution Propagation-based Label Completion for Crowdsourcing",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67369-67381",
+          "pmlr_id": "wu25n",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "LLMs are typically trained to answer user questions or follow instructions similarly to how human experts respond. However, in the standard alignment framework they lack the basic ability of explicit thinking before answering. Thinking is important for complex questions that require reasoning and planning – but can be applied to any task. We propose a training method for equipping existing LLMs with such thinking abilities for general instruction following without use of additional human data. We achieve this by an iterative search and optimization procedure that explores the space of possible thought generations, allowing the model to learn how to think without direct supervision. For each instruction, the thought candidates are scored using a judge model to evaluate their responses only, and then optimized via preference optimization. We show that this procedure leads to superior performance on AlpacaEval and Arena-Hard, and shows gains from thinking on non-reasoning categories such as marketing, health and general knowledge, in addition to more traditional reasoning & problem-solving tasks.",
+      "paper_id": "pmlr:v267:wu25o",
+      "title": "Thinking LLMs: General Instruction Following with Thought Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67382-67407",
+          "pmlr_id": "wu25o",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Label distribution learning (LDL) is a novel learning paradigm that emulates label polysemy by assigning label distributions over the label space. However, recent LDL work seems to exhibit a notable contradiction: 1) existing LDL methods employ auxiliary tasks to enhance performance, which narrows their focus to specific applications, thereby lacking generalizability; 2) conversely, LDL methods without auxiliary tasks rely on losses tailored solely to the primary task, lacking beneficial data to guide the learning process. In this paper, we propose S-LDL, a novel and minimalist solution that generates subtask label distributions, i.e., a form of extra supervised information, to reconcile the above contradiction. S-LDL encompasses two key aspects: 1) an algorithm capable of generating subtasks without any prior/expert knowledge; and 2) a plug-andplay framework seamlessly compatible with existing LDL methods, and even adaptable to derivative tasks of LDL. Our analysis and experiments demonstrate that S-LDL is effective and efficient. To the best of our knowledge, this paper represents the first endeavor to address LDL via subtasks.",
+      "paper_id": "pmlr:v267:wu25p",
+      "title": "Divide and Conquer: Learning Label Distribution with Subtasks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67408-67426",
+          "pmlr_id": "wu25p",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The Area Under the ROC Curve (AUC) is a key metric for classification, especially under class imbalance, with growing research focus on optimizing AUC over accuracy in applications like medical image analysis and deepfake detection. This leads to fairness in AUC optimization becoming crucial as biases can impact protected groups. While various fairness mitigation techniques exist, fairness considerations in AUC optimization remain in their early stages, with most research focusing on improving AUC fairness under the assumption of clean protected groups. However, these studies often overlook the impact of noisy protected groups, leading to fairness violations in practice. To address this, we propose the first robust AUC fairness approach under noisy protected groups with fairness theoretical guarantees using distributionally robust optimization. Extensive experiments on tabular and image datasets show that our method outperforms state-of-the-art approaches in preserving AUC fairness. The code is in https://github.com/Purdue-M2/AUC_Fairness_with_Noisy_Groups.",
+      "paper_id": "pmlr:v267:wu25q",
+      "title": "Preserving AUC Fairness in Learning with Noisy Protected Groups",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67427-67448",
+          "pmlr_id": "wu25q",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Current fake image detectors trained on large synthetic image datasets perform satisfactorily on limited studied generative models. However, these detectors suffer a notable performance decline over unseen models. Besides, collecting adequate training data from online generative models is often expensive or infeasible. To overcome these issues, we propose Few-Shot Detector (FSD), a novel AI-generated image detector which learns a specialized metric space for effectively distinguishing unseen fake images using very few samples. Experiments show that FSD achieves state-of-the-art performance by $+11.6%$ average accuracy on the GenImage dataset with only $10$ additional samples. More importantly, our method is better capable of capturing the intra-category commonality in unseen images without further training. Our code is available at https://github.com/teheperinko541/Few-Shot-AIGI-Detector.",
+      "paper_id": "pmlr:v267:wu25r",
+      "title": "Few-Shot Learner Generalizes Across AI-Generated Image Detection",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67449-67460",
+          "pmlr_id": "wu25r",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large multimodal models excel in multimodal tasks but face significant computational challenges due to excessive visual tokens. Unlike token reduction methods that focus on token-level redundancy, we identify and study the computation-level redundancy on vision tokens to ensure no information loss. Our key insight is that vision tokens from the pretrained vision encoder do not necessarily require all the heavy operations (e.g., self-attention, FFNs) in decoder-only LMMs and could be processed more lightly with proper designs. We designed a series of experiments to discover and progressively squeeze out the vision-related computation redundancy. Based on our findings, we propose ProxyV, a novel approach that utilizes proxy vision tokens to alleviate the computational burden on original vision tokens. ProxyV enhances efficiency without compromising performance and can even yield notable performance gains in scenarios with more moderate efficiency improvements. Furthermore, the flexibility of ProxyV is demonstrated through its combination with token reduction methods to boost efficiency further.",
+      "paper_id": "pmlr:v267:wu25s",
+      "title": "Streamline Without Sacrifice - Squeeze out Computation Redundancy in LMM",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67461-67475",
+          "pmlr_id": "wu25s",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We propose a novel preference alignment framework for improving spoken dialogue models on real-time conversations from user interactions. Current preference learning methods primarily focus on text-based language models, and are not directly suited to the complexities of real-time speech interactions, with richer dynamics (e.g. interruption, interjection) and no explicit segmentation between speaker turns.We create a large-scale dataset of more than 150,000 preference pairs from raw multi-turn speech conversations, annotated with AI feedback, to cover preferences over both linguistic content and temporal context variations. We leverage offline alignment methods to finetune a full-duplex autoregressive speech-to-speech model. Extensive experiments demonstrate that feedback on generic conversations can be consistently effective in improving spoken dialogue models to produce more factual, safer and more contextually aligned interactions. We deploy the finetuned model and conduct holistic human evaluations to assess the impact beyond single-turn conversations. Our findings shed light on the importance of a well-calibrated balance among various dynamics, crucial for natural real-time speech dialogue systems.",
+      "paper_id": "pmlr:v267:wu25t",
+      "title": "Aligning Spoken Dialogue Models from User Interactions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67476-67498",
+          "pmlr_id": "wu25t",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Neural Collapse is a phenomenon where the last-layer representations of a well-trained neural network converge to a highly structured geometry. In this paper, we focus on its first (and most basic) property, known as NC1: the within-class variability vanishes. While prior theoretical studies establish the occurrence of NC1 via the data-agnostic unconstrained features model, our work adopts a data-specific perspective, analyzing NC1 in a three-layer neural network, with the first two layers operating in the mean-field regime and followed by a linear layer. In particular, we establish a fundamental connection between NC1 and the loss landscape: we prove that points with small empirical loss and gradient norm (thus, close to being stationary) approximately satisfy NC1, and the closeness to NC1 is controlled by the residual loss and gradient norm. We then show that (i) gradient flow on the mean squared error converges to NC1 solutions with small empirical loss, and (ii) for well-separated data distributions, both NC1 and vanishing test loss are achieved simultaneously. This aligns with the empirical observation that NC1 emerges during training while models attain near-zero test error. Overall, our results demonstrate that NC1 arises from gradient training due to the properties of the loss landscape, and they show the co-occurrence of NC1 and small test error for certain data distributions.",
+      "paper_id": "pmlr:v267:wu25u",
+      "title": "Neural Collapse Beyond the Unconstrained Features Model: Landscape, Dynamics, and Generalization in the Mean-Field Regime",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67499-67536",
+          "pmlr_id": "wu25u",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Identifying variables responsible for changes to a biological system enables applications in drug target discovery and cell engineering. Given a pair of observational and interventional datasets, the goal is to isolate the subset of observed variables that were the targets of the intervention. Directly applying causal discovery algorithms is challenging: the data may contain thousands of variables with as few as tens of samples per intervention, and biological systems do not adhere to classical causality assumptions. We propose a causality-inspired approach to address this practical setting. First, we infer noisy causal graphs from the observational and interventional data. Then, we learn to map the differences between these graphs, along with additional statistical features, to sets of variables that were intervened upon. Both modules are jointly trained in a supervised framework, on simulated and real data that reflect the nature of biological interventions. This approach consistently outperforms baselines for perturbation modeling on seven single-cell transcriptomics datasets. We also demonstrate significant improvements over current causal discovery methods for predicting soft and hard intervention targets across a variety of synthetic data.",
+      "paper_id": "pmlr:v267:wu25v",
+      "title": "Identifying biological perturbation targets through causal differential networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67537-67561",
+          "pmlr_id": "wu25v",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Probabilistic Time Series Forecasting (PTSF) plays a crucial role in decision-making across various fields, including economics, energy, and transportation. Most existing methods excell at short-term forecasting, while overlooking the hurdles of Long-term Probabilistic Time Series Forecasting (LPTSF). As the forecast horizon extends, the inherent nonlinear dynamics have a significant adverse effect on prediction accuracy, and make generative models inefficient by increasing the cost of each iteration. To overcome these limitations, we introduce $K^2$VAE, an efficient VAE-based generative model that leverages a KoopmanNet to transform nonlinear time series into a linear dynamical system, and devises a KalmanNet to refine predictions and model uncertainty in such linear system, which reduces error accumulation in long-term forecasting. Extensive experiments demonstrate that $K^2$VAE outperforms state-of-the-art methods in both short- and long-term PTSF, providing a more efficient and accurate solution.",
+      "paper_id": "pmlr:v267:wu25w",
+      "title": "$K^2$VAE: A Koopman-Kalman Enhanced Variational AutoEncoder for Probabilistic Time Series Forecasting",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67562-67583",
+          "pmlr_id": "wu25w",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Leveraging high-quality joint representations from multimodal data can greatly enhance model performance in various machine-learning based applications. Recent multimodal learning methods, based on the multimodal information bottleneck (MIB) principle, aim to generate optimal MIB with maximal task-relevant information and minimal superfluous information via regularization. However, these methods often set regularization weights in an ad hoc manner and overlook imbalanced task-relevant information across modalities, limiting their ability to achieve optimal MIB. To address this gap, we propose a novel multimodal learning framework, Optimal Multimodal Information Bottleneck (OMIB), whose optimization objective guarantees the achievability of optimal MIB by setting the regularization weight within a theoretically derived bound. OMIB further addresses imbalanced task-relevant information by dynamically adjusting regularization weights per modality, ensuring the inclusion of all task-relevant information. Moreover, we establish a solid information-theoretical foundation for OMIB’s optimization and implement it under the variational approximation framework for computational efficiency. Finally, we empirically validate the OMIB’s theoretical properties on synthetic data and demonstrate its superiority over the state-of-the-art benchmark methods in various downstream tasks.",
+      "paper_id": "pmlr:v267:wu25x",
+      "title": "Learning Optimal Multimodal Information Bottleneck Representations",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67584-67622",
+          "pmlr_id": "wu25x",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Node classification is a fundamental task in graph analysis, with broad applications across various fields. Recent breakthroughs in Large Language Models (LLMs) have enabled LLM-based approaches for this task. Although many studies demonstrate the impressive performance of LLM-based methods, the lack of clear design guidelines may hinder their practical application. In this work, we aim to establish such guidelines through a fair and systematic comparison of these algorithms. As a first step, we developed LLMNodeBed, a comprehensive codebase and testbed for node classification using LLMs. It includes 10 homophilic datasets, 4 heterophilic datasets, 8 LLM-based algorithms, 8 classic baselines, and 3 learning paradigms. Subsequently, we conducted extensive experiments, training and evaluating over 2,700 models, to determine the key settings (e.g., learning paradigms and homophily) and components (e.g., model size and prompt) that affect performance. Our findings uncover 8 insights, e.g., (1) LLM-based methods can significantly outperform traditional methods in a semi-supervised setting, while the advantage is marginal in a supervised setting; (2) Graph Foundation Models can beat open-source LLMs but still fall short of strong LLMs like GPT-4o in a zero-shot setting. We hope that the release of LLMNodeBed, along with our insights, will facilitate reproducible research and inspire future studies in this field. Codes and datasets are released at https://llmnodebed.github.io/.",
+      "paper_id": "pmlr:v267:wu25y",
+      "title": "When Do LLMs Help With Node Classification? A Comprehensive Analysis",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67623-67649",
+          "pmlr_id": "wu25y",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Generating ultra-long sequences with large language models (LLMs) has become increasingly crucial but remains a highly time-intensive task, particularly for sequences up to 100K tokens. While traditional speculative decoding methods exist, simply extending their generation limits fails to accelerate the process and can be detrimental. Through an in-depth analysis, we identify three major challenges hindering efficient generation: frequent model reloading, dynamic key-value (KV) management and repetitive generation. To address these issues, we introduce TokenSwift, a novel framework designed to substantially accelerate the generation process of ultra-long sequences while maintaining the target model’s inherent quality. Experimental results demonstrate that TokenSwift achieves over $3 \\times$ speedup across models of varying scales (1.5B, 7B, 8B, 14B) and architectures (MHA, GQA). This acceleration translates to hours of time savings for ultra-long sequence generation, establishing TokenSwift as a scalable and effective solution at unprecedented lengths.",
+      "paper_id": "pmlr:v267:wu25z",
+      "title": "TokenSwift: Lossless Acceleration of Ultra Long Sequence Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "67650-67669",
+          "pmlr_id": "wu25z",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "With the growing deployment of large language models (LLMs) across diverse domains, concerns regarding their safety have grown substantially. LLM unlearning has emerged as a pivotal approach to removing harmful or unlawful contents while maintaining utility. Despite increasing interest, the challenges of continual unlearning, which is common in real-world scenarios, remain underexplored. Successive unlearning tasks often lead to intensified utility degradation. To effectively unlearn targeted knowledge while preserving LLM utility, it is essential to minimize changes in model parameters by selectively updating those linked to the target knowledge, thereby ensuring other knowledge remains unaffected. Building on the task vector framework, we propose a new method named ALKN (Adaptive Localization of Knowledge Negation), which uses dynamic masking to sparsify training gradients and adaptively adjusts unlearning intensity based on inter-task relationships. Comprehensive experiments across three well-established LLM unlearning datasets demonstrate that our approach consistently outperforms baseline methods in both unlearning effectiveness and utility retention under continual unlearning settings.",
+      "paper_id": "pmlr:v267:wuerkaixi25a",
+      "title": "Adaptive Localization of Knowledge Negation for Continual LLM Unlearning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68094-68117",
+          "pmlr_id": "wuerkaixi25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recently, newly developed Vision-Language Models (VLMs), such as OpenAI’s o1, have emerged, seemingly demonstrating advanced reasoning capabilities across text and image modalities. However, the depth of these advances in language-guided perception and abstract reasoning remains underexplored, and it is unclear whether these models can truly live up to their ambitious promises. To assess the progress and identify shortcomings, we enter the wonderland of Bongard problems, a set of classic visual reasoning puzzles that require human-like abilities of pattern recognition and abstract reasoning. With our extensive evaluation setup, we show that while VLMs occasionally succeed in identifying discriminative concepts and solving some of the problems, they frequently falter. Surprisingly, even elementary concepts that may seem trivial to humans, such as simple spirals, pose significant challenges. Moreover, when explicitly asked to recognize ground truth concepts, they continue to falter, suggesting not only a lack of understanding of these elementary visual concepts but also an inability to generalize to unseen concepts. We compare the results of VLMs to human performance and observe that a significant gap remains between human visual reasoning capabilities and machine cognition.",
+      "paper_id": "pmlr:v267:wust25a",
+      "title": "Bongard in Wonderland: Visual Puzzles that Still Make AI Go Mad?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68118-68142",
+          "pmlr_id": "wust25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Solving partial differential equations (PDEs) using neural methods has been a long-standing scientific and engineering research pursuit. Physics-Informed Neural Networks (PINNs) have emerged as a promising alternative to traditional numerical methods for solving PDEs. However, the gap between domain-specific knowledge and deep learning expertise often limits the practical application of PINNs. Previous works typically involve manually conducting extensive PINNs experiments and summarizing heuristic rules for hyperparameter tuning. In this work, we introduce PINNsAgent, a novel surrogation framework that leverages large language models (LLMs) to bridge the gap between domain-specific knowledge and deep learning. PINNsAgent integrates Physics-Guided Knowledge Replay (PGKR) for efficient knowledge transfer from solved PDEs to similar problems, and Memory Tree Reasoning for exploring the search space of optimal PINNs architectures. We evaluate PINNsAgent on 14 benchmark PDEs, demonstrating its effectiveness in automating the surrogation process and significantly improving the accuracy of PINNs-based solutions.",
+      "paper_id": "pmlr:v267:wuwu25a",
+      "title": "PINNsAgent: Automated PDE Surrogation with Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68143-68165",
+          "pmlr_id": "wuwu25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Bivariate structural causal models (SCM) are often used to infer causal direction by examining their goodness-of-fit under restricted model classes. In this paper, we describe a parametrization of bivariate SCMs in terms of a causal velocity by viewing the cause variable as time in a dynamical system. The velocity implicitly defines counterfactual curves via the solution of initial value problems where the observation specifies the initial condition. Using tools from measure transport, we obtain a unique correspondence between SCMs and the score function of the generated distribution via its causal velocity. Based on this, we derive an objective function that directly regresses the velocity against the score function, the latter of which can be estimated non-parametrically from observational data. We use this to develop a method for bivariate causal discovery that extends beyond known model classes such as additive or location-scale noise, and that requires no assumptions on the noise distributions. When the score is estimated well, the objective is also useful for detecting model non–identifiability and misspecification. We present positive results in simulation and benchmark experiments where many existing methods fail, and perform ablation studies to examine the method’s sensitivity to accurate score estimation.",
+      "paper_id": "pmlr:v267:xi25a",
+      "title": "Distinguishing Cause from Effect with Causal Velocity Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68166-68189",
+          "pmlr_id": "xi25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Open World Object Detection (OWOD) requires the detector to continuously identify and learn new categories. Existing methods rely on the large language model (LLM) to describe the visual attributes of known categories and use these attributes to mark potential objects. The performance of such methods is influenced by the accuracy of LLM descriptions, and selecting appropriate attributes during incremental learning remains a challenge. In this paper, we propose a novel OWOD framework, termed OW-VAP, which operates independently of LLM and requires only minimal object descriptions to detect unknown objects. Specifically, we propose a Visual Attribute Parser (VAP) that parses the attributes of visual regions and assesses object potential based on the similarity between these attributes and the object descriptions. To enable the VAP to recognize objects in unlabeled areas, we exploit potential objects within background regions. Finally, we propose Probabilistic Soft Label Assignment (PSLA) to prevent optimization conflicts from misidentifying background as foreground. Comparative results on the OWOD benchmark demonstrate that our approach surpasses existing state-of-the-art methods with a +13 improvement in U-Recall and a +8 increase in U-AP for unknown detection capabilities. Furthermore, OW-VAP approaches the unknown recall upper limit of the detector.",
+      "paper_id": "pmlr:v267:xi25b",
+      "title": "OW-VAP: Visual Attribute Parsing for Open World Object Detection",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68190-68207",
+          "pmlr_id": "xi25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Diffusion Transformers (DiTs) dominate video generation but their high computational cost severely limits real-world applicability, usually requiring tens of minutes to generate a few seconds of video even on high-performance GPUs. This inefficiency primarily arises from the quadratic computational complexity of 3D full attention with respect to the context length. In this paper, we propose a training-free framework termed Sparse VideoGen (SVG) that leverages the inherent sparsity in 3D full attention to boost inference efficiency. We reveal that the attention heads can be dynamically classified into two groups depending on distinct sparse patterns: (1) Spatial Head, where only spatially-related tokens within each frame dominate the attention output, and (2) Temporal Head, where only temporally-related tokens across different frames dominate. Based on this insight, SVG proposes an online profiling strategy to capture the dynamic sparse patterns and predicts the type of attention head. Combined with a novel hardware-efficient tensor layout transformation and customized kernel implementations, SVG achieves up to 2.28$\\times$ and 2.33$\\times$ end-to-end speedup on CogVideoX-v1.5 and HunyuanVideo, respectively, while preserving generation quality. Our code will be open-sourced upon publication.",
+      "paper_id": "pmlr:v267:xi25c",
+      "title": "Sparse Video-Gen: Accelerating Video Diffusion Transformers with Spatial-Temporal Sparsity",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68208-68224",
+          "pmlr_id": "xi25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The study of causal abstractions bridges two integral components of human intelligence: the ability to determine cause and effect, and the ability to interpret complex patterns into abstract concepts. Formally, causal abstraction frameworks define connections between complicated low-level causal models and simple high-level ones. One major limitation of most existing definitions is that they are not well-defined when considering lossy abstraction functions in which multiple low-level interventions can have different effects while mapping to the same high-level intervention (an assumption called the abstract invariance condition). In this paper, we introduce a new type of abstractions called projected abstractions that generalize existing definitions to accommodate lossy representations. We show how to construct a projected abstraction from the low-level model and how it translates equivalent observational, interventional, and counterfactual causal queries from low to high-level. Given that the true model is rarely available in practice we prove a new graphical criteria for identifying and estimating high-level causal queries from limited low-level data. Finally, we experimentally show the effectiveness of projected abstraction models in high-dimensional image settings.",
+      "paper_id": "pmlr:v267:xia25a",
+      "title": "Causal Abstraction Inference under Lossy Representations",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68225-68235",
+          "pmlr_id": "xia25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph neural networks (GNNs) have shown promise in learning the ground-state electronic properties of materials, subverting ab initio density functional theory (DFT) calculations when the underlying lattices can be represented as small and/or repeatable unit cells (i.e., molecules and periodic crystals). Realistic systems are, however, non-ideal and generally characterized by higher structural complexity. As such, they require large (10+ {Å}) unit cells and thousands of atoms to be accurately described. At these scales, DFT becomes computationally prohibitive, making GNNs especially attractive. In this work, we present a strictly local equivariant GNN capable of learning the electronic Hamiltonian ( H ) of realistically extended materials. It incorporates an augmented partitioning approach that enables training on arbitrarily large structures while preserving local atomic environments beyond boundaries. We demonstrate its capabilities by predicting the electronic Hamiltonian of various systems with up to 3,000 nodes (atoms), 500,000+ edges, 28 million orbital interactions (nonzero entries of H ), and $\\leq$0.53% error in the eigenvalue spectra. Our work expands the applicability of current electronic property prediction methods to some of the most challenging cases encountered in computational materials science, namely systems with disorder, interfaces, and defects.",
+      "paper_id": "pmlr:v267:xia25b",
+      "title": "Learning the Electronic Hamiltonian of Large Atomic Structures",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68236-68257",
+          "pmlr_id": "xia25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "How effectively can LLM-based AI assistants utilize their memory (context) to perform various tasks? Traditional data benchmarks, which are often manually crafted, suffer from several limitations: they are static, susceptible to overfitting, difficult to interpret, and lack actionable insights–failing to pinpoint the specific capabilities a model lacks when it does not pass a test. In this paper, we present a framework for automatically generating a comprehensive set of tests to evaluate models’ abilities to use their memory effectively. Our framework extends the range of capability tests beyond the commonly explored (passkey, key-value, needle in the haystack) search, a dominant focus in the literature. Specifically, we evaluate models on atomic tasks such as searching, recalling, editing, matching, comparing information in context memory, performing basic operations when inputs are structured into distinct blocks, and maintaining state while operating on memory, simulating real-world data. Additionally, we design composite tests to investigate the models’ ability to perform more complex, integrated tasks. Our benchmark enables an interpretable, detailed assessment of memory capabilities of LLMs.",
+      "paper_id": "pmlr:v267:xia25c",
+      "title": "Minerva: A Programmable Memory Test Benchmark for Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68258-68276",
+          "pmlr_id": "xia25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Drag-based editing within pretrained diffusion model provides a precise and flexible way to manipulate foreground objects. Traditional methods optimize the input feature obtained from DDIM inversion directly, adjusting them iteratively to guide handle points towards target locations. However, these approaches often suffer from limited accuracy due to the low representation ability of the feature in motion supervision, as well as inefficiencies caused by the large search space required for point tracking. To address these limitations, we present DragLoRA, a novel framework that integrates LoRA (Low-Rank Adaptation) adapters into the drag-based editing pipeline. To enhance the training of LoRA adapters, we introduce an additional denoising score distillation loss which regularizes the online model by aligning its output with that of the original model. Additionally, we improve the consistency of motion supervision by adapting the input features using the updated LoRA, giving a more stable and accurate input feature for subsequent operations. Building on this, we design an adaptive optimization scheme that dynamically toggles between two modes, prioritizing efficiency without compromising precision. Extensive experiments demonstrate that DragLoRA significantly enhances the control precision and computational efficiency for drag-based image editing. The Codes of DragLoRA are available at: https://github.com/Sylvie-X/DragLoRA.",
+      "paper_id": "pmlr:v267:xia25d",
+      "title": "DragLoRA: Online Optimization of LoRA Adapters for Drag-based Image Editing in Diffusion Model",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68277-68291",
+          "pmlr_id": "xia25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Retrieval-Augmented Generation (RAG) has been empirically shown to enhance the performance of large language models (LLMs) in knowledge-intensive domains such as healthcare, finance, and legal contexts. Given a query, RAG retrieves relevant documents from a corpus and integrates them into the LLMs’ generation process. In this study, we investigate the adversarial robustness of RAG, focusing specifically on examining the retrieval system. First, across 225 different setup combinations of corpus, retriever, query, and targeted information, we show that retrieval systems are vulnerable to universal poisoning attacks in medical Q&A. In such attacks, adversaries generate poisoned documents containing a broad spectrum of targeted information, such as personally identifiable information. When these poisoned documents are inserted into a corpus, they can be accurately retrieved by any users, as long as attacker-specified queries are used. To understand this vulnerability, we discovered that the deviation from the query’s embedding to that of the poisoned document tends to follow a pattern in which the high similarity between the poisoned document and the query is retained, thereby enabling precise retrieval. Based on these findings, we develop a new detection-based defense to ensure the safe use of RAG. Through extensive experiments spanning various Q&A domains, we observed that our proposed method consistently achieves excellent detection rates in nearly all cases.",
+      "paper_id": "pmlr:v267:xian25a",
+      "title": "On the Vulnerability of Applying Retrieval-Augmented Generation within Knowledge-Intensive Application Domains",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68292-68315",
+          "pmlr_id": "xian25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The rapid advancement of large language model (LLM) agents has raised new concerns regarding their safety and security. In this paper, we propose GuardAgent, the first guardrail agent to protect target agents by dynamically checking whether their actions satisfy given safety guard requests. Specifically, GuardAgent first analyzes the safety guard requests to generate a task plan, and then maps this plan into guardrail code for execution. By performing the code execution, GuardAgent can deterministically follow the safety guard request and safeguard target agents. In both steps, an LLM is utilized as the reasoning component, supplemented by in-context demonstrations retrieved from a memory module storing experiences from previous tasks. In addition, we propose two novel benchmarks: EICU-AC benchmark to assess the access control for healthcare agents and Mind2Web-SC benchmark to evaluate the safety policies for web agents. We show that GuardAgent effectively moderates the violation actions for different types of agents on these two benchmarks with over 98% and 83% guardrail accuracies, respectively. Project page: https://guardagent.github.io/",
+      "paper_id": "pmlr:v267:xiang25a",
+      "title": "GuardAgent: Safeguard LLM Agents via Knowledge-Enabled Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68316-68342",
+          "pmlr_id": "xiang25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Anomaly detection is essential for the safety and reliability of autonomous driving systems. Current methods often focus on detection accuracy but neglect response time, which is critical in time-sensitive driving scenarios. In this paper, we introduce real-time anomaly detection for autonomous driving, prioritizing both minimal response time and high accuracy. We propose a novel multimodal asynchronous hybrid network that combines event streams from event cameras with image data from RGB cameras. Our network utilizes the high temporal resolution of event cameras through an asynchronous Graph Neural Network and integrates it with spatial features extracted by a CNN from RGB images. This combination effectively captures both the temporal dynamics and spatial details of the driving environment, enabling swift and precise anomaly detection. Extensive experiments on benchmark datasets show that our approach outperforms existing methods in both accuracy and response time, achieving millisecond-level real-time performance.",
+      "paper_id": "pmlr:v267:xiao25a",
+      "title": "When Every Millisecond Counts: Real-Time Anomaly Detection via the Multimodal Asynchronous Hybrid Network",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68343-68363",
+          "pmlr_id": "xiao25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "One of the key technologies for the success of Large Language Models (LLMs) is preference alignment. However, a notable side effect of preference alignment is poor calibration: while the pre-trained models are typically well-calibrated, LLMs tend to become poorly calibrated after alignment with human preferences. In this paper, we investigate why preference alignment affects calibration and how to address this issue. For the first question, we observe that the preference collapse issue in alignment undesirably generalizes to the calibration scenario, causing LLMs to exhibit overconfidence and poor calibration. To address this, we demonstrate the importance of fine-tuning with domain-specific knowledge to alleviate the overconfidence issue. To further analyze whether this affects the model’s performance, we categorize models into two regimes: calibratable and non-calibratable, defined by bounds of Expected Calibration Error (ECE). In the calibratable regime, we propose a calibration-aware fine-tuning approach to achieve proper calibration without compromising LLMs’ performance. However, as models are further fine-tuned for better performance, they enter the non-calibratable regime. For this case, we develop an EM-algorithm-based ECE regularization for the fine-tuning loss to maintain low calibration error. Extensive experiments validate the effectiveness of the proposed methods.",
+      "paper_id": "pmlr:v267:xiao25b",
+      "title": "Restoring Calibration for Aligned Large Language Models: A Calibration-Aware Fine-Tuning Approach",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68364-68390",
+          "pmlr_id": "xiao25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In recent years, SignSGD has garnered interest as both a practical optimizer as well as a simple model to understand adaptive optimizers like Adam. Though there is a general consensus that SignSGD acts to precondition optimization and reshapes noise, quantitatively understanding these effects in theoretically solvable settings remains difficult. We present an analysis of SignSGD in a high dimensional limit, and derive a limiting SDE and ODE to describe the risk. Using this framework we quantify four effects of SignSGD: effective learning rate, noise compression, diagonal preconditioning, and gradient noise reshaping. Our analysis is consistent with experimental observations but moves beyond that by quantifying the dependence of these effects on the data and noise distributions. We conclude with a conjecture on how these results might be extended to Adam.",
+      "paper_id": "pmlr:v267:xiao25c",
+      "title": "Exact risk curves of signSGD in High-Dimensions: quantifying preconditioning and noise-compression effects",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68391-68439",
+          "pmlr_id": "xiao25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We propose MUltiway Dynamic Dense (MUDD) connections, a simple yet effective method to address the limitations of residual connections and enhance cross-layer information flow in Transformers. Unlike existing dense connection approaches with static and shared connection weights, MUDD generates connection weights dynamically depending on hidden states at each sequence position and for each decoupled input stream (the query, key, value or residual) of a Transformer block. MUDD connections can be seamlessly integrated into any Transformer architecture to create MUDDFormer. Extensive experiments show that MUDDFormer significantly outperforms Transformers across various model architectures and scales in language modeling, achieving performance of Transformers trained with 1.8x–2.4x compute. Notably, MUDDPythia-2.8B matches Pythia-6.9B in pretraining ppl and downstream tasks and even rivals Pythia-12B in five-shot settings, while adding only 0.23% parameters and 0.4% computation. Code in JAX and PyTorch and pre-trained models are available at https://github.com/Caiyun-AI/MUDDFormer.",
+      "paper_id": "pmlr:v267:xiao25d",
+      "title": "MUDDFormer: Breaking Residual Bottlenecks in Transformers via Multiway Dynamic Dense Connections",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68440-68458",
+          "pmlr_id": "xiao25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advances have highlighted the benefits of scaling language models to enhance performance across a wide range of NLP tasks. However, these approaches still face limitations in effectiveness and efficiency when applied to domain-specific tasks, particularly for small edge-side models. We propose the LoRA-Gen framework, which utilizes a large cloud-side model to generate LoRA parameters for edge-side models based on task descriptions. By employing the reparameterization technique, we merge the LoRA parameters into the edge-side model to achieve flexible specialization. Our method facilitates knowledge transfer between models while significantly improving the inference efficiency of the specialized model by reducing the input context length. Without specialized training, LoRA-Gen outperforms conventional LoRA fine-tuning, which achieves competitive accuracy and a 2.1x speedup with TinyLLaMA-1.1B in reasoning tasks. Besides, our method delivers a compress ratio of 10.1x with Gemma-2B on intelligent agent tasks.",
+      "paper_id": "pmlr:v267:xiao25e",
+      "title": "LoRA-Gen: Specializing Large Language Model via Online LoRA Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68459-68471",
+          "pmlr_id": "xiao25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Safe learning is central to AI-enabled robots where a single failure may lead to catastrophic results. Existing safe learning methods are not scalable, inefficient and hard to train, and tend to generate unstable signals under noisy inputs that are challenging to be deployed for robots. To address these challenges, we propose Adaptive explicit-Barrier Net (ABNet) in which barriers explicitly show up in the closed-form model that guarantees safety. The ABNet has the potential to incrementally scale toward larger safe foundation models. Each head of ABNet could learn safe control policies from different features and focuses on specific part of the observation. In this way, we do not need to directly construct a large model for complex tasks, which significantly facilitates the training of the model while ensuring its stable output. Most importantly, we can still formally prove the safety guarantees of the ABNet. We demonstrate the efficiency and strength of ABNet in 2D robot obstacle avoidance, safe robot manipulation, and vision-based end-to-end autonomous driving, with results showing much better robustness and guarantees over existing models.",
+      "paper_id": "pmlr:v267:xiao25f",
+      "title": "ABNet: Adaptive explicit-Barrier Net for Safe and Scalable Robot Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68472-68490",
+          "pmlr_id": "xiao25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The remarkable evolution of generative models has enabled the generation of high-quality, visually attractive images, often perceptually indistinguishable from real photographs to human eyes. This has spurred significant attention on AI-generated image (AIGI) detection. Intuitively, higher image quality should increase detection difficulty. However, our systematic study on cutting-edge text-to-image generators reveals a counterintuitive finding: AIGIs with higher quality scores, as assessed by human preference models, tend to be more easily detected by existing models. To investigate this, we examine how the text prompts for generation and image characteristics influence both quality scores and detector accuracy. We observe that images from short prompts tend to achieve higher preference scores while being easier to detect. Furthermore, through clustering and regression analyses, we verify that image characteristics like saturation, contrast, and texture richness collectively impact both image quality and detector accuracy. Finally, we demonstrate that the performance of off-the-shelf detectors can be enhanced across diverse generators and datasets by selecting input patches based on the predicted scores of our regression models, thus substantiating the broader applicability of our findings. Code and data are available at https://github.com/Coxy7/AIGI-Detection-Quality-Paradox.",
+      "paper_id": "pmlr:v267:xiao25g",
+      "title": "Are High-Quality AI-Generated Images More Difficult for Models to Detect?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "68491-68512",
+          "pmlr_id": "xiao25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

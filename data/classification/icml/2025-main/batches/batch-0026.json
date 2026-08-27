@@ -1,0 +1,747 @@
+{
+  "batch_index": 26,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "We propose the notion of empirical privacy variance and study it in the context of differentially private fine-tuning of language models. Specifically, we show that models calibrated to the same $(\\varepsilon, \\delta)$-DP guarantee using DP-SGD with different hyperparameter configurations can exhibit significant variations in empirical privacy, which we quantify through the lens of memorization. We investigate the generality of this phenomenon across multiple dimensions and discuss why it is surprising and relevant. Through regression analysis, we examine how individual and composite hyperparameters influence empirical privacy. The results reveal a no-free-lunch trade-off: existing practices of hyperparameter tuning in DP-SGD, which focus on optimizing utility under a fixed privacy budget, often come at the expense of empirical privacy. To address this, we propose refined heuristics for hyperparameter selection that explicitly account for empirical privacy, showing that they are both precise and practically useful. Finally, we take preliminary steps to understand empirical privacy variance. We propose two hypotheses, identify limitations in existing techniques like privacy auditing, and outline open questions for future research.",
+      "paper_id": "pmlr:v267:hu25x",
+      "title": "Empirical Privacy Variance",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "24761-24804",
+          "pmlr_id": "hu25x",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Irregular Multivariate Time Series (IMTS) forecasting is challenging due to the unaligned nature of multi-channel signals and the prevalence of extensive missing data. Existing methods struggle to capture reliable temporal patterns from such data due to significant missing values. While pre-trained foundation models show potential for addressing these challenges, they are typically designed for Regularly Sampled Time Series (RTS). Motivated by the visual Mask AutoEncoder’s (MAE) powerful capability for modeling sparse multi-channel information and its success in RTS forecasting, we propose VIMTS , a framework adapting V isual MAE for IMTS forecasting. To mitigate the effect of missing values, VIMTS first processes IMTS along the timeline into feature patches at equal intervals. These patches are then complemented using learned cross-channel dependencies. Then it leverages visual MAE’s capability in handling sparse multichannel data for patch reconstruction, followed by a coarse-to-fine technique to generate precise predictions from focused contexts. In addition, we integrate self-supervised learning for improved IMTS modeling by adapting the visual MAE to IMTS data. Extensive experiments demonstrate VIMTS’s superior performance and few-shot capability, advancing the application of visual foundation models in more general time series tasks. Our code is available at https://github.com/WHU-HZY/VIMTS.",
+      "paper_id": "pmlr:v267:hu25y",
+      "title": "IMTS is Worth Time $\\times$ Channel Patches: Visual Masked Autoencoders for Irregular Multivariate Time Series Prediction",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "24805-24822",
+          "pmlr_id": "hu25y",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "While Large Language Models (LLMs) have exhibited remarkable emergent capabilities through extensive pre-training, they still face critical limitations in generalizing to specialized domains and handling diverse linguistic variations, known as distribution shifts. In this paper, we propose a Test-Time Learning (TTL) paradigm for LLMs, namely TLM, which dynamically adapts LLMs to target domains using only unlabeled test data during testing. Specifically, we first provide empirical evidence and theoretical insights to reveal that more accurate predictions from LLMs can be achieved by minimizing the input perplexity of the unlabeled test data. Based on this insight, we formulate the Test-Time Learning process of LLMs as input perplexity minimization, enabling self-supervised enhancement of LLM performance. Furthermore, we observe that high-perplexity samples tend to be more informative for model optimization. Accordingly, we introduce a Sample Efficient Learning Strategy that actively selects and emphasizes these high-perplexity samples for test-time updates. Lastly, to mitigate catastrophic forgetting and ensure adaptation stability, we adopt Low-Rank Adaptation (LoRA) instead of full-parameter optimization, which allows lightweight model updates while preserving more original knowledge from the model. We introduce the AdaptEval benchmark for TTL and demonstrate through experiments that TLM improves performance by at least 20% compared to original LLMs on domain knowledge adaptation.",
+      "paper_id": "pmlr:v267:hu25z",
+      "title": "Test-Time Learning for Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "24823-24849",
+          "pmlr_id": "hu25z",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Addressing reward design complexities in deep reinforcement learning is facilitated by knowledge transfer across different domains. To this end, we define reward translation to describe the cross-domain reward transfer problem. However, current methods struggle with non-pairable and non-time-alignable incompatible MDPs. This paper presents an adaptable reward translation framework neural reward translation featuring semi-alignable MDPs , which allows efficient reward translation under relaxed constraints while handling the intricacies of incompatible MDPs. Given the inherent difficulty of directly mapping semi-alignable MDPs and transferring rewards, we introduce an indirect mapping method through reward machines, created using limited human input or LLM-based automated learning. Graph-matching techniques establish links between reward machines from distinct environments, thus enabling cross-domain reward translation within semi-alignable MDP settings. This broadens the applicability of DRL across multiple domains. Experiments substantiate our approach’s effectiveness in tasks under environments with semi-alignable MDPs.",
+      "paper_id": "pmlr:v267:hua25a",
+      "title": "Reward Translation via Reward Machine in Semi-Alignable MDPs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "24912-24931",
+          "pmlr_id": "hua25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Extending the context length of Language Models (LMs) by improving Rotary Position Embedding (RoPE) has become a trend. While prior works mainly address RoPE’s limitations within attention, this paper uncovers the adverse effects on length generalization from nearly all parts of LMs. Using Discrete Signal Processing theory, we show that RoPE enables periodic attention by implicitly achieving Non-Uniform Discrete Fourier Transform . However, this periodicity is undermined by the spectrum damage caused by: 1) linear layers and activation functions outside of attention; 2) insufficiently trained frequency components brought by time-domain truncation. Building on our observations, we propose Fourier Position Embedding (FoPE) , which enhances attention’s frequency-domain properties to improve both its periodic extension and length generalization. FoPE constructs Fourier Series and zero-outs the destructive frequency components, increasing model robustness against the spectrum damage. Experiments across various model scales and benchmarks show that, within varying context windows, FoPE maintains a more stable performance compared to other baselines. Several analyses and ablations bring further support to our method and theoretical modeling.",
+      "paper_id": "pmlr:v267:hua25b",
+      "title": "Fourier Position Embedding: Enhancing Attention’s Periodic Extension for Length Generalization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "24932-24949",
+          "pmlr_id": "hua25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Deciphering protein folding and unfolding pathways under tension is essential for deepening our understanding of fundamental biological mechanisms. Such insights hold the promise of developing treatments for a range of debilitating and fatal conditions, including muscular disorders like Duchenne Muscular Dystrophy and neurodegenerative diseases such as Parkinson’s disease. Single molecule force spectroscopy (SMFS) is a powerful technique for investigating forces involved in protein domains folding and unfolding. However, SMFS trials often involve multiple protein molecules, necessitating filtering to isolate measurements from single-molecule trials. Currently, manual visual inspection is the primary method for classifying single-molecule data; a process that is both time-consuming and requires significant expertise. Here, we both apply state-of-the-art machine learning models and present a novel deep learning model tailored to SMFS data. The proposed model employs a dual-branch fusion strategy; one branch integrates the physics of protein molecules, and the other operates independently of physical constraints. This model automates the isolation of single-molecule measurements, significantly enhancing data processing efficiency. To train and validate our approach, we developed a physics-based Monte Carlo engine to simulate force spectroscopy datasets, including trials involving single molecules, multiple molecules, and no molecules. Our model achieves state-of-the-art performance, outperforming five baseline methods on both simulated and experimental datasets. It attains nearly 100% accuracy across all simulated datasets and an average accuracy of $79.6 \\pm 5.2$% on experimental datasets, using only $\\sim$30 training samples, surpassing baseline methods by 11.4%. Notably, even without expert annotations on experimental data, the model achieves an average accuracy of $72.0 \\pm 5.9$% when pre-trained on corresponding simulated datasets. With our deep learning approach, the time required to extract meaningful statistics from single-molecule SMFS trials is reduced from a day to under an hour. This work results in SMFS experimental datasets from four important protein molecules crucial to many biological pathways. To support further research, we have made our datasets publicly available and provided a Python-based toolbox (https://github.com/SalapakaLab-SIMBioSys/SMFS-Identification).",
+      "paper_id": "pmlr:v267:hua25c",
+      "title": "A Physics-Augmented Deep Learning Framework for Classifying Single Molecule Force Spectroscopy Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "24950-24974",
+          "pmlr_id": "hua25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Prompt tuning adapts Vision-Language Models like CLIP to open-world tasks with minimal training costs. In this direction, one typical paradigm evaluates model performance separately on known classes ( i.e. , base domain) and unseen classes ( i.e. , new domain). However, real-world scenarios require models to handle inputs without prior domain knowledge . This practical challenge has spurred the development of open-world prompt tuning , which demands a unified evaluation of two stages: 1) detecting whether an input belongs to the base or new domain ( P1 ), and 2) classifying the sample into its correct class ( P2 ). What’s more, as domain distributions are generally unknown, a proper metric should be insensitive to varying base/new sample ratios ( P3 ). However, we find that current metrics, including HM, overall accuracy, and AUROC, fail to satisfy these three properties simultaneously. To bridge this gap, we propose $\\mathsf{OpenworldAUC}$, a unified metric that jointly assesses detection and classification through pairwise instance comparisons. To optimize $\\mathsf{OpenworldAUC}$ effectively, we introduce Gated Mixture-of-Prompts (GMoP) , which employs domain-specific prompts and a gating mechanism to dynamically balance detection and classification. Theoretical guarantees ensure generalization of GMoP under practical conditions. Experiments on 15 benchmarks in open-world scenarios show GMoP achieves SOTA performance on $\\mathsf{OpenworldAUC}$ and other metrics.",
+      "paper_id": "pmlr:v267:hua25d",
+      "title": "OpenworldAUC: Towards Unified Evaluation and Optimization for Open-world Prompt Tuning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "24975-25020",
+          "pmlr_id": "hua25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Knowledge Graph Foundation Models (KGFMs) are at the frontier for deep learning on knowledge graphs (KGs), as they can generalize to completely novel knowledge graphs with different relational vocabularies. Despite their empirical success, our theoretical understanding of KGFMs remains very limited. In this paper, we conduct a rigorous study of the expressive power of KGFMs. Specifically, we show that the expressive power of KGFMs directly depends on the motifs that are used to learn the relation representations. We then observe that the most typical motifs used in the existing literature are binary , as the representations are learned based on how pairs of relations interact, which limits the model’s expressiveness. As part of our study, we design more expressive KGFMs using richer motifs, which necessitate learning relation representations based on, e.g., how triples of relations interact with each other. Finally, we empirically validate our theoretical findings, showing that the use of richer motifs results in better performance on a wide range of datasets drawn from different domains.",
+      "paper_id": "pmlr:v267:huang25a",
+      "title": "How Expressive are Knowledge Graph Foundation Models?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25021-25058",
+          "pmlr_id": "huang25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Post-training quantization (PTQ) is an effective technique for compressing large language models (LLMs). However, while uniform-precision quantization is computationally efficient, it often compromises model performance. To address this, we propose SliM-LLM, a salience-driven mixed-precision quantization framework that allocates bit-widths at the group-wise with high accuracy. Our approach leverages the observation that important weights follow a structured distribution and introduces two key components: 1) Salience-Determined Bit Allocation adaptively assigns bit-widths to groups within each layer based on their salience; and 2) Salience-Weighted Quantizer Calibration optimizes quantizer parameters by incorporating element-level salience, retain essential information. With its structured group-wise partitioning, SliM-LLM provides a hardware-friendly solution that matches the efficiency of uniform quantization methods while significantly improving accuracy. Experiments show that SliM-LLM achieves superior performance across various LLMs at low bit-widths. For example, a 2-bit quantized LLaMA-7B model reduces memory usage by nearly 6x compared to the floating-point baseline, decreases perplexity by 48% compared to state-of-the-art gradient-free PTQ methods, and maintains GPU inference speed. Additionally, the extended version, SliM-LLM+, which incorporates gradient-based quantization, further reduces perplexity by 35.1%. Our code is available at https://github.com/Aaronhuang-778/SliM-LLM.",
+      "paper_id": "pmlr:v267:huang25aa",
+      "title": "SliM-LLM: Salience-Driven Mixed-Precision Quantization for Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25672-25692",
+          "pmlr_id": "huang25aa",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "State-Space Models (SSMs), and particularly Mamba, have recently emerged as a promising alternative to Transformers. Mamba introduces input selectivity to its SSM layer (S6) and incorporates convolution and gating into its block definition. While these modifications do improve Mamba’s performance over its SSM predecessors, it remains largely unclear how Mamba leverages the additional functionalities provided by input selectivity, and how these interact with the other operations in the Mamba architecture. In this work, we demystify the role of input selectivity in Mamba, investigating its impact on function approximation power, long-term memorization, and associative recall capabilities. In particular: (i) we prove that the S6 layer of Mamba can represent projections onto Haar wavelets , providing an edge over its Diagonal SSM (S4D) predecessor in approximating discontinuous functions commonly arising in practice; (ii) we show how the S6 layer can dynamically counteract memory decay; (iii) we provide analytical solutions to the MQAR associative recall task using the Mamba architecture with different mixers — Mamba, Mamba-2, and S4D. We demonstrate the tightness of our theoretical constructions with empirical results on concrete tasks. Our findings offer a mechanistic understanding of Mamba and reveal opportunities for improvement.",
+      "paper_id": "pmlr:v267:huang25ab",
+      "title": "Understanding Input Selectivity in Mamba: Impact on Approximation Power, Memorization, and Associative Recall Capacity",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25693-25727",
+          "pmlr_id": "huang25ab",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Vision foundation models pre-trained on massive data encode rich representations of real-world concepts, which can be adapted to downstream tasks by fine-tuning. However, fine-tuning foundation models on one task often leads to the issue of concept forgetting on other tasks. Recent methods of robust fine-tuning aim to mitigate forgetting of prior knowledge without affecting the fine-tuning performance. Knowledge is often preserved by matching the original and fine-tuned model weights or feature pairs. However, such point-wise matching can be too strong, without explicit awareness of the feature neighborhood structures that encode rich knowledge as well. We propose a novel regularization method Proxy-FDA that explicitly preserves the structural knowledge in feature space. Proxy-FDA performs Feature Distribution Alignment (using nearest neighbor graphs) between the pre-trained and fine-tuned feature spaces, and the alignment is further improved by informative proxies that are generated dynamically to increase data diversity. Experiments show that Proxy-FDA significantly reduces concept forgetting during fine-tuning, and we find a strong correlation between forgetting and a distributional distance metric (in comparison to L2 distance). We further demonstrate Proxy-FDA’s benefits in various fine-tuning settings (end-to-end, few-shot and continual tuning) and across different tasks like image classification, captioning and VQA.",
+      "paper_id": "pmlr:v267:huang25ac",
+      "title": "Proxy-FDA: Proxy-based Feature Distribution Alignment for Fine-tuning Vision Foundation Models without Forgetting",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25728-25749",
+          "pmlr_id": "huang25ac",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "With advancements in visual language models (VLMs) and large language models (LLMs), video anomaly detection (VAD) has progressed beyond binary classification to fine-grained categorization and multidimensional analysis. However, existing methods focus mainly on coarse-grained detection, lacking anomaly explanations. To address these challenges, we propose Ex-VAD, an Explainable Fine-grained Video Anomaly Detection approach that combines fine-grained classification with detailed explanations of anomalies. First, we use a VLM to extract frame-level captions, and an LLM converts them to video-level explanations, enhancing the model’s explainability. Second, integrating textual explanations of anomalies with visual information greatly enhances the model’s anomaly detection capability. Finally, we apply label-enhanced alignment to optimize feature fusion, enabling precise fine-grained detection. Extensive experimental results on the UCF-Crime and XD-Violence datasets demonstrate that Ex-VAD significantly outperforms existing State-of-The-Art methods.",
+      "paper_id": "pmlr:v267:huang25ad",
+      "title": "Ex-VAD: Explainable Fine-grained Video Anomaly Detection Based on Visual-Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25750-25761",
+          "pmlr_id": "huang25ad",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Personalized Federated Learning (PFL) has become a promising learning paradigm, enabling the training of high-quality personalized models through multiple communication rounds between clients and a central server. However, directly applying traditional PFL in real-world environments where communication is expensive, limited, or infeasible is challenging, as seen in Low Earth Orbit (LEO) satellite constellations, which face severe communication constraints due to their high mobility, limited contact windows. To address these issues, we introduce Federated Oriented Learning (FOL), a novel four-stage one-shot PFL algorithm designed to enhance local model performance by leveraging neighboring models within stringent communication constraints. FOL comprises model pretraining, model collection, model alignment (via fine-tuning, pruning, post fine-tuning, and ensemble refinement), and knowledge distillation stages. We establish two theoretical guarantees on empirical risk discrepancy between student and teacher models and the convergence of the distillation process. Extensive experiments on datasets Wildfire, Hurricane, CIFAR-10, CIFAR-100, and SVHN demonstrate that FOL consistently outperforms state-of-the-art one-shot Federated Learning (OFL) methods; for example, it achieves accuracy improvements of up to 39.24% over the baselines on the Wildfire dataset.",
+      "paper_id": "pmlr:v267:huang25ae",
+      "title": "Federated Oriented Learning: A Practical One-Shot Personalized Federated Learning Framework",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25762-25790",
+          "pmlr_id": "huang25ae",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Interpretability research now offers a variety of techniques for identifying abstract internal mechanisms in neural networks. Can such techniques be used to predict how models will behave on out-of-distribution examples? In this work, we provide a positive answer to this question. Through a diverse set of language modeling tasks—including symbol manipulation, knowledge retrieval, and instruction following—we show that the most robust features for correctness prediction are those that play a distinctive causal role in the model’s behavior. Specifically, we propose two methods that leverage causal mechanisms to predict the correctness of model outputs: counterfactual simulation (checking whether key causal variables are realized) and value probing (using the values of those variables to make predictions). Both achieve high AUC-ROC in distribution and outperform methods that rely on causal-agnostic features in out-of-distribution settings, where predicting model behaviors is more crucial. Our work thus highlights a novel and significant application for internal causal analysis of language models.",
+      "paper_id": "pmlr:v267:huang25af",
+      "title": "Internal Causal Mechanisms Robustly Predict Language Model Out-of-Distribution Behaviors",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25791-25812",
+          "pmlr_id": "huang25af",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Conditional flow matching (CFM) stands out as an efficient, simulation-free approach for training flow-based generative models, achieving remarkable performance for data generation. However, CFM is insufficient to ensure accuracy in learning probability paths. In this paper, we introduce a new partial differential equation characterization for the error between the learned and exact probability paths, along with its solution. We show that the total variation gap between the two probability paths is bounded above by a combination of the CFM loss and an associated divergence loss. This theoretical insight leads to the design of a new objective function that simultaneously matches the flow and its divergence. Our new approach improves the performance of the flow-based generative model by a noticeable margin without sacrificing generation efficiency. We showcase the advantages of this enhanced training approach over CFM on several important benchmark tasks, including generative modeling for dynamical systems, DNA sequences, and videos. Code is available at https://github.com/Utah-Math-Data-Science/Flow_Div_Matching.",
+      "paper_id": "pmlr:v267:huang25ag",
+      "title": "Improving Flow Matching by Aligning Flow Divergence",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25813-25834",
+          "pmlr_id": "huang25ag",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Diffusion Transformers (DiTs) excel in generative tasks but face practical deployment challenges due to high inference costs. Feature caching, which stores and retrieves redundant computations, offers the potential for acceleration. Existing learning-based caching, though adaptive, overlooks the impact of the prior timestep. It also suffers from misaligned objectives- aligned predicted noise vs. high-quality images -between training and inference. These two discrepancies compromise both performance and efficiency. To this end, we harmonize training and inference with a novel learning-based caching framework dubbed HarmoniCa . It first incorporates Step-Wise Denoising Training (SDT) to ensure the continuity of the denoising process, where prior steps can be leveraged. In addition, an Image Error Proxy-Guided Objective (IEPO) is applied to balance image quality against cache utilization through an efficient proxy to approximate the image error. Extensive experiments across $8$ models, $4$ samplers, and resolutions from $256\\times256$ to $2K$ demonstrate superior performance and speedup of our framework. For instance, it achieves over $40\\%$ latency reduction (*i.e.*, $2.07\\times$ theoretical speedup) and improved performance on PixArt-$\\alpha$. Remarkably, our *image-free* approach reduces training time by $25\\%$ compared with the previous method. Our code is available at https://github.com/ModelTC/HarmoniCa.",
+      "paper_id": "pmlr:v267:huang25ah",
+      "title": "HarmoniCa: Harmonizing Training and Inference for Better Feature Caching in Diffusion Transformer Acceleration",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25835-25858",
+          "pmlr_id": "huang25ah",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Partial observability presents a significant challenge for Safe Reinforcement Learning (Safe RL), as it impedes the identification of potential risks and rewards. Leveraging specific types of privileged information during training to mitigate the effects of partial observability has yielded notable empirical successes. In this paper, we propose Asymmetric Constrained Partially Observable Markov Decision Processes (ACPOMDPs) to theoretically examine the advantages of incorporating privileged information in Safe RL. Building upon ACPOMDPs, we propose the Privileged Information Guided Dreamer ( PIGDreamer ), a model-based RL approach that leverages privileged information to enhance the agent’s safety and performance through privileged representation alignment and an asymmetric actor-critic structure. Our empirical results demonstrate that PIGDreamer significantly outperforms existing Safe RL methods. Furthermore, compared to alternative privileged RL methods, our approach exhibits enhanced performance, robustness, and efficiency. Codes are available at: https://github.com/hggforget/PIGDreamer.",
+      "paper_id": "pmlr:v267:huang25ai",
+      "title": "PIGDreamer: Privileged Information Guided World Models for Safe Partially Observable Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25859-25875",
+          "pmlr_id": "huang25ai",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Traditional network inference methods, such as Gaussian Graphical Models, which are built on continuity and homogeneity, face challenges when modeling discrete data and heterogeneous frameworks. Furthermore, under high-dimensionality, the parameter estimation of such models can be hindered by the notorious intractability of high-dimensional integrals. In this paper, we introduce a new and flexible device for graphical models, which accommodates diverse data types, including Gaussian, Poisson log-normal, and latent Gaussian copula models. The new device is driven by a new marginally recoverable parametric family, which can be effectively estimated without evaluating the high-dimensional integration in high-dimensional settings thanks to the marginal recoverability. We further introduce a mixture of marginally recoverable models to capture ubiquitous heterogeneous structures. We show the validity of the desirable properties of the models and the effective estimation methods, and demonstrate their advantages over the state-of-the-art network inference methods via extensive simulation studies and a gene regulatory network analysis of real single-cell RNA sequencing data.",
+      "paper_id": "pmlr:v267:huang25aj",
+      "title": "A Generic Family of Graphical Models: Diversity, Efficiency, and Heterogeneity",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25876-25907",
+          "pmlr_id": "huang25aj",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We present DriveGPT, a scalable behavior model for autonomous driving. We model driving as a sequential decision-making task, and learn a transformer model to predict future agent states as tokens in an autoregressive fashion. We scale up our model parameters and training data by multiple orders of magnitude, enabling us to explore the scaling properties in terms of dataset size, model parameters, and compute. We evaluate DriveGPT across different scales in a planning task, through both quantitative metrics and qualitative examples, including closed-loop driving in complex real-world scenarios. In a separate prediction task, DriveGPT outperforms state-of-the-art baselines and exhibits improved performance by pretraining on a large-scale dataset, further validating the benefits of data scaling.",
+      "paper_id": "pmlr:v267:huang25ak",
+      "title": "DriveGPT: Scaling Autoregressive Behavior Models for Driving",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25908-25921",
+          "pmlr_id": "huang25ak",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Preference learning is critical for aligning large language models (LLMs) with human values, with the quality of preference datasets playing a crucial role in this process. While existing metrics primarily assess data quality based on either explicit or implicit reward margins, their single-margin focus often leads to contradictory evaluations for the same data. To address this issue, we propose a new metric of alignment potential , $M_{AP}$, which integrates both margins to quantify the gap from the model’s current implicit reward margin to the target explicit reward margin, thereby estimating the model’s potential to align on the preference data. Empirical results demonstrate that training on the data selected by $M_{AP}$ consistently enhances alignment performance, surpassing existing metrics across different base models and optimization objectives. Furthermore, our method can be extended to self-play data generation frameworks, where we use this metric to identify high-quality data within the self-generated content by LLMs. Under this data generation scenario, our method surpasses current state-of-the-art methods across various training settings and demonstrates continuous improvements with increasing dataset size and training iterations.",
+      "paper_id": "pmlr:v267:huang25al",
+      "title": "Larger or Smaller Reward Margins to Select Preferences for LLM Alignment?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25922-25946",
+          "pmlr_id": "huang25al",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We investigate the use of large language models (LLMs) to simulate human responses to survey questions, and perform uncertainty quantification to gain reliable insights. Our approach converts imperfect, LLM-simulated responses into confidence sets for population parameters of human responses, addressing the distribution shift between the simulated and real populations. A key innovation lies in determining the optimal number of simulated responses: too many produce overly narrow confidence sets with poor coverage, while too few yield excessively loose estimates. To resolve this, our method adaptively selects the simulation sample size, ensuring valid average-case coverage guarantees. It is broadly applicable to any LLM, irrespective of its fidelity, and any procedure for constructing confidence sets. Additionally, the selected sample size quantifies the degree of misalignment between the LLM and the target human population. We illustrate our method on real datasets and LLMs.",
+      "paper_id": "pmlr:v267:huang25am",
+      "title": "Uncertainty Quantification for LLM-Based Survey Simulations",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25947-25971",
+          "pmlr_id": "huang25am",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph neural networks have recently demonstrated remarkable performance in predicting material properties. Crystalline material data is manually encoded into graph representations. Existing methods incorporate different attributes into constructing representations to satisfy the constraints arising from symmetries of material structure. However, existing methods for obtaining graph representations are specific to certain constraints, which are ineffective when facing new constraints. In this work, we propose a code generation framework with multiple large language model agents to obtain representations named Rep-CodeGen with three iterative stages simulating an evolutionary algorithm. To the best of our knowledge, Rep-CodeGen is the first framework for automatically generating code to obtain representations that can be used when facing new constraints. Furthermore, a type of representation from generated codes by our framework satisfies six constraints, with codes satisfying three constraints as bases. Extensive experiments on two real-world material datasets show that a property prediction method based on such a graph representation achieves state-of-the-art performance in material property prediction tasks.",
+      "paper_id": "pmlr:v267:huang25an",
+      "title": "Code-Generated Graph Representations Using Multiple LLM Agents for Material Properties Prediction",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25972-25986",
+          "pmlr_id": "huang25an",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Although graph contrastive learning (GCL) has been widely investigated, it is still a challenge to generate effective and stable graph augmentations. Existing methods often apply heuristic augmentation like random edge dropping, which may disrupt important graph structures and result in unstable GCL performance. In this paper, we propose P ositive- i ncentive N oise driven G raph D ata A ugmentation (PiNGDA), where positive-incentive noise (pi-noise) scientifically analyzes the beneficial effect of noise under the information theory. To bridge the standard GCL and pi-noise framework, we design a Gaussian auxiliary variable to convert the loss function to information entropy. We prove that the standard GCL with pre-defined augmentations is equivalent to estimate the beneficial noise via the point estimation. Following our analysis, PiNGDA is derived from learning the beneficial noise on both topology and attributes through a trainable noise generator for graph augmentations, instead of the simple estimation. Since the generator learns how to produce beneficial perturbations on graph topology and node attributes, PiNGDA is more reliable compared with the existing methods. Extensive experimental results validate the effectiveness and stability of PiNGDA.",
+      "paper_id": "pmlr:v267:huang25ao",
+      "title": "Learn Beneficial Noise as Graph Augmentation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25987-26001",
+          "pmlr_id": "huang25ao",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Text-to-audio generation synthesizes realistic sounds or music given a natural language prompt. Diffusion-based frameworks, including the Tango and the AudioLDM series, represent the state-of-the-art in text-to-audio generation. Despite achieving high audio fidelity, they incur significant inference latency due to the slow diffusion sampling process. MAGNET, a mask-based model operating on discrete tokens, addresses slow inference through iterative mask-based parallel decoding. However, its audio quality still lags behind that of diffusion-based models. In this work, we introduce IMPACT, a text-to-audio generation framework that achieves high performance in audio quality and fidelity while ensuring fast inference. IMPACT utilizes iterative mask-based parallel decoding in a continuous latent space powered by diffusion modeling. This approach eliminates the fidelity constraints of discrete tokens while maintaining competitive inference speed. Results on AudioCaps demonstrate that IMPACT achieves state-of-the-art performance on key metrics including Fréchet Distance (FD) and Fréchet Audio Distance (FAD) while significantly reducing latency compared to prior models. The project website is available at https://audio-impact.github.io/.",
+      "paper_id": "pmlr:v267:huang25ap",
+      "title": "IMPACT: Iterative Mask-based Parallel Decoding for Text-to-Audio Generation with Diffusion Modeling",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "26002-26019",
+          "pmlr_id": "huang25ap",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Correlation analysis is a fundamental step in uncovering meaningful insights from complex datasets. In this paper, we study the problem of detecting correlations between two random graphs following the Gaussian Wigner model with unlabeled vertices. Specifically, the task is formulated as a hypothesis testing problem: under the null hypothesis, the two graphs are independent, while under the alternative hypothesis, they are edge-correlated through a latent vertex permutation, yet maintain the same marginal distributions as under the null. We focus on the scenario where two induced subgraphs, each with a fixed number of vertices, are sampled. We determine the optimal rate for the sample size required for correlation detection, derived through an analysis of the conditional second moment. Additionally, we propose an efficient approximate algorithm that significantly reduces running time.",
+      "paper_id": "pmlr:v267:huang25aq",
+      "title": "Sample Complexity of Correlation Detection in the Gaussian Wigner Model",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "26020-26040",
+          "pmlr_id": "huang25aq",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Characterizing users and items through vector representations is crucial for various tasks in recommender systems. Recent approaches attempt to apply Large Language Models (LLMs) in recommendation through a question&answer format, where real items (eg, Item No.2024) are represented with compound words formed from in-vocabulary tokens (eg, “item“, “20“, “24“). However, these tokens are not suitable for representing items, as their meanings are shaped by pre-training on natural language tasks, limiting the model’s ability to capture user-item relationships effectively. In this paper, we explore how to effectively characterize users and items in LLM-based recommender systems from the token construction view. We demonstrate the necessity of using out-of-vocabulary (OOV) tokens for the characterization of items and users, and propose a well-constructed way of these OOV tokens. By clustering the learned representations from historical user-item interactions, we make the representations of user/item combinations share the same OOV tokens if they have similar properties. This construction allows us to capture user/item relationships well (memorization) and preserve the diversity of descriptions of users and items (diversity). Furthermore, integrating these OOV tokens into the LLM’s vocabulary allows for better distinction between users and items and enhanced capture of user-item relationships during fine-tuning on downstream tasks. Our proposed framework outperforms existing state-of-the-art methods across various downstream recommendation tasks.",
+      "paper_id": "pmlr:v267:huang25ar",
+      "title": "Improving LLMs for Recommendation with Out-Of-Vocabulary Tokens",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "26041-26057",
+          "pmlr_id": "huang25ar",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "As large language models (LLMs) play an increasingly important role in code generation, enhancing both correctness and efficiency has become crucial. Current methods primarily focus on correctness, often overlooking efficiency. To address this gap, we introduce SWIFTCODE to improve both aspects by fine-tuning LLMs on a high-quality dataset comprising correct and efficient code samples. Our methodology involves leveraging multiple LLMs to generate diverse candidate code solutions for various tasks across different programming languages. We then evaluate these solutions by directly measuring their execution time and memory usage through local execution. The code solution with the lowest execution time and memory consumption is selected as the final output for each task. Experimental results demonstrate significant improvements when fine-tuning with SWIFTCODE. For instance, Qwen2.5-Coder-7B-Instruct’s pass@1 score increases from 44.8% to 57.7%, while the average execution time for correct tasks decreases by 48.4%. SWIFTCODE offers a scalable and effective solution for advancing AI-driven code generation, benefiting both software development and computational problem-solving.",
+      "paper_id": "pmlr:v267:huang25as",
+      "title": "EffiCoder: Enhancing Code Generation in Large Language Models through Efficiency-Aware Fine-tuning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "26058-26076",
+          "pmlr_id": "huang25as",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Incorporating group symmetries into neural networks has been a cornerstone of success in many AI-for-science applications. Diagonal groups of isometries, which describe the invariance under a simultaneous movement of multiple objects, arise naturally in many-body quantum problems. Despite their importance, diagonal groups have received relatively little attention, as they lack a natural choice of invariant maps except in special cases. We study different ways of incorporating diagonal invariance in neural network ansatze trained via variational Monte Carlo methods, and consider specifically data augmentation, group averaging and canonicalization. We show that, contrary to standard ML setups, in-training symmetrization destabilizes training and can lead to worse performance. Our theoretical and numerical results indicate that this unexpected behavior may arise from a unique computational-statistical tradeoff not found in standard ML analyses of symmetrization. Meanwhile, we demonstrate that post hoc averaging is less sensitive to such tradeoffs and emerges as a simple, flexible and effective method for improving neural network solvers.",
+      "paper_id": "pmlr:v267:huang25at",
+      "title": "Diagonal Symmetrization of Neural Network Solvers for the Many-Electron Schrödinger Equation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "26077-26105",
+          "pmlr_id": "huang25at",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We propose smoothed primal-dual algorithms for solving stochastic nonconvex optimization problems with linear inequality constraints. Our algorithms are single-loop and only require a single (or two) samples of stochastic gradients at each iteration. A defining feature of our algorithm is that it is based on an inexact gradient descent framework for the Moreau envelope, where the gradient of the Moreau envelope is estimated using one step of a stochastic primal-dual (linearized) augmented Lagrangian algorithm. To handle inequality constraints and stochasticity, we combine the recently established global error bounds in constrained optimization with a Moreau envelope-based analysis of stochastic proximal algorithms. We establish the optimal (in their respective cases) $O(\\varepsilon^{-4})$ and $O(\\varepsilon^{-3})$ sample complexity guarantees for our algorithms and provide extensions to stochastic linear constraints. Unlike existing methods, iterations of our algorithms are free of subproblems, large batch sizes or increasing penalty parameters in their iterations and they use dual variable updates to ensure feasibility.",
+      "paper_id": "pmlr:v267:huang25au",
+      "title": "Stochastic Smoothed Primal-Dual Algorithms for Nonconvex Optimization with Linear Inequality Constraints",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "26106-26142",
+          "pmlr_id": "huang25au",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Visual deep reinforcement learning (RL) enables robots to acquire skills from visual input for unstructured tasks. However, current algorithms suffer from low sample efficiency, limiting their practical applicability. In this work, we present MENTOR, a method that improves both the architecture and optimization of RL agents. Specifically, MENTOR replaces the standard multi-layer perceptron (MLP) with a mixture-of-experts (MoE) backbone and introduces a task-oriented perturbation mechanism. MENTOR outperforms state-of-the-art methods across three simulation benchmarks and achieves an average of 83% success rate on three challenging real-world robotic manipulation tasks, significantly surpassing the 32% success rate of the strongest existing model-free visual RL algorithm. These results underscore the importance of sample efficiency in advancing visual RL for real-world robotics. Experimental videos are available at https://suninghuang19.github.io/mentor_page/.",
+      "paper_id": "pmlr:v267:huang25av",
+      "title": "MENTOR: Mixture-of-Experts Network with Task-Oriented Perturbation for Visual Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "26143-26161",
+          "pmlr_id": "huang25av",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advances in test-time adaptation (TTA) for Vision-Language Models (VLMs) have garnered increasing attention, particularly through the use of multiple augmented views of a single image to boost zero-shot generalization. Unfortunately, existing methods fail to strike a satisfactory balance between performance and efficiency, either due to excessive overhead of tuning text prompts or unstable benefits from handcrafted, training-free visual feature enhancement. In this paper, we present Global-Spatial Bias Learner (GS-Bias), an efficient and effective TTA paradigm that incorporates two learnable biases during TTA, unfolded as the global bias and spatial bias. Particularly, the global bias captures the global semantic features of a test image by learning consistency across augmented views, while spatial bias learns the semantic coherence between regions in the image’s spatial visual representation. It is worth highlighting that these two sets of biases are directly added to the logits outputed by the pretrained VLMs, which circumvent the full backpropagation through VLM that hinders the efficiency of existing TTA methods. This endows GS-Bias with extremely high efficiency while achieving state-of-the-art performance on 15 benchmark datasets. For example, it achieves a 2.23% improvement over TPT in cross-dataset generalization and a 2.72% improvement in domain generalization, while requiring only 6.5% of TPT’s memory usage on ImageNet.",
+      "paper_id": "pmlr:v267:huang25aw",
+      "title": "GS-Bias: Global-Spatial Bias Learner for Single-Image Test-Time Adaptation of Vision-Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "26162-26174",
+          "pmlr_id": "huang25aw",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In this paper, we address the challenge of determining the layer-wise sparsity rates of large language models (LLMs) through a theoretical perspective. Specifically, we identify a critical issue of \"reconstruction error explosion\" in existing LLMs sparsification methods. This refers to the cumulative effect of reconstruction errors throughout the sparsification process, where errors from earlier layers propagate and amplify in subsequent layers. As a result, the overall reconstruction error increases significantly, leading to a substantial degradation in model performance. Through theoretical analysis, we derive a simple yet effective approach to layer-wise sparsity allocation that mitigates this issue. Our method uses a monotonically increasing arithmetic progression, reducing the process of determining sparsity rates for multiple layers to the determination of a single common difference hyperparameter. Remarkably, this allows for the optimal layer-wise sparsity rates to be identified with just a few trials. Both our theoretical analysis and experimental results demonstrate that this sparsity allocation scheme is near optimal. Extensive experiments show that our method significantly improves the performance of sparse LLMs across various architectures, outperforming existing layer-wise sparsity methods. Furthermore, it enhances the performance of various compression techniques and is applicable to vision and multimodal models. Notably, our method achieves a reduction of 52.10 in perplexity for the 70% sparse LLaMA2-7B model obtained via Wanda, improves average zero-shot accuracy by 10.50%, and delivers speedups of 2.63$\\times$ and 2.23$\\times$ on CPU and GPU, respectively. Code is available at https://github.com/wzhuang-xmu/ATP.",
+      "paper_id": "pmlr:v267:huang25ax",
+      "title": "Determining Layer-wise Sparsity for Large Language Models Through a Theoretical Perspective",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "26175-26201",
+          "pmlr_id": "huang25ax",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language model-based multi-agent systems have shown great abilities across various tasks due to the collaboration of expert agents, each focusing on a specific domain. However, the impact of clumsy or even malicious agents—those who frequently make errors in their tasks—on the overall performance of the system remains underexplored. This paper investigates: (1) What is the resilience of various system structures (e.g., A$\\rightarrow$B$\\rightarrow$C, A$\\leftrightarrow$B$\\leftrightarrow$C) under faulty agents, on different downstream tasks? (2) How can we increase system resilience to defend against these agents? To simulate faulty agents, we propose two approaches—AutoTransform and AutoInject—which introduce mistakes into the agents’ responses. Experiments on four downstream tasks using six systems show that the \"hierarchical\" structure, i.e., A$\\rightarrow$(B$\\leftrightarrow$C), exhibits superior resilience with the lowest performance drop of 5.5%, compared to 10.5% and 23.7% of other two structures. To further improve resilience, we introduce (1) Challenger, that introduces a mechanism for each agent to challenge others’ outputs, and (2) Inspector, an additional agent to review and correct messages, recovering up to 96.4% errors made by faulty agents. Our code and data are available at https://github.com/CUHK-ARISE/MAS-Resilience.",
+      "paper_id": "pmlr:v267:huang25ay",
+      "title": "On the Resilience of LLM-Based Multi-Agent Collaboration with Faulty Agents",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "26202-26226",
+          "pmlr_id": "huang25ay",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Long-term time series forecasting (LTSF) has traditionally relied on large parameters to capture extended temporal dependencies, resulting in substantial computational costs and inefficiencies in both memory usage and processing time. However, time series data, unlike high-dimensional images or text, often exhibit temporal pattern similarity and low-rank structures, especially in long-term horizons. By leveraging this structure, models can be guided to focus on more essential, concise temporal data, improving both accuracy and computational efficiency. In this paper, we introduce TimeBase, an ultra-lightweight network to harness the power of minimalism in LTSF. TimeBase 1) extracts core basis temporal components and 2) transforms traditional point-level forecasting into efficient segment-level forecasting, achieving optimal utilization of both data and parameters. Extensive experiments on diverse real-world datasets show that TimeBase achieves remarkable efficiency and secures competitive forecasting performance. Additionally, TimeBase can also serve as a very effective plug-and-play complexity reducer for any patch-based forecasting models. Code is available at https://github.com/hqh0728/TimeBase.",
+      "paper_id": "pmlr:v267:huang25az",
+      "title": "TimeBase: The Power of Minimalism in Efficient Long-term Time Series Forecasting",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "26227-26246",
+          "pmlr_id": "huang25az",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Safety aligned Large Language Models (LLMs) are vulnerable to harmful fine-tuning attacks – a few harmful data mixed in the fine-tuning dataset can break the LLMs’s safety alignment. While several defenses have been proposed, our evaluation shows that existing defenses fail when some specific training hyper-parameters are chosen – a large learning rate or a large number of training epochs in the fine-tuning stage can easily invalidate the defense. To this end, we propose Antidote, a post-fine-tuning stage solution, which remains agnostic to the training hyper-parameters in the fine-tuning stage . Antidote relies on the philosophy that by removing the harmful parameters, the harmful model can be recovered from the harmful behaviors, regardless of how those harmful parameters are formed in the fine-tuning stage. With this philosophy, we introduce a one-shot pruning stage after harmful fine-tuning to remove the harmful weights that are responsible for the generation of harmful content. Despite its embarrassing simplicity, empirical results show that Antidote can reduce harmful score while maintaining accuracy on downstream tasks.",
+      "paper_id": "pmlr:v267:huang25b",
+      "title": "Antidote: Post-fine-tuning Safety Alignment for Large Language Models against Harmful Fine-tuning Attack",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25059-25074",
+          "pmlr_id": "huang25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Protein Language Models (PLMs), pre-trained on extensive evolutionary data from natural proteins, have emerged as indispensable tools for protein design. While powerful, PLMs often struggle to produce proteins with precisely specified functionalities or properties due to inherent challenges in controlling their outputs. In this work, we investigate the potential of Activation Steering, a technique originally developed for controlling text generation in Large Language Models (LLMs), to direct PLMs toward generating protein sequences with targeted properties. We propose a simple yet effective method that employs activation editing to steer PLM outputs, and extend this approach to protein optimization through a novel editing site identification module. Through comprehensive experiments on lysozyme-like sequence generation and optimization, we demonstrate that our methods can be seamlessly integrated into both auto-encoding and autoregressive PLMs without requiring additional training. These results highlight a promising direction for precise protein engineering using foundation models. Code is available at https://github.com/Long-Kai/Steering-PLMs.",
+      "paper_id": "pmlr:v267:huang25ba",
+      "title": "Steering Protein Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "26247-26260",
+          "pmlr_id": "huang25ba",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Tokenization is a fundamental component of large language models (LLMs), yet its influence on model scaling and performance is not fully explored. In this paper, we introduce Over-Tokenized Transformers, a novel framework that decouples input and output vocabularies to improve language modeling performance. Specifically, our approach scales up input vocabularies to leverage multi-gram tokens. Through extensive experiments, we uncover a log-linear relationship between input vocabulary size and training loss, demonstrating that larger input vocabularies consistently enhance model performance, regardless of model size. Using a large input vocabulary, we achieve performance comparable to double-sized baselines with no additional cost. Our findings highlight the importance of tokenization in scaling laws and provide practical insight for tokenizer design, paving the way for more efficient and powerful LLMs.",
+      "paper_id": "pmlr:v267:huang25bb",
+      "title": "Over-Tokenized Transformer: Vocabulary is Generally Worth Scaling",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "26261-26282",
+          "pmlr_id": "huang25bb",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent work on inference-time alignment has established benefits of increasing inference-time computation in language models, but naively scaling compute through techniques like Best-of-N sampling can cause performance to degrade due to reward hacking. Toward a theoretical understanding of how to best leverage additional computation, we formalize inference-time alignment as improving a pre-trained policy’s responses for a prompt of interest, given access to an imperfect reward model. We analyze the performance of inference-time alignment algorithms in terms of (i) response quality, and (ii) compute, and provide new results that highlight the importance of the pre-trained policy’s coverage over high-quality responses for performance and compute scaling: (1) We show that Best-of-N alignment with an ideal N can achieve optimal performance under stringent notions of coverage, but provably suffers from reward hacking when N is large, and fails to achieve tight guarantees under more realistic coverage conditions; (2) We introduce InferenceTimePessimism, a new algorithm which mitigates reward hacking through deliberate use of inference-time compute, implementing pessimism in the face of uncertainty; we prove that its performance is optimal and scaling-monotonic, i.e., does ot degrade as N increases. We complement our theoretical results with experiments that demonstrate the practicality of our algorithm across a variety of tasks and models.",
+      "paper_id": "pmlr:v267:huang25c",
+      "title": "Is Best-of-N the Best of Them? Coverage, Scaling, and Optimality in Inference-Time Alignment",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25075-25126",
+          "pmlr_id": "huang25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent Vision Mamba (Vim) models exhibit nearly linear complexity in sequence length, making them highly attractive for processing visual data. However, the training methodologies and their potential are still not sufficiently explored. In this paper, we investigate strategies for Vim and propose Stochastic Layer-Wise Shuffle (SLWS), a novel regularization method that can effectively improve the Vim training. Without architectural modifications, this approach enables the non-hierarchical Vim to get leading performance on ImageNet-1K compared with the similar type counterparts. Our method operates through four simple steps per layer: probability allocation to assign layer-dependent shuffle rates, operation sampling via Bernoulli trials, sequence shuffling of input tokens, and order restoration of outputs. SLWS distinguishes itself through three principles: (1) Plug-and-play: No architectural modifications are needed, and it is deactivated during inference. (2) Simple but effective: The four-step process introduces only random permutations and negligible overhead. (3) Intuitive design: Shuffling probabilities grow linearly with layer depth, aligning with the hierarchical semantic abstraction in vision models. Our work underscores the importance of tailored training strategies for Vim models and provides a helpful way to explore their scalability. Code and models are available at https://github.com/huangzizheng01/ShuffleMamba",
+      "paper_id": "pmlr:v267:huang25d",
+      "title": "Stochastic Layer-Wise Shuffle for Improving Vision Mamba Training",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25127-25140",
+          "pmlr_id": "huang25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Existing multi-view image compression methods often rely on 2D projection-based similarities between views to estimate disparities. While effective for small disparities, such as those in stereo images, these methods struggle with the more complex disparities encountered in wide-baseline multi-camera systems, commonly found in virtual reality and autonomous driving applications. To address this limitation, we propose 3D-LMVIC, a novel learning-based multi-view image compression framework that leverages 3D Gaussian Splatting to derive geometric priors for accurate disparity estimation. Furthermore, we introduce a depth map compression model to minimize geometric redundancy across views, along with a multi-view sequence ordering strategy based on a defined distance measure between views to enhance correlations between adjacent views. Experimental results demonstrate that 3D-LMVIC achieves superior performance compared to both traditional and learning-based methods. Additionally, it significantly improves disparity estimation accuracy over existing two-view approaches.",
+      "paper_id": "pmlr:v267:huang25e",
+      "title": "3D-LMVIC: Learning-based Multi-View Image Compression with 3D Gaussian Geometric Priors",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "25141-25158",
+          "pmlr_id": "huang25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

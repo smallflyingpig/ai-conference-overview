@@ -1,0 +1,747 @@
+{
+  "batch_index": 46,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Decoder-only models generate tokens autoregressively by caching key/value vectors, but as the cache grows, inference becomes memory-bounded. To address this challenge, we introduce CLOVER (Cross-Layer Orthogonal Vectors) pruning, a novel approach that treats pairs of components of the attention mechanism as low-rank decompositions. CLOVER applies Singular Value Decomposition (SVD) to the Q-K and V-O pairs within each attention head. The resulting singular values, in turn, guide pruning and further serve as trainable parameters for efficient fine-tuning, ultimately enabling the model to recover its performance to the level before pruning.After pruning and fine-tuning, these values are reintegrated into the model without increasing its parameter count. Visualizations across various models show that CLOVER effectively removes linear redundancies within attention heads, greatly improving pruning efficiency. For example, pruning 70% of the Q-K head dimension in GPT-2 XL results in a perplexity comparable to that of pruning just 8% using vanilla pruning. The combination of CLOVER and TransMLA achieves a speedup of up to 11.1$\\times$ over LLaMA-2-7B.",
+      "paper_id": "pmlr:v267:meng25d",
+      "title": "CLOVER: Cross-Layer Orthogonal Vectors Pruning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "43807-43825",
+          "pmlr_id": "meng25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "One of the core pillars of efficient deep learning methods are architectural improvements, such as residual/skip connections, which have led to significantly better model convergence and quality. Since their introduction, residual connections have become ubiquitous not only in convolutional neural networks but also in transformer-based architectures, the backbone of LLMs. In this paper, we introduce the Learned Augmented Residual Layer (LAuReL) — a novel generalization of the canonical residual connection — designed to serve as an in-situ replacement while outperforming it in both model quality and footprint metrics. Our experiments show that LAuReL can enhance quality for both vision and language models while adding fewer parameters and incurring less latency and memory overhead than naively increasing parameter count. For example, on the ImageNet-1K task, LAuReL achieves the same model quality improvements as naively adding an extra layer while using $2.6 \\times$ fewer parameters. Similarly, when pre-training 1B and 4B parameter LLMs, LAuReL improves performance on a variety of challenging downstream evaluation tasks by 2.54% to 20.05%, while adding only 0.012% and 0.1% additional parameters, respectively.",
+      "paper_id": "pmlr:v267:menghani25a",
+      "title": "LAuReL: Learned Augmented Residual Layer",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "43826-43836",
+          "pmlr_id": "menghani25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In continual RL we want agents capable of never-ending learning, and yet our evaluation methodologies do not reflect this. The standard practice in RL is to assume unfettered access to the deployment environment for the full lifetime of the agent. For example, agent designers select the best performing hyperparameters in Atari by testing each for 200 million frames and then reporting results on 200 million frames. In this position paper, we argue and demonstrate the pitfalls of this inappropriate empirical methodology: lifetime tuning. We provide empirical evidence to support our position by testing DQN and SAC across several of continuing and non-stationary environments with two main findings: (1) lifetime tuning does not allow us to identify algorithms that work well for continual learning—all algorithms equally succeed; (2) recently developed continual RL algorithms outperform standard non-continual algorithms when tuning is limited to a fraction of the agent’s lifetime. The goal of this paper is to provide an explanation for why recent progress in continual RL has been mixed and motivate the development of empirical practices that better match the goals of continual RL.",
+      "paper_id": "pmlr:v267:mesbahi25a",
+      "title": "Position: Lifetime tuning is incompatible with continual reinforcement learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "81786-81796",
+          "pmlr_id": "mesbahi25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Protein sequence design has seen significant advances through discrete diffusion and autoregressive approaches, yet the potential of continuous diffusion remains underexplored. Here, we present DiMA , a latent diffusion framework that operates on protein language model representations. Through systematic exploration of architectural choices and diffusion components, we develop a robust methodology that generalizes across multiple protein encoders ranging from 8M to 3B parameters. We demonstrate that our framework achieves consistently high performance across sequence-only (ESM-2, ESMc), dual-decodable (CHEAP), and multimodal (SaProt) representations using the same architecture and training approach. We conduct extensive evaluation of existing methods alongside DiMA using multiple metrics across two protein modalities, covering quality, diversity, novelty, and distribution matching of generated proteins. DiMA consistently produces novel, high-quality and diverse protein sequences and achieves strong results compared to baselines such as autoregressive, discrete diffusion and flow matching language models. The model demonstrates versatile functionality, supporting conditional generation tasks including protein family-generation, motif scaffolding and infilling, and fold-specific sequence design, despite being trained solely on sequence data. This work provides a universal continuous diffusion framework for protein sequence generation, offering both architectural insights and practical applicability across various protein design scenarios. Code is released at GitHub.",
+      "paper_id": "pmlr:v267:meshchaninov25a",
+      "title": "Diffusion on Language Model Encodings for Protein Sequence Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "43837-43878",
+          "pmlr_id": "meshchaninov25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In Machine learning, separating data into classes is a very fundamental problem. A mathematical framework around the classes is presented in this work to deepen the understanding of classes. The classes are defined as vectors in a Vector Space, where addition corresponds to the union of classes, and scalar multiplication resembles set complement of classes. The Zero-Vector in the vector space corresponds to a class referred to as the Metta-Class. This discovery enables numerous applications. One such application, termed ’clear learning’ in this work, focuses on learning the true nature (manifold) of the data instead of merely learning a boundary sufficient for classification. Another application, called ’unary class learning’, involves learning a single class in isolation rather than learning by comparing two or more classes. Additionally, ’set operations on classes’ is another application highlighted in this work. Furthermore, Continual Learning of classes is facilitated by smaller networks. The Metta-Class enables neural networks to learn only the data manifold; therefore, it can also be used for generation of new data. Results for the key applications are shown using the MNIST dataset. To further strengthen the claims, some results are also produced using the CIFAR-10 and ImageNet-1k embeddings. The code supporting these applications is publicly available at: github.com/hm-4/Metta-Class.",
+      "paper_id": "pmlr:v267:metta25a",
+      "title": "Discovering a Zero (Zero-Vector Class of Machine Learning)",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "43879-43908",
+          "pmlr_id": "metta25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study the computational model where we can access a matrix $\\mathbf{A}$ only by computing matrix-vector products $\\mathbf{A}\\mathrm{x}$ for vectors of the form $\\mathrm{x} = \\mathrm{x}_1 \\otimes \\cdots \\otimes \\mathrm{x}_q$. We prove exponential lower bounds on the number of queries needed to estimate various properties, including the trace and the top eigenvalue of $\\mathbf{A}$. Our proofs hold for all adaptive algorithms, modulo a mild conditioning assumption on the algorithm’s queries. We further prove that algorithms whose queries come from a small alphabet (e.g., $\\mathrm{x}_i \\in \\\\{\\pm1\\\\}^n$) cannot test if $\\mathbf{A}$ is identically zero with polynomial complexity, despite the fact that a single query using Gaussian vectors solves the problem with probability 1. In steep contrast to the non-Kronecker case, this shows that sketching $\\mathbf{A}$ with different distributions of the same subguassian norm can yield exponentially different query complexities. Our proofs follow from the observation that random vectors with Kronecker structure have exponentially smaller inner products than their non-Kronecker counterparts.",
+      "paper_id": "pmlr:v267:meyer25a",
+      "title": "Understanding the Kronecker Matrix-Vector Complexity of Linear Algebra",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "43909-43933",
+          "pmlr_id": "meyer25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Benchmarking and establishing proper statistical validation metrics for reinforcement learning (RL) remain ongoing challenges, where no consensus has been established yet. The emergence of quantum computing and its potential applications in quantum reinforcement learning (QRL) further complicate benchmarking efforts. To enable valid performance comparisons and to streamline current research in this area, we propose a novel benchmarking methodology, which is based on a statistical estimator for sample complexity and a definition of statistical outperformance. Furthermore, considering QRL, our methodology casts doubt on some previous claims regarding its superiority. We conducted experiments on a novel benchmarking environment with flexible levels of complexity. While we still identify possible advantages, our findings are more nuanced overall. We discuss the potential limitations of these results and explore their implications for empirical research on quantum advantage in QRL.",
+      "paper_id": "pmlr:v267:meyer25b",
+      "title": "Benchmarking Quantum Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "43934-43964",
+          "pmlr_id": "meyer25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Decomposing hard problems into subproblems often makes them easier and more efficient to solve. With the high cost of running LLMs at scale, there is an increasing effort to decompose systems into sets of LLM-based agents, each of whom can be delegated sub-tasks. However, this decomposition (even when automated) is often intuitive, e.g., based on how a human might assign roles to members of a human team. How close are these role decompositions to optimal? This position paper argues that asymptotic analysis with LLM primitives is needed to reason about the efficiency of such problem decompositions, and that insights from such analysis will unlock opportunities for scaling such systems. By treating the LLM forward pass as the atomic unit of computational cost, one can separate out the (often opaque) inner workings of a particular LLM from the inherent efficiency of how a set of LLMs are orchestrated to solve hard problems. In other words, if we want to scale the deployment of LLMs to the limit, instead of anthropomorphizing LLMs, asymptotic analysis with LLM primitives should be used to reason about and develop more powerful decompositions of large problems into LLM agents.",
+      "paper_id": "pmlr:v267:meyerson25a",
+      "title": "Position: Scaling LLM Agents Requires Asymptotic Analysis with LLM Primitives",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "81797-81809",
+          "pmlr_id": "meyerson25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We present several advances on neural operators by viewing the action of operator layers as the minimizers of Bregman regularized optimization problems over Banach function spaces. The proposed framework allows interpreting the activation operators as Bregman proximity operators from dual to primal space. This novel viewpoint is general enough to recover classical neural operators as well as a new variant, coined Bregman neural operators, which includes the inverse activation operator and features the same expressivity of standard neural operators. Numerical experiments support the added benefits of the Bregman variant of Fourier neural operators for training deeper and more accurate models.",
+      "paper_id": "pmlr:v267:mezidi25a",
+      "title": "A Bregman Proximal Viewpoint on Neural Operators",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "43965-43989",
+          "pmlr_id": "mezidi25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We revisit the Follow the Regularized Leader (FTRL) framework for Online Convex Optimization (OCO) over compact sets, focusing on achieving dynamic regret guarantees. Prior work has highlighted the framework’s limitations in dynamic environments due to its tendency to produce \"lazy\" iterates. However, building on insights showing FTRL’s ability to produce \"agile\" iterates, we show that it can indeed recover known dynamic regret bounds through optimistic composition of future costs and careful linearization of past costs, which can lead to pruning some of them. This new analysis of FTRL against dynamic comparators yields a principled way to interpolate between greedy and agile updates and offers several benefits, including refined control over regret terms, optimism without cyclic dependence, and the application of minimal recursive regularization akin to AdaFTRL. More broadly, we show that it is not the \"lazy\" projection style of FTRL that hinders (optimistic) dynamic regret, but the decoupling of the algorithm’s state (linearized history) from its iterates, allowing the state to grow arbitrarily. Instead, pruning synchronizes these two when necessary.",
+      "paper_id": "pmlr:v267:mhaisen25a",
+      "title": "On the Dynamic Regret of Following the Regularized Leader: Optimism with History Pruning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "43990-44016",
+          "pmlr_id": "mhaisen25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This paper presents ThinkDiff, a novel alignment paradigm that empowers text-to-image diffusion models with multimodal in-context understanding and reasoning capabilities by integrating the strengths of vision-language models (VLMs). Existing multimodal diffusion finetuning methods largely focus on pixel-level reconstruction rather than in-context reasoning, and are constrained by the complexity and limited availability of reasoning-based datasets. ThinkDiff addresses these challenges by leveraging vision-language training as a proxy task, aligning VLMs with the decoder of an encoder-decoder large language model (LLM) instead of a diffusion decoder. This proxy task builds on the observation that the LLM decoder shares the same input feature space with diffusion decoders that use the corresponding LLM encoder for prompt embedding. As a result, aligning VLMs with diffusion decoders can be simplified through alignment with the LLM decoder. Without complex training and datasets, ThinkDiff effectively unleashes understanding, reasoning, and composing capabilities in diffusion models. Experiments demonstrate that ThinkDiff significantly improves accuracy from 19.2% to 46.3% on the challenging CoBSAT benchmark for multimodal in-context reasoning generation, with only 5 hours of training on 4 A100 GPUs. Additionally, ThinkDiff demonstrates exceptional performance in composing multiple images and texts into logically coherent images. Project page: https://mizhenxing.github.io/ThinkDiff.",
+      "paper_id": "pmlr:v267:mi25a",
+      "title": "I Think, Therefore I Diffuse: Enabling Multimodal In-Context Reasoning in Diffusion Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44017-44036",
+          "pmlr_id": "mi25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Score Distillation Sampling (SDS) has emerged as a prominent method for text-to-3D generation by leveraging the strengths of 2D diffusion models. However, SDS is limited to generation tasks and lacks the capability to edit existing 3D assets. Conversely, variants of SDS that introduce editing capabilities often can not generate new 3D assets effectively. In this work, we observe that the processes of generation and editing within SDS and its variants have unified underlying gradient terms. Building on this insight, we propose Unified Distillation Sampling (UDS), a method that seamlessly integrates both the generation and editing of 3D assets. Essentially, UDS refines the gradient terms used in vanilla SDS methods, unifying them to support both tasks. Extensive experiments demonstrate that UDS not only outperforms baseline methods in generating 3D assets with richer details but also excels in editing tasks, thereby bridging the gap between 3D generation and editing.",
+      "paper_id": "pmlr:v267:miao25a",
+      "title": "Rethinking Score Distilling Sampling for 3D Editing and Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44037-44053",
+          "pmlr_id": "miao25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The development of Generalist Virtual Agents (GVAs) has shown significant promise in autonomous task execution. However, current training paradigms face critical limitations, including reliance on outcome supervision and labor-intensive human annotations. To address these challenges, we propose Similar , a s tep-w i se m ult i -dimensiona l gener a list r eward model, which offers fine-grained signals for agent training and can choose better actions for inference-time scaling. Specifically, we begin by systematically defining five dimensions for evaluating agent actions. Building on this framework, we design an MCTS-P algorithm to automatically collect and annotate step-wise, five-dimensional agent execution data. Using this data, we train Similar with our crafted Triple-M strategy. Furthermore, we introduce the first benchmark in the virtual agent domain for step-wise, multi-dimensional reward model training and evaluation, named SRM . This benchmark consists of two components: SRMTrain , which serves as the training set for Similar , and SRMEval , a manually selected test set for evaluating the reward model. Experimental results demonstrate that Similar , through its step-wise, multi-dimensional assessment and synergistic gain, provides GVAs with effective intermediate signals during both training and inference-time scaling. The code is available at https://github.com/antgroup/Similar.",
+      "paper_id": "pmlr:v267:miao25b",
+      "title": "Boosting Virtual Agent Learning and Reasoning: A Step-Wise, Multi-Dimensional, and Generalist Reward Model with Benchmark",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44054-44075",
+          "pmlr_id": "miao25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This work identifies the Energy Loss Phenomenon in Reinforcement Learning from Human Feedback (RLHF) and its connection to reward hacking. Specifically, energy loss in the final layer of a Large Language Model (LLM) gradually increases during the RL process, with an excessive increase in energy loss characterizing reward hacking. Beyond empirical analysis, we further provide a theoretical foundation by proving that, under mild conditions, the increased energy loss reduces the upper bound of contextual relevance in LLMs, which is a critical aspect of reward hacking as the reduced contextual relevance typically indicates overfitting to reward model-favored patterns in RL. To address this issue, we propose an Energy loss-aware PPO algorithm (EPPO) which penalizes the increase in energy loss in the LLM’s final layer during reward calculation to prevent excessive energy loss, thereby mitigating reward hacking. We theoretically show that EPPO can be conceptually interpreted as an entropy-regularized RL algorithm, which provides deeper insights into its effectiveness. Extensive experiments across various LLMs and tasks demonstrate the commonality of the energy loss phenomenon, as well as the effectiveness of EPPO in mitigating reward hacking and improving RLHF performance.",
+      "paper_id": "pmlr:v267:miao25c",
+      "title": "The Energy Loss Phenomenon in RLHF: A New Perspective on Mitigating Reward Hacking",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44076-44105",
+          "pmlr_id": "miao25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Aggregating preferences under incomplete or constrained feedback is a fundamental problem in social choice and related domains. While prior work has established strong impossibility results for pairwise comparisons, this paper extends the inquiry to improvement feedback, where voters express incremental adjustments rather than complete preferences. We provide a complete characterization of the positional scoring rules that can be computed given improvement feedback. Interestingly, while plurality is learnable under improvement feedback—unlike with pairwise feedback—strong impossibility results persist for many other positional scoring rules. Furthermore, we show that improvement feedback, unlike pairwise feedback, does not suffice for the computation of any Condorcet-consistent rule. We complement our theoretical findings with experimental results, providing further insights into the practical implications of improvement feedback for preference aggregation.",
+      "paper_id": "pmlr:v267:micha25a",
+      "title": "Computing Voting Rules with Improvement Feedback",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44106-44133",
+          "pmlr_id": "micha25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce FedGVI, a probabilistic Federated Learning (FL) framework that is robust to both prior and likelihood misspecification. FedGVI addresses limitations in both frequentist and Bayesian FL by providing unbiased predictions under model misspecification, with calibrated uncertainty quantification. Our approach generalises previous FL approaches, specifically Partitioned Variational Inference (Ashman et al., 2022), by allowing robust and conjugate updates, decreasing computational complexity at the clients. We offer theoretical analysis in terms of fixed-point convergence, optimality of the cavity distribution, and provable robustness to likelihood misspecification. Further, we empirically demonstrate the effectiveness of FedGVI in terms of improved robustness and predictive performance on multiple synthetic and real world classification data sets.",
+      "paper_id": "pmlr:v267:mildner25a",
+      "title": "Federated Generalised Variational Inference: A Robust Probabilistic Federated Learning Framework",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44134-44174",
+          "pmlr_id": "mildner25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In a neural network with ReLU activations, the number of piecewise linear regions in the output can grow exponentially with depth. However, this is highly unlikely to happen when the initial parameters are sampled randomly, which therefore often leads to the use of networks that are unnecessarily large. To address this problem, we introduce a novel parameterization of the network that restricts its weights so that a depth $d$ network produces exactly $2^d$ linear regions at initialization and maintains those regions throughout training under the parameterization. This approach allows us to learn approximations of convex, one-dimensional functions that are several orders of magnitude more accurate than their randomly initialized counterparts. We further demonstrate a preliminary extension of our construction to multidimensional and non-convex functions, allowing the technique to replace traditional dense layers in various architectures.",
+      "paper_id": "pmlr:v267:milkert25a",
+      "title": "Compelling ReLU Networks to Exhibit Exponentially Many Linear Regions at Initialization and During Training",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44175-44198",
+          "pmlr_id": "milkert25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Reinforcement Learning (RL) agents can solve diverse tasks but often exhibit unsafe behavior. Constrained Markov Decision Processes (CMDPs) address this by enforcing safety constraints, yet existing methods either sacrifice reward maximization or allow unsafe training. We introduce Constrained Trust Region Policy Optimization (C-TRPO), which reshapes the policy space geometry to ensure trust regions contain only safe policies, guaranteeing constraint satisfaction throughout training. We analyze its theoretical properties and connections to TRPO, Natural Policy Gradient (NPG), and Constrained Policy Optimization (CPO). Experiments show that C-TRPO reduces constraint violations while maintaining competitive returns.",
+      "paper_id": "pmlr:v267:milosevic25a",
+      "title": "Embedding Safety into RL: A New Take on Trust Region Methods",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44199-44224",
+          "pmlr_id": "milosevic25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We consider layerwise function-space learning rates, which measure the magnitude of the change in a neural network’s output function in response to an update to a parameter tensor. This contrasts with traditional learning rates, which describe the magnitude of changes in parameter space. We develop efficient methods to measure and set function-space learning rates in arbitrary neural networks, requiring only minimal computational overhead through a few additional backward passes that can be performed at the start of, or periodically during, training. We demonstrate two key applications: (1) analysing the dynamics of standard neural network optimisers in function space, rather than parameter space, and (2) introducing FLeRM (Function-space Learning Rate Matching), a novel approach to hyperparameter transfer across model scales. FLeRM records function-space learning rates while training a small, cheap base model, then automatically adjusts parameter-space layerwise learning rates when training larger models to maintain consistent function-space updates. FLeRM gives hyperparameter transfer across model width, depth, initialisation scale, and LoRA rank in various architectures including MLPs with residual connections and transformers with different layer normalisation schemes.",
+      "paper_id": "pmlr:v267:milsom25a",
+      "title": "Function-Space Learning Rates",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44225-44251",
+          "pmlr_id": "milsom25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Chatbot Arena is an open platform for evaluating LLMs by pairwise battles, in which users vote for their preferred response from two randomly sampled anonymous models. While Chatbot Arena is widely regarded as a reliable LLM ranking leaderboard, we show that crowdsourced voting can be rigged to improve (or decrease) the ranking of a target model $m_{t}$. We first introduce a straightforward target-only rigging strategy that focuses on new battles involving $m_{t}$, identifying it via watermarking or a binary classifier, and exclusively voting for $m_{t}$ wins. However, this strategy is practically inefficient because there are over $190$ models on Chatbot Arena and on average only about 1% of new battles will involve $m_{t}$. To overcome this, we propose an omnipresent rigging strategy, exploiting the Elo rating mechanism of Chatbot Arena that any new vote on a battle can influence the ranking of the target model $m_{t}$, even if $m_{t}$ is not directly involved in the battle. We conduct experiments on around 1.7 million historical votes from the Chatbot Arena Notebook, showing that omnipresent rigging strategy can improve model rankings by rigging only hundreds of new votes. While we have evaluated several defense mechanisms, our findings highlight the importance of continued efforts to prevent vote rigging. Code is publicly available to reproduce all experiments.",
+      "paper_id": "pmlr:v267:min25a",
+      "title": "Improving Your Model Ranking on Chatbot Arena by Vote Rigging",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44252-44271",
+          "pmlr_id": "min25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) are vulnerable to backdoor attacks that manipulate outputs via hidden triggers. Existing defense methods—designed for vision/text classification tasks—fail for text generation. We propose Internal Consistency Regularization (CROW) , a defense leveraging the observation that backdoored models exhibit unstable layer-wise hidden representations when triggered, while clean models show smooth transitions. CROW enforces consistency across layers via adversarial perturbations and regularization during finetuning, neutralizing backdoors without requiring clean reference models or trigger knowledge—only a small clean dataset. Experiments across Llama-2 (7B, 13B), CodeLlama (7B, 13B), and Mistral-7B demonstrate CROW’s effectiveness: it achieves significant reductions in attack success rates across diverse backdoor strategies (sentiment steering, targeted refusal, code injection) while preserving generative performance. CROW’s architecture-agnostic design enables practical deployment.",
+      "paper_id": "pmlr:v267:min25b",
+      "title": "CROW: Eliminating Backdoors from Large Language Models via Internal Consistency Regularization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44272-44291",
+          "pmlr_id": "min25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Deep learning-based classifiers are known to be vulnerable to adversarial attacks. Existing methods for defending against such attacks require adding a defense mechanism or modifying the learning procedure (e.g., by adding adversarial examples). This paper shows that for certain data distributions one can learn a provably robust classifier using standard learning methods and without adding a defense mechanism. More specifically, this paper addresses the problem of finding a robust classifier for a binary classification problem in which the data comes from an isotropic mixture of Gaussians with orthonormal cluster centers. First, we characterize the largest $\\ell_2$-attack any classifier can defend against while maintaining high accuracy, and show the existence of optimal robust classifiers achieving this maximum $\\ell_2$-robustness. Next, we show that given data from the orthonormal Gaussian mixture model, gradient flow on a two-layer network with a polynomial ReLU activation and without adversarial examples provably finds an optimal robust classifier.",
+      "paper_id": "pmlr:v267:min25c",
+      "title": "Gradient Flow Provably Learns Robust Classifiers for Orthonormal GMMs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44292-44350",
+          "pmlr_id": "min25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The cellular Potts model (CPM) is a powerful computational method for simulating collective spatiotemporal dynamics of biological cells. To drive the dynamics, CPMs rely on physics-inspired Hamiltonians. However, as first principles remain elusive in biology, these Hamiltonians only approximate the full complexity of real multicellular systems. To address this limitation, we propose NeuralCPM, a more expressive cellular Potts model that can be trained directly on observational data. At the core of NeuralCPM lies the Neural Hamiltonian, a neural network architecture that respects universal symmetries in collective cellular dynamics. Moreover, this approach enables seamless integration of domain knowledge by combining known biological mechanisms and the expressive Neural Hamiltonian into a hybrid model. Our evaluation with synthetic and real-world multicellular systems demonstrates that NeuralCPM is able to model cellular dynamics that cannot be accounted for by traditional analytical Hamiltonians.",
+      "paper_id": "pmlr:v267:minartz25a",
+      "title": "Deep Neural Cellular Potts Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44351-44371",
+          "pmlr_id": "minartz25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Transformer-based language models exhibit In-Context Learning (ICL), where predictions are made adaptively based on context. While prior work links induction heads to ICL through a sudden jump in accuracy, this can only account for ICL when the answer is included within the context. However, an important property of practical ICL in large language models is the ability to meta-learn how to solve tasks from context, rather than just copying answers from context; how such an ability is obtained during training is largely unexplored. In this paper, we experimentally clarify how such meta-learning ability is acquired by analyzing the dynamics of the model’s circuit during training. Specifically, we extend the copy task from previous research into an In-Context Meta Learning setting, where models must infer a task from examples to answer queries. Interestingly, in this setting, we find that there are multiple phases in the process of acquiring such abilities, and that a unique circuit emerges in each phase, contrasting with the single-phases change in induction heads. The emergence of such circuits can be related to several phenomena known in large language models, and our analysis lead to a deeper understanding of the source of the transformer’s ICL ability.",
+      "paper_id": "pmlr:v267:minegishi25a",
+      "title": "Beyond Induction Heads: In-Context Meta Learning Induces Multi-Phase Circuit Emergence",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44372-44395",
+          "pmlr_id": "minegishi25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This paper addresses the problem of quantifying diversity for a set of objects. First, we conduct a systematic review of existing diversity measures and explore their undesirable behavior in certain cases. Based on this review, we formulate three desirable properties (axioms) of a reliable diversity measure: monotonicity, uniqueness, and continuity. We show that none of the existing measures has all three properties and thus these measures are not suitable for quantifying diversity. Then, we construct two examples of measures that have all the desirable properties, thus proving that the list of axioms is not self-contradictory. Unfortunately, the constructed examples are too computationally expensive (NP-hard) for practical use. Thus, we pose an open problem of constructing a diversity measure that has all the listed properties and can be computed in practice or proving that all such measures are NP-hard to compute.",
+      "paper_id": "pmlr:v267:mironov25a",
+      "title": "Measuring Diversity: Axioms and Challenges",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44396-44411",
+          "pmlr_id": "mironov25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce SWE-Lancer, a benchmark of over 1400 freelance software engineering tasks from Upwork, valued at $1 million USD total in real-world payouts. SWE-Lancer encompasses both independent engineering tasks — ranging from $50 bug fixes to $32000 feature implementations — and managerial tasks, where models choose between technical implementation proposals. Independent tasks are graded with end-to-end tests triple-verified by experienced software engineers, while managerial decisions are assessed against the choices of the original hired engineering managers. We evaluate model performance and find that frontier models are still unable to solve the majority of tasks. To facilitate future research, we open-source a unified Docker image and a public evaluation split. By mapping model performance to monetary value, we hope SWE-Lancer enables greater research into the economic impact of AI model development.",
+      "paper_id": "pmlr:v267:miserendino25a",
+      "title": "SWE-Lancer: Can Frontier LLMs Earn $1 Million from Real-World Freelance Software Engineering?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44412-44450",
+          "pmlr_id": "miserendino25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Integrating spatial context into large language models (LLMs) has the potential to revolutionize human-computer interaction, particularly in wearable devices. In this work, we present a novel system architecture that incorporates spatial speech understanding into LLMs, enabling contextually aware and adaptive applications for wearable technologies. Our approach leverages microstructure-based spatial sensing to extract precise Direction of Arrival (DoA) information using a monaural microphone. To address the lack of existing dataset for microstructure-assisted speech recordings, we synthetically create a dataset by using the LibriSpeech dataset. This spatial information is fused with linguistic embeddings from OpenAI’s Whisper model, allowing each modality to learn complementary contextual representations. The fused embeddings are aligned with the input space of LLaMA-3.2 3B model and fine-tuned with lightweight adaptation technique LoRA to optimize for on-device processing. SING supports spatially-aware automatic speech recognition (ASR), achieving a mean error of 25.72$^\\circ$—a substantial improvement compared to the 88.52$^\\circ$ median error in existing work—with a word error rate (WER) of 5.3. SING also supports soundscaping, for example, inference how many people were talking and their directions, with up to 5 people and a median DoA error of 16$^\\circ$. Our system demonstrates superior performance in spatial speech understanding while addressing the challenges of power efficiency, privacy, and hardware constraints, paving the way for advanced applications in augmented reality, accessibility, and immersive experiences.",
+      "paper_id": "pmlr:v267:mishra25a",
+      "title": "SING: Spatial Context in Large Language Model for Next-Gen Wearables",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44451-44469",
+          "pmlr_id": "mishra25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Little is known about the training dynamics of equivariant neural networks, in particular how it compares to data augmented training of their non-equivariant counterparts. Recently, neural tangent kernels (NTKs) have emerged as a powerful tool to analytically study the training dynamics of wide neural networks. In this work, we take an important step towards a theoretical understanding of training dynamics of equivariant models by deriving neural tangent kernels for a broad class of equivariant architectures based on group convolutions. As a demonstration of the capabilities of our framework, we show an interesting relationship between data augmentation and group convolutional networks. Specifically, we prove that they share the same expected prediction over initializations at all training times and even off the data manifold. In this sense, they have the same training dynamics. We demonstrate in numerical experiments that this still holds approximately for finite-width ensembles. By implementing equivariant NTKs for roto-translations in the plane ($G=C_{n}\\ltimes\\mathbb{R}^{2}$) and 3d rotations ($G=\\mathrm{SO}(3)$), we show that equivariant NTKs outperform their non-equivariant counterparts as kernel predictors for histological image classification and quantum mechanical property prediction.",
+      "paper_id": "pmlr:v267:misof25a",
+      "title": "Equivariant Neural Tangent Kernels",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44470-44503",
+          "pmlr_id": "misof25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large autoregressive models like Transformers can solve tasks through in-context learning (ICL) without learning new weights, suggesting avenues for efficiently solving new tasks. For many tasks, e.g., linear regression, the data factorizes: examples are independent given a task latent that generates the data, e.g., linear coefficients. While an optimal predictor leverages this factorization by inferring task latents, it is unclear if Transformers implicitly do so or instead exploit heuristics and statistical shortcuts through attention layers. In this paper, we systematically investigate the effect of explicitly inferring task latents by minimally modifying the Transformer architecture with a bottleneck to prevent shortcuts and incentivize structured solutions. We compare it against standard Transformers across various ICL tasks and find that contrary to intuition and recent works, there is little discernible difference between the two; biasing towards task-relevant latent variables does not lead to better out-of-distribution performance, in general. Curiously, we find that while the bottleneck effectively learns to extract latent task variables from context, downstream processing struggles to utilize them for robust prediction. Our study highlights the intrinsic limitations of Transformers in achieving structured ICL solutions that generalize, and shows that while inferring the right latents aids interpretability, it is not sufficient to alleviate this problem.",
+      "paper_id": "pmlr:v267:mittal25a",
+      "title": "Does learning the right latent variables necessarily improve in-context learning?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44504-44530",
+          "pmlr_id": "mittal25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Causal inference is a key research area in machine learning, yet confusion reigns over the tools needed to tackle it. There are prevalent claims in the machine learning literature that you need a bespoke causal framework or notation to answer causal questions. In this paper, we make it clear that you can answer any causal inference question within the realm of probabilistic modelling and inference, without causal-specific tools or notation. Through concrete examples, we demonstrate how causal questions can be tackled by writing down the probability of everything. We argue for the advantages of the generality of the probabilistic modelling lens, when compared to bespoke causal frameworks. Lastly, we reinterpret causal tools as emerging from standard probabilistic modelling and inference, elucidating their necessity and utility.",
+      "paper_id": "pmlr:v267:mlodozeniec25a",
+      "title": "Position: Probabilistic Modelling is Sufficient for Causal Inference",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "81810-81840",
+          "pmlr_id": "mlodozeniec25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Generative models have made it possible to synthesize highly realistic images, potentially providing an abundant data source for training machine learning models. Despite the advantages of these synthesizable data sources, the indiscriminate use of generated images as real images for training can even cause mode collapse due to modality discrepancies between real and synthetic domains. In this paper, we propose a novel framework for discriminative use of generated images, coined GMAIL , that explicitly treats generated images as a separate modality from real images. Instead of indiscriminately replacing real images with generated ones in the pixel space, our approach bridges the two distinct modalities in the same latent space through a multi-modal learning approach. To be specific, we first fine-tune a model exclusively on generated images using a cross-modality alignment loss and then employ this aligned model to further train various vision-language models with generated images. By aligning the two modalities, our approach effectively leverages the benefits of recent advances in generative models, thereby boosting the effectiveness of generated image learning across a range of vision-language tasks. Our framework can be easily incorporated with various vision-language models, and we demonstrate its efficacy throughout extensive experiments. For example, our framework significantly improves performance on image captioning, zero-shot image retrieval, zero-shot image classification, and long caption retrieval tasks. It also shows positive generated data scaling trends and notable enhancements in the captioning performance of the large multimodal model, LLaVA.",
+      "paper_id": "pmlr:v267:mo25a",
+      "title": "GMAIL: Generative Modality Alignment for generated Image Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44531-44553",
+          "pmlr_id": "mo25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent large language models (LLMs) support long contexts ranging from 128K to 1M tokens. A popular method for evaluating these capabilities is the needle-in-a-haystack (NIAH) test, which involves retrieving a \"needle\" (relevant information) from a \"haystack\" (long irrelevant context). Extensions of this approach include increasing distractors, fact chaining, and in-context reasoning. However, in these benchmarks, models can exploit existing literal matches between the needle and haystack to simplify the task. To address this, we introduce NoLiMa, a benchmark extending NIAH with a carefully designed needle set, where questions and needles have minimal lexical overlap, requiring models to infer latent associations to locate the needle within the haystack. We evaluate 13 popular LLMs that claim to support contexts of at least 128K tokens. While they perform well in short contexts ($<$1K), performance degrades significantly as context length increases. At 32K, for instance, 11 models drop below 50% of their strong short-length baselines. Even GPT-4o, one of the top-performing exceptions, experiences a reduction from an almost-perfect baseline of 99.3% to 69.7%. Our analysis suggests these declines stem from the increased difficulty the attention mechanism faces in longer contexts when literal matches are absent, making it harder to retrieve relevant information. Even models enhanced with reasoning capabilities or CoT prompting struggle to maintain performance in long contexts. We publicly release the dataset and evaluation code at https://github.com/adobe-research/NoLiMa.",
+      "paper_id": "pmlr:v267:modarressi25a",
+      "title": "NoLiMa: Long-Context Evaluation Beyond Literal Matching",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44554-44570",
+          "pmlr_id": "modarressi25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In domains such as finance, healthcare, and robotics, managing worst-case scenarios is critical, as failure to do so can lead to catastrophic outcomes. Distributional Reinforcement Learning (DRL) provides a natural framework to incorporate risk sensitivity into decision-making processes. However, existing approaches face two key limitations: (1) the use of fixed risk measures at each decision step often results in overly conservative policies, and (2) the interpretation and theoretical properties of the learned policies remain unclear. While optimizing a static risk measure addresses these issues, its use in the DRL framework has been limited to the simple static CVaR risk measure. In this paper, we present a novel DRL algorithm with convergence guarantees that optimizes for a broader class of static Spectral Risk Measures (SRM). Additionally, we provide a clear interpretation of the learned policy by leveraging the distribution of returns in DRL and the decomposition of static coherent risk measures. Extensive experiments demonstrate that our model learns policies aligned with the SRM objective, and outperforms existing risk-neutral and risk-sensitive DRL models in various settings.",
+      "paper_id": "pmlr:v267:moghimi25a",
+      "title": "Beyond CVaR: Leveraging Static Spectral Risk Measures for Enhanced Decision-Making in Distributional Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44571-44593",
+          "pmlr_id": "moghimi25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce a novel approach for discovering effective degrees of freedom (DOF) in molecular dynamics simulations by mapping the DOF to approximate symmetries of the energy landscape. Unlike most existing methods, we do not require trajectory data but instead rely on knowledge of the forcefield (energy function) around the initial state. We present a scalable symmetry loss function compatible with existing force-field frameworks and a Hessian-based method efficient for smaller systems. Our approach enables systematic exploration of conformational space by connecting structural dynamics to energy landscape symmetries. We apply our method to two systems, Alanine dipeptide and Chignolin, recovering their known important conformations. Our approach can prove useful for efficient exploration in molecular simulations with potential applications in protein folding and drug discovery.",
+      "paper_id": "pmlr:v267:mohapatra25a",
+      "title": "Symmetry-Driven Discovery of Dynamical Variables in Molecular Simulations",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44594-44614",
+          "pmlr_id": "mohapatra25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Linear algebra is a cornerstone of neural network inference. The efficiency of popular frameworks, such as TensorFlow and PyTorch, critically depends on backend libraries providing highly optimized matrix multiplications and convolutions. A diverse range of these backends exists across platforms, including Intel MKL, Nvidia CUDA, and Apple Accelerate. Although these backends provide equivalent functionality, subtle variations in their implementations can lead to seemingly negligible differences during inference. In this paper, we investigate these minor discrepancies and demonstrate how they can be selectively amplified by adversaries. Specifically, we introduce Chimera examples , inputs to models that elicit conflicting predictions depending on the employed backend library. These inputs can even be constructed with integer values, creating a vulnerability exploitable from real-world input domains. We analyze the prevalence and extent of the underlying attack surface and propose corresponding defenses to mitigate this threat.",
+      "paper_id": "pmlr:v267:moller25a",
+      "title": "Adversarial Inputs for Linear Algebra Backends",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44615-44626",
+          "pmlr_id": "moller25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We present a theory for the construction of out-of-distribution (OOD) detection features for neural networks. We introduce random features for OOD through a novel information-theoretic loss functional consisting of two terms, the first based on the KL divergence separates resulting in-distribution (ID) and OOD feature distributions and the second term is the Information Bottleneck, which favors compressed features that retain the OOD information. We formulate a variational procedure to optimize the loss and obtain OOD features. Based on assumptions on OOD distributions, one can recover properties of existing OOD features, i.e., shaping functions. Furthermore, we show that our theory can predict a new shaping function that out-performs existing ones on OOD benchmarks. Our theory provides a general framework for constructing a variety of new features with clear explainability.",
+      "paper_id": "pmlr:v267:mondal25a",
+      "title": "A Variational Information Theoretic Approach to Out-of-Distribution Detection",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44627-44651",
+          "pmlr_id": "mondal25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Policy gradient (PG) methods are effective reinforcement learning (RL) approaches, particularly for continuous problems. While they optimize stochastic (hyper)policies via action- or parameter-space exploration, real-world applications often require deterministic policies. Existing PG convergence guarantees to deterministic policies assume a fixed stochasticity in the (hyper)policy, tuned according to the desired final suboptimality, whereas practitioners commonly use a dynamic stochasticity level. This work provides the theoretical foundations for this practice. We introduce PES, a phase-based method that reduces stochasticity via a deterministic schedule while running PG subroutines with fixed stochasticity in each phase. Under gradient domination assumptions, PES achieves last-iterate convergence to the optimal deterministic policy with a sample complexity of order $\\widetilde{\\mathcal{O}}(\\epsilon^{-5})$. Additionally, we analyze the common practice, termed SL-PG, of jointly learning stochasticity (via an appropriate parameterization) and (hyper)policy parameters. We show that SL-PG also ensures last-iterate convergence with a rate $\\widetilde{\\mathcal{O}}(\\epsilon^{-3})$, but to the optimal stochastic (hyper)policy only, requiring stronger assumptions compared to PES.",
+      "paper_id": "pmlr:v267:montenegro25a",
+      "title": "Convergence Analysis of Policy Gradient Methods with Dynamic Stochasticity",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44652-44698",
+          "pmlr_id": "montenegro25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Two-stage Learning-to-Defer (L2D) enables optimal task delegation by assigning each input to either a fixed main model or one of several offline experts, supporting reliable decision-making in complex, multi-agent environments. However, existing L2D frameworks assume clean inputs and are vulnerable to adversarial perturbations that can manipulate query allocation—causing costly misrouting or expert overload. We present the first comprehensive study of adversarial robustness in two-stage L2D systems. We introduce two novel attack strategies—untargeted and targeted—which respectively disrupt optimal allocations or force queries to specific agents. To defend against such threats, we propose SARD, a convex learning algorithm built on a family of surrogate losses that are provably Bayes-consistent and $(\\mathcal{R}, \\mathcal{G})$-consistent. These guarantees hold across classification, regression, and multi-task settings. Empirical results demonstrate that SARD significantly improves robustness under adversarial attacks while maintaining strong clean performance, marking a critical step toward secure and trustworthy L2D deployment.",
+      "paper_id": "pmlr:v267:montreuil25a",
+      "title": "Adversarial Robustness in Two-Stage Learning-to-Defer: Algorithms and Guarantees",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44699-44725",
+          "pmlr_id": "montreuil25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The Two-Stage Learning-to-Defer (L2D) framework has been extensively studied for classification and, more recently, regression tasks. However, many real-world applications require solving both tasks jointly in a multi-task setting. We introduce a novel Two-Stage L2D framework for multi-task learning that integrates classification and regression through a unified deferral mechanism. Our method leverages a two-stage surrogate loss family, which we prove to be both Bayes-consistent and $(\\mathcal{G}, \\mathcal{R})$-consistent, ensuring convergence to the Bayes-optimal rejector. We derive explicit consistency bounds tied to the cross-entropy surrogate and the $L_1$-norm of agent-specific costs, and extend minimizability gap analysis to the multi-expert two-stage regime. We also make explicit how shared representation learning—commonly used in multi-task models—affects these consistency guarantees. Experiments on object detection and electronic health record analysis demonstrate the effectiveness of our approach and highlight the limitations of existing L2D methods in multi-task scenarios.",
+      "paper_id": "pmlr:v267:montreuil25b",
+      "title": "A Two-Stage Learning-to-Defer Approach for Multi-Task Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "44726-44749",
+          "pmlr_id": "montreuil25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The proliferation of LLM bias probes introduces three challenges: we lack (1) principled criteria for selecting appropriate probes, (2) a system for reconciling conflicting results across probes, and (3) formal frameworks for reasoning about when and why experimental findings will generalize to real user behavior. In response, we propose a systematic approach to LLM social bias probing, drawing on insights from the social sciences. Central to this approach is EcoLevels—a novel framework that helps (a) identify appropriate bias probes (b) reconcile conflicting results, and (c) generate predictions about bias generalization. We ground our framework in the social sciences, as many LLM probes are adapted from human studies, and these fields have faced similar challenges when studying bias in humans. Finally, we outline five lessons that demonstrate how LLM bias probing can (and should) benefit from decades of social science research",
+      "paper_id": "pmlr:v267:morehouse25a",
+      "title": "Position: Rethinking LLM Bias Probing Using Lessons from the Social Sciences",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "81841-81860",
+          "pmlr_id": "morehouse25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

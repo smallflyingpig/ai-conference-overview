@@ -1,0 +1,747 @@
+{
+  "batch_index": 58,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Diffusion models have demonstrated remarkable performance in generative modeling, but generating samples with specific desiderata remains challenging. Existing solutions — such as fine-tuning, best-of-n sampling, and gradient-based guidance — are expensive, inefficient, or limited in applicability. In this work, we propose FK steering, a framework for inference-time steering diffusion models with reward functions. In this work, we introduce FK steering, which applies Feynman-Kac interacting particle systems to the inference-time steering of diffusion models with arbitrary reward functions. FK steering works by generating multiple trajectories, called particles, and resampling particles at intermediate steps based on scores computed using functions called potentials. Potentials are defined using rewards for intermediate states and are chosen such that a high score indicates the particle will yield a high-reward sample. We explore various choices of potentials, rewards, and samplers. Steering text-to-image models with a human preference reward, we find that FK steering outperforms fine-tuned models with just 2 particles. Moreover, FK steering a 0.8B parameter model outperforms a 2.6B model, achieving state-of-the-art performance on prompt fidelity. We also steer text diffusion models with rewards for text quality and rare attributes such as toxicity, and find that FK steering generates lower perplexity text and enables gradient-free control. Overall, inference-time scaling and steering of diffusion models, even training-free, provides significant quality and controllability benefits. Code available here.",
+      "paper_id": "pmlr:v267:singhal25b",
+      "title": "A General Framework for Inference-time Scaling and Steering of Diffusion Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "55810-55827",
+          "pmlr_id": "singhal25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Volume parameterizations abound in recent literature, encompassing methods from classic voxel grids to implicit neural representations. While implicit representations offer impressive capacity and improved memory efficiency compared to voxel grids, they traditionally require training through nonconvex optimization, which can be slow and sensitive to initialization and hyperparameters. We introduce GA-Planes, a novel family of implicit neural volume representations inspired by Geometric Algebra that can be trained using convex optimization, addressing the limitations of nonconvex methods. GA-Planes models generalize many existing representations including any combination of features stored in tensor basis elements followed by a neural feature decoder, and can be adapted to convex or nonconvex training as needed for various inverse problems. In the 2D setting, we prove GA-Planes models are equivalent to a low-rank plus low-resolution matrix factorization that outperforms the classic low-rank plus sparse decomposition for fitting a natural image. In 3D, GA-Planes models exhibit competitive expressiveness, model size, and optimizability across tasks such as radiance field reconstruction, 3D segmentation, and video segmentation.",
+      "paper_id": "pmlr:v267:sivgin25a",
+      "title": "Geometric Algebra Planes: Convex Implicit Neural Volumes",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "55828-55853",
+          "pmlr_id": "sivgin25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "From extracting features to generating text, the outputs of large language models (LLMs) typically rely on their final layers, following the conventional wisdom that earlier layers capture only low-level cues. However, our analysis shows that intermediate layers can encode even richer representations, often improving performance on a wide range of downstream tasks. To explain and quantify these hidden-layer properties, we propose a unified framework of representation quality metrics based on information theory, geometry, and invariance to input perturbations. Our framework highlights how each model layer balances information compression and signal preservation, revealing why mid-depth embeddings can exceed the last layer’s performance. Through extensive experiments on 32 text-embedding tasks across various architectures (transformers, state-space models) and domains (language, vision), we demonstrate that intermediate layers consistently provide stronger features, challenging the standard view on final-layer embeddings and opening new directions on using mid-layer representations for more robust and accurate representations.",
+      "paper_id": "pmlr:v267:skean25a",
+      "title": "Layer by Layer: Uncovering Hidden Representations in Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "55854-55875",
+          "pmlr_id": "skean25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Latent diffusion models have emerged as the leading approach for generating high-quality images and videos, utilizing compressed latent representations to reduce the computational burden of the diffusion process. While recent advancements have primarily focused on scaling diffusion backbones and improving autoencoder reconstruction quality, the interaction between these components has received comparatively less attention. In this work, we perform a spectral analysis of modern autoencoders and identify inordinate high-frequency components in their latent spaces, which are especially pronounced in the autoencoders with a large bottleneck channel size. We hypothesize that this high-frequency component interferes with the coarse-to-fine nature of the diffusion synthesis process and hinders the generation quality. To mitigate the issue, we propose scale equivariance: a simple regularization strategy that aligns latent and RGB spaces across frequencies by enforcing scale equivariance in the decoder. It requires minimal code changes and only up to $20$K autoencoder fine-tuning steps, yet significantly improves generation quality, reducing FID by 19% for image generation on ImageNet-1K 256x256 and FVD by at least 44% for video generation on Kinetics-700 17x256x256. The source code is available at https://github.com/snap-research/diffusability.",
+      "paper_id": "pmlr:v267:skorokhodov25a",
+      "title": "Improving the Diffusability of Autoencoders",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "55876-55905",
+          "pmlr_id": "skorokhodov25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "While score-based generative models are the model of choice across diverse domains, there are limited tools available for controlling inference-time behavior in a principled manner, e.g. for composing multiple pretrained models. Existing classifier-free guidance methods use a simple heuristic to mix conditional and unconditional scores to approximately sample from conditional distributions. However, such methods do not approximate the intermediate distributions, necessitating additional ‘corrector’ steps. In this work, we provide an efficient and principled method for sampling from a sequence of annealed, geometric-averaged, or product distributions derived from pretrained score-based models. We derive a weighted simulation scheme which we call Feynman-Kac Correctors (FKCs) based on the celebrated Feynman-Kac formula by carefully accounting for terms in the appropriate partial differential equations (PDEs). To simulate these PDEs, we propose Sequential Monte Carlo (SMC) resampling algorithms that leverage inference-time scaling to improve sampling quality. We empirically demonstrate the utility of our methods by proposing amortized sampling via inference-time temperature annealing, improving multi-objective molecule generation using pretrained models, and improving classifier-free guidance for text-to-image generation.",
+      "paper_id": "pmlr:v267:skreta25a",
+      "title": "Feynman-Kac Correctors in Diffusion: Annealing, Guidance, and Product of Experts",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "55906-55949",
+          "pmlr_id": "skreta25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce in-context denoising, a task that refines the connection between attention-based architectures and dense associative memory (DAM) networks, also known as modern Hopfield networks. Using a Bayesian framework, we show theoretically and empirically that certain restricted denoising problems can be solved optimally even by a single-layer transformer. We demonstrate that a trained attention layer processes each denoising prompt by performing a single gradient descent update on a context-aware DAM energy landscape, where context tokens serve as associative memories and the query token acts as an initial state. This one-step update yields better solutions than exact retrieval of either a context token or a spurious local minimum, providing a concrete example of DAM networks extending beyond the standard retrieval paradigm. Overall, this work solidifies the link between associative memory and attention mechanisms first identified by Ramsauer et al., and demonstrates the relevance of associative memory models in the study of in-context learning.",
+      "paper_id": "pmlr:v267:smart25a",
+      "title": "In-Context Denoising with One-Layer Transformers: Connections between Attention and Associative Memory Retrieval",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "55950-55971",
+          "pmlr_id": "smart25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "A common belief in the representational comparison literature is that if two representations can be functionally aligned, they must capture similar information. In this paper we focus on model stitching and show that models can be functionally aligned, but represent very different information. Firstly, we show that discriminative models with very different biases can be stitched together. We then show that models trained to solve entirely different tasks on different data modalities, and even clustered random noise, can be successfully stitched into MNIST or ImageNet-trained models. We end with a discussion of the wider impact of our results on the community’s current beliefs. Overall, our paper draws attention to the need to correctly interpret the results of such functional similarity measures and highlights the need for approaches that capture informational similarity.",
+      "paper_id": "pmlr:v267:smith25a",
+      "title": "Functional Alignment Can Mislead: Examining Model Stitching",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "55972-55998",
+          "pmlr_id": "smith25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Humans are often modeled as rational actors by interactive agents when they are in fact frequently observed to make biased decisions. This erroneous assumption may cause an agent’s model of the human to fail, especially when interaction occurs in bias-inducing settings that prompt risky decisions. To address this, this paper formulates a risk-sensitive multi-agent coordination problem and presents the novel Risk-Sensitive Theory of Mind (RS-ToM) framework that allows an autonomous agent to reason about and adapt to a partner of unknown risk-sensitivity. In simulated studies, we show that an agent with an RS-ToM is able to better coordinate with such a partner when compared to an agent that assumes their partner is rational. Thus, we observe significant improvements to team performance, coordination fluency, compliance with partner risk-preferences, and predictability. The presented results suggest that an RS-ToM will be able to model and plan with partners that exhibit these risk-sensitive biases in the real world.",
+      "paper_id": "pmlr:v267:smith25b",
+      "title": "Risk-Sensitive Theory of Mind: Coordinating with Agents of Unknown Bias using Cumulative Prospect Theory",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "55999-56017",
+          "pmlr_id": "smith25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study model personalization under user-level differential privacy (DP) in the shared representation framework. In this problem, there are $n$ users whose data is statistically heterogeneous, and their optimal parameters share an unknown embedding $U^* \\in\\mathbb{R}^{d\\times k}$ that maps the user parameters in $\\mathbb{R}^d$ to low-dimensional representations in $\\mathbb{R}^k$, where $k\\ll d$. Our goal is to privately recover the shared embedding and the local low-dimensional representations with small excess risk in the federated setting. We propose a private, efficient federated learning algorithm to learn the shared embedding based on the FedRep algorithm in (Collins et al., 2021). Unlike (Collins et al., 2021), our algorithm satisfies differential privacy, and our results hold for the case of noisy labels. In contrast to prior work on private model personalization (Jain et al., 2021), our utility guarantees hold under a larger class of users’ distributions (sub-Gaussian instead of Gaussian distributions). Additionally, in natural parameter regimes, we improve the privacy error term in (Jain et al., 2021) by a factor of $\\widetilde{O}(dk)$. Next, we consider the binary classification setting. We present an information-theoretic construction to privately learn the shared embedding and derive a margin-based accuracy guarantee that is independent of $d$. Our method utilizes the Johnson-Lindenstrauss transform to reduce the effective dimensions of the shared embedding and the users’ data. This result shows that dimension-independent risk bounds are possible in this setting under a margin loss.",
+      "paper_id": "pmlr:v267:snedeker25a",
+      "title": "Private Model Personalization Revisited",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56018-56067",
+          "pmlr_id": "snedeker25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "As machine learning-based prediction systems are increasingly used in high-stakes situations, it is important to understand how such predictive models will perform upon deployment. Distribution-free uncertainty quantification techniques such as conformal prediction provide guarantees about the loss black-box models will incur even when the details of the models are hidden. However, such methods are based on frequentist probability, which unduly limits their applicability. We revisit the central aspects of conformal prediction from a Bayesian perspective and thereby illuminate the shortcomings of frequentist guarantees. We propose a practical alternative based on Bayesian quadrature that provides interpretable guarantees and offers a richer representation of the likely range of losses to be observed at test time.",
+      "paper_id": "pmlr:v267:snell25a",
+      "title": "Conformal Prediction as Bayesian Quadrature",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56068-56084",
+          "pmlr_id": "snell25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) have demonstrated significant potential in code generation by following natural language instructions. Unfortunately, crucial real-world software engineering tasks, such as debugging or repository-level feature implementation, involve processing extensive contexts beyond current LLM context sizes and performing complex reasoning that is brittle using standard autoregressive decoding. Enhancing LLMs’ performance in these scenarios requires careful consideration of the contextual information provided to the model, optimizing how the model leverages that, and identifying tools that enable more effective navigation of the development environment. To address these challenges, we introduce Nemotron-CORTEXA, an agentic system built on a predefined scaffold that enhances LLMs’ ability to navigate and reason efficiently in complex software engineering contexts. Specifically, we develop a novel code embedding model that retrieves the most relevant files with greater precision, along with a localization agent that refines the granularity of the retrieval process. Additionally, we demonstrate that providing diverse contextual information and utilizing different prompt formats enable the model to identify and resolve issues more efficiently. We evaluate Nemotron-CORTEXA using SWE-bench, a benchmark derived from real-world GitHub issues. Compared to the widely used Agentless framework, Nemotron-CORTEXA achieves a higher issue resolution rate at a lower cost, highlighting its practical impact in addressing real-world software engineering challenges.",
+      "paper_id": "pmlr:v267:sohrabizadeh25a",
+      "title": "Nemotron-CORTEXA: Enhancing LLM Agents for Software Engineering Tasks via Improved Localization and Solution Diversity",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56085-56100",
+          "pmlr_id": "sohrabizadeh25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study the statistical-computational trade-offs for learning with exact invariances (or symmetries) using kernel regression. Traditional methods, such as data augmentation, group averaging, canonicalization, and frame-averaging, either fail to provide a polynomial-time solution or are not applicable in the kernel setting. However, with oracle access to the geometric properties of the input space, we propose a polynomial-time algorithm that learns a classifier with exact invariances. Moreover, our approach achieves the same excess population risk (or generalization error) as the original kernel regression problem. To the best of our knowledge, this is the first polynomial-time algorithm to achieve exact (as opposed to approximate) invariances in this setting. In developing our approach, we also resolve a question recently posed by D{ı}az et al. (2025) on efficient computation of invariant bases and kernels with respect to finite groups, even when the group size is prohibitively large. Our proof leverages tools from differential geometry, spectral theory, and optimization. A key result in our development is a new reformulation of the problem of learning under invariances as optimizing an infinite number of linearly constrained convex quadratic programs, which may be of independent interest.",
+      "paper_id": "pmlr:v267:soleymani25a",
+      "title": "Learning with Exact Invariances in Polynomial Time",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56101-56121",
+          "pmlr_id": "soleymani25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Interpretability is crucial for ensuring RL systems align with human values. However, it remains challenging to achieve in complex decision making domains. Existing methods frequently attempt interpretability at the level of fundamental model units, such as neurons or decision nodes: an approach which scales poorly to large models. Here, we instead propose an approach to interpretability at the level of functional modularity. We show how encouraging sparsity and locality in network weights leads to the emergence of functional modules in RL policy networks. To detect these modules, we develop an extended Louvain algorithm which uses a novel ‘correlation alignment’ metric to overcome the limitations of standard network analysis techniques when applied to neural network architectures. Applying these methods to 2D and 3D MiniGrid environments reveals the consistent emergence of distinct navigational modules for different axes, and we further demonstrate how these functions can be validated through direct interventions on network weights prior to inference.",
+      "paper_id": "pmlr:v267:soligo25a",
+      "title": "Inducing, Detecting and Characterising Neural Modules: A Pipeline for Functional Interpretability in Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56122-56147",
+          "pmlr_id": "soligo25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "When learning is used to inform decisions about humans, such as for loans, hiring, or admissions, this can incentivize users to strategically modify their features, at a cost, to obtain positive predictions. The common assumption is that the function governing costs is exogenous, fixed, and predetermined. We challenge this assumption, and assert that costs emerge as a result of deploying a classifier. Our idea is simple: when users seek positive predictions, this creates demand for important features; and if features are available for purchase, then a market will form, and competition will give rise to prices. We extend the strategic classification framework to support this notion, and study learning in a setting where a classifier can induce a market for features. We present an analysis of the learning task, devise an algorithm for computing market prices, propose a differentiable learning framework, and conduct experiments to explore our novel setting and approach.",
+      "paper_id": "pmlr:v267:sommer25a",
+      "title": "Learning Classifiers That Induce Markets",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56148-56172",
+          "pmlr_id": "sommer25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Current Large Language Model (LLM) preference optimization algorithms do not account for temporal preference drift, which can lead to severe misalignment. To address this limitation, we propose Non-Stationary Direct Preference Optimisation (NS-DPO) that models time-dependent reward functions with a Dynamic Bradley-Terry model. NS-DPO proposes a computationally efficient solution by introducing only a single discount parameter in the loss function, which is used for exponential weighting that proportionally focuses learning on more time-relevant datapoints. We theoretically analyze the convergence of NS-DPO in a general setting where the exact nature of the preference drift is not known, providing upper bounds on the estimation error and regret caused by non-stationary preferences. Finally, we demonstrate the effectiveness of NS-DPO for fine-tuning LLMs under drifting preferences. Using scenarios where various levels of preference drift is introduced, with popular LLM reward models and datasets, we show that NS-DPO fine-tuned LLMs remain robust under non-stationarity, significantly outperforming baseline algorithms that ignore temporal preference changes, without sacrificing performance in stationary cases.",
+      "paper_id": "pmlr:v267:son25a",
+      "title": "Right Now, Wrong Then: Non-Stationary Direct Preference Optimization under Preference Drift",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56173-56203",
+          "pmlr_id": "son25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Deep reinforcement learning (RL) is effective for decision-making and control tasks like autonomous driving and embodied AI. However, RL policies often suffer from the action fluctuation problem in real-world applications, resulting in severe actuator wear, safety risk, and performance degradation. This paper identifies the two fundamental causes of action fluctuation: observation noise and policy non-smoothness. We propose LipsNet++, a novel policy network with Fourier filter layer and Lipschitz controller layer to separately address both causes. The filter layer incorporates a trainable filter matrix that automatically extracts important frequencies while suppressing noise frequencies in the observations. The controller layer introduces a Jacobian regularization technique to achieve a low Lipschitz constant, ensuring smooth fitting of a policy function. These two layers function analogously to the filter and controller in classical control theory, suggesting that filtering and control capabilities can be seamlessly integrated into a single policy network. Both simulated and real-world experiments demonstrate that LipsNet++ achieves the state-of-the-art noise robustness and action smoothness. The code and videos are publicly available at https://xjsong99.github.io/LipsNet_v2.",
+      "paper_id": "pmlr:v267:song25a",
+      "title": "LipsNet++: Unifying Filter and Controller into a Policy Network",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56204-56241",
+          "pmlr_id": "song25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Classifier-free guidance (CFG) is a key technique for improving conditional generation in diffusion models, enabling more accurate control while enhancing sample quality. It is natural to extend this technique to video diffusion, which generates video conditioned on a variable number of context frames, collectively referred to as history. However, we find two key challenges to guiding with variable-length history: architectures that only support fixed-size conditioning, and the empirical observation that CFG-style history dropout performs poorly. To address this, we propose the Diffusion Forcing Transformer (DFoT), a video diffusion architecture and theoretically grounded training objective that jointly enable conditioning on a flexible number of history frames. We then introduce History Guidance, a family of guidance methods uniquely enabled by DFoT. We show that its simplest form, vanilla history guidance, already significantly improves video generation quality and temporal consistency. A more advanced method, history guidance across time and frequency further enhances motion dynamics, enables compositional generalization to out-of-distribution history, and can stably roll out extremely long videos. Project website: https://boyuan.space/history-guidance",
+      "paper_id": "pmlr:v267:song25b",
+      "title": "History-Guided Video Diffusion",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56242-56280",
+          "pmlr_id": "song25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Optimization problems on the Stiefel manifold, ranging from principal component analysis to enhancing neural network robustness, are ubiquitous in machine learning. The Landing algorithm avoids computationally expensive retraction operations on manifolds, making it highly competitive for large-scale problems. This paper extends this method to distributed settings, introducing EF-Landing , the first retraction-free and communication-efficient algorithm for distributed stochastic optimization on the Stiefel manifold. By incorporating communication compression and error feedback, EF-Landing ensures convergence and constraint feasibility while significantly reducing communication overhead. We provide sharp convergence guarantees, demonstrating that EF-Landing achieves the same asymptotic linear speedup convergence rate as existing methods without communication compression. Furthermore, our analysis is highly versatile, applying to both deterministic and stochastic settings and encompassing algorithms based on gradient descent or momentum-based gradient descent. We also generalize EF-Landing to operate on block-wise Stiefel manifolds, enabling greater flexibility for structured constraints. Extensive numerical experiments validate our theoretical results.",
+      "paper_id": "pmlr:v267:song25c",
+      "title": "Distributed Retraction-Free and Communication-Efficient Optimization on the Stiefel Manifold",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56281-56318",
+          "pmlr_id": "song25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Designing protein-binding proteins with high affinity is critical in biomedical research and biotechnology. Despite recent advancements targeting specific proteins, the ability to create high-affinity binders for arbitrary protein targets on demand, without extensive rounds of wet-lab testing, remains a significant challenge. Here, we introduce PPDiff, a diffusion model to jointly design the sequence and structure of binders for arbitrary protein targets in a non-autoregressive manner. PPDiff builds upon our developed Sequence Structure Interleaving Network with Causal attention layers (SSINC), which integrates interleaved self-attention layers to capture global amino acid correlations, $k$-nearest neighbor ($k$NN) equivariant graph convolutional layers to model local interactions in three-dimensional (3D) space, and causal attention layers to simplify the intricate interdependencies within the protein sequence. To assess PPDiff, we curate PPBench, a general protein-protein complex dataset comprising 706,360 complexes from the Protein Data Bank (PDB). The model is pretrained on PPBench and finetuned on two real-world applications: target-protein mini-binder complex design and antigen-antibody complex design. PPDiff consistently surpasses baseline methods, achieving success rates of 50.00%, 23.16%, and 16.89% for the pretraining task and the two downstream applications, respectively.",
+      "paper_id": "pmlr:v267:song25d",
+      "title": "PPDiff: Diffusing in Hybrid Sequence-Structure Space for Protein-Protein Complex Design",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56319-56336",
+          "pmlr_id": "song25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Proteolysis-targeting chimeras (PROTACs) are a groundbreaking technology for targeted protein degradation, but designing effective linkers that connect two molecular fragments to form a drug-candidate PROTAC molecule remains a key challenge. While diffusion models show promise in molecular generation, current diffusion models for PROTAC linker design are typically trained on small molecule datasets, introducing distribution mismatches in the chemical space between small molecules and target PROTACs. Direct fine-tuning on limited PROTAC datasets often results in overfitting and poor generalization. In this work, we propose DAD-PROTAC, a domain-adapted diffusion model for PROTAC linker design, which addresses this distribution mismatch in chemical space through density ratio estimation to bridge the gap between small-molecule and PROTAC domains. By decomposing the target score estimator into a pre-trained score function and a lightweight score correction term, DAD-PROTAC achieves efficient fine-tuning without full retraining. Experimental results demonstrate its superior ability to generate high-quality PROTAC linkers.",
+      "paper_id": "pmlr:v267:song25e",
+      "title": "Domain-Adapted Diffusion Model for PROTAC Linker Design Through the Lens of Density Ratio in Chemical Space",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56337-56362",
+          "pmlr_id": "song25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Though typically represented by the discrete node and edge attributes, the graph topological information can be sufficiently captured by the graph spectrum in a continuous space. It is believed that incorporating the continuity of graph topological information into the generative process design could establish a superior paradigm for graph generative modeling. Motivated by such prior and recent advancements in the generative paradigm, we propose Graph Bayesian Flow Networks (GraphBFN) in this paper, a principled generative framework that designs an alternative generative process emphasizing the dynamics of topological information. Unlike recent discrete-diffusion-based methods, GraphBFNemploys the continuous counts derived from sampling infinite times from a categorical distribution as latent to facilitate a smooth decomposition of topological information, demonstrating enhanced effectiveness. To effectively realize the concept, we further develop an advanced sampling strategy and new time-scheduling techniques to overcome practical barriers and boost performance. Through extensive experimental validation on both generic graph and molecular graph generation tasks, GraphBFN could consistently achieve superior or competitive performance with significantly higher training and sampling efficiency.",
+      "paper_id": "pmlr:v267:song25f",
+      "title": "Smooth Interpolation for Improved Discrete Graph Generative Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56363-56388",
+          "pmlr_id": "song25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Multimodal Large Language Models (Multimodal LLMs) have shown their strength in Video Question Answering (VideoQA). However, due to the black-box nature of end-to-end training strategies, existing approaches based on Multimodal LLMs suffer from the lack of interpretability for VideoQA: they can neither present reasoning paths nor indicate where the answers are derived from the video. To address this issue, we propose MSR-ViR ( M odularized S elf- R eflected Vi deo R easoner), which for the first time integrates modular networks to Multimodal LLMs, capable of providing VideoQA with explicit reasoning paths for more interpretability. Specifically, a MoST-Grounding (Modularized Spatial-Temporal Grounding) network is proposed to decompose complex questions via tree-structured policies, localizing relevant temporal and spatial segments within videos through step-by-step reasoning. The proposed MoST-Grounding network provides explicit visually grounded information for Multimodal LLMs with clear reasoning paths, thus enhancing interpretability for the predicted answers. To further improve the reasoning quality, we design an Alternate Self-reflection Training Strategy to jointly optimize policy generation and Multimodal LLMs. Experiments on real-world datasets demonstrate the superiority of our proposed MSR-ViR framework in video understanding, reasoning transparency, and providing explicit localization evidence for answers.",
+      "paper_id": "pmlr:v267:song25g",
+      "title": "Modularized Self-Reflected Video Reasoner for Multimodal LLM with Application to Video Question Answering",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56389-56413",
+          "pmlr_id": "song25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recently, deep unsupervised hashing has gained considerable attention in image retrieval due to its advantages in cost-free data labeling, computational efficiency, and storage savings. Although existing methods achieve promising performance by leveraging inherent visual structures within the data, they primarily focus on learning discriminative features from unlabeled images through limited internal knowledge, resulting in an intrinsic upper bound on their performance. To break through this intrinsic limitation, we propose a novel method, called Deep Unsupervised Hashing with External Guidance (DUH-EG), which incorporates external textual knowledge as semantic guidance to enhance discrete representation learning. Specifically, our DUH-EG: i) selects representative semantic nouns from an external textual database by minimizing their redundancy, then matches images with them to extract more discriminative external features; and ii) presents a novel bidirectional contrastive learning mechanism to maximize agreement between hash codes in internal and external spaces, thereby capturing discrimination from both external and intrinsic structures in Hamming space. Extensive experiments on four benchmark datasets demonstrate that our DUH-EG remarkably outperforms existing state-of-the-art hashing methods.",
+      "paper_id": "pmlr:v267:song25h",
+      "title": "Deep Unsupervised Hashing via External Guidance",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56414-56428",
+          "pmlr_id": "song25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Contrastive Language-Image Pretraining (CLIP) has achieved remarkable success, but its performance can degrade when fine-tuned in out-of-distribution (OOD) scenarios. We model the prediction process using a Structural Causal Model (SCM) and show that the causal mechanism involving both invariant and variant factors in training environments differs from that in test environments. In contrast, the causal mechanism with solely invariant factors remains consistent across environments. We theoretically prove the existence of a linear mapping from CLIP embeddings to invariant factors, which can be estimated using interventional data. Additionally, we provide a condition to guarantee low OOD risk of the invariant predictor. Based on these insights, we propose the Invariant Causal Mechanism of CLIP (CLIP-ICM) framework. CLIP-ICM involves collecting interventional data, estimating a linear projection matrix, and making predictions within the invariant subspace. Experiments on several OOD datasets show that CLIP-ICM significantly improves the performance of CLIP. Our method offers a simple but powerful enhancement, boosting the reliability of CLIP in real-world applications.",
+      "paper_id": "pmlr:v267:song25i",
+      "title": "Learning Invariant Causal Mechanism from Vision-Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56429-56464",
+          "pmlr_id": "song25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Machine learning algorithms often struggle to control complex real-world systems. In the case of nuclear fusion, these challenges are exacerbated, as the dynamics are notoriously complex, data is poor, hardware is subject to failures, and experiments often affect dynamics beyond the experiment’s duration. Existing tools like reinforcement learning, supervised learning, and Bayesian optimization address some of these challenges but fail to provide a comprehensive solution. To overcome these limitations, we present a multi-scale Bayesian optimization approach that integrates a high-frequency data-driven dynamics model with a low-frequency Gaussian process. By updating the Gaussian process between experiments, the method rapidly adapts to new data, refining the predictions of the less reliable dynamical model. We validate our approach by controlling tearing instabilities in the DIII-D nuclear fusion plant. Offline testing on historical data shows that our method significantly outperforms several baselines. Results on live experiments on the DIII-D tokamak, conducted under high-performance plasma scenarios prone to instabilities, shows a 50% success rate — marking a 117% improvement over historical outcomes.",
+      "paper_id": "pmlr:v267:sonker25a",
+      "title": "Multi-Timescale Dynamics Model Bayesian Optimization for Plasma Stabilization in Tokamaks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56465-56479",
+          "pmlr_id": "sonker25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We present a constructive universal approximation theorem for learning machines equipped with joint-group-equivariant feature maps, called the joint-equivariant machines, based on the group representation theory. “Constructive” here indicates that the distribution of parameters is given in a closed-form expression known as the ridgelet transform. Joint-group-equivariance encompasses a broad class of feature maps that generalize classical group-equivariance. Particularly, fully-connected networks are not group-equivariant but are joint-group-equivariant. Our main theorem also unifies the universal approximation theorems for both shallow and deep networks. Until this study, the universality of deep networks has been shown in a different manner from the universality of shallow networks, but our results discuss them on common ground. Now we can understand the approximation schemes of various learning machines in a unified manner. As applications, we show the constructive universal approximation properties of four examples: depth-$n$ joint-equivariant machine, depth-$n$ fully-connected network, depth-$n$ group-convolutional network, and a new depth-$2$ network with quadratic forms whose universality has not been known.",
+      "paper_id": "pmlr:v267:sonoda25a",
+      "title": "Deep Ridgelet Transform and Unified Universality Theorem for Deep and Shallow Joint-Group-Equivariant Machines",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56480-56498",
+          "pmlr_id": "sonoda25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We present PDE-Controller, a framework that enables large language models (LLMs) to control systems governed by partial differential equations (PDEs). Traditional LLMs have excelled in commonsense reasoning but fall short in rigorous logical reasoning. While recent AI-for-math has made strides in pure mathematics, areas of applied mathematics, particularly PDEs, remain underexplored despite their significant real-world applications. Our approach enables LLMs to transform informal natural language instructions into formal specifications, and then execute reasoning and planning steps to improve the utility of PDE control. We build a holistic solution comprising datasets (both human-written cases and 2 million synthetic samples), math-reasoning models, and novel evaluation metrics, all of which require significant effort. Our PDE-Controller significantly outperforms the latest open-source and GPT models in reasoning, autoformalization, and program synthesis, achieving up to a 62% improvement in utility gain for PDE control. By bridging the gap between language generation and PDE systems, we demonstrate the potential of LLMs in addressing complex scientific and engineering challenges. We promise to release all data, model checkpoints, and code upon acceptance.",
+      "paper_id": "pmlr:v267:soroco25a",
+      "title": "PDE-Controller: LLMs for Autoformalization and Reasoning of PDEs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56499-56530",
+          "pmlr_id": "soroco25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Density-based distances (DBDs) provide a principled approach to metric learning by defining distances in terms of the underlying data distribution. By employing a Riemannian metric that increases in regions of low probability density, shortest paths naturally follow the data manifold. Fermat distances, a specific type of DBD, have attractive properties, but existing estimators based on nearest neighbor graphs suffer from poor convergence due to inaccurate density estimates. Moreover, graph-based methods scale poorly to high dimensions, as the proposed geodesics are often insufficiently smooth. We address these challenges in two key ways. First, we learn densities using normalizing flows. Second, we refine geodesics through relaxation, guided by a learned score model. Additionally, we introduce a dimension-adapted Fermat distance that scales intuitively to high dimensions and improves numerical stability. Our work paves the way for the practical use of density-based distances, especially in high-dimensional spaces.",
+      "paper_id": "pmlr:v267:sorrenson25a",
+      "title": "Learning Distances from Data with Normalizing Flows and Score Matching",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56531-56548",
+          "pmlr_id": "sorrenson25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We propose DocVXQA , a novel framework for visually self-explainable document question answering, where the goal is not only to produce accurate answers to questions but also to learn visual heatmaps that highlight critical regions, offering interpretable justifications for the model decision. To integrate explanations into the learning process, we quantitatively formulate explainability principles as explicit learning criteria. Unlike conventional relevance map methods that solely emphasize regions relevant to the answer, our context-aware DocVXQA delivers explanations that are contextually sufficient yet representation-efficient. This fosters user trust while achieving a balance between predictive performance and interpretability in document visual question answering applications. Extensive experiments, including human evaluation, provide strong evidence supporting the effectiveness of our method.",
+      "paper_id": "pmlr:v267:souibgui25a",
+      "title": "DocVXQA: Context-Aware Visual Explanations for Document Question Answering",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56549-56569",
+          "pmlr_id": "souibgui25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study the design of iterative combinatorial auctions (ICAs) . The main challenge in this domain is that the bundle space grows exponentially in the number of items. To address this, recent work has proposed machine learning (ML)-based preference elicitation algorithms that aim to elicit only the most critical information from bidders to maximize efficiency. However, while the SOTA ML-based algorithms elicit bidders’ preferences via value queries , ICAs that are used in practice elicit information via demand queries . In this paper, we introduce a novel ML algorithm that provably makes use of the full information from both value and demand queries, and we show via experiments that combining both query types results in significantly better learning performance in practice. Building on these insights, we present MLHCA, a new ML-powered auction that uses value and demand queries. MLHCA significantly outperforms the previous SOTA, reducing efficiency loss by up to a factor 10, with up to 58% fewer queries. Thus, MLHCA achieves large efficiency improvements while also reducing bidders’ cognitive load, establishing a new benchmark for both practicability and efficiency. Our code is available at https://github.com/marketdesignresearch/MLHCA.",
+      "paper_id": "pmlr:v267:soumalias25a",
+      "title": "Prices, Bids, Values: One ML-Powered Combinatorial Auction to Rule Them All",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56570-56614",
+          "pmlr_id": "soumalias25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The rapid deployment of autonomous AI agents creates urgent challenges in the areas of authorization, accountability, and access control in task delegation. This position paper argues that authenticated and auditable delegation of authority to AI agents is a critical component of mitigating practical risks and unlocking the value of agents. To support this argument, we examine how existing web authentication and authorization protocols, as well as natural language interfaces to common access control mechanisms, can be extended to enable secure authenticated delegation of authority to AI agents. By extending OAuth 2.0 and OpenID Connect with agent-specific credentials and using transparent translation of natural language permissions into robust scoping rules across diverse interaction modalities, we outline how authenticated delegation can be achieved to enable clear chains of accountability while maintaining compatibility with established authentication and web infrastructure for immediate compatibility. This work contributes to ensuring that agentic AI systems perform only appropriate actions. It argues for prioritizing delegation infrastructure as a key component of AI agent governance and provides a roadmap for achieving this.",
+      "paper_id": "pmlr:v267:south25a",
+      "title": "Position: AI Agents Need Authenticated Delegation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "82211-82231",
+          "pmlr_id": "south25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Subgraph GNNs have emerged as promising architectures that overcome the expressiveness limitations of Graph Neural Networks (GNNs) by processing bags of subgraphs. Despite their compelling empirical performance, these methods are afflicted by a high computational complexity: they process bags whose size grows linearly in the number of nodes, hindering their applicability to larger graphs. In this work, we propose an effective and easy-to-implement approach to dramatically alleviate the computational cost of Subgraph GNNs and unleash broader applications thereof. Our method, dubbed HyMN, leverages walk-based centrality measures to sample a small number of relevant subgraphs and drastically reduce the bag size. By drawing a connection to perturbation analysis, we highlight the strength of the proposed centrality-based subgraph sampling, and further prove that these walk-based centralities can be additionally used as Structural Encodings for improved discriminative power. A comprehensive set of experimental results demonstrates that HyMN provides an effective synthesis of expressiveness, efficiency, and downstream performance, unlocking the application of Subgraph GNNs to dramatically larger graphs. Not only does our method outperform more sophisticated subgraph sampling approaches, it is also competitive, and sometimes better, than other state-of-the-art approaches for a fraction of their runtime.",
+      "paper_id": "pmlr:v267:southern25a",
+      "title": "Balancing Efficiency and Expressiveness: Subgraph GNNs with Walk-Based Centrality",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56615-56649",
+          "pmlr_id": "southern25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Dual-target molecule generation, which focuses on discovering compounds capable of interacting with two target proteins, has garnered significant attention due to its potential for improving therapeutic efficiency, safety and resistance mitigation. Existing approaches face two critical challenges. First, by simplifying the complex dual-target optimization problem to scalarized combinations of individual objectives, they fail to capture important trade-offs between target engagement and molecular properties. Second, they typically do not integrate synthetic planning into the generative process. This highlights a need for more appropriate objective function design and synthesis-aware methodologies tailored to the dual-target molecule generation task. In this work, we propose CombiMOTS, a Pareto Monte Carlo Tree Search (PMCTS) framework that generates dual-target molecules. CombiMOTS is designed to explore a synthesizable fragment space while employing vectorized optimization constraints to encapsulate target affinity and physicochemical properties. Extensive experiments on real-world databases demonstrate that CombiMOTS produces novel dual-target molecules with high docking scores, enhanced diversity, and balanced pharmacological characteristics, showcasing its potential as a powerful tool for dual-target drug discovery. The code and data is accessible through https://github.com/Tibogoss/CombiMOTS.",
+      "paper_id": "pmlr:v267:southiratn25a",
+      "title": "CombiMOTS: Combinatorial Multi-Objective Tree Search for Dual-Target Molecule Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56650-56691",
+          "pmlr_id": "southiratn25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Maximizing a single submodular set function subject to a cardinality constraint is a well-studied and central topic in combinatorial optimization. However, finding a set that maximizes multiple functions at the same time is much less understood, even though it is a formulation which naturally occurs in robust maximization or problems with fairness considerations such as fair influence maximization or fair allocation. In this work, we consider the problem of maximizing the minimum over many submodular functions subject to a cardinality constraint, which is known as multiobjective submodular maximization. All known polynomial-time approximation algorithms either obtain a weak approximation guarantee or rely on the evaluation of the multilinear extension. The latter is expensive to evaluate and renders such algorithms impractical. We bridge this gap and introduce the first scalable and practical algorithm that obtains the best-known approximation guarantee. We furthermore introduce a novel application fair centrality maximization and show how it can be addressed via multiobjective submodular maximization. In our experimental evaluation, we show that our algorithm outperforms known algorithms in terms of objective value and running time.",
+      "paper_id": "pmlr:v267:spaeh25a",
+      "title": "An Asymptotically Optimal Approximation Algorithm for Multiobjective Submodular Maximization at Scale",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56692-56718",
+          "pmlr_id": "spaeh25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models are pre-trained on ever-growing token budgets under the assumption that better pre-training performance translates to improved downstream models. In this work, we challenge this assumption and show that extended pre-training can make models harder to fine-tune, leading to degraded final performance. We term this phenomenon catastrophic overtraining . For example, the instruction-tuned OLMo-1B model pre-trained on 3T tokens leads to over 2% worse performance on multiple standard LLM benchmarks than its 2.3T token counterpart. Through controlled experiments and theoretical analysis, we show that catastrophic overtraining arises from a systematic increase in the broad sensitivity of pre-trained parameters to modifications, including but not limited to fine-tuning. Our findings call for a critical reassessment of pre-training design that considers the downstream adaptability of the model.",
+      "paper_id": "pmlr:v267:springer25a",
+      "title": "Overtrained Language Models Are Harder to Fine-Tune",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56719-56789",
+          "pmlr_id": "springer25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We consider the problem of online learning where the sequence of actions played by the learner must adhere to an unknown safety constraint at every round. The goal is to minimize regret with respect to the best safe action in hindsight while simultaneously satisfying the safety constraint with high probability on each round. We provide a general meta-algorithm that leverages an online regression oracle to estimate the unknown safety constraint, and converts the predictions of an online learning oracle to predictions that adhere to the unknown safety constraint. On the theoretical side, our algorithm’s regret can be bounded by the regret of the online regression and online learning oracles, the eluder dimension of the model class containing the unknown safety constraint, and a novel complexity measure that characterizes the difficulty of safe learning. We complement our result with an asymptotic lower bound that shows that the aforementioned complexity measure is necessary. When the constraints are linear, we instantiate our result to provide a concrete algorithm with $\\sqrt{T}$ regret using a scaling transformation that balances optimistic exploration with pessimistic constraint satisfaction.",
+      "paper_id": "pmlr:v267:sridharan25a",
+      "title": "Online Learning with Unknown Constraints",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56790-56819",
+          "pmlr_id": "sridharan25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We propose a novel method for measuring the discrepancy between a set of samples and a desired posterior distribution for Bayesian inference. Classical methods for assessing sample quality like the effective sample size are not appropriate for scalable Bayesian sampling algorithms, such as stochastic gradient Langevin dynamics, that are asymptotically biased. Instead, the gold standard is to use the kernel Stein Discrepancy (KSD), which is itself not scalable given its quadratic cost in the number of samples. The KSD and its faster extensions also typically suffer from the curse-of-dimensionality and can require extensive tuning. To address these limitations, we develop the polynomial Stein discrepancy (PSD) and an associated goodness-of-fit test. While the new test is not fully convergence-determining, we prove that it detects differences in the first $r$ moments for Gaussian targets. We empirically show that the test has higher power than its competitors in several examples, and at a lower computational cost. Finally, we demonstrate that the PSD can assist practitioners to select hyper-parameters of Bayesian sampling algorithms more efficiently than competitors.",
+      "paper_id": "pmlr:v267:srinivasan25a",
+      "title": "The Polynomial Stein Discrepancy for Assessing Moment Convergence",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56820-56842",
+          "pmlr_id": "srinivasan25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce PaperBench, a benchmark evaluating the ability of AI agents to replicate state-of-the-art AI research. Agents must replicate 20 ICML 2024 Spotlight and Oral papers from scratch, including understanding paper contributions, developing a codebase, and successfully executing experiments. For objective evaluation, we develop rubrics that hierarchically decompose each replication task into smaller sub-tasks with clear grading criteria. In total, PaperBench contains 8,316 individually gradable tasks. Rubrics are co-developed with the author(s) of each ICML paper for accuracy and realism. To enable scalable evaluation, we also develop an LLM-based judge to automatically grade replication attempts against rubrics, and assess our judge’s performance by creating a separate benchmark for judges. We evaluate several frontier models on PaperBench, finding that the best-performing tested agent, Claude 3.5 Sonnet (New) with open-source scaffolding, achieves an average replication score of 21.0%. Finally, we recruit top ML PhDs to attempt a subset of PaperBench, finding that models do not yet outperform the human baseline. We open-source our code (https://github.com/openai/preparedness) to facilitate future research in understanding the AI engineering capabilities of AI agents.",
+      "paper_id": "pmlr:v267:starace25a",
+      "title": "PaperBench: Evaluating AI’s Ability to Replicate AI Research",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56843-56873",
+          "pmlr_id": "starace25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study the incorporation of equivariances into vector-valued GPs and more general classes of random field models. While kernels guaranteeing equivariances have been investigated previously, their evaluation is often computationally prohibitive due to required integrations over the involved groups. In this work, we provide a kernel characterization of stochastic equivariance for centred second-order vector-valued random fields and we construct integration-free equivariant kernels based on the notion of fundamental regions of group actions. We establish data-efficient and computationally lightweight GP models for velocity fields and molecular electric dipole moments and demonstrate that proposed integration-free kernels may also be leveraged to extract equivariant components from data.",
+      "paper_id": "pmlr:v267:steinert25a",
+      "title": "Integration-free Kernels for Equivariant Gaussian Process Modelling",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56874-56898",
+          "pmlr_id": "steinert25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Handling missing values at test time is challenging for machine learning models, especially when aiming for both high accuracy and interpretability. Established approaches often add bias through imputation or excessive model complexity via missingness indicators. Moreover, either method can obscure interpretability, making it harder to understand how the model utilizes the observed variables in predictions. We propose missingness-avoiding (MA) machine learning, a general framework for training models to rarely require the values of missing (or imputed) features at test time. We create tailored MA learning algorithms for decision trees, tree ensembles, and sparse linear models by incorporating classifier-specific regularization terms in their learning objectives. The tree-based models leverage contextual missingness by reducing reliance on missing values based on the observed context. Experiments on real-world datasets demonstrate that MA-DT, MA-LASSO, MA-RF , and MA-GBT effectively reduce the reliance on features with missing values while maintaining predictive performance competitive with their unregularized counterparts. This shows that our framework gives practitioners a powerful tool to maintain interpretability in predictions with test-time missing values.",
+      "paper_id": "pmlr:v267:stempfle25a",
+      "title": "Prediction models that learn to avoid missing values",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "56899-56919",
+          "pmlr_id": "stempfle25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

@@ -1,0 +1,747 @@
+{
+  "batch_index": 81,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "The remarkable capabilities of Large Language Models (LLMs) can be mainly attributed to their massive training datasets, which are often scraped from the internet without respecting data owners’ intellectual property rights. Dataset Inference (DI) offers a potential remedy by identifying whether a suspect dataset was used in training, thereby enabling data owners to verify unauthorized use. However, existing DI methods require a private set—known to be absent from training—that closely matches the compromised dataset’s distribution. Such in-distribution, held-out data is rarely available in practice, severely limiting the applicability of DI. In this work, we address this challenge by synthetically generating the required held-out set. Our approach tackles two key obstacles: (1) creating high-quality, diverse synthetic data that accurately reflects the original distribution, which we achieve via a data generator trained on a carefully designed suffix-based completion task, and (2) bridging likelihood gaps between real and synthetic data, which is realized through post-hoc calibration. Extensive experiments on diverse text datasets show that using our generated data as a held-out set enables DI to detect the original training sets with high confidence, while maintaining a low false positive rate. This result empowers copyright owners to make legitimate claims on data usage and demonstrates our method’s reliability for real-world litigations. Our code is available at https://github.com/sprintml/PostHocDatasetInference.",
+      "paper_id": "pmlr:v267:zhao25q",
+      "title": "Unlocking Post-hoc Dataset Inference with Synthetic Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77608-77629",
+          "pmlr_id": "zhao25q",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce GraphGPT , a novel self-supervised generative pre-trained model for graph learning based on the Graph Eulerian Transformer ( GET ). First, we propose GET , which combines a standard transformer encoder or decoder architecture with an innovative graph-to-sequence transformation method. This method converts graphs or sampled subgraphs into sequences of tokens representing nodes, edges, and attributes in a reversible manner using Eulerian paths. We pre-train GET using either of the two self-supervised tasks: next-token prediction (NTP) and scheduled masked-token prediction (SMTP). The pre-trained model is then fine-tuned for downstream tasks such as graph-, edge-, and node-level prediction. Despite its simplicity, GraphGPT achieves performance comparable to or surpassing state-of-the-art methods on multiple large-scale Open Graph Benchmark (OGB) datasets. It demonstrates exceptional results on the molecular property prediction dataset PCQM4Mv2 and the protein-protein interaction dataset ogbl-ppa. Notably, generative pre-training enables scaling GraphGPT to 2 billion parameters while maintaining performance gains — a breakthrough that overcomes the scalability limitations of traditional Graph Neural Networks (GNNs) and prior graph transformers (GTs). To advance research in graph foundation models and facilitate scientific discovery in chemistry, materials science, and related fields, we have released the source code (https://github.com/alibaba/graph-gpt) and model checkpoints (https://www.modelscope.cn/organization/Alibaba-DT).",
+      "paper_id": "pmlr:v267:zhao25r",
+      "title": "GraphGPT: Generative Pre-trained Graph Eulerian Transformer",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77630-77656",
+          "pmlr_id": "zhao25r",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Inspired by the Kolmogorov-Arnold representation theorem, KANs offer a novel framework for function approximation by replacing traditional neural network weights with learnable univariate functions. This design demonstrates significant potential as an efficient and interpretable alternative to traditional MLPs. However, KANs are characterized by a substantially larger number of trainable parameters, leading to challenges in memory efficiency and higher training costs compared to MLPs. To address this limitation, we propose to generate weights for KANs via a smaller meta-learner, called MetaKANs. By training KANs and MetaKANs in an end-to-end differentiable manner, MetaKANs achieve comparable or even superior performance while significantly reducing the number of trainable parameters and maintaining promising interpretability. Extensive experiments on diverse benchmark tasks, including symbolic regression, partial differential equation solving, and image classification, demonstrate the effectiveness of MetaKANs in improving parameter efficiency and memory usage. The proposed method provides an alternative technique for training KANs, that allows for greater scalability and extensibility, and narrows the training cost gap with MLPs stated in the original paper of KANs. Our code is available at https://github.com/Murphyzc/MetaKAN.",
+      "paper_id": "pmlr:v267:zhao25s",
+      "title": "Improving Memory Efficiency for Training KANs via Meta Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77657-77676",
+          "pmlr_id": "zhao25s",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In planning processes of computational decision-making agents, generative or predictive models are often used as \"generators\" to propose \"targets\" representing sets of expected or desirable states. Unfortunately, learned models inevitably hallucinate infeasible targets that can cause delusional behaviors and safety concerns. We first investigate the kinds of infeasible targets that generators can hallucinate. Then, we devise a strategy to identify and reject infeasible targets by learning a target feasibility evaluator. To ensure that the evaluator is robust and non-delusional, we adopted a design choice combining off-policy compatible learning rule, distributional architecture, and data augmentation based on hindsight relabeling. Attaching to a planning agent, the designed evaluator learns by observing the agent’s interactions with the environment and the targets produced by its generator, without the need to change the agent or its generator. Our controlled experiments show significant reductions in delusional behaviors and performance improvements for various kinds of existing agents.",
+      "paper_id": "pmlr:v267:zhao25t",
+      "title": "Rejecting Hallucinated State Targets during Planning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77677-77702",
+          "pmlr_id": "zhao25t",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advances in hierarchical policy learning highlight the advantages of decomposing systems into high-level and low-level agents, enabling efficient long-horizon reasoning and precise fine-grained control. However, the interface between these hierarchy levels remains underexplored, and existing hierarchical methods often ignore domain symmetry, resulting in the need for extensive demonstrations to achieve robust performance. To address these issues, we propose Hierarchical Equivariant Policy (HEP), a novel hierarchical policy framework. We propose a frame transfer interface for hierarchical policy learning, which uses the high-level agent’s output as a coordinate frame for the low-level agent, providing a strong inductive bias while retaining flexibility. Additionally, we integrate domain symmetries into both levels and theoretically demonstrate the system’s overall equivariance. HEP achieves state-of-the-art performance in complex robotic manipulation tasks, demonstrating significant improvements in both simulation and real-world settings.",
+      "paper_id": "pmlr:v267:zhao25u",
+      "title": "Hierarchical Equivariant Policy via Frame Transfer",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77703-77722",
+          "pmlr_id": "zhao25u",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Long-tailed distribution datasets are prevalent in many machine learning tasks, yet existing neural network models still face significant challenges when handling such data. This paper proposes a novel adaptive pruning strategy, LTAP (Long-Tailed Adaptive Pruner), aimed at balancing model efficiency and performance to better address the challenges posed by long-tailed data distributions. LTAP introduces multi-dimensional importance scoring criteria and designs a dynamic weight adjustment mechanism to adaptively determine the pruning priority of parameters for different classes. By focusing on protecting parameters critical for tail classes, LTAP significantly enhances computational efficiency while maintaining model performance. This method combines the strengths of long-tailed learning and neural network pruning, overcoming the limitations of existing approaches in handling imbalanced data. Extensive experiments demonstrate that LTAP outperforms existing methods on various long-tailed datasets, achieving a good balance between model compression rate, computational efficiency, and classification accuracy. This research provides new insights into solving model optimization problems in long-tailed learning and is significant for improving the performance of neural networks on imbalanced datasets. The code is available at https://github.com/DataLab-atom/LT-VOTE.",
+      "paper_id": "pmlr:v267:zhao25v",
+      "title": "Balancing Model Efficiency and Performance: Adaptive Pruner for Long-tailed Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77723-77739",
+          "pmlr_id": "zhao25v",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In generative modeling, tokenization simplifies complex data into compact, structured representations, creating a more efficient, learnable space. For high-dimensional visual data, it reduces redundancy and emphasizes key features for high-quality generation. Current visual tokenization methods rely on a traditional autoencoder framework, where the encoder compresses data into latent representations, and the decoder reconstructs the original input. In this work, we offer a new perspective by proposing denoising as decoding, shifting from single-step reconstruction to iterative refinement. Specifically, we replace the decoder with a diffusion process that iteratively refines noise to recover the original image, guided by the latents provided by the encoder. We evaluate our approach by assessing both reconstruction (rFID) and generation quality (FID), comparing it to state-of-the-art autoencoding approaches. By adopting iterative reconstruction through diffusion, our autoencoder, namely Epsilon-VAE, achieves high reconstruction quality, which in turn enhances downstream generation quality by 22% at the same compression rates or provides 2.3x inference speedup through increasing compression rates. We hope this work offers new insights into integrating iterative generation and autoencoding for improved compression and generation.",
+      "paper_id": "pmlr:v267:zhao25w",
+      "title": "Epsilon-VAE: Denoising as Visual Decoding",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77740-77759",
+          "pmlr_id": "zhao25w",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent deep learning models demand larger datasets, driving the need for dataset distillation to create compact, cost-efficient datasets while maintaining performance. Due to the powerful image generation capability of diffusion, it has been introduced to this field for generating distilled images. In this paper, we systematically investigate issues present in current diffusion-based dataset distillation methods, including inaccurate distribution matching, distribution deviation with random noise, and separate sampling. Building on this, we propose D$^3$HR, a novel diffusion-based framework to generate distilled datasets with high representativeness. Specifically, we adopt DDIM inversion to map the latents of the full dataset from a low-normality latent domain to a high-normality Gaussian domain, preserving information and ensuring structural consistency to generate representative latents for the distilled dataset. Furthermore, we propose an efficient sampling scheme to better align the representative latents with the high-normality Gaussian distribution. Our comprehensive experiments demonstrate that D$^3$HR can achieve higher accuracy across different model architectures compared with state-of-the-art baselines in dataset distillation. Source code: https://github.com/lin-zhao-resoLve/D3HR.",
+      "paper_id": "pmlr:v267:zhao25x",
+      "title": "Taming Diffusion for Dataset Distillation with High Representativeness",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77760-77780",
+          "pmlr_id": "zhao25x",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Evaluating large vision-language models (LVLMs) is very expensive, due to high computational cost and the wide variety of tasks. The good news is that if we already have some observed performance scores, we may be able to infer unknown ones. In this study, we propose a new framework for predicting unknown performance scores based on observed ones from other LVLMs or tasks. We first formulate the performance prediction as a matrix completion task. Specifically, we construct a sparse performance matrix $\\boldsymbol{R}$, where each entry $R_{mn}$ represents the performance score of the $m$-th model on the $n$-th dataset. By applying probabilistic matrix factorization (PMF) with Markov chain Monte Carlo (MCMC), we can complete the performance matrix, i.e., predict unknown scores. Additionally, we estimate the uncertainty of performance prediction based on MCMC. Practitioners can evaluate their models on untested tasks with higher uncertainty first, which quickly reduces the prediction errors. We further introduce several improvements to enhance PMF for scenarios with sparse observed performance scores. Our experiments demonstrate the accuracy of PMF in predicting unknown scores, the reliability of uncertainty estimates in ordering evaluations, and the effectiveness of our enhancements for handling sparse data. Our code is available at https://github.com/Qinyu-Allen-Zhao/CrossPred-LVLM.",
+      "paper_id": "pmlr:v267:zhao25y",
+      "title": "Can We Predict Performance of Large Models across Vision-Language Tasks?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77781-77806",
+          "pmlr_id": "zhao25y",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recently, incorporating knowledge from pretrained language models (PLMs) into decision transformers (DTs) has generated significant attention in offline reinforcement learning (RL). These PLMs perform well in RL tasks, raising an intriguing question: what kind of knowledge from PLMs has been transferred to RL to achieve such good results? This work first dives into this problem by analyzing each head quantitatively and points out Markov head, a crucial component that exists in the attention heads of PLMs. It leads to extreme attention on the last-input token and performs well only in short-term environments. Furthermore, we prove that this extreme attention cannot be changed by re-training embedding layer or fine-tuning. Inspired by our analysis, we propose a general method GPT-DTMA, which equips a pretrained DT with Mixture of Attention (MoA), to enable adaptive learning and accommodate diverse attention requirements during fine-tuning. Extensive experiments demonstrate the effectiveness of GPT-DTMA: it achieves superior performance in short-term environments compared to baselines, significantly reduces the performance gap of PLMs in long-term scenarios, and the experimental results also validate our theorems.",
+      "paper_id": "pmlr:v267:zhao25z",
+      "title": "Unveiling Markov heads in Pretrained Language Models for Offline Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77807-77821",
+          "pmlr_id": "zhao25z",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large-scale physical systems defined on irregular grids pose significant scalability challenges for deep learning methods, especially in the presence of long-range interactions and multi-scale coupling. Traditional approaches that compute all pairwise interactions, such as attention, become computationally prohibitive as they scale quadratically with the number of nodes. We present Erwin, a hierarchical transformer inspired by methods from computational many-body physics, which combines the efficiency of tree-based algorithms with the expressivity of attention mechanisms. Erwin employs ball tree partitioning to organize computation, which enables linear-time attention by processing nodes in parallel within local neighborhoods of fixed size. Through progressive coarsening and refinement of the ball tree structure, complemented by a novel cross-ball interaction mechanism, it captures both fine-grained local details and global features. We demonstrate Erwin’s effectiveness across multiple domains, including cosmology, molecular dynamics, and particle fluid dynamics, where it consistently outperforms baseline methods both in accuracy and computational efficiency.",
+      "paper_id": "pmlr:v267:zhdanov25a",
+      "title": "Erwin: A Tree-based Hierarchical Transformer for Large-scale Physical Systems",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78023-78040",
+          "pmlr_id": "zhdanov25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Model immunization aims to pre-train models that are difficult to fine-tune on harmful tasks while retaining their utility on other non-harmful tasks. Though prior work has shown empirical evidence for immunizing text-to-image models, the key understanding of when immunization is possible and a precise definition of an immunized model remain unclear. In this work, we propose a framework, based on the condition number of a Hessian matrix, to analyze model immunization for linear models. Building on this framework, we design an algorithm with regularization terms to control the resulting condition numbers after pre-training. Empirical results on linear models and non-linear deep-nets demonstrate the effectiveness of the proposed algorithm on model immunization. The code is available at https://github.com/amberyzheng/model-immunization-cond-num.",
+      "paper_id": "pmlr:v267:zheng25a",
+      "title": "Model Immunization from a Condition Number Perspective",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78041-78066",
+          "pmlr_id": "zheng25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "While likelihood-based generative models, particularly diffusion and autoregressive models, have achieved remarkable fidelity in visual generation, the maximum likelihood estimation (MLE) objective, which minimizes the forward KL divergence, inherently suffers from a mode-covering tendency that limits the generation quality under limited model capacity. In this work, we propose Direct Discriminative Optimization (DDO) as a unified framework that integrates likelihood-based generative training and GAN-type discrimination to bypass this fundamental constraint by exploiting reverse KL and self-generated negative signals. Our key insight is to parameterize a discriminator implicitly using the likelihood ratio between a learnable target model and a fixed reference model, drawing parallels with the philosophy of Direct Preference Optimization (DPO). Unlike GANs, this parameterization eliminates the need for joint training of generator and discriminator networks, allowing for direct, efficient, and effective finetuning of a well-trained model to its full potential beyond the limits of MLE. DDO can be performed iteratively in a self-play manner for progressive model refinement, with each round requiring less than 1% of pretraining epochs. Our experiments demonstrate the effectiveness of DDO by significantly advancing the previous SOTA diffusion model EDM, reducing FID scores from 1.79/1.58/1.96 to new records of 1.30/0.97/1.26 on CIFAR-10/ImageNet-64/ImageNet 512$\\times$512 datasets without any guidance mechanisms, and by consistently improving both guidance-free and CFG-enhanced FIDs of visual autoregressive models on ImageNet 256$\\times$256.",
+      "paper_id": "pmlr:v267:zheng25b",
+      "title": "Direct Discriminative Optimization: Your Likelihood-Based Visual Generative Model is Secretly a GAN Discriminator",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78067-78094",
+          "pmlr_id": "zheng25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recently, the potential of lightweight models for resource-constrained scenarios has garnered significant attention, particularly in safety-critical tasks such as bio-electrical signal classification and B-ultrasound-assisted diagnostic. These tasks are frequently affected by environmental noise due to patient movement artifacts and inherent device noise, which pose significant challenges for lightweight models (e.g., deep binary neural networks (DBNNs)) to perform robust inference. A pertinent question arises: can a well-trained DBNN effectively resist environmental noise during inference? In this study, we find that the DBNN’s robustness vulnerability comes from the binary weights and scaling factors. Drawing upon theoretical insights, we propose L1-infinite norm constraints for binary weights and scaling factors, which yield a tighter upper bound compared to existing state-of-the-art (SOTA) methods. Finally, visualization studies show that our approach introduces minimal noise perturbations at the periphery of the feature maps. Our approach outperforms the SOTA method, as validated by several experiments conducted on the bio-electrical and image classification datasets. We hope our findings can raise awareness among researchers about the environmental noise robustness of DBNNs.",
+      "paper_id": "pmlr:v267:zheng25c",
+      "title": "Can DBNNs Robust to Environmental Noise for Resource-constrained Scenarios?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78095-78114",
+          "pmlr_id": "zheng25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This paper focuses on the fundamental challenge of partitioning input variables in attribution methods for Explainable AI, particularly in Shapley value-based approaches. Previous methods always compute attributions given a predefined partition but lack theoretical guidance on how to form meaningful variable partitions. We identify that attribution conflicts arise when the attribution of a coalition differs from the sum of its individual variables’ attributions. To address this, we analyze the numerical effects of AND-OR interactions in AI models and extend the Shapley value to a new attribution metric for variable coalitions. Our theoretical findings reveal that specific interactions cause attribution conflicts, and we propose three metrics to evaluate coalition faithfulness. Experiments on synthetic data, NLP, image classification, and the game of Go validate our approach, demonstrating consistency with human intuition and practical applicability.",
+      "paper_id": "pmlr:v267:zheng25d",
+      "title": "Towards Attributions of Input Variables in a Coalition",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78115-78138",
+          "pmlr_id": "zheng25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Fluorescence microscopy is ubiquitously used in cell biology research to characterize the cellular role of a protein. To help elucidate the relationship between the amino acid sequence of a protein and its cellular function, we introduce CELL-Diff, a unified diffusion model facilitating bidirectional transformations between protein sequences and their corresponding microscopy images. Utilizing reference cell morphology images and a protein sequence, CELL-Diff efficiently generates corresponding protein images. Conversely, given a protein image, the model outputs protein sequences. CELL-Diff integrates continuous and diffusion models within a unified framework and is implemented using a transformer-based network. We train CELL-Diff on the Human Protein Atlas (HPA) dataset and fine-tune it on the OpenCell dataset. Experimental results demonstrate that CELL-Diff outperforms existing methods in generating high-fidelity protein images, making it a practical tool for investigating subcellular protein localization and interactions.",
+      "paper_id": "pmlr:v267:zheng25e",
+      "title": "Bridging Protein Sequences and Microscopy Images with Unified Diffusion Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78139-78155",
+          "pmlr_id": "zheng25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In this work, we address the test-time adaptation challenge in graph neural networks (GNNs), focusing on overcoming the limitations in flexibility and generalization inherent in existing data-centric approaches. To this end, we propose a novel research problem, test-time graph neural dataset search, which seeks to learn a parameterized test-time graph distribution to enhance the inference performance of unseen test graphs on well-trained GNNs. Specifically, we propose a generative Projection based test-time Graph Neural Dataset Search method, named PGNDS, which maps the unseen test graph distribution back to the known training distribution through a generation process guided by well-trained GNNs. The proposed PGNDS framework consists of three key modules: (1) dual conditional diffusion for GNN-guided generative projection through test-back-to-training distribution mapping; (2) dynamic search from the generative sampling space to select the most expressive test graphs; (3) ensemble inference to aggregate information from original and adapted test graphs. Extensive experiments on real-world graphs demonstrate the superior ability of our proposed PGNDS for improved test-time GNN inference.",
+      "paper_id": "pmlr:v267:zheng25f",
+      "title": "Test-Time Graph Neural Dataset Search With Generative Projection",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78156-78169",
+          "pmlr_id": "zheng25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Electromagnetic structure (EMS) design plays a critical role in developing advanced antennas and materials, but remains challenging due to high-dimensional design spaces and expensive evaluations. While existing methods commonly employ high-quality predictors or generators to alleviate evaluations, they are often data-intensive and struggle with real-world scale and budget constraints. To address this, we propose a novel method called Progressive Quadtree-based Search (PQS). Rather than exhaustively exploring the high-dimensional space, PQS converts the conventional image-like layout into a quadtree-based hierarchical representation, enabling a progressive search from global patterns to local details. Furthermore, to lessen reliance on highly accurate predictors, we introduce a consistency-driven sample selection mechanism. This mechanism quantifies the reliability of predictions, balancing exploitation and exploration when selecting candidate designs. We evaluate PQS on two real-world engineering tasks, i.e., Dual-layer Frequency Selective Surface and High-gain Antenna. Experimental results show that our method can achieve satisfactory designs under limited computational budgets, outperforming baseline methods. In particular, compared to generative approaches, it cuts evaluation costs by 75$\\tilde$85%, effectively saving 20.27$\\tilde$38.80 days of product designing cycle.",
+      "paper_id": "pmlr:v267:zheng25g",
+      "title": "Deep Electromagnetic Structure Design Under Limited Evaluation Budgets",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78170-78189",
+          "pmlr_id": "zheng25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Inverse problems (IPs) involve reconstructing signals from noisy observations. Recently, diffusion models (DMs) have emerged as a powerful framework for solving IPs, achieving remarkable reconstruction performance. However, existing DM-based methods frequently encounter issues such as heavy computational demands and suboptimal convergence. In this work, building upon the idea of the recent work DMPlug, we propose two novel methods, DMILO and DMILO-PGD, to address these challenges. Our first method, DMILO, employs intermediate layer optimization (ILO) to alleviate the memory burden inherent in DMPlug. Additionally, by introducing sparse deviations, we expand the range of DMs, enabling the exploration of underlying signals that may lie outside the range of the diffusion model. We further propose DMILO-PGD, which integrates ILO with projected gradient descent (PGD), thereby reducing the risk of suboptimal convergence. We provide an intuitive theoretical analysis of our approaches under appropriate conditions and validate their superiority through extensive experiments on diverse image datasets, encompassing both linear and nonlinear IPs. Our results demonstrate significant performance gains over state-of-the-art methods, highlighting the effectiveness of DMILO and DMILO-PGD in addressing common challenges in DM-based IP solvers.",
+      "paper_id": "pmlr:v267:zheng25h",
+      "title": "Integrating Intermediate Layer Optimization and Projected Gradient Descent for Solving Inverse Problems with Diffusion Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78190-78207",
+          "pmlr_id": "zheng25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Autoregressive models have emerged as a powerful generative paradigm for visual generation. The current de-facto standard of next token prediction commonly operates over a single-scale sequence of dense image tokens, and is incapable of utilizing global context especially for early tokens prediction. In this paper, we introduce a new autoregressive design to model a hierarchy from a few low-resolution image tokens to the typical dense image tokens, and delve into a thorough hierarchical dependency across multi-scale image tokens. Technically, we present a Hierarchical Masked Autoregressive models (Hi-MAR) that pivot on low-resolution image tokens to trigger hierarchical autoregressive modeling in a multi-phase manner. Hi-MAR learns to predict a few image tokens in low resolution, functioning as intermediary pivots to reflect global structure, in the first phase. Such pivots act as the additional guidance to strengthen the next autoregressive modeling phase by shaping global structural awareness of typical dense image tokens. A new Diffusion Transformer head is further devised to amplify the global context among all tokens for mask token prediction. Extensive evaluations on both class-conditional and text-to-image generation tasks demonstrate that Hi-MAR outperforms typical AR baselines, while requiring fewer computational costs.",
+      "paper_id": "pmlr:v267:zheng25i",
+      "title": "Hierarchical Masked Autoregressive Models with Low-Resolution Token Pivots",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78208-78220",
+          "pmlr_id": "zheng25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Developing AI agents capable of interacting with open-world environments to solve diverse tasks is a compelling challenge. However, evaluating such open-ended agents remains difficult, with current benchmarks facing scalability limitations. To address this, we introduce Minecraft Universe (MCU), a comprehensive evaluation framework set within the open-world video game Minecraft. MCU incorporates three key components: (1) an expanding collection of 3,452 composable atomic tasks that encompasses 11 major categories and 41 subcategories of challenges; (2) a task composition mechanism capable of generating infinite diverse tasks with varying difficulty; and (3) a general evaluation framework that achieves 91.5% alignment with human ratings for open-ended task assessment. Empirical results reveal that even state-of-the-art foundation agents struggle with the increasing diversity and complexity of tasks. These findings highlight the necessity of MCU as a robust benchmark to drive progress in AI agent development within open-ended environments. Our evaluation code and scripts are available at https://github.com/CraftJarvis/MCU.",
+      "paper_id": "pmlr:v267:zheng25j",
+      "title": "MCU: An Evaluation Framework for Open-Ended Game Agents",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78221-78259",
+          "pmlr_id": "zheng25j",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph Neural Networks (GNNs) are widely used for node classification tasks but often fail to generalize when training and test nodes come from different distributions, limiting their practicality. To address this challenge, recent approaches have adopted invariant learning and sample reweighting techniques from the out-of-distribution (OOD) generalization field. However, invariant learning-based methods face difficulties when applied to graph data, as they rely on the impractical assumption of obtaining real environment labels and strict invariance, which may not hold in real-world graph structures. Moreover, current sample reweighting methods tend to overlook topological information, potentially leading to suboptimal results. In this work, we introduce the Topology-Aware Dynamic Reweighting (TAR) framework to address distribution shifts by leveraging the inherent graph structure. TAR dynamically adjusts sample weights through gradient flow on the graph edges during training. Instead of relying on strict invariance assumptions, we theoretically prove that our method is able to provide distributional robustness, thereby enhancing the out-of-distribution generalization performance on graph data. Our framework’s superiority is demonstrated through standard testing on extensive node classification OOD datasets, exhibiting marked improvements over existing methods.",
+      "paper_id": "pmlr:v267:zheng25k",
+      "title": "Topology-Aware Dynamic Reweighting for Distribution Shifts on Graph",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78260-78275",
+          "pmlr_id": "zheng25k",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Learning unknown dynamics under environmental (or external) constraints is fundamental to many fields (e.g., modern robotics), particularly challenging when constraint information is only locally available and uncertain. Existing approaches requiring global constraints or using probabilistic filtering fail to fully exploit the geometric structure inherent in local measurements (by using, e.g., sensors) and constraints. This paper presents a geometric framework unifying measurements, constraints, and dynamics learning through a fiber bundle structure over the state space. This naturally induced geometric structure enables measurement-aware Control Barrier Functions that adapt to local sensing (or measurement) conditions. By integrating Neural ODEs, our framework learns continuous-time dynamics while preserving geometric constraints, with theoretical guarantees of learning convergence and constraint satisfaction dependent on sensing quality. The geometric framework not only enables efficient dynamics learning but also suggests promising directions for integration with reinforcement learning approaches. Extensive simulations demonstrate significant improvements in both learning efficiency and constraint satisfaction over traditional methods, especially under limited and uncertain sensing conditions.",
+      "paper_id": "pmlr:v267:zheng25l",
+      "title": "Learning Dynamics under Environmental Constraints via Measurement-Induced Bundle Structures",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78276-78296",
+          "pmlr_id": "zheng25l",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The Conditional Sequence Modeling (CSM) paradigm, benefiting from the transformer’s powerful distribution modeling capabilities, has demonstrated considerable promise in offline Reinforcement Learning (RL) tasks. Depending on the task’s nature, it is crucial to carefully balance the interplay between inherent local features and long-term dependencies in Markov decision trajectories to mitigate potential performance degradation and unnecessary computational overhead. In this paper, we propose Decision Mixer (DM), which addresses the conflict between features of different scales in the modeling process from the perspective of dynamic integration. Drawing inspiration from conditional computation, we design a plug-and-play dynamic token selection mechanism to ensure the model can effectively allocate attention to different features based on task characteristics. Additionally, we employ an auxiliary predictor to alleviate the short-sightedness issue in the autoregressive sampling process. DM achieves state-of-the-art performance on various standard RL benchmarks while requiring significantly fewer computational resources, offering a viable solution for building efficient and scalable RL foundation models. Code is available at here.",
+      "paper_id": "pmlr:v267:zheng25m",
+      "title": "Decision Mixer: Integrating Long-term and Local Dependencies via Dynamic Token Selection for Decision-Making",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78297-78314",
+          "pmlr_id": "zheng25m",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Achieving robustness in image segmentation models is challenging due to the fine-grained nature of pixel-level classification. These models, which are crucial for many real-time perception applications, particularly struggle when faced with natural corruptions in the wild for autonomous systems. While sensitivity analysis can help us understand how input variables influence model outputs, its application to natural and uncontrollable corruptions in training data is computationally expensive. In this work, we present an adaptive, sensitivity-guided augmentation method to enhance robustness against natural corruptions. Our sensitivity analysis on average runs 10 times faster and requires about 200 times less storage than previous sensitivity analysis, enabling practical, on-the-fly estimation during training for a model-free augmentation policy. With minimal fine-tuning, our sensitivity-guided augmentation method achieves improved robustness on both real-world and synthetic datasets compared to state-of-the-art data augmentation techniques in image segmentation.",
+      "paper_id": "pmlr:v267:zheng25n",
+      "title": "Adaptive Sensitivity Analysis for Robust Augmentation against Natural Corruptions in Image Segmentation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78315-78337",
+          "pmlr_id": "zheng25n",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Handcrafting heuristics for solving complex optimization tasks (e.g., route planning and task allocation) is a common practice but requires extensive domain knowledge. Recently, Large Language Model (LLM)-based automatic heuristic design (AHD) methods have shown promise in generating high-quality heuristics without manual interventions. Existing LLM-based AHD methods employ a population to maintain a fixed number of top-performing LLM-generated heuristics and introduce evolutionary computation (EC) to iteratively enhance the population. However, these population-based procedures cannot fully develop the potential of each heuristic and are prone to converge into local optima. To more comprehensively explore the space of heuristics, this paper proposes to use Monte Carlo Tree Search (MCTS) for LLM-based heuristic evolution. The proposed MCTS-AHD method organizes all LLM-generated heuristics in a tree structure and can better develop the potential of temporarily underperforming heuristics. In experiments, MCTS-AHD delivers significantly higher-quality heuristics on various complex tasks. Our code is available.",
+      "paper_id": "pmlr:v267:zheng25o",
+      "title": "Monte Carlo Tree Search for Comprehensive Exploration in LLM-Based Automatic Heuristic Design",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78338-78373",
+          "pmlr_id": "zheng25o",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We are born with the ability to learn concepts by comparing diverse observations. This helps us to understand the new world in a compositional manner and facilitates extrapolation, as objects naturally consist of multiple concepts. In this work, we argue that the cognitive mechanism of comparison, fundamental to human learning, is also vital for machines to recover true concepts underlying the data. This offers correctness guarantees for the field of concept learning, which, despite its impressive empirical successes, still lacks general theoretical support. Specifically, we aim to develop a theoretical framework for the identifiability of concepts with multiple classes of observations. We show that with sufficient diversity across classes, hidden concepts can be identified without assuming specific concept types, functional relations, or parametric generative models. Interestingly, even when conditions are not globally satisfied, we can still provide alternative guarantees for as many concepts as possible based on local comparisons, thereby extending the applicability of our theory to more flexible scenarios. Moreover, the hidden structure between classes and concepts can also be identified nonparametrically. We validate our theoretical results in both synthetic and real-world settings.",
+      "paper_id": "pmlr:v267:zheng25p",
+      "title": "Nonparametric Identification of Latent Concepts",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78374-78404",
+          "pmlr_id": "zheng25p",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Masked Language Models (MLMs) have achieved remarkable success in many self-supervised representation learning tasks. MLMs are trained by randomly masking portions of the input sequences with $\\texttt{[MASK]}$ tokens and learning to reconstruct the original content based on the remaining context. This paper explores the impact of $\\texttt{[MASK]}$ tokens on MLMs. Analytical studies show that masking tokens can introduce the corrupted semantics problem, wherein the corrupted context may convey multiple, ambiguous meanings. This problem is also a key factor affecting the performance of MLMs on downstream tasks. Based on these findings, we propose a novel enhanced-context MLM, ExLM. Our approach expands $\\texttt{[MASK]}$ tokens in the input context and models the dependencies between these expanded states. This enhancement increases context capacity and enables the model to capture richer semantic information, effectively mitigating the corrupted semantics problem during pre-training. Experimental results demonstrate that ExLM achieves significant performance improvements in both text modeling and SMILES modeling tasks. Further analysis confirms that ExLM enriches semantic representations through context enhancement, and effectively reduces the semantic multimodality commonly observed in MLMs.",
+      "paper_id": "pmlr:v267:zheng25q",
+      "title": "ExLM: Rethinking the Impact of $\\texttt[MASK]$ Tokens in Masked Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78405-78433",
+          "pmlr_id": "zheng25q",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Diffusion distillation is a widely used technique to reduce the sampling cost of diffusion models, yet it often requires extensive training, and the student performance tends to be degraded. Recent studies show that incorporating a GAN objective may alleviate these issues, yet the underlying mechanism remains unclear. In this work, we first identify a key limitation of distillation: mismatched step sizes and parameter numbers between the teacher and the student model lead them to converge to different local minima, rendering direct imitation suboptimal. We further demonstrate that a standalone GAN objective, without relying a distillation loss, overcomes this limitation and is sufficient to convert diffusion models into efficient one-step generators. Based on this finding, we propose that diffusion training may be viewed as a form of generative pre-training, equipping models with capabilities that can be unlocked through lightweight GAN fine-tuning. Supporting this view, we create a one-step generation model by fine-tuning a pre-trained model with 85% of parameters frozen, achieving strong performance with only 0.2M images and near-SOTA results with 5M images. We further present a frequency-domain analysis that may explain the one-step generative capability gained in diffusion training. Overall, our work provides a new perspective for diffusion training, highlighting its role as a powerful generative pre-training process, which can be the basis for building efficient one-step generation models.",
+      "paper_id": "pmlr:v267:zheng25r",
+      "title": "Revisiting Diffusion Models: From Generative Pre-training to One-Step Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78434-78453",
+          "pmlr_id": "zheng25r",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Deep neural networks often develop spurious bias, reliance on correlations between non-essential features and classes for predictions. For example, a model may identify objects based on frequently co-occurring backgrounds rather than intrinsic features, resulting in degraded performance on data lacking these correlations. Existing mitigation approaches typically depend on external annotations of spurious correlations, which may be difficult to obtain and are not relevant to the spurious bias in a model. In this paper, we take a step towards self-guided mitigation of spurious bias by proposing NeuronTune, a post hoc method that directly intervenes in a model’s internal decision process. Our method probes in a model’s latent embedding space to identify and regulate neurons that lead to spurious prediction behaviors. We theoretically justify our approach and show that it brings the model closer to an unbiased one. Unlike previous methods, NeuronTune operates without requiring spurious correlation annotations, making it a practical and effective tool for improving model robustness. Experiments across different architectures and data modalities demonstrate that our method significantly mitigates spurious bias in a self-guided way.",
+      "paper_id": "pmlr:v267:zheng25s",
+      "title": "NeuronTune: Towards Self-Guided Spurious Bias Mitigation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78454-78477",
+          "pmlr_id": "zheng25s",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advancements in time series forecasting have explored augmenting models with text or vision modalities to improve accuracy. While text provides contextual understanding, it often lacks fine-grained temporal details. Conversely, vision captures intricate temporal patterns but lacks semantic context, limiting the complementary potential of these modalities. To address this, we propose Time-VLM, a novel multimodal framework that leverages pre-trained Vision-Language Models (VLMs) to bridge temporal, visual, and textual modalities for enhanced forecasting. Our framework comprises three key components: (1) a Retrieval-Augmented Learner, which extracts enriched temporal features through memory bank interactions; (2) a Vision-Augmented Learner, which encodes time series as informative images; and (3) a Text-Augmented Learner, which generates contextual textual descriptions. These components collaborate with frozen pre-trained VLMs to produce multimodal embeddings, which are then fused with temporal features for final prediction. Extensive experiments demonstrate that Time-VLM achieves superior performance, particularly in few-shot and zero-shot scenarios, thereby establishing a new direction for multimodal time series forecasting. Code is available at https://github.com/CityMind-Lab/ICML25-TimeVLM.",
+      "paper_id": "pmlr:v267:zhong25a",
+      "title": "Time-VLM: Exploring Multimodal Vision-Language Models for Augmented Time Series Forecasting",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78478-78497",
+          "pmlr_id": "zhong25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In the classical Reinforcement Learning from Human Feedback (RLHF) framework, Proximal Policy Optimization (PPO) is employed to learn from sparse, sentence-level rewards—a challenging scenario in traditional deep reinforcement learning. Despite the great successes of PPO in the alignment of state-of-the-art closed-source large language models (LLMs), its open-source implementation is still largely sub-optimal, as widely reported by numerous research studies. To address these issues, we introduce a framework that models RLHF problems as a Markov decision process (MDP), enabling the capture of fine-grained token-wise information. Furthermore, we provide theoretical insights that demonstrate the superiority of our MDP framework over the previous sentence-level bandit formulation. Under this framework, we introduce an algorithm, dubbed as Reinforced Token Optimization (RTO), which learns the token-wise reward function from preference data and performs policy optimization based on this learned token-wise reward signal. Theoretically, RTO is proven to have the capability of finding the near-optimal policy sample-efficiently. For its practical implementation, RTO innovatively integrates Direct Preference Optimization (DPO) and PPO. DPO, originally derived from sparse sentence rewards, surprisingly provides us with a token-wise characterization of response quality, which is seamlessly incorporated into our subsequent PPO training stage. We conduct extensive experiments to evaluate RTO against PPO and other direct preference learning algorithms. The results highlight the effectiveness of RTO, with the algorithm outperforming PPO by 7.5 points on the AlpacaEval 2 benchmark and by 4.1 points on Arena-Hard. Our code and models are available at https://github.com/zkshan2002/RTO.",
+      "paper_id": "pmlr:v267:zhong25b",
+      "title": "DPO Meets PPO: Reinforced Token Optimization for RLHF",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78498-78521",
+          "pmlr_id": "zhong25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In multi-view multi-label classification (MVML), each object has multiple heterogeneous views and is annotated with multiple labels. The key to deal with such problem lies in how to capture cross-view consistent correlations while excavate multi-label semantic relationships. Existing MVML methods usually employ two independent components to address them separately, and ignores their potential interaction relationships. To address this issue, we propose a novel Tensorized MVML method named TMvML, which formulates an MVML tensor classifier to excavate comprehensive cross-view feature correlations while characterize complete multi-label semantic relationships. Specifically, we first reconstruct the MVML mapping matrices as an MVML tensor classifier. Then, we rotate the tensor classifier and introduce a low-rank tensor constraint to ensure view-level feature consistency and label-level semantic co-occurrence simultaneously. To better characterize the low-rank tensor structure, we design a new Laplace Tensor Rank (LTR), which serves as a tighter surrogate of tensor rank to capture high-order fiber correlations within the tensor space. By conducting the above operations, our method can easily address the two key challenges in MVML via a concise LTR tensor classifier and achieve the extraction of both cross-view consistent correlations and multi-label semantic relationships simultaneously. Extensive experiments demonstrate that TMvML significantly outperforms state-of-the-art methods.",
+      "paper_id": "pmlr:v267:zhong25c",
+      "title": "Tensorized Multi-View Multi-Label Classification via Laplace Tensor Rank",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78522-78536",
+          "pmlr_id": "zhong25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This paper presents CPL-IQA, a novel semi-supervised blind image quality assessment (BIQA) framework for authentic distortion scenarios. To address the challenge of limited labeled data in IQA area, our approach leverages confidence-quantifiable pseudo-label learning to effectively utilize unlabeled authentically distorted images. The framework operates through a preprocessing stage and two training phases: first converting MOS labels to vector labels via entropy minimization, followed by an iterative process that alternates between model training and label optimization. The key innovations of CPL-IQA include a manifold assumption-based label optimization strategy and a confidence learning method for pseudo-labels, which enhance reliability and mitigate outlier effects. Experimental results demonstrate the framework’s superior performance on real-world distorted image datasets, offering a more standardized semi-supervised learning paradigm without requiring additional supervision or network complexity.",
+      "paper_id": "pmlr:v267:zhong25d",
+      "title": "Semi-Supervised Blind Quality Assessment with Confidence-quantifiable Pseudo-label Learning for Authentic Images",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78537-78554",
+          "pmlr_id": "zhong25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) have demonstrated remarkable capabilities in complex reasoning tasks, yet generating reliable reasoning processes remains a significant challenge. We present a unified probabilistic framework that formalizes LLM reasoning through a novel graphical model incorporating latent thinking processes and evaluation signals. Our framework addresses two critical questions: (1) how to generate high-quality reasoning processes during inference automatically, and (2) how to integrate these processes into post-training. We propose the Bootstrapping Reinforced Thinking Process (BRiTE) algorithm and demonstrate its theoretical convergence at a rate of $1/T$, where $T$ is the number of iterations. The algorithm operates in two steps. First, it generates high-quality rationales by approximating the desired posterior distribution using a reinforcement learning approach with a novel reward shaping mechanism. Second, it fine-tunes the base LLM by maximizing the joint probability of rationale generation with respect to LLM parameters. Empirical evaluation on GSM8K and MATH benchmarks demonstrates that our approach consistently improves performance across different model sizes without requiring human-annotated thinking processes, outperforming standard chain-of-thought prompting while enhancing existing post-training methods.",
+      "paper_id": "pmlr:v267:zhong25e",
+      "title": "BRiTE: Bootstrapping Reinforced Thinking Process to Enhance Language Model Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78555-78574",
+          "pmlr_id": "zhong25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This study presents an innovative reinforcement learning (RL) control approach to facilitate soft exosuit-assisted human walking. Our goal is to address the ongoing challenges in developing reliable RL-based methods for controlling physical devices. To overcome key obstacles—such as limited data, the absence of a simulator for human-robot interaction during walking, the need for low computational overhead in real-time deployment, and the demand for rapid adaptation to achieve personalized control while ensuring human safety—we propose an online Adaptation from an offline Imitating Expert Policy (AIP) approach. Our offline learning mimics human expert actions through real human walking demonstrations without robot assistance. The resulted policy is then used to initialize online actor-critic learning, the goal of which is to optimally personalize robot assistance. In addition to being fast and robust, our online RL method also posses important properties such as learning convergence, dynamic stability, and solution optimality. We have successfully demonstrated our simple and robust framework for safe robot control on all five tested human participants, without selectively presenting results. The qualitative performance guarantees provided by our online RL, along with the consistent experimental validation of AIP control, represent the first demonstration of online adaptation for softsuit control personalization and serve as important evidence for the use of online RL in controlling a physical device to solve a real-life problem.",
+      "paper_id": "pmlr:v267:zhong25f",
+      "title": "Reinforcement Learning Control of a Physical Robot Device for Assisted Human Walking without a Simulator",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78575-78601",
+          "pmlr_id": "zhong25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Subgraph neural networks have recently gained prominence for various subgraph-level predictive tasks. However, existing methods either 1) apply simple standard pooling over graph convolutional networks, failing to capture essential subgraph properties, or 2) rely on rigid subgraph definitions, leading to suboptimal performance. Moreover, these approaches fail to model long-range dependencies both between and within subgraphs—a critical limitation, as many real-world networks contain subgraphs of varying sizes and connectivity patterns. In this paper, we propose a novel implicit subgraph neural network, the first of its kind, designed to capture dependencies across subgraphs. Our approach also integrates label-aware subgraph-level information. We formulate implicit subgraph learning as a bilevel optimization problem and develop a provably convergent algorithm that requires fewer gradient estimations than standard bilevel optimization methods. We evaluate our approach on real-world networks against state-of-the-art baselines, demonstrating its effectiveness and superiority.",
+      "paper_id": "pmlr:v267:zhong25g",
+      "title": "Implicit Subgraph Neural Network",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78602-78615",
+          "pmlr_id": "zhong25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph Neural Networks (GNNs) are pivotal in graph-based learning, particularly excelling in node classification. However, their scalability is hindered by the need for multi-hop data during inference, limiting their application in latency-sensitive scenarios. Recent efforts to distill GNNs into multi-layer perceptrons (MLPs) for faster inference often underutilize the layer-level insights of GNNs. In this paper, we present TINED, a novel approach that distills GNNs to MLPs on a layer-by-layer basis using Teacher Injection and Dirichlet Energy Distillation techniques. We focus on two key operations in GNN layers: feature transformation (FT) and graph propagation (GP). We recognize that FT is computationally equivalent to a fully-connected (FC) layer in MLPs. Thus, we propose directly transferring teacher parameters from an FT in a GNN to an FC layer in the student MLP, enhanced by fine-tuning. In TINED, the FC layers in an MLP replicate the sequence of FTs and GPs in the GNN. We also establish a theoretical bound for GP approximation. Furthermore, we note that FT and GP operations in GNN layers often exhibit opposing smoothing effects: GP is aggressive, while FT is conservative. Using Dirichlet energy, we develop a DE ratio to measure these effects and propose Dirichlet Energy Distillation to convey these characteristics from GNN layers to MLP layers. Extensive experiments show that TINED outperforms GNNs and leading distillation methods across various settings and seven datasets. Source code are available at https://github.com/scottjiao/TINED_ICML25/.",
+      "paper_id": "pmlr:v267:zhou25a",
+      "title": "TINED: GNNs-to-MLPs by Teacher Injection and Dirichlet Energy Distillation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78616-78632",
+          "pmlr_id": "zhou25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language model pre-training has traditionally relied on human experts to craft heuristics for improving the corpora quality, resulting in numerous rules developed to date. However, these fixed rules lack the flexibility to address the unique characteristics of individual examples, yet crafting sample-wise rules is impractical for human experts. In this paper, we show that even small language models, with only 0.3B parameters, can exhibit substantial data refining capabilities. We propose Programming Every Example (ProX), a novel framework that treats data refinement as a programming task, and enables the model to refine corpora by generating and executing fine-grained operations, such as string normalization, for each individual example at scale. Experiments show that models trained on ProX-refined data consistently outperform other baselines across 10 benchmarks, demonstrating effectiveness across model sizes (up to 1.7B) and pre-training corpora (C4, RedPajama-V2, FineWeb, FineWeb-Edu, and DCLM). ProX also shows great potential in continual pre-training: on math domain, ProX boosts 7B models by up to 20% within 10B tokens—results typically achieved with much larger scale training (e.g., 200B tokens). We believe ProX offers a way to curate high-quality pre-training data, and finally contributes to efficient LLM development.",
+      "paper_id": "pmlr:v267:zhou25aa",
+      "title": "Programming Every Example: Lifting Pre-training Data Quality Like Experts at Scale",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "79281-79327",
+          "pmlr_id": "zhou25aa",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Contrastive learning has achieved remarkable success in learning effective representations, with supervised contrastive learning often outperforming self-supervised approaches. However, in real-world scenarios, data annotations are often ambiguous or inaccurate, meaning that class labels may not reliably indicate whether two examples belong to the same class. This limitation restricts the applicability of supervised contrastive learning. To address this challenge, we introduce the concept of “continuous semantic similarity” to define positive and negative pairs. Instead of directly relying on imprecise class labels, we measure the semantic similarity between example pairs, which quantifies how closely they belong to the same category by iteratively refining weak supervisory signals. Based on this concept, we propose a graph-theoretic framework for weakly-supervised contrastive learning, where semantic similarity serves as the graph weights. Our framework is highly versatile and can be applied to many weakly-supervised learning scenarios. We demonstrate its effectiveness through experiments in two common settings, i.e., noisy label and partial label learning, where existing methods can be easily integrated to significantly improve performance. Theoretically, we establish an error bound for our approach, showing that it can approximate supervised contrastive learning under mild conditions. The implementation code is available at https://github.com/Speechless-10308/WSC.",
+      "paper_id": "pmlr:v267:zhou25ab",
+      "title": "Weakly-Supervised Contrastive Learning for Imprecise Class Labels",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "79328-79365",
+          "pmlr_id": "zhou25ab",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

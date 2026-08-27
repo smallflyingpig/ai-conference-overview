@@ -1,0 +1,747 @@
+{
+  "batch_index": 33,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "This paper introduces $k$-Dynamic Time Warping ($k$-DTW), a novel dissimilarity measure for polygonal curves. $k$-DTW has stronger metric properties than Dynamic Time Warping (DTW) and is more robust to outliers than the Fréchet distance, which are the two gold standards of dissimilarity measures for polygonal curves. We show interesting properties of $k$-DTW and give an exact algorithm as well as a $(1+\\varepsilon)$-approximation algorithm for $k$-DTW by a parametric search for the $k$-th largest matched distance. We prove the first dimension-free learning bounds for curves and further learning theoretic results. $k$-DTW not only admits smaller sample size than DTW for the problem of learning the median of curves, where some factors depending on the curves’ complexity $m$ are replaced by $k$, but we also show a surprising separation on the associated Rademacher and Gaussian complexities: $k$-DTW admits strictly smaller bounds than DTW, by a factor $\\tilde\\Omega(\\sqrt{m})$ when $k\\ll m$. We complement our theoretical findings with an experimental illustration of the benefits of using $k$-DTW for clustering and nearest neighbor classification.",
+      "paper_id": "pmlr:v267:krivosija25a",
+      "title": "Improved Learning via k-DTW: A Novel Dissimilarity Measure for Curves",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "31696-31726",
+          "pmlr_id": "krivosija25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The Schrödinger Bridge (SB) is a powerful framework for solving generative modeling tasks such as unpaired domain translation. Most SB-related research focuses on continuous data space $\\mathbb{R}^{D}$ and leaves open theoretical and algorithmic questions about applying SB methods to discrete data, e.g, on finite spaces $\\mathbb{S}^{D}$. Notable examples of such sets $\\mathbb{S}$ are codebooks of vector-quantized (VQ) representations of modern autoencoders, tokens in texts, categories of atoms in molecules, etc. In this paper, we provide a theoretical and algorithmic foundation for solving SB in discrete spaces using the recently introduced Iterative Markovian Fitting (IMF) procedure. Specifically, we theoretically justify the convergence of discrete-time IMF (D-IMF) to SB in discrete spaces. This enables us to develop a practical computational algorithm for SB, which we call Categorical Schrödinger Bridge Matching (CSBM). We show the performance of CSBM via a series of experiments with synthetic data and VQ representations of images. The code of CSBM is available at this repository.",
+      "paper_id": "pmlr:v267:ksenofontov25a",
+      "title": "Categorical Schrödinger Bridge Matching",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "31727-31751",
+          "pmlr_id": "ksenofontov25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The core component of attention is the scoring function, which transforms the inputs into low-dimensional queries and keys and takes the dot product of each pair. While the low-dimensional projection improves efficiency, it causes information loss for certain tasks that have intrinsically high-dimensional inputs. Additionally, attention uses the same scoring function for all input pairs, without imposing a distance-dependent compute bias for neighboring tokens in the sequence. In this work, we address these shortcomings by proposing new scoring functions based on computationally efficient structured matrices with high ranks, including Block Tensor-Train (BTT) and Multi-Level Low Rank (MLR) matrices. On in-context regression tasks with high-dimensional inputs, our proposed scoring functions outperform standard attention for any fixed compute budget. On language modeling, a task that exhibits locality patterns, our MLR-based attention method achieves improved scaling laws compared to both standard attention and variants of sliding window attention. Additionally, we show that both BTT and MLR fall under a broader family of efficient structured matrices capable of encoding either full-rank or distance-dependent compute biases, thereby addressing significant shortcomings of standard attention.",
+      "paper_id": "pmlr:v267:kuang25a",
+      "title": "Customizing the Inductive Biases of Softmax Attention using Structured Matrices",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "31752-31776",
+          "pmlr_id": "kuang25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "How a single fertilized cell gives rise to a complex array of specialized cell types in development is a central question in biology. The cells replicate to generate cell lineages and acquire differentiated characteristics through poorly understood molecular processes. A key approach to studying developmental processes is to infer the tree graph of cell lineage histories, which provides an analytical framework for dissecting individual cells’ molecular decisions during replication and differentiation (i.e., acquisition of specialized traits). Although genetically engineered lineage-tracing methods have advanced the field, they are either infeasible or ethically constrained in many organisms. By contrast, modern single-cell technologies can measure high-content molecular profiles ( e.g. , transcriptomes) in a wide range of biological systems. Here, we introduce CellTreeQM , a novel deep learning method based on transformer architectures that learns an embedding space with geometric properties optimized for tree-graph inference. By formulating the lineage reconstruction problem as tree-metric learning, we systematically explore weakly supervised training settings at different levels of information and present the Cell Lineage Reconstruction Benchmark to facilitate comprehensive evaluation. This benchmark includes (1) synthetic data modeled via Brownian motion with independent noise and spurious signals; (2) lineage-resolved single-cell RNA sequencing datasets. Experimental results show that CellTreeQM recovers lineage structures with minimal supervision and limited data, offering a scalable framework for uncovering cell lineage relationships. To our knowledge, this is the first method to cast cell lineage inference explicitly as a metric learning task, paving the way for future computational models aimed at uncovering the molecular dynamics of cell lineage. Code and benchmarks are available at: https://kuang-da.github.io/CellTreeQM-page",
+      "paper_id": "pmlr:v267:kuang25b",
+      "title": "Reconstructing Cell Lineage Trees from Phenotypic Features with Metric Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "31777-31820",
+          "pmlr_id": "kuang25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Early exits enable the network’s forward pass to terminate early by attaching trainable internal classifiers to the backbone network. Existing early-exit methods typically adopt either a joint training approach, where the backbone and exit heads are trained simultaneously, or a disjoint approach, where the heads are trained separately. However, the implications of this choice are often overlooked, with studies typically adopting one approach without adequate justification. This choice influences training dynamics and its impact remains largely unexplored. In this paper, we introduce a set of metrics to analyze early-exit training dynamics and guide the choice of training strategy. We demonstrate that conventionally used joint and disjoint regimes yield suboptimal performance. To address these limitations, we propose a mixed training strategy: the backbone is trained first, followed by the training of the entire multi-exit network. Through comprehensive evaluations of training strategies across various architectures, datasets, and early-exit methods we present strengths and weaknesses of the early exit training strategies. In particular, we show consistent improvements in performance and efficiency using the proposed mixed strategy.",
+      "paper_id": "pmlr:v267:kubaty25a",
+      "title": "How to Train Your Multi-Exit Model? Analyzing the Impact of Training Strategies",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "31821-31840",
+          "pmlr_id": "kubaty25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Time-series forecasting has gained significant attention in machine learning due to its crucial role in various domains. However, most existing forecasting models rely heavily on point-wise loss functions like Mean Squared Error, which treat each time step independently and neglect the structural dependencies inherent in time series data, making it challenging to capture complex temporal patterns accurately. To address these challenges, we propose a novel P atch-wise S tructural ( PS ) loss, designed to enhance structural alignment by comparing time series at the patch level. Through leveraging local statistical properties, such as correlation, variance, and mean, PS loss captures nuanced structural discrepancies overlooked by traditional point-wise losses. Furthermore, it integrates seamlessly with point-wise loss, simultaneously addressing local structural inconsistencies and individual time-step errors. PS loss establishes a novel benchmark for accurately modeling complex time series data and provides a new perspective on time series loss function design. Extensive experiments demonstrate that PS loss significantly improves the performance of state-of-the-art models across diverse real-world datasets. The data and code are publicly available at: https://github.com/Dilfiraa/PS_Loss.",
+      "paper_id": "pmlr:v267:kudrat25a",
+      "title": "Patch-wise Structural Loss for Time Series Forecasting",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "31841-31859",
+          "pmlr_id": "kudrat25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Although social networks have expanded the range of ideas and information accessible to users, they are also criticized for amplifying the polarization of user opinions. Given the inherent complexity of these phenomena, existing approaches to counteract these effects typically rely on handcrafted algorithms and heuristics. We propose an elegant solution: we act on the network weights that model user interactions on social networks (e.g., ranking of users’ shared content in feeds), to optimize a performance metric (e.g., minimize polarization), while users’ opinions follow the classical Friedkin-Johnsen model. Our formulation gives rise to a challenging, large-scale optimization problem with non-convex constraints, for which we develop a gradient-based algorithm. Our scheme is simple, scalable, and versatile, as it can readily integrate different, potentially non-convex, objectives. We demonstrate its merit by: (i) rapidly solving complex social network intervention problems with 4.8 million variables based on the Reddit, LiveJournal, and DBLP datasets; (ii) outperforming competing approaches in terms of both computation time and disagreement reduction.",
+      "paper_id": "pmlr:v267:kuhne25a",
+      "title": "Optimizing Social Network Interventions via Hypergradient-Based Recommender System Design",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "31860-31875",
+          "pmlr_id": "kuhne25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This paper examines the systemic risks posed by incremental advancements in artificial intelligence, developing the concept of ‘gradual disempowerment’, in contrast to the abrupt takeover scenarios commonly discussed in AI safety. We analyze how even incremental improvements in AI capabilities can undermine human influence over large-scale systems that society depends on, including the economy, culture, and nation-states. As AI increasingly replaces human labor and cognition in these domains, it can weaken both explicit human control mechanisms (like voting and consumer choice) and the implicit alignments with human preferences that often arise from societal systems’ reliance on human participation to function. Furthermore, AI systems may amplify existing misalignments with human preferences by optimizing these systems more powerfully. These distortions across domains may be mutually reinforcing: economic power shapes cultural narratives and political decisions, while cultural shifts alter economic and political behavior. We argue that this dynamic could lead to an effectively irreversible loss of human influence over crucial societal systems, precipitating an existential catastrophe through the permanent disempowerment of humanity. This analysis suggests the need for both technical research and governance approaches that specifically address the risk of incremental erosion of human influence across interconnected societal systems.",
+      "paper_id": "pmlr:v267:kulveit25a",
+      "title": "Position: Humanity Faces Existential Risk from Gradual Disempowerment",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "81678-81688",
+          "pmlr_id": "kulveit25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Maximizing the area under the receiver operating characteristic curve (AUC) is a standard approach to imbalanced binary classification tasks. Existing AUC maximization methods typically assume that training and test distributions are identical. However, this assumption is often violated due to a covariate shift , where the input distribution can vary but the conditional distribution of the class label given the input remains unchanged. The importance weighting is a common approach to the covariate shift, which minimizes the test risk with importance-weighted training data. However, it cannot maximize the AUC. In this paper, to achieve this, we theoretically derive two estimators of the test AUC risk under the covariate shift by using positive and unlabeled (PU) data in the training distribution and unlabeled data in the test distribution. Our first estimator is calculated from importance-weighted PU data in the training distribution, and the second one is calculated from importance-weighted positive data in the training distribution and unlabeled data in the test distribution. We train classifiers by minimizing a weighted sum of the two AUC risk estimators that approximates the test AUC risk. Unlike the existing importance weighting, our method does not require negative labels and class-priors. We show the effectiveness of our method with six real-world datasets.",
+      "paper_id": "pmlr:v267:kumagai25a",
+      "title": "Positive-unlabeled AUC Maximization under Covariate Shift",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "31876-31891",
+          "pmlr_id": "kumagai25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "When rodents learn to navigate in a novel environment, a high density of place fields emerges at reward locations, fields elongate against the trajectory, and individual fields change spatial selectivity while demonstrating stable behavior. Why place fields demonstrate these characteristic phenomena during learning remains elusive. We develop a normative framework using a reward maximization objective, whereby the temporal difference (TD) error drives place field reorganization to improve policy learning. Place fields are modeled using Gaussian radial basis functions to represent states in an environment, and directly synapse to an actor-critic for policy learning. Each field’s amplitude, center, and width, as well as downstream weights, are updated online at each time step to maximize rewards. We demonstrate that this framework unifies three disparate phenomena observed in navigation experiments. Furthermore, we show that these place field phenomena improve policy convergence when learning to navigate to a single target and relearning multiple new targets. To conclude, we develop a simple normative model that recapitulates several aspects of hippocampal place field learning dynamics and unifies mechanisms to offer testable predictions for future experiments.",
+      "paper_id": "pmlr:v267:kumar25a",
+      "title": "A Model of Place Field Reorganization During Reward Maximization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "31892-31929",
+          "pmlr_id": "kumar25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The success of deep networks is crucially attributed to their ability to capture latent features within a representation space. In this work, we investigate whether the underlying learned features of a model can be efficiently retrieved through feedback from an agent, such as a large language model (LLM), in the form of relative triplet comparisons. These features may represent various constructs, including dictionaries in LLMs or components of a covariance matrix of Mahalanobis distances. We analyze the feedback complexity associated with learning a feature matrix in sparse settings. Our results establish tight bounds when the agent is permitted to construct activations and demonstrate strong upper bounds in sparse scenarios when the agent’s feedback is limited to distributional information. We validate our theoretical findings through experiments on two distinct applications: feature recovery from Recursive Feature Machine-trained models and dictionary extraction from sparse autoencoders trained on Large Language Models.",
+      "paper_id": "pmlr:v267:kumar25b",
+      "title": "The Complexity of Learning Sparse Superposed Features with Feedback",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "31930-31963",
+          "pmlr_id": "kumar25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In this work, we explore the theoretical properties of conditional deep generative models under the statistical framework of distribution regression where the response variable lies in a high-dimensional ambient space but concentrates around a potentially lower-dimensional manifold. More specifically, we study the large-sample properties of a likelihood-based approach for estimating these models. Our results lead to the convergence rate of a sieve maximum likelihood estimator (MLE) for estimating the conditional distribution (and its devolved counterpart) of the response given predictors in the Hellinger (Wasserstein) metric. Our rates depend solely on the intrinsic dimension and smoothness of the true conditional distribution. These findings provide an explanation of why conditional deep generative models can circumvent the curse of dimensionality from the perspective of statistical foundations and demonstrate that they can learn a broader class of nearly singular conditional distributions. Our analysis also emphasizes the importance of introducing a small noise perturbation to the data when they are supported sufficiently close to a manifold. Finally, in our numerical studies, we demonstrate the effective implementation of the proposed approach using both synthetic and real-world datasets, which also provide complementary validation to our theoretical findings.",
+      "paper_id": "pmlr:v267:kumar25c",
+      "title": "A Likelihood Based Approach to Distribution Regression Using Conditional Deep Generative Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "31964-31990",
+          "pmlr_id": "kumar25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The lottery ticket hypothesis (LTH) is well-studied for convolutional neural networks but has been validated only empirically for graph neural networks (GNNs), for which theoretical findings are largely lacking. In this paper, we identify the expressivity of sparse subnetworks, i.e. their ability to distinguish non-isomorphic graphs, as crucial for finding winning tickets that preserve the predictive performance. We establish conditions under which the expressivity of a sparsely initialized GNN matches that of the full network, particularly when compared to the Weisfeiler-Leman test, and in that context put forward and prove a Strong Expressive Lottery Ticket Hypothesis. We subsequently show that an increased expressivity in the initialization potentially accelerates model convergence and improves generalization. Our findings establish novel theoretical foundations for both LTH and GNN research, highlighting the importance of maintaining expressivity in sparsely initialized GNNs. We illustrate our results using examples from drug discovery.",
+      "paper_id": "pmlr:v267:kummer25a",
+      "title": "Weisfeiler and Leman Go Gambling: Why Expressive Lottery Tickets Win",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "31991-32010",
+          "pmlr_id": "kummer25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce Steerable Transformers, an extension of the Vision Transformer mechanism that maintains equivariance to the special Euclidean group $\\mathrm{SE}(d)$. We propose an equivariant attention mechanism that operates on features extracted by steerable convolutions. Operating in Fourier space, our network utilizes Fourier space non-linearities. Our experiments in both two and three dimensions show that adding steerable transformer layers to steerable convolutional networks enhances performance.",
+      "paper_id": "pmlr:v267:kundu25a",
+      "title": "Steerable Transformers for Volumetric Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32011-32031",
+          "pmlr_id": "kundu25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Short-term memory is essential for cognitive processing, yet our understanding of its neural mechanisms remains unclear. Neuroscience has long focused on how sequential activity patterns, where neurons fire one after another within large networks, can explain how information is maintained. While recurrent connections were shown to drive sequential dynamics, a mechanistic understanding of this process still remains unknown. In this work, we introduce two unique mechanisms that can support this form of short-term memory: slow-point manifolds generating direct sequences or limit cycles providing temporally localized approximations. Using analytical models, we identify fundamental properties that govern the selection of each mechanism. Precisely, on short-term memory tasks (delayed cue-discrimination tasks), we derive theoretical scaling laws for critical learning rates as a function of the delay period length, beyond which no learning is possible. We empirically verify these results by training and evaluating approximately 80,000 recurrent neural networks (RNNs), which are publicly available for further analysis. Overall, our work provides new insights into short-term memory mechanisms and proposes experimentally testable predictions for systems neuroscience.",
+      "paper_id": "pmlr:v267:kurtkaya25a",
+      "title": "Dynamical phases of short-term memory mechanisms in RNNs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32032-32062",
+          "pmlr_id": "kurtkaya25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Composed Image Retrieval (CIR) retrieves relevant images based on a reference image and accompanying text describing desired modifications. However, existing CIR methods only focus on retrieving the target image and disregard the relevance of other images. This limitation arises because most methods employing contrastive learning-which treats the target image as positive and all other images in the batch as negatives-can inadvertently include false negatives. This may result in retrieving irrelevant images, reducing user satisfaction even when the target image is retrieved. To address this issue, we propose Query-Relevant Retrieval through Hard Negative Sampling (QuRe), which optimizes a reward model objective to reduce false negatives. Additionally, we introduce a hard negative sampling strategy that selects images positioned between two steep drops in relevance scores following the target image, to effectively filter false negatives. In order to evaluate CIR models on their alignment with human satisfaction, we create Human-Preference FashionIQ (HP-FashionIQ), a new dataset that explicitly captures user preferences beyond target retrieval. Extensive experiments demonstrate that QuRe achieves state-of-the-art performance on FashionIQ and CIRR datasets while exhibiting the strongest alignment with human preferences on the HP-FashionIQ dataset. The source code is available at https://github.com/jackwaky/QuRe.",
+      "paper_id": "pmlr:v267:kwak25a",
+      "title": "QuRe: Query-Relevant Retrieval through Hard Negative Sampling in Composed Image Retrieval",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32063-32077",
+          "pmlr_id": "kwak25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Despite substantial progress in promoting fairness in high-stake applications using machine learning models, existing methods often modify the training process, such as through regularizers or other interventions, but lack formal guarantees that fairness achieved during training will generalize to unseen data. Although overfitting with respect to prediction performance has been extensively studied, overfitting in terms of fairness loss has received far less attention. This paper proposes a theoretical framework for analyzing fairness generalization error through an information-theoretic lens. Our novel bounding technique is based on Efron–Stein inequality, which allows us to derive tight information-theoretic fairness generalization bounds with both Mutual Information (MI) and Conditional Mutual Information (CMI). Our empirical results validate the tightness and practical relevance of these bounds across diverse fairness-aware learning algorithms. Our framework offers valuable insights to guide the design of algorithms improving fairness generalization.",
+      "paper_id": "pmlr:v267:laakom25a",
+      "title": "Fairness Overfitting in Machine Learning: An Information-Theoretic Perspective",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32078-32115",
+          "pmlr_id": "laakom25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce Hibiki, a decoder-only model for simultaneous speech translation. Hibiki leverages a multistream language model to synchronously process source and target speech, and jointly produces text and audio tokens to perform speech-to-text and speech-to-speech translation. We furthermore address the fundamental challenge of simultaneous interpretation, which unlike its consecutive counterpart –where one waits for the end of the source utterance to start translating– adapts its flow to accumulate just enough context to produce a correct translation in real-time, chunk by chunk. To do so, we introduce a weakly-supervised method that leverages the perplexity of an off-the-shelf text translation system to identify optimal delays on a per-word basis and create aligned synthetic data. After supervised training, Hibiki performs adaptive, simultaneous speech translation with vanilla temperature sampling. On a French-English simultaneous speech translation task, Hibiki demonstrates state-of-the-art performance in translation quality, speaker fidelity and naturalness. Moreover, the simplicity of its inference process makes it compatible with batched translation and even real-time on-device deployment. We provide examples on huggingface.co/spaces/kyutai/hibiki-samples as well as models and inference code at github.com/kyutai-labs/hibiki .",
+      "paper_id": "pmlr:v267:labiausse25a",
+      "title": "High-Fidelity Simultaneous Speech-To-Speech Translation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32116-32129",
+          "pmlr_id": "labiausse25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In the kernel density estimation (KDE) problem, we are given a set $X$ of data points in $\\mathbb{R}^d$, a kernel function $k: \\mathbb{R}^d \\times \\mathbb{R}^d \\rightarrow \\mathbb{R}$, and a query point $\\mathbf{q} \\in \\mathbb{R}^d$, and the objective is to quickly output an estimate of $\\sum_{\\mathbf{x} \\in X} k(\\mathbf{q}, \\mathbf{x})$. In this paper, we consider $\\textsf{KDE}$ in the dynamic setting, and introduce a data structure that efficiently maintains the estimates for a set of query points as data points are added to $X$ over time. Based on this, we design a dynamic data structure that maintains a sparse approximation of the fully connected similarity graph on $X$, and develop a fast dynamic spectral clustering algorithm. We further evaluate the effectiveness of our algorithms on both synthetic and real-world datasets.",
+      "paper_id": "pmlr:v267:laenen25a",
+      "title": "Dynamic Similarity Graph Construction with Kernel Density Estimation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32130-32163",
+          "pmlr_id": "laenen25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We propose a greedy search-and-score algorithm for ancestral graphs, which include directed as well as bidirected edges, originating from unobserved latent variables. The normalized likelihood score of ancestral graphs is estimated in terms of multivariate information over relevant \"$ac$-connected subset\" of vertices, $\\boldsymbol{C}$, that are connected through collider paths confined to the ancestor set of $\\boldsymbol{C}$. For computational efficiency, the proposed two-step algorithm relies on local information scores limited to the close surrounding vertices of each node (step 1) and edge (step 2). This computational strategy, although restricted to information contributions from $ac$-connected subsets containing up to two-collider paths, is shown to outperform state-of-the-art causal discovery methods on challenging benchmark datasets.",
+      "paper_id": "pmlr:v267:lagrange25a",
+      "title": "An Efficient Search-and-Score Algorithm for Ancestral Graphs using Multivariate Information Scores for Complex Non-linear and Categorical Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32164-32187",
+          "pmlr_id": "lagrange25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The $p$-Wasserstein distance measures the cost of optimally transporting one distribution to another, where the cost of moving a unit mass from $a$ to $b$ is the $p^{th}$ power of the ground distance $\\mathrm{d}(a,b)$ between them. Despite its strong theoretical properties, its use in practice – especially for $p \\ge 2$ – is limited due to two key challenges: sensitivity to noise and a lack of scalable algorithms. We identify noise sensitivity as a key reason why some existing approximation algorithms for $p=1$ fail to generalize to $p \\ge 2$ and then present new algorithms for approximating the $p$-Wasserstein distance and its variant. First, when $\\mathrm{d}(\\cdot,\\cdot)$ is a metric, for any constant $p \\ge 2$, we present a novel relative $O(\\log n)$-approximation algorithm to compute the $p$-Wasserstein distance between any two discrete distributions of size $n$. The algorithm runs in $O(n^2 \\log U\\log \\Delta\\log n)$ time, where $\\log U$ is the bit-length of the input probabilities and $\\Delta$ is the ratio of the largest to the smallest pairwise distance. We use $p$ hierarchically well-separated trees to define a distance that approximates the $p$-Wasserstein cost within a factor of $O(\\log n)$ and then present a simple primal-dual algorithm to compute the $p$-Wasserstein cost with respect to this distance. Second, due to the noise sensitivity of the $p$-Wasserstein distance, we show that existing combinatorial approaches require $\\Omega(n^2/\\delta^p)$ time to approximate the $p$-Wasserstein distance within an additive error of $\\delta$. In contrast, we show that, for any arbitrary distance $\\mathrm{d}(\\cdot,\\cdot)$, a recent noise-resistant variant of the $p$-Wasserstein distance, called the $p$-RPW distance, can be approximated in $O(n^2/\\delta^3)$ time.",
+      "paper_id": "pmlr:v267:lahn25a",
+      "title": "Scalable Approximation Algorithms for $p$-Wasserstein Distance and Its Variants",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32188-32205",
+          "pmlr_id": "lahn25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Parameter-efficient fine-tuning (PEFT) methods, such as LoRA, are commonly used to adapt LLMs. However, the effectiveness of standard PEFT methods is limited in low-resource scenarios with only a few hundred examples. Recent advances in interpretability research have inspired the emergence of activation editing (or steering) techniques, which modify the activations of specific model components. Due to their extremely small parameter counts, these methods show promise for small datasets. However, their performance is highly dependent on identifying the correct modules to edit and often lacks stability across different datasets. In this paper, we propose Joint Localization and Activation Editing (JoLA), a method that jointly learns (1) which heads in the Transformer to edit (2) whether the intervention should be additive, multiplicative, or both and (3) the intervention parameters themselves - the vectors applied as additive offsets or multiplicative scalings to the head output. Through evaluations on three benchmarks spanning commonsense reasoning, natural language understanding, and natural language generation, we demonstrate that JoLA consistently outperforms existing methods.",
+      "paper_id": "pmlr:v267:lai25a",
+      "title": "Joint Localization and Activation Editing for Low-Resource Fine-Tuning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32206-32227",
+          "pmlr_id": "lai25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Equalized odds , an important notion of algorithmic fairness, aims to ensure that sensitive variables, such as race and gender, do not unfairly influence the algorithm’s prediction when conditioning on the true outcome. Despite rapid advancements, current research primarily focuses on equalized odds violations caused by a single sensitive attribute, leaving the challenge of simultaneously accounting for multiple attributes under-addressed. We bridge this gap by introducing an in-processing fairness-aware learning approach, FairICP, which integrates adversarial learning with a novel inverse conditional permutation scheme. FairICP offers a flexible and efficient scheme to promote equalized odds under fairness conditions described by complex and multi-dimensional sensitive attributes. The efficacy and adaptability of our method are demonstrated through both simulation studies and empirical analyses of real-world datasets.",
+      "paper_id": "pmlr:v267:lai25b",
+      "title": "FairICP: Encouraging Equalized Odds via Inverse Conditional Permutation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32228-32245",
+          "pmlr_id": "lai25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Lipschitz neural networks are well-known for providing certified robustness in deep learning. In this paper, we present a novel, efficient Block Reflector Orthogonal (BRO) layer that enhances the capability of orthogonal layers on constructing more expressive Lipschitz neural architectures. In addition, by theoretically analyzing the nature of Lipschitz neural networks, we introduce a new loss function that employs an annealing mechanism to increase margin for most data points. This enables Lipschitz models to provide better certified robustness. By employing our BRO layer and loss function, we design BRONet — a simple yet effective Lipschitz neural network that achieves state-of-the-art certified robustness. Extensive experiments and empirical analysis on CIFAR-10/100, Tiny-ImageNet, and ImageNet validate that our method outperforms existing baselines. The implementation is available at GitHub Link.",
+      "paper_id": "pmlr:v267:lai25c",
+      "title": "Enhancing Certified Robustness via Block Reflector Orthogonal Layers and Logit Annealing Loss",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32246-32277",
+          "pmlr_id": "lai25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Assistance games are a promising alternative to reinforcement learning from human feedback (RLHF) for training AI assistants. Assistance games resolve key drawbacks of RLHF, such as incentives for deceptive behavior, by explicitly modeling the interaction between assistant and user as a two-player game where the assistant cannot observe their shared goal. Despite their potential, assistance games have only been explored in simple settings. Scaling them to more complex environments is difficult because it requires both solving intractable decision-making problems under uncertainty and accurately modeling human users’ behavior. We present the first scalable approach to solving assistance games and apply it to a new, challenging Minecraft-based assistance game with over $10^{400}$ possible goals. Our approach, AssistanceZero, extends AlphaZero with a neural network that predicts human actions and rewards, enabling it to plan under uncertainty. We show that AssistanceZero outperforms model-free RL algorithms and imitation learning in the Minecraft-based assistance game. In a human study, our AssistanceZero-trained assistant significantly reduces the number of actions participants take to complete building tasks in Minecraft. Our results suggest that assistance games are a tractable framework for training effective AI assistants in complex environments. Code and videos are available at https://anonymous.4open.science/w/scalably-solving-assistance-games/.",
+      "paper_id": "pmlr:v267:laidlaw25a",
+      "title": "AssistanceZero: Scalably Solving Assistance Games",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32278-32305",
+          "pmlr_id": "laidlaw25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Estimating optimal transport maps between two distributions from respective samples is an important element for many machine learning methods. To do so, rather than extending discrete transport maps, it has been shown that estimating the Brenier potential of the transport problem and obtaining a transport map through its gradient is near minimax optimal for smooth problems. In this paper, we investigate the private estimation of such potentials and transport maps with respect to the distribution samples. We propose a differentially private transport map estimator with $L^2$ error at most $n^{-1} \\vee n^{-\\frac{2 \\alpha}{2 \\alpha - 2 + d}} \\vee (n\\epsilon)^{-\\frac{2 \\alpha}{2 \\alpha + d}} $ up do polylog terms where $n$ is the sample size, $\\epsilon$ is the desired level of privacy, $\\alpha$ is the smoothness of the true transport map, and $d$ is the dimension of the feature space. We also provide a lower bound for the problem.",
+      "paper_id": "pmlr:v267:lalanne25a",
+      "title": "On the Private Estimation of Smooth Transport Maps",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32306-32338",
+          "pmlr_id": "lalanne25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Despite the success of Instruction Tuning (IT) in training large language models (LLMs), such models often leverage spurious or biased features learnt from their training data and can become misaligned, leading to undesired behaviours. While existing techniques can steer model behaviour at inference-time, they are often post-hoc and do not embed steering as an intrinsic model feature. In this work, we introduce Focus Instruction Tuning (FIT), which trains LLMs to condition their responses by focusing on specific features whilst ignoring others, leading to different behaviours based on what features are specified. Across diverse benchmarks, we demonstrate that FIT: (i) successfully steers behaviour at inference time; (ii) increases robustness by amplifying core task signals and down-weighting spurious cues; (iii) mitigates social bias by suppressing demographic attributes; and (iv) generalises under distribution shifts and to previously unseen focus features. FIT therefore offers a lightweight, intrinsic mechanism for building more robust, fair, and easily controllable LLMs.",
+      "paper_id": "pmlr:v267:lamb25a",
+      "title": "Focus On This, Not That! Steering LLMs with Adaptive Feature Specification",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32339-32374",
+          "pmlr_id": "lamb25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In reinforcement learning for partially observable environments, many successful algorithms have been developed within the asymmetric learning paradigm. This paradigm leverages additional state information available at training time for faster learning. Although the proposed learning objectives are usually theoretically sound, these methods still lack a precise theoretical justification for their potential benefits. We propose such a justification for asymmetric actor-critic algorithms with linear function approximators by adapting a finite-time convergence analysis to this setting. The resulting finite-time bound reveals that the asymmetric critic eliminates error terms arising from aliasing in the agent state.",
+      "paper_id": "pmlr:v267:lambrechts25a",
+      "title": "A Theoretical Justification for Asymmetric Actor-Critic Algorithms",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32375-32405",
+          "pmlr_id": "lambrechts25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We consider the max-min eigenvalue augmentation problem: given $n \\times n$ symmetric positive semidefinite matrices $M,A_1,\\ldots, A_m$ and a positive integer $k Bayesian E-optimal design and maximum algebraic connectivity augmentation problems. In contrast to the existing work, we do not assume that the augmentation matrices are rank-one matrices, and we focus on the setting in which $k simple randomized rounding method provides a constant-factor approximation if the optimal increase is sufficiently large, specifically, if $\\mathrm{OPT} - \\lambda_{\\mathrm{min}}(M) = \\Omega(R \\ln k)$, where $\\mathrm{OPT}$ is the optimal value, and $R$ is the maximum trace of an augmentation matrix. To establish the guarantee, we derive a matrix concentration inequality that is of independent interest. The inequality can be interpreted as an intrinsic dimension analog of the matrix Chernoff inequality for the minimum eigenvalue of a sum of independent random positive semidefinite matrices; such an inequality has already been established for the maximum eigenvalue, but not for the minimum eigenvalue.",
+      "paper_id": "pmlr:v267:lamperski25a",
+      "title": "Simple Randomized Rounding for Max-Min Eigenvalue Augmentation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32406-32419",
+          "pmlr_id": "lamperski25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We address the problem of estimating heterogeneous treatment effects in panel data, adopting the popular Difference-in-Differences (DiD) framework under the conditional parallel trends assumption. We propose a novel doubly robust meta-learner for the Conditional Average Treatment Effect on the Treated (CATT), reducing the estimation to a convex risk minimization problem involving a set of auxiliary models. Our framework allows for the flexible estimation of the CATT, when conditioning on any subset of variables of interest using generic machine learning. Leveraging Neyman orthogonality, our proposed approach is robust to estimation errors in the auxiliary models. As a generalization to our main result, we develop a meta-learning approach for the estimation of general conditional functionals under covariate shift. We also provide an extension to the instrumented DiD setting with non-compliance. Empirical results demonstrate the superiority of our approach over existing baselines.",
+      "paper_id": "pmlr:v267:lan25a",
+      "title": "A Meta-learner for Heterogeneous Effects in Difference-in-Differences",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32420-32451",
+          "pmlr_id": "lan25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Transformers with linear recurrent modeling offer linear-time training and constant-memory inference. Despite their demonstrated efficiency and performance, pretraining such non-standard architectures from scratch remains costly and risky. The linearization of large language models (LLMs) transforms pretrained standard models into linear recurrent structures, enabling more efficient deployment. However, current linearization methods typically introduce additional feature map modules that require extensive fine-tuning and overlook the gating mechanisms used in state-of-the-art linear recurrent models. To address these issues, this paper presents Liger , short for Li nearizing LLMs to g at e d r ecurrent structures. Liger is a novel approach for converting pretrained LLMs into gated linear recurrent models without adding extra parameters. It repurposes the pretrained key matrix weights to construct diverse gating mechanisms, facilitating the formation of various gated recurrent structures while avoiding the need to train additional components from scratch. Using lightweight fine-tuning with Low-Rank Adaptation (LoRA), Liger restores the performance of the linearized gated recurrent models to match that of the original LLMs. Additionally, we introduce Liger Attention, an intra-layer hybrid attention mechanism, which significantly recovers 93% of the Transformer-based LLM performance at 0.02% pre-training tokens during the linearization process, achieving competitive results across multiple benchmarks, as validated on models ranging from 1B to 8B parameters.",
+      "paper_id": "pmlr:v267:lan25b",
+      "title": "Liger: Linearizing Large Language Models to Gated Recurrent Structures",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32452-32466",
+          "pmlr_id": "lan25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study online finite-horizon Markov Decision Processes with adversarially changing loss and aggregate bandit feedback (a.k.a full-bandit). Under this type of feedback, the agent observes only the total loss incurred over the entire trajectory, rather than the individual losses at each intermediate step within the trajectory. We introduce the first Policy Optimization algorithms for this setting. In the known-dynamics case, we achieve the first optimal regret bound of $\\tilde \\Theta(H^2\\sqrt{SAK})$, where $K$ is the number of episodes, $H$ is the episode horizon, $S$ is the number of states, and $A$ is the number of actions. In the unknown dynamics case we establish regret bound of $\\tilde O(H^3 S \\sqrt{AK})$, significantly improving the best known result by a factor of $H^2 S^5 A^2$.",
+      "paper_id": "pmlr:v267:lancewicki25a",
+      "title": "Near-optimal Regret Using Policy Optimization in Online MDPs with Aggregate Bandit Feedback",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32467-32491",
+          "pmlr_id": "lancewicki25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Deep learning survival models often outperform classical methods in time-to-event predictions, particularly in personalized medicine, but their \"black box\" nature hinders broader adoption. We propose a framework for gradient-based explanation methods tailored to survival neural networks, extending their use beyond regression and classification. We analyze the implications of their theoretical assumptions for time-dependent explanations in the survival setting and propose effective visualizations incorporating the temporal dimension. Experiments on synthetic data show that gradient-based methods capture the magnitude and direction of local and global feature effects, including time dependencies. We introduce GradSHAP(t), a gradient-based counterpart to SurvSHAP(t), which outperforms SurvSHAP(t) and SurvLIME in a computational speed vs. accuracy trade-off. Finally, we apply these methods to medical data with multi-modal inputs, revealing relevant tabular features and visual patterns, as well as their temporal dynamics.",
+      "paper_id": "pmlr:v267:langbein25a",
+      "title": "Gradient-based Explanations for Deep Learning Survival Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32492-32522",
+          "pmlr_id": "langbein25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Knowing where a particular species can or cannot be found on Earth is crucial for ecological research and conservation efforts. By mapping the spatial ranges of all species, we would obtain deeper insights into how global biodiversity is affected by climate change and habitat loss. However, accurate range estimates are only available for a relatively small proportion of all known species. For the majority of the remaining species, we typically only have a small number of records denoting the spatial locations where they have previously been observed. We outline a new approach for few-shot species range estimation to address the challenge of accurately estimating the range of a species from limited data. During inference, our model takes a set of spatial locations as input, along with optional metadata such as text or an image, and outputs a species encoding that can be used to predict the range of a previously unseen species in a feedforward manner. We evaluate our approach on two challenging benchmarks, where we obtain state-of-the-art range estimation performance, in a fraction of the compute time, compared to recent alternative approaches.",
+      "paper_id": "pmlr:v267:lange25a",
+      "title": "Feedforward Few-shot Species Range Estimation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32523-32561",
+          "pmlr_id": "lange25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "State-space formulations allow for Gaussian process (GP) regression with linear-in-time computational cost in spatio-temporal settings, but performance typically suffers in the presence of outliers. In this paper, we adapt and specialise the robust and conjugate GP (RCGP) framework of Altamirano et al. (2024) to the spatio-temporal setting. In doing so, we obtain an outlier-robust spatio-temporal GP with a computational cost comparable to classical spatio-temporal GPs. We also overcome the three main drawbacks of RCGPs: their unreliable performance when the prior mean is chosen poorly, their lack of reliable uncertainty quantification, and the need to carefully select a hyperparameter by hand. We study our method extensively in finance and weather forecasting applications, demonstrating that it provides a reliable approach to spatio-temporal modelling in the presence of outliers.",
+      "paper_id": "pmlr:v267:laplante25a",
+      "title": "Robust and Conjugate Spatio-Temporal Gaussian Processes",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32562-32592",
+          "pmlr_id": "laplante25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce a new approach to systematically map features discovered by sparse autoencoder across consecutive layers of large language models, extending earlier work that examined inter-layer feature links. By using a data-free cosine similarity technique, we trace how specific features persist, transform, or first appear at each stage. This method yields granular flow graphs of feature evolution, enabling fine-grained interpretability and mechanistic insights into model computations. Crucially, we demonstrate how these cross-layer feature maps facilitate direct steering of model behavior by amplifying or suppressing chosen features, achieving targeted thematic control in text generation. Together, our findings highlight the utility of a causal, cross-layer interpretability framework that not only clarifies how features develop through forward passes but also provides new means for transparent manipulation of large language models.",
+      "paper_id": "pmlr:v267:laptev25a",
+      "title": "Analyze Feature Flow to Enhance Interpretation and Steering in Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32593-32616",
+          "pmlr_id": "laptev25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Previous influential work showed that infinite width limits of neural networks in the lazy training regime are described by kernel machines. Here, we show that neural networks trained in the rich infinite-width regime in two different settings are also described by kernel machines, but with data-dependent kernels. For both cases, we provide explicit expressions for the kernel predictors and prescriptions to numerically calculate them. To derive the first predictor, we study the large-width limit of feature-learning Bayesian networks, showing how feature learning leads to task-relevant adaptation of layer kernels and preactivation densities. The saddle point equations governing this limit result in a min-max optimization problem that defines the kernel predictor. To derive the second predictor, we study gradient flow training of randomly initialized networks trained with weight decay in the infinite-width limit using dynamical mean field theory (DMFT). The fixed point equations of the arising DMFT defines the task-adapted internal representations and the kernel predictor. We compare our kernel predictors to kernels derived from lazy regime and demonstrate that our adaptive kernels achieve lower test loss on benchmark datasets.",
+      "paper_id": "pmlr:v267:lauditi25a",
+      "title": "Adaptive kernel predictors from feature-learning infinite limits of neural networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32617-32648",
+          "pmlr_id": "lauditi25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Machine learning models can assign fixed predictions that preclude individuals from changing their outcome. Existing approaches to audit fixed predictions do so on a pointwise basis, which requires access to an existing dataset of individuals and may fail to anticipate fixed predictions in out-of-sample data. This work presents a new paradigm to identify fixed predictions by finding confined regions of the feature space in which all individuals receive fixed predictions. This paradigm enables the certification of recourse for out-of-sample data, works in settings without representative datasets, and provides interpretable descriptions of individuals with fixed predictions. We develop a fast method to discover confined regions for linear classifiers using mixed-integer quadratically constrained programming. We conduct a comprehensive empirical study of confined regions across diverse applications. Our results highlight that existing pointwise verification methods fail to anticipate future individuals with fixed predictions, while our method both identifies them and provides an interpretable description.",
+      "paper_id": "pmlr:v267:lawless25a",
+      "title": "Understanding Fixed Predictions via Confined Regions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32649-32674",
+          "pmlr_id": "lawless25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Piecewise constant functions describe a variety of real-world phenomena in domains ranging from chemistry to manufacturing. In practice, it is often required to confidently identify the locations of the abrupt changes in these functions as quickly as possible. For this, we introduce a fixed-confidence piecewise constant bandit problem. Here, we sequentially query points in the domain and receive noisy evaluations of the function under bandit feedback. We provide instance-dependent lower bounds for the complexity of change point identification in this problem. These lower bounds illustrate that an optimal method should focus its sampling efforts adjacent to each of the change points, and the number of samples around each change point should be inversely proportional to the magnitude of the change. Building on this, we devise a simple and computationally efficient variant of Track-and-Stop and prove that it is asymptotically optimal in many regimes. We support our theoretical findings with experimental results in synthetic environments demonstrating the efficiency of our method.",
+      "paper_id": "pmlr:v267:lazzaro25a",
+      "title": "Fixed-Confidence Multiple Change Point Identification under Bandit Feedback",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32675-32703",
+          "pmlr_id": "lazzaro25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Although it is well-known that humans commonly engage in risk-sensitive behaviors in the presence of stochasticity, most Inverse Reinforcement Learning (IRL) models assume a risk-neutral agent. As such, beyond $(i)$ introducing model misspecification, $(ii)$ they do not permit direct inference of the risk attitude of the observed agent, which can be useful in many applications. In this paper, we propose a novel model of behavior to cope with these issues. By allowing for risk sensitivity, our model alleviates $(i)$, and by explicitly representing risk attitudes through (learnable) utility functions, it solves $(ii)$. Then, we characterize the partial identifiability of an agent’s utility under the new model and note that demonstrations from multiple environments mitigate the problem. We devise two provably-efficient algorithms for learning utilities in a finite-data regime, and we conclude with some proof-of-concept experiments to validate both our model and our algorithms.",
+      "paper_id": "pmlr:v267:lazzati25a",
+      "title": "Learning Utilities from Demonstrations in Markov Decision Processes",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "32704-32770",
+          "pmlr_id": "lazzati25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

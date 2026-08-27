@@ -1,0 +1,747 @@
+{
+  "batch_index": 1,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Multimodal learning with variational autoencoders (VAEs) requires estimating joint distributions to evaluate the evidence lower bound (ELBO). Current methods, the product and mixture of experts, aggregate single-modality distributions assuming independence for simplicity, which is an overoptimistic assumption. This research introduces a novel methodology for aggregating single-modality distributions by exploiting the principle of consensus of dependent experts (CoDE), which circumvents the aforementioned assumption. Utilizing the CoDE method, we propose a novel ELBO that approximates the joint likelihood of the multimodal data by learning the contribution of each subset of modalities. The resulting CoDE-VAE model demonstrates better performance in terms of balancing the trade-off between generative coherence and generative quality, as well as generating more precise log-likelihood estimations. CoDE-VAE further minimizes the generative quality gap as the number of modalities increases. In certain cases, it reaches a generative quality similar to that of unimodal VAEs, which is a desirable property that is lacking in most current methods. Finally, the classification accuracy achieved by CoDE-VAE is comparable to that of state-of-the-art multimodal VAE models.",
+      "paper_id": "pmlr:v267:a-mancisidor25a",
+      "title": "Aggregation of Dependent Expert Distributions in Multimodal Variational Autoencoders",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "1-26",
+          "pmlr_id": "a-mancisidor25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Distributed data analysis is a large and growing field driven by a massive proliferation of user devices, and by privacy concerns surrounding the centralised storage of data. We consider two adaptive algorithms for estimating one quantile (e.g. the median) when each user holds a single data point lying in a domain $[B]$ that can be queried once through a private mechanism; one under local differential privacy (LDP) and another for shuffle differential privacy (shuffle-DP). In the adaptive setting we present an $\\varepsilon$-LDP algorithm which can estimate any quantile within error $\\alpha$ only requiring $O(\\frac{\\log B}{\\varepsilon^2\\alpha^2})$ users, and an $(\\varepsilon,\\delta)$-shuffle DP algorithm requiring only $\\widetilde{O}((\\frac{1}{\\varepsilon^2}+\\frac{1}{\\alpha^2})\\log B)$ users. Prior (nonadaptive) algorithms require more users by several logarithmic factors in $B$. We further provide a matching lower bound for adaptive protocols, showing that our LDP algorithm is optimal in the low-$\\varepsilon$ regime. Additionally, we establish lower bounds against non-adaptive protocols which paired with our understanding of the adaptive case, proves a fundamental separation between these models.",
+      "paper_id": "pmlr:v267:aamand25a",
+      "title": "Lightweight Protocols for Distributed Private Quantile Estimation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "27-58",
+          "pmlr_id": "aamand25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study differentially private algorithms for graph cut sparsification, a fundamental problem in algorithms, privacy, and machine learning. While significant progress has been made, the best-known private and efficient cut sparsifiers on $n$-node graphs approximate each cut within $\\widetilde{O}(n^{1.5})$ additive error and $1+\\gamma$ multiplicative error for any $\\gamma > 0$ [Gupta, Roth, Ullman TCC’12]. In contrast, inefficient algorithms, i.e., those requiring exponential time, can achieve an $\\widetilde{O}(n)$ additive error and $1+\\gamma$ multiplicative error [Eliáš, Kapralov, Kulkarni, Lee SODA’20]. In this work, we break the $n^{1.5}$ additive error barrier for private and efficient cut sparsification. We present an $(\\varepsilon,\\delta)$-DP polynomial time algorithm that, given a non-negative weighted graph, outputs a private synthetic graph approximating all cuts with multiplicative error $1+\\gamma$ and additive error $n^{1.25 + o(1)}$ (ignoring dependencies on $\\varepsilon, \\delta, \\gamma$). At the heart of our approach lies a private algorithm for expander decomposition, a popular and powerful technique in (non-private) graph algorithms.",
+      "paper_id": "pmlr:v267:aamand25b",
+      "title": "Breaking the $n^1.5$ Additive Error Barrier for Private and Efficient Graph Sparsification via Private Expander Decomposition",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "59-72",
+          "pmlr_id": "aamand25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We design improved approximation algorithms for NP-hard graph problems by incorporating predictions (e.g., learned from past data). Our prediction model builds upon and extends the $\\varepsilon$-prediction framework by Cohen-Addad, d’Orsi, Gupta, Lee, and Panigrahi (NeurIPS 2024). We consider an edge-based version of this model, where each edge provides two bits of information, corresponding to predictions about whether each of its endpoints belong to an optimal solution. Even with weak predictions where each bit is only $\\varepsilon$-correlated with the true solution, this information allows us to break approximation barriers in the standard setting. We develop algorithms with improved approximation ratios for MaxCut, Vertex Cover, Set Cover, and Maximum Independent Set problems (among others). Across these problems, our algorithms share a unifying theme, where we separately satisfy constraints related to high degree vertices (using predictions) and low-degree vertices (without using predictions) and carefully combine the answers.",
+      "paper_id": "pmlr:v267:aamand25c",
+      "title": "Improved Approximations for Hard Graph Problems using Predictions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "73-101",
+          "pmlr_id": "aamand25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph Neural Networks (GNNs) have shown great promise in tasks like node and graph classification, but they often struggle to generalize, particularly to unseen or out-of-distribution (OOD) data. These challenges are exacerbated when training data is limited in size or diversity. To address these issues, we introduce a theoretical framework using Rademacher complexity to compute a regret bound on the generalization error and then characterize the effect of data augmentation. This framework informs the design of GRATIN, an efficient graph data augmentation algorithm leveraging the capability of Gaussian Mixture Models (GMMs) to approximate any distribution. Our approach not only outperforms existing augmentation techniques in terms of generalization but also offers improved time complexity, making it highly suitable for real-world applications.",
+      "paper_id": "pmlr:v267:abbahaddou25a",
+      "title": "Graph Neural Network Generalization With Gaussian Mixture Model Based Augmentation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "102-125",
+          "pmlr_id": "abbahaddou25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) provide excellent text-generation capabilities, but standard prompting and generation methods generally do not lead to intentional or goal-directed agents and might necessitate considerable prompt tuning. Even the best current LLMs rarely ask clarifying questions, engage in explicit information gathering, or take actions that lead to better decisions after multiple turns. Reinforcement learning has the potential to leverage the powerful modeling capabilities of LLMs, as well as their internal representation of textual interactions, to create capable goal-directed language agents. This can enable intentional and temporally extended interactions, such as with humans, the emergence of complex skills such as persuasion, and long-horizon strategic behavior, such as in the context of games. Enabling this requires the community to develop reliable reinforcement learning algorithms for training LLMs. Developing such algorithms requires tasks that can gauge progress on algorithm design, provide accessible and reproducible evaluations for multi-turn interactions, and cover a range of task properties and challenges in improving reinforcement learning algorithms. Our paper introduces the LMRL-Gym benchmark for evaluating multi-turn RL for LLMs, together with an open-source research framework for getting started on multi-turn RL with offline value-based and online policy-based RL methods. Our benchmark consists of 3 Interactive Dialogue tasks and 5 RL Capability tests for a total of 8 tasks, which require multiple rounds of language interaction and cover a range of tasks in open-ended dialogue and text games.",
+      "paper_id": "pmlr:v267:abdulhai25a",
+      "title": "LMRL Gym: Benchmarks for Multi-Turn Reinforcement Learning with Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "126-153",
+          "pmlr_id": "abdulhai25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) exhibit remarkable task generalization, solving tasks they were never explicitly trained on with only a few demonstrations. This raises a fundamental question: When can learning from a small set of tasks generalize to a large task family? In this paper, we investigate task generalization through the lens of autoregressive compositional structure, where each task is a composition of T operations, and each operation is among a finite family of D subtasks. This yields a total class of size D^T. We first show that generalization to all D^T tasks is theoretically achievable by training on only Õ(D) tasks. Empirically, we demonstrate that Transformers achieve such exponential task generalization on sparse parity functions via In-context Learning (ICL) and chain-of-thought (CoT) reasoning. We further demonstrate this exponential generalization in arithmetic and language translation, extending beyond parity functions.",
+      "paper_id": "pmlr:v267:abedsoltan25a",
+      "title": "Task Generalization with Autoregressive Compositional Structure: Can Learning from $D$ Tasks Generalize to $D^T$ Tasks?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "154-173",
+          "pmlr_id": "abedsoltan25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "A key component of transformers is the attention mechanism orchestrating how each token influences the propagation of every other token along the layers of a transformer. In this paper we provide a rigorous, mathematical analysis of the asymptotic properties of attention in transformers. Although we present several results based on different assumptions, all of them point to the same conclusion, all tokens asymptotically converge to each other, a phenomenon that has been empirically reported in the literature. Our findings are carefully compared with existing theoretical results and illustrated by simulations and experimental studies using the GPT-2 model.",
+      "paper_id": "pmlr:v267:abella25a",
+      "title": "Consensus Is All You Get: The Role of Attention in Transformers",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "174-184",
+          "pmlr_id": "abella25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Machine learning models are routinely trained on a mixture of different data domains. Different domain weights yield very different downstream performances. We propose the Soup-of-Experts, a novel architecture that can instantiate a model at test time for any domain weights with minimal computational cost and without re-training the model. Our architecture consists of a bank of expert parameters, which are linearly combined to instantiate one model. We learn the linear combination coefficients as a function of the input domain weights. To train this architecture, we sample random domain weights, instantiate the corresponding model, and backprop through one batch of data sampled with these domain weights. We demonstrate how our approach obtains small specialized models on several language modeling tasks quickly. Soup-of-Experts are particularly appealing when one needs to ship many different specialist models quickly under a size constraint.",
+      "paper_id": "pmlr:v267:ablin25a",
+      "title": "Soup-of-Experts: Pretraining Specialist Models via Parameters Averaging",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "185-203",
+          "pmlr_id": "ablin25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Scaling the capacity of language models has consistently proven to be a reliable approach for improving performance and unlocking new capabilities. Capacity can be primarily defined by two dimensions: the number of model parameters and the compute per example. While scaling typically involves increasing both, the precise interplay between these factors and their combined contribution to overall capacity remains not fully understood. We explore this relationship in the context of sparse Mixture-of-Expert models (MoEs), which allow scaling the number of parameters without proportionally increasing the FLOPs per example. We investigate how varying the sparsity level, i.e., the ratio of non-active to total parameters, affects model performance in terms of both pretraining and downstream performance. We find that under different constraints (e.g. parameter size and total training compute), there is an optimal level of sparsity that improves both training efficiency and model performance.These results provide a better understanding of the impact of sparsity in scaling laws for MoEs and complement existing works in this area, offering insights for designing more efficient architectures.",
+      "paper_id": "pmlr:v267:abnar25a",
+      "title": "Parameters vs FLOPs: Scaling Laws for Optimal Sparsity for Mixture-of-Experts Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "204-230",
+          "pmlr_id": "abnar25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Transformers have achieved great success in numerous NLP tasks but continue to exhibit notable gaps in multi-step factual reasoning, especially when real-world knowledge is sparse. Recent advances in grokking have demonstrated that neural networks can transition from memorizing to perfectly generalizing once they detect underlying logical patterns – yet these studies have primarily used small, synthetic tasks. In this paper, for the first time, we extend grokking to real-world factual data and address the challenge of dataset sparsity by augmenting existing knowledge graphs with carefully designed synthetic data to raise the ratio $\\phi_r$ of inferred facts to atomic facts above the threshold required for grokking. Surprisingly, we find that even factually incorrect synthetic data can strengthen emergent reasoning circuits rather than degrade accuracy, as it forces the model to rely on relational structure rather than memorization. When evaluated on multi-hop reasoning benchmarks, our approach achieves up to 95–100% accuracy on 2WikiMultiHopQA – substantially improving over strong baselines and matching or exceeding current state-of-the-art results. We further provide an in-depth analysis of how increasing $\\phi_r$ drives the formation of generalizing circuits inside Transformers. Our findings suggest that grokking-based data augmentation can unlock implicit multi-hop reasoning capabilities, opening the door to more robust and interpretable factual reasoning in large-scale language models.",
+      "paper_id": "pmlr:v267:abramov25a",
+      "title": "Grokking in the Wild: Data Augmentation for Real-World Multi-Hop Reasoning with Transformers",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "231-245",
+          "pmlr_id": "abramov25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Although language model (LM) agents have demonstrated increased performance in multiple domains, including coding and web-browsing, their success in cybersecurity has been limited. We present EnIGMA , an LM agent for autonomously solving Capture The Flag (CTF) challenges. We introduce new tools and interfaces to improve the agent’s ability to find and exploit security vulnerabilities, focusing on interactive terminal programs. These novel Interactive Agent Tools enable LM agents, for the first time, to run interactive utilities, such as a debugger and a server connection tool, which are essential for solving these challenges. Empirical analysis on 390 CTF challenges across four benchmarks demonstrate that these new tools and interfaces substantially improve our agent’s performance, achieving state-of-the-art results on NYU CTF, Intercode-CTF, and CyBench. Finally, we analyze data leakage, developing new methods to quantify it and identifying a new phenomenon we term soliloquizing , where the model self-generates hallucinated observations without interacting with the environment.",
+      "paper_id": "pmlr:v267:abramovich25a",
+      "title": "EnIGMA: Interactive Tools Substantially Assist LM Agents in Finding Security Vulnerabilities",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "246-355",
+          "pmlr_id": "abramovich25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Inference with Transformer-based Large Language Models (LLMs) on long sequences is both costly and slow due to the quadratic complexity of the self-attention mechanism. We introduce Star Attention, a two-phase block-sparse approximation that improves computational efficiency by sharding attention across multiple hosts while minimizing communication overhead. In the first phase, the context is processed using blockwise-local attention across hosts, in parallel. In the second phase, query and response tokens attend to all prior cached tokens through sequence-global attention. Star Attention integrates seamlessly with most Transformer-based LLMs trained with global attention, reducing memory requirements and inference time by up to 11x while preserving 97-100% of accuracy.",
+      "paper_id": "pmlr:v267:acharya25a",
+      "title": "Star Attention: Efficient LLM Inference over Long Sequences",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "356-371",
+          "pmlr_id": "acharya25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Data pruning – the combinatorial task of selecting a small and representative subset from a large dataset, is crucial for mitigating the enormous computational costs associated with training data-hungry modern deep learning models at scale. Since large-scale data collections are invariably noisy, developing data pruning strategies that remain robust even in the presence of corruption is critical in practice. Existing data pruning methods often fail under high corruption rates due to their reliance on empirical mean estimation, which is highly sensitive to outliers. In response, this work proposes Geometric Median (GM) Matching, a novel k-subset selection strategy that leverages the Geometric Median (GM) , a robust estimator with an optimal breakdown point of 1/2; to enhance resilience against noisy data. Our method iteratively selects a $k$-subset such that the mean of the subset approximates the GM of the (potentially) noisy dataset, ensuring robustness even under arbitrary corruption. We provide theoretical guarantees, showing that GM Matching enjoys an improved $\\mathcal{O}(1/k)$ convergence rate, outperforming $\\mathcal{O}(1/\\sqrt{k})$ scaling of uniform sampling, even under arbitrary corruption. Extensive experiments across image classification and image generation tasks demonstrate that GM Matching consistently outperforms existing pruning approaches, particularly in high-corruption settings; making it a strong baseline for robust data pruning.",
+      "paper_id": "pmlr:v267:acharya25b",
+      "title": "Geometric Median (GM) Matching for Robust k-Subset Selection from Noisy Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "372-419",
+          "pmlr_id": "acharya25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In image processing, solving inverse problems is the task of finding plausible reconstructions of an image that was corrupted by some (usually known) degradation operator. Commonly, this process is done using a generative image model that can guide the reconstruction towards solutions that appear natural. The success of diffusion models over the last few years has made them a leading candidate for this task. However, the sequential nature of diffusion models makes this conditional sampling process challenging. Furthermore, since diffusion models are often defined in the latent space of an autoencoder, the encoder-decoder transformations introduce additional difficulties. To address these challenges, we suggest a novel sampling method based on sequential Monte Carlo (SMC) in the latent space of diffusion models. We name our method LD-SMC. We define a generative model for the data using additional auxiliary observations and perform posterior inference with SMC sampling based on a backward diffusion process. Empirical evaluations on ImageNet and FFHQ show the benefits of LD-SMC over competing methods in various inverse problem tasks and especially in challenging inpainting tasks.",
+      "paper_id": "pmlr:v267:achituve25a",
+      "title": "Inverse Problem Sampling in Latent Space Using Sequential Monte Carlo",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "420-443",
+          "pmlr_id": "achituve25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Due to its invariance to rigid transformations such as rotations and reflections, Procrustes-Wasserstein (PW) was introduced in the literature as an optimal transport (OT) distance, alternative to Wasserstein and more suited to tasks such as the alignment and comparison of point clouds. Having that application in mind, we carefully build a space of discrete probability measures and show that over that space PW actually is a distance. Algorithms to solve the PW problems already exist, however we extend the PW framework by discussing and testing several initialization strategies. We then introduce the notion of PW barycenter and detail an algorithm to estimate it from the data. The result is a new method to compute representative shapes from a collection of point clouds. We benchmark our method against existing OT approaches, demonstrating superior performance in scenarios requiring precise alignment and shape preservation. We finally show the usefulness of the PW barycenters in an archaeological context. Our results highlight the potential of PW in advancing 2D and 3D point cloud analysis for machine learning and computational geometry applications.",
+      "paper_id": "pmlr:v267:adamo25a",
+      "title": "An in depth look at the Procrustes-Wasserstein distance: properties and barycenters",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "444-459",
+          "pmlr_id": "adamo25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Protein language models (pLMs) are powerful predictors of protein structure and function, learning through unsupervised training on millions of protein sequences. pLMs are thought to capture common motifs in protein sequences, but the specifics of pLM features are not well understood. Identifying these features would not only shed light on how pLMs work, but potentially uncover novel protein biologystudying the model to study the biology. Motivated by this, we train sparse autoencoders (SAEs) on the residual stream of a pLM, ESM-2. By characterizing SAE features, we determine that pLMs use a combination of generic features and family-specific features to represent a protein. In addition, we demonstrate how known sequence determinants of properties such as thermostability and subcellular localization can be identified by linear probing of SAE features. For predictive features without known functional associations, we hypothesize their role in unknown mechanisms and provide visualization tools to aid their interpretation. Our study gives a better understanding of the limitations of pLMs, and demonstrates how SAE features can be used to help generate hypotheses for biological mechanisms. We release our code, model weights, and feature visualizer.",
+      "paper_id": "pmlr:v267:adams25a",
+      "title": "From Mechanistic Interpretability to Mechanistic Biology: Training, Evaluating, and Interpreting Sparse Autoencoders on Protein Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "460-476",
+          "pmlr_id": "adams25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The Lottery Ticket Hypothesis (LTH) suggests there exists a sparse LTH mask and weights that achieve the same generalization performance as the dense model while using significantly fewer parameters. However, finding a LTH solution is computationally expensive, and a LTH sparsity mask does not generalize to other random weight initializations. Recent work has suggested that neural networks trained from random initialization find solutions within the same basin modulo permutation, and proposes a method to align trained models within the same loss basin. We hypothesize that misalignment of basins is the reason why LTH masks do not generalize to new random initializations and propose permuting the LTH mask to align with the new optimization basin when performing sparse training from a different random init. We empirically show a significant increase in generalization when sparse training from random initialization with the permuted mask as compared to using the non-permuted LTH mask, on multiple datasets (CIFAR-10/100 & ImageNet) and models (VGG11 & ResNet20/50).",
+      "paper_id": "pmlr:v267:adnan25a",
+      "title": "Sparse Training from Random Initialization: Aligning Lottery Ticket Masks using Weight Symmetry",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "477-498",
+          "pmlr_id": "adnan25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Offline algorithms for Reinforcement Learning from Human Preferences (RLHF), which use only a fixed dataset of sampled responses given an input, and preference feedback among these responses, have gained increasing prominence in the literature on aligning language models. In this paper, we study how the different design choices made in methods such as DPO, IPO, SLiC and many variants influence the quality of the learned policy, from a theoretical perspective. Our treatment yields insights into the choices of loss function, the policy which is used to normalize log-likelihoods, and also the role of the data sampling policy. Notably, our results do not rely on the standard reparameterization-style arguments used to motivate some of the algorithms in this family, which allows us to give a unified treatment to a broad class of methods. We also conduct a small empirical study to verify some of the theoretical findings on a standard summarization benchmark.",
+      "paper_id": "pmlr:v267:agarwal25a",
+      "title": "Design Considerations in Offline Preference-based RL",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "499-512",
+          "pmlr_id": "agarwal25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Previous work in fair machine learning has characterised the Fair Bayes Optimal Classifier (BOC) on a given distribution for both deterministic and randomized classifiers. We study the robustness of the Fair BOC to adversarial noise in the data distribution. Kearns & Li (1988) implies that the accuracy of the deterministic BOC without any fairness constraints is robust (Lipschitz) to malicious noise in the data distribution. We demonstrate that their robustness guarantee breaks down when we add fairness constraints. Hence, we consider the randomized Fair BOC, and our central result is that its accuracy is robust to malicious noise in the data distribution. Our robustness result applies to various fairness constraints—Demographic Parity, Equal Opportunity, Predictive Equality. Beyond robustness, we demonstrate that randomization leads to better accuracy and efficiency. We show that the randomized Fair BOC is nearly-deterministic, and gives randomized predictions on at most one data point, hence availing numerous benefits of randomness, while using very little of it.",
+      "paper_id": "pmlr:v267:agarwal25b",
+      "title": "Optimal Fair Learning Robust to Adversarial Distribution Shift",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "513-530",
+          "pmlr_id": "agarwal25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Federated learning harnesses the power of distributed optimization to train a unified machine learning model across separate clients. However, heterogeneous data distributions and computational workloads can lead to inconsistent updates and limit model performance. This work tackles these challenges by proposing FedECADO, a new algorithm inspired by a dynamical system representation of the federated learning process. FedECADO addresses non-IID data distribution through an aggregate sensitivity model that reflects the amount of data processed by each client. To tackle heterogeneous computing, we design a multi-rate integration method with adaptive step-size selections that synchronizes active client updates in continuous time. Compared to prominent techniques, including FedProx, FedExp, and FedNova, FedECADO achieves higher classification accuracies in numerous heterogeneous scenarios.",
+      "paper_id": "pmlr:v267:agarwal25c",
+      "title": "FedECADO: A Dynamical System Model of Federated Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "531-549",
+          "pmlr_id": "agarwal25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) have demonstrated the capability to perform in-context learning (ICL) for completely unseen tasks in classification or language completion. Sequence to sequence (seq2seq) is another popular task category with several applications seeking quick adaptation with ICL. We present a systematic analysis of the ICL capability of LLMs on Seq2Seq tasks using a formal structured language-pair. Our study reveals a critical limitation: except for very short input sequences, ICL fails to achieve consistent learning across all output positions. This exposes a fundamental weakness of modern LLMs — their inability to effectively uncover the alignment between input and output sequences. Consequently, this limitation results in incomplete induction heads, which are essential for in-context learning of new discrete mappings. To address these limitations, we propose ICA-Tune, a method for focused fine-tuning of an LLM using in-context examples. We present a mechanistic evaluation with two accuracy probes to show how input-output alignment emerges in middle layers of an LLM without direct supervision. This alignment leads to an abrupt jump in the completeness of the induction heads in higher layers. We show that, compared to standard fine-tuning, ICA-Tune enables more sample efficient learning and better generalization to OOD instances.",
+      "paper_id": "pmlr:v267:agarwal25d",
+      "title": "The Missing Alignment Link of In-context Learning on Sequences",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "550-565",
+          "pmlr_id": "agarwal25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Having explored an environment, intelligent agents should be able to transfer their knowledge to most downstream tasks within that environment without additional interactions. Referred to as \"zero-shot learning\", this ability remains elusive for general-purpose reinforcement learning algorithms. While recent works have attempted to produce zero-shot RL agents, they make assumptions about the nature of the tasks or the structure of the MDP. We present Proto Successor Measure : the basis set for all possible behaviors of a Reinforcement Learning Agent in a dynamical system. We prove that any possible behavior (represented using visitation distributions) can be represented using an affine combination of these policy-independent basis functions. Given a reward function at test time, we simply need to find the right set of linear weights to combine these bases corresponding to the optimal policy. We derive a practical algorithm to learn these basis functions using reward-free interaction data from the environment and show that our approach can produce the near-optimal policy at test time for any given reward function without additional environmental interactions. Project page: agarwalsiddhant10.github.io/projects/psm.html.",
+      "paper_id": "pmlr:v267:agarwal25e",
+      "title": "Proto Successor Measure: Representing the Behavior Space of an RL Agent",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "566-586",
+          "pmlr_id": "agarwal25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Automated code generation with large language models has gained significant traction, but there remains no guarantee of the correctness of generated code. We aim to use formal verification to provide mathematical guarantees that the generated code is correct. However, generating formally verified code with LLMs is hindered by the scarcity of training data and the complexity of formal proofs. To tackle this challenge, we introduce AlphaVerus, a self-improving framework that bootstraps formally verified code generation by iteratively translating programs from a higher-resource language and leveraging feedback from a verifier. AlphaVerus operates in three phases: exploration of candidate translations, Treefinement – a novel tree search algorithm for program refinement using verifier feedback, and filtering misaligned specifications and programs to prevent reward hacking. Through this iterative process, AlphaVerus enables the LLaMA-3.1-70B model to generate verified code without human intervention or model finetuning. AlphaVerus shows an ability to generate formally verified solutions for HumanEval and MBPP, laying the groundwork for truly trustworthy code-generation agents.",
+      "paper_id": "pmlr:v267:aggarwal25a",
+      "title": "AlphaVerus: Bootstrapping Formally Verified Code Generation through Self-Improving Translation and Treefinement",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "587-615",
+          "pmlr_id": "aggarwal25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Software engineering activities frequently involve edits to existing code. However, contemporary code language models (LMs) lack the ability to handle diverse types of code-edit requirements. In this work, we attempt to overcome this shortcoming through (1) a novel synthetic data generation pipeline and (2) a robust model adaptation algorithm. Starting with seed code examples and diverse editing criteria, our pipeline generates high-quality samples comprising original and modified code, along with natural language instructions in different styles and verbosity. Today’s code LMs come bundled with strong abilities, such as code generation and instruction following, which should not be lost due to fine-tuning. To ensure this, we propose a novel adaptation algorithm, SeleKT, that (a) leverages a dense gradient-based step to identify the weights that are most important for code editing, and (b) does a sparse projection onto the base model to avoid overfitting. Using our approach, we obtain a new series of models NextCoder (adapted from QwenCoder-2.5) that achieves strong results on five code-editing benchmarks, outperforming comparable size models and even several larger ones. We show the generality of our approach on two model families DeepSeekCoder and QwenCoder), compare against other fine-tuning approaches, and demonstrate robustness by showing retention of code generation and general problem-solving abilities post adaptation. We opensource the models, synthetic dataset, and implementation at https://aka.ms/nextcoder.",
+      "paper_id": "pmlr:v267:aggarwal25b",
+      "title": "NextCoder: Robust Adaptation of Code LMs to Diverse Code Edits",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "616-638",
+          "pmlr_id": "aggarwal25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The sample efficiency of Bayesian optimization algorithms depends on carefully crafted acquisition functions (AFs) guiding the sequential collection of function evaluations. The best-performing AFs can vary significantly across optimization problems, often requiring ad-hoc and problem-specific choices. This work tackles the challenge of designing novel AFs that perform well across a variety of experimental settings. Based on FunSearch, a recent work using Large Language Models (LLMs) for discovery in mathematical sciences, we propose FunBO, an LLM-based method that can be used to learn new AFs written in computer code by leveraging access to a number of evaluations for a limited set of objective functions. We provide the analytic expression of all discovered AFs and evaluate them on various global optimization benchmarks and hyperparameter optimization tasks. We show how FunBO identifies AFs that generalize well both in and out of the training distribution of functions, thus outperforming established general-purpose AFs and achieving competitive performance against AFs that are customized to specific function types and are learned via transfer-learning algorithms.",
+      "paper_id": "pmlr:v267:aglietti25a",
+      "title": "FunBO: Discovering Acquisition Functions for Bayesian Optimization with FunSearch",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "639-661",
+          "pmlr_id": "aglietti25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Predictive posterior densities (PPDs) are essential in approximate inference for quantifying predictive uncertainty and comparing inference methods. Typically, PPDs are estimated by simple Monte Carlo (MC) averages. In this paper, we expose a critical under-recognized issue: the signal-to-noise ratio (SNR) of the simple MC estimator can sometimes be extremely low, leading to unreliable estimates. Our main contribution is a theoretical analysis demonstrating that even with exact inference, SNR can decay rapidly with an increase in (a) the mismatch between training and test data, (b) the dimensionality of the latent space, or (c) the size of test data relative to training data. Through several examples, we empirically verify these claims and show that these factors indeed lead to poor SNR and unreliable PPD estimates (sometimes, estimates are off by hundreds of nats even with a million samples). While not the primary focus, we also explore an adaptive importance sampling approach as an illustrative way to mitigate the problem, where we learn the proposal distribution by maximizing a variational proxy to the SNR. Taken together, our findings highlight an important challenge and provide essential insights for reliable estimation.",
+      "paper_id": "pmlr:v267:agrawal25a",
+      "title": "Understanding the difficulties of posterior predictive estimation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "662-702",
+          "pmlr_id": "agrawal25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study the Continuous-Discrete Kalman Filter (CD-KF) for State-Space Models (SSMs) where continuous-time dynamics are observed via multiple sensors with discrete, irregularly timed measurements. Our focus extends to scenarios in which the measurement process is coupled with the states of an auxiliary SSM. For instance, higher measurement rates may increase energy consumption or heat generation, while a sensor’s accuracy can depend on its own spatial trajectory or that of the measured target. Each sensor thus carries distinct costs and constraints associated with its measurement rate and additional constraints and costs on the auxiliary state. We model measurement occurrences as independent Poisson processes with sensor-specific rates and derive an upper bound on the mean posterior covariance matrix of the CD-KF along the mean auxiliary state. The bound is continuously differentiable with respect to the measurement rates, which enables efficient gradient-based optimization. Exploiting this bound, we propose a finite-horizon optimal control framework to optimize measurement rates and auxiliary-state dynamics jointly. We further introduce a deterministic method for scheduling measurement times from the optimized rates. Empirical results in state-space filtering and dynamic temporal Gaussian process regression demonstrate that our approach achieves improved trade-offs between resource usage and estimation accuracy.",
+      "paper_id": "pmlr:v267:ahdab25a",
+      "title": "Optimal Sensor Scheduling and Selection for Continuous-Discrete Kalman Filtering with Auxiliary Dynamics",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "703-729",
+          "pmlr_id": "ahdab25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Representation learning plays a crucial role in reinforcement learning, especially in complex environments with high-dimensional and unstructured states. Effective representations can enhance the efficiency of learning algorithms by improving sample efficiency and generalization across tasks. This paper considers the Laplacian-based framework for representation learning, where the eigenvectors of the Laplacian matrix of the underlying transition graph are leveraged to encode meaningful features from raw sensory observations of the states. Despite the promising algorithmic advances in this framework, it remains an open question whether the Laplacian-based representations can be learned online and with theoretical guarantees along with policy learning. We address this by formulating an online optimization approach using the Asymmetric Graph Drawing Objective (AGDO) and analyzing its convergence via online projected gradient descent under mild assumptions. Our extensive simulation studies empirically validate the convergence guarantees to the true Laplacian representation. Furthermore, we provide insights into the compatibility of different reinforcement learning algorithms with online representation learning.",
+      "paper_id": "pmlr:v267:ahmed25a",
+      "title": "Online Laplacian-Based Representation Learning in Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "730-751",
+          "pmlr_id": "ahmed25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "While there has been plenty of work on generating tests from existing code, there has been limited work on generating tests from issues. A correct test must validate the code patch that resolves the issue. This paper focuses on the scenario where that code patch does not yet exist. Doing so supports two major use-cases. First, it supports TDD (test-driven development), the discipline of \"test first, write code later\" that has well-documented benefits for human software engineers. Second, it also validates SWE (software engineering) agents, which generate code patches for resolving issues. This paper introduces TDD-Bench-Verified, a benchmark for generating tests from issues, and Otter, an LLM-based solution for this task. Otter augments LLMs with rule-based analysis to check and repair their outputs, and introduces a novel self-reflective action planner. Experiments show Otter outperforming state-of-the-art systems for generating tests from issues, in addition to enhancing systems that generate patches from issues. We hope that Otter helps make developers more productive at resolving issues and leads to more robust, well-tested code.",
+      "paper_id": "pmlr:v267:ahmed25b",
+      "title": "Otter: Generating Tests from Issues to Validate SWE Patches",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "752-771",
+          "pmlr_id": "ahmed25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This work investigates the effectiveness of schedule-free methods, developed by A. Defazio et al. (NeurIPS 2024), in nonconvex optimization settings, inspired by their remarkable empirical success in training neural networks. Specifically, we show that schedule-free SGD achieves optimal iteration complexity for nonsmooth, non-convex optimization problems. Our proof begins with the development of a general framework for online-to-nonconvex conversion, which converts a given online learning algorithm into an optimization algorithm for nonconvex losses. Our general framework not only recovers existing conversions but also leads to two novel conversion schemes. Notably, one of these new conversions corresponds directly to schedule-free SGD, allowing us to establish its optimality. Additionally, our analysis provides valuable insights into the parameter choices for schedule-free SGD, addressing a theoretical gap that the convex theory cannot explain.",
+      "paper_id": "pmlr:v267:ahn25a",
+      "title": "General framework for online-to-nonconvex conversion: Schedule-free SGD is also effective for nonconvex optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "772-795",
+          "pmlr_id": "ahn25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Pre-trained 3D vision models have gained significant attention for their promising performance on point cloud data. However, fully fine-tuning these models for downstream tasks is computationally expensive and storage-intensive. Existing parameter-efficient fine-tuning (PEFT) approaches, which focus primarily on input token prompting, struggle to achieve competitive performance due to their limited ability to capture the geometric information inherent in point clouds. To address this challenge, we propose a novel Geometry-Aware Point Cloud Prompt (GAPrompt) that leverages geometric cues to enhance the adaptability of 3D vision models. First, we introduce a Point Prompt that serves as an auxiliary input alongside the original point cloud, explicitly guiding the model to capture fine-grained geometric details. Additionally, we present a Point Shift Prompter designed to extract global shape information from the point cloud, enabling instance-specific geometric adjustments at the input level. Moreover, our proposed Prompt Propagation mechanism incorporates the shape information into the model’s feature extraction process, further strengthening its ability to capture essential geometric characteristics. Extensive experiments demonstrate that GAPrompt significantly outperforms state-of-the-art PEFT methods and achieves competitive results compared to full fine-tuning on various benchmarks, while utilizing only 2.19% of trainable parameters.",
+      "paper_id": "pmlr:v267:ai25a",
+      "title": "GAPrompt: Geometry-Aware Point Cloud Prompt for 3D Vision Model",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "796-808",
+          "pmlr_id": "ai25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Vision GNN (ViG) demonstrates superior performance by representing images as graph structures, providing a more natural way to capture irregular semantic patterns beyond traditional grid or sequence-based representations. To efficiently adapt ViG to downstream tasks, parameter-efficient fine-tuning techniques like visual prompting become increasingly essential. However, existing prompting methods are primarily designed for Transformer-based models, neglecting the rich topological relationships among nodes and edges in graph-based representations, limiting their capacity to model complex semantics. In this paper, we propose Vision Graph Prompting (VGP), a novel framework tailored for vision graph structures. Our core insight reveals that semantically connected components in the graph exhibit low-rank properties. Building on this observation, we introduce a semantic low-rank prompting method that decomposes low-rank semantic features and integrates them with prompts on vision graph topologies, capturing both global structural patterns and fine-grained semantic dependencies. Extensive experiments demonstrate our method significantly improves ViG’s transfer performance on diverse downstream tasks, achieving results comparable to full fine-tuning while maintaining parameter efficiency.",
+      "paper_id": "pmlr:v267:ai25b",
+      "title": "Vision Graph Prompting via Semantic Low-Rank Decomposition",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "809-821",
+          "pmlr_id": "ai25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We develop a framework for capturing the instrumental value of data production processes, which accounts for two key factors: (a) the context of the agent’s decision-making; (b) how much data or information the buyer already possesses. We \"micro-found\" our data valuation function by establishing its connection to classic notions of signals and information design in economics. When instantiated in Bayesian linear regression, our value naturally corresponds to information gain. Applying our proposed data value in Bayesian linear regression for monopoly pricing, we show that if the seller can fully customize data production, she can extract the first-best revenue (i.e., full surplus) from any population of buyers, i.e., achieving first-degree price discrimination. If data can only be constructed from an existing data pool, this limits the seller’s ability to customize, and achieving first-best revenue becomes generally impossible. However, we design a mechanism that achieves seller revenue at most $\\log(\\kappa)$ less than the first-best, where $\\kappa$ is the condition number associated with the data matrix. As a corollary, the seller extracts the first-best revenue in the multi-armed bandits special case.",
+      "paper_id": "pmlr:v267:ai25c",
+      "title": "An Instrumental Value for Data Production and its Application to Data Pricing",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "822-856",
+          "pmlr_id": "ai25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph Transformers (GTs) have demonstrated remarkable performance in graph representation learning over popular graph neural networks (GNNs). However, self-attention, the core module of GTs, preserves only low-frequency signals in graph features, leading to ineffectiveness in capturing other important signals like high-frequency ones. Some recent GT models help alleviate this issue, but their flexibility and expressiveness are still limited since the filters they learn are fixed on predefined graph spectrum or spectral order. To tackle this challenge, we propose a Graph Fourier Kolmogorov-Arnold Transformer (GrokFormer), a novel GT model that learns highly expressive spectral filters with adaptive graph spectrum and spectral order through a Fourier series modeling over learnable activation functions. We demonstrate theoretically and empirically that the proposed GrokFormer filter offers better expressiveness than other spectral methods. Comprehensive experiments on 10 real-world node classification datasets across various domains, scales, and graph properties, as well as 5 graph classification datasets, show that GrokFormer outperforms state-of-the-art GTs and GNNs. Our code is available at https://github.com/GGA23/GrokFormer.",
+      "paper_id": "pmlr:v267:ai25d",
+      "title": "GrokFormer: Graph Fourier Kolmogorov-Arnold Transformers",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "21277-21296",
+          "pmlr_id": "ai25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph transformers extend global self-attention to graph-structured data, achieving notable success in graph learning. Recently, Relative Random Walk Probabilities (RRWP) has been found to further enhance their predictive power by encoding both structural and positional information into the edge representation. However, RRWP cannot always distinguish between edges that belong to different local graph patterns, which reduces its ability to capture the full structural complexity of graphs. This work introduces Simple Path Structural Encoding (SPSE), a novel method that utilizes simple path counts for edge encoding. We show theoretically and experimentally that SPSE overcomes the limitations of RRWP, providing a richer representation of graph structures, particularly in capturing local cyclic patterns. To make SPSE computationally tractable, we propose an efficient approximate algorithm for simple path counting. SPSE demonstrates significant performance improvements over RRWP on various benchmarks, including molecular and long-range graph datasets, achieving statistically significant gains in discriminative tasks. These results pose SPSE as a powerful edge encoding alternative for enhancing the expressivity of graph transformers.",
+      "paper_id": "pmlr:v267:airale25a",
+      "title": "Simple Path Structural Encoding for Graph Transformers",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "857-873",
+          "pmlr_id": "airale25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Link prediction—a task of distinguishing actual hidden edges from random unconnected node pairs—is one of the quintessential tasks in graph machine learning. Despite being widely accepted as a universal benchmark and a downstream task for representation learning, the link prediction benchmark’s validity has rarely been questioned. Here, we show that the common edge sampling procedure in the link prediction task has an implicit bias toward high-degree nodes. This produces a highly skewed evaluation that favors methods overly dependent on node degree. In fact a “null” link prediction method based solely on node degree can yield nearly optimal performance in this setting. We propose a degree-corrected link prediction benchmark that offers a more reasonable assessment and better aligns with the performance on the recommendation task. Finally, we demonstrate that the degree-corrected benchmark can more effectively train graph machine-learning models by reducing overfitting to node degrees and facilitating the learning of relevant structures in graphs.",
+      "paper_id": "pmlr:v267:aiyappa25a",
+      "title": "Implicit degree bias in the link prediction task",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "874-908",
+          "pmlr_id": "aiyappa25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Pipeline Parallelism (PP) enables large neural network training on small, interconnected devices by splitting the model into multiple stages. To maximize pipeline utilization, asynchronous optimization is appealing as it offers 100% pipeline utilization by construction. However, it is inherently challenging as the weights and gradients are no longer synchronized, leading to stale (or delayed) gradients . To alleviate this, we introduce a variant of Nesterov Accelerated Gradient (NAG) for asynchronous optimization in PP. Specifically, we modify the look-ahead step in NAG to effectively address the staleness in gradients. We theoretically prove that our approach converges at a sublinear rate in the presence of fixed delay in gradients. Our experiments on large-scale language modelling tasks using decoder-only architectures with up to 1B parameters , demonstrate that our approach significantly outperforms existing asynchronous methods, even surpassing the synchronous baseline.",
+      "paper_id": "pmlr:v267:ajanthan25a",
+      "title": "Nesterov Method for Asynchronous Pipeline Parallel Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "909-924",
+          "pmlr_id": "ajanthan25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Averaging checkpoints along the training trajectory is a simple yet powerful approach to improve the generalization performance of Machine Learning models and reduce training time. Motivated by these potential gains, and in an effort to fairly and thoroughly benchmark this technique, we present an extensive evaluation of averaging techniques in modern Deep Learning, which we perform using AlgoPerf, a large-scale benchmark for optimization algorithms. We investigate whether weight averaging can reduce training time, improve generalization, and replace learning rate decay, as suggested by recent literature. Our evaluation across seven architectures and datasets reveals that averaging significantly accelerates training and yields considerable efficiency gains across all considered workloads, at the price of a minimal implementation and memory cost, while mildly improving generalization. Finally, we explore the relationship between averaging and learning rate annealing and show that combining the two achieves optimal performance.",
+      "paper_id": "pmlr:v267:ajroldi25a",
+      "title": "When, Where and Why to Average Weights?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "925-941",
+          "pmlr_id": "ajroldi25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Language models (LMs) have shown impressive performance on tasks within their training distribution, but often struggle with structurally novel tasks even when given a small number of in-context task examples. We investigate the effectiveness of test-time training (TTT)—temporarily updating model parameters during inference using a loss derived from input data—as a mechanism for improving LMs’ reasoning and few-shot learning capabilities. On the Abstraction and Reasoning Corpus (ARC), performing TTT with in-context examples yields up to $6\\times$ higher accuracy compared to fine-tuned baselines—reaching $53.0%$ on the public validation set with an 8B-parameter LM and $61.9%$ when ensembled with program-synthesis methods, matching average human performance. On BIG-Bench Hard (BBH), TTT on in-context examples surpasses standard few-shot prompting in the $10$-shot setting by $7.3$ percentage points ($50.5%$ to $57.8%$). Our findings highlight the limitations of in-context learning for novel tasks and demonstrate the potential of test-time training to enhance language model adaptability.",
+      "paper_id": "pmlr:v267:akyurek25a",
+      "title": "The Surprising Effectiveness of Test-Time Training for Few-Shot Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "942-963",
+          "pmlr_id": "akyurek25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

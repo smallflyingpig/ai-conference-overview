@@ -1,0 +1,747 @@
+{
+  "batch_index": 80,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "In this work, we study reinforcement learning (RL) with trajectory feedback. Compared to the standard RL setting, in RL with trajectory feedback, the agent only observes the accumulative reward along the trajectory, and therefore, this model is particularly suitable for scenarios where querying the reward in each single step incurs prohibitive cost. For a finite-horizon Markov Decision Process (MDP) with $S$ states, $A$ actions and a horizon length of $H$, we develop an algorithm that enjoys an asymptotically nearly optimal regret of $\\tilde{O}\\left(\\sqrt{SAH^3K}\\right)$ in $K$ episodes. To achieve this result, our new technical ingredients include (i) constructing a tighter confidence region for the reward function by incorporating the RL with trajectory feedback setting with techniques in linear bandits and (ii) constructing a reference transition model to better guide the exploration process.",
+      "paper_id": "pmlr:v267:zhang25l",
+      "title": "Minimax Optimal Regret Bound for Reinforcement Learning with Trajectory Feedback",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74692-74713",
+          "pmlr_id": "zhang25l",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Diffusion Transformers (DiTs) with 3D full attention power state-of-the-art video generation, but suffer from prohibitive compute cost – when generating just a 5-second 720P video, attention alone takes 800 out of 950 seconds of total inference time. This paper introduces sliding tile attention (STA) to address this challenge. STA leverages the observation that attention scores in pretrained video diffusion models predominantly concentrate within localized 3D windows. By sliding and attending over local spatial-temporal region, STA eliminates redundancy from full attention. Unlike traditional token-wise sliding window attention (SWA), STA operates tile-by-tile with a novel hardware-aware sliding window design, preserving expressiveness while being hardware-efficient . With careful kernel-level optimizations, STA offers the first efficient 2D/3D sliding-window-like attention implementation, achieving 58.79% MFU – 7.17$\\times$ faster than prior art methods. On the leading video DiT model, Hunyuan, it accelerates attention by 1.6–10x over FlashAttention-3, yielding a 1.36–3.53$\\times$ end-to-end speedup with no or minimum quality loss.",
+      "paper_id": "pmlr:v267:zhang25m",
+      "title": "Fast Video Generation with Sliding Tile Attention",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74714-74731",
+          "pmlr_id": "zhang25m",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Mathematical diagrams have a distinctive structure. Standard feature transforms designed for natural images (e.g., CLIP) fail to process them effectively, limiting their utility in multimodal large language models (MLLMs). Current efforts to improve MLLMs have primarily focused on scaling mathematical visual instruction datasets and strengthening LLM backbones, yet fine-grained visual recognition errors remain unaddressed. Our systematic evaluation on the visual grounding capabilities of state-of-the-art MLLMs highlights that fine-grained visual understanding remains a crucial bottleneck in visual mathematical reasoning (GPT-4o exhibits a 70% grounding error rate, and correcting these errors improves reasoning accuracy by 12%). We thus propose a novel approach featuring a geometrically-grounded vision encoder and a feature router that dynamically selects between hierarchical visual feature maps. Our model accurately recognizes visual primitives and generates precise visual prompts aligned with the language model’s reasoning needs. In experiments, PRIMITIVE-Qwen2.5-7B outperforms other 7B models by 12% on MathVerse and is on par with GPT-4V on MathVista. Our findings highlight the need for better fine-grained visual integration in MLLMs. Code is available at github.com/AI4Math-ShanZhang/SVE-Math.",
+      "paper_id": "pmlr:v267:zhang25n",
+      "title": "Primitive Vision: Improving Diagram Understanding in MLLMs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74732-74755",
+          "pmlr_id": "zhang25n",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This paper addresses online learning with ”corrupted” feedback. Our learner is provided with potentially corrupted gradients $\\tilde g_t$ instead of the ”true” gradients $g_t$. We make no assumptions about how the corruptions arise: they could be the result of outliers, mislabeled data, or even malicious interference. We focus on the difficult “unconstrained” setting in which our algorithm must maintain low regret with respect to any comparison point $u \\in \\mathbb{R}^d$. The unconstrained setting is significantly more challenging as existing algorithms suffer extremely high regret even with very tiny amounts of corruption (which is not true in the case of a bounded domain). Our algorithms guarantee regret $ \\|u\\|G (\\sqrt{T} + k) $ when $G \\ge \\max_t \\|g_t\\|$ is known, where $k$ is a measure of the total amount of corruption. When $G$ is unknown we incur an extra additive penalty of $(\\|u\\|^2+G^2) k$.",
+      "paper_id": "pmlr:v267:zhang25o",
+      "title": "Unconstrained Robust Online Convex Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74756-74786",
+          "pmlr_id": "zhang25o",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Despite growing interest in incorporating feedback to improve language models, most efforts focus only on sequence-level annotations. In this work, we explore the potential of utilizing fine-grained span-level annotations from offline datasets to improve model quality. We develop a simple finetuning algorithm, called Training with Annotations (TWA), to directly train machine translation models on such annotated data. TWA utilizes targeted span-level error information while also flexibly learning what to penalize within a span. Moreover, TWA considers the overall trajectory of a sequence when deciding which non-error spans to utilize as positive signals. Experiments on English-German and Chinese-English machine translation show that TWA outperforms baselines such as supervised finetuning on sequences filtered for quality and Direct Preference Optimization on pairs constructed from the same data.",
+      "paper_id": "pmlr:v267:zhang25p",
+      "title": "Learning from others’ mistakes: Finetuning machine translation models with span-level error annotations",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74787-74803",
+          "pmlr_id": "zhang25p",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Probabilistic Circuits (PCs) are tractable representations of probability distributions allowing for exact and efficient computation of likelihoods and marginals. Recent advancements have improved the scalability of PCs either by leveraging their sparse properties or through the use of tensorized operations for better hardware utilization. However, no existing method fully exploits both aspects simultaneously. In this paper, we propose a novel sparse and structured parameterization for the sum blocks in PCs. By replacing dense matrices with sparse Monarch matrices, we significantly reduce the memory and computation costs, enabling unprecedented scaling of PCs. From a theory perspective, our construction arises naturally from circuit multiplication; from a practical perspective, compared to previous efforts on scaling up tractable probabilistic models, our approach not only achieves state-of-the-art generative modeling performance on challenging benchmarks like Text8, LM1B and ImageNet, but also demonstrates superior scaling behavior, achieving the same performance with substantially less compute as measured by the number of floating-point operations (FLOPs) during training.",
+      "paper_id": "pmlr:v267:zhang25q",
+      "title": "Scaling Probabilistic Circuits via Monarch Matrices",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74804-74818",
+          "pmlr_id": "zhang25q",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Estimating Individual Treatment Effects (ITE) from observational data is challenging due to covariate shift and counterfactual absence. While existing methods attempt to balance distributions globally, they often lack fine-grained sample-level alignment, especially in scenarios with significant individual heterogeneity. To address these issues, we reconsider counterfactual as a proxy to emulate balanced randomization. Furthermore, we derive a theoretical bound that links the expected ITE estimation error to both factual prediction errors and representation distances between factuals and counterfactuals. Building on this theoretical foundation, we propose FCCL, a novel method designed to effectively capture the nuances of potential outcomes under different treatments by (i) generating diffeomorphic counterfactuals that adhere to the data manifold while maintaining high semantic similarity to their factual counterparts, and (ii) mitigating distribution shift via sample-level alignment grounded in our derived generalization-error bound, which considers factual-counterfactual similarity and category consistency. Extensive evaluations on benchmark datasets demonstrate that FCCL outperforms 13 state-of-the-art methods, particularly in capturing individual-level heterogeneity and handling sparse boundary samples.",
+      "paper_id": "pmlr:v267:zhang25r",
+      "title": "Counterfactual Contrastive Learning with Normalizing Flows for Robust Treatment Effect Estimation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74819-74839",
+          "pmlr_id": "zhang25r",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In vision-language models (VLMs), visual tokens usually consume a significant amount of computational overhead, despite their sparser information density compared to text tokens. To address this, most existing methods learn a network to prune redundant visual tokens and require additional training data. Differently, we propose an efficient training-free token optimization mechanism dubbed SparseVLM without extra parameters or fine-tuning costs. Concretely, given that visual tokens complement text tokens in VLMs for linguistic reasoning, we select visual-relevant text tokens to rate the significance of vision tokens within the self-attention matrix extracted from the VLMs. Then we progressively prune irrelevant tokens. To maximize sparsity while retaining essential information, we introduce a rank-based strategy to adaptively determine the sparsification ratio for each layer, alongside a token recycling method that compresses pruned tokens into more compact representations. Experimental results show that our SparseVLM improves the efficiency of various VLMs across a range of image and video understanding tasks. In particular, when LLaVA is equipped with SparseVLM, it achieves a 54% reduction in FLOPs, lowers CUDA time by 37%, and maintains an accuracy rate of 97%. Our code is available at https://github.com/Gumpest/SparseVLMs.",
+      "paper_id": "pmlr:v267:zhang25s",
+      "title": "SparseVLM: Visual Token Sparsification for Efficient Vision-Language Model Inference",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74840-74857",
+          "pmlr_id": "zhang25s",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "While autoregressive models dominate natural language generation, their application to tabular data remains limited due to two challenges: 1) tabular data contains heterogeneous types, whereas autoregressive next-token (distribution) prediction is designed for discrete data, and 2) tabular data is column permutation-invariant, requiring flexible generation orders. Traditional autoregressive models, with their fixed generation order, struggle with tasks like missing data imputation, where the target and conditioning columns vary. To address these issues, we propose Diffusion-nested Non-autoregressive Transformer (TabNAT), a hybrid model combining diffusion processes and masked generative modeling. For continuous columns, TabNAT uses a diffusion model to parameterize their conditional distributions, while for discrete columns, it employs next-token prediction with KL divergence minimization. A masked Transformer with bi-directional attention enables order-agnostic generation, allowing it to learn the distribution of target columns conditioned on arbitrary observed columns. Extensive experiments on ten datasets with diverse properties demonstrate TabNAT’s superiority in both unconditional tabular data generation and conditional missing data imputation tasks.",
+      "paper_id": "pmlr:v267:zhang25t",
+      "title": "TabNAT: A Continuous-Discrete Joint Generative Framework for Tabular Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74858-74881",
+          "pmlr_id": "zhang25t",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "It is now a common business practice to buy access to large language model (LLM) inference rather than self-host, because of significant upfront hardware infrastructure and energy costs. However, as a buyer, there is no mechanism to verify the authenticity of the advertised service including the serving hardware platform, e.g. that it is actually being served using an NVIDIA H100. Furthermore, there are reports suggesting that model providers may deliver models that differ slightly from the advertised ones, often to make them run on less expensive hardware. That way, a client pays premium for a capable model access on more expensive hardware, yet ends up being served by a (potentially less capable) cheaper model on cheaper hardware. In this paper we introduce hardware and software platform inference (HSPI) – a method for identifying the underlying GPU architecture and software stack of a (black-box) machine learning model solely based on its input-output behavior. Our method leverages the inherent differences of various GPU architectures and compilers to distinguish between different GPU types and software stacks. By analyzing the numerical patterns in the model’s outputs, we propose a classification framework capable of accurately identifying the GPU used for model inference as well as the underlying software configuration. Our findings demonstrate the feasibility of inferring GPU type from black-box models. We evaluate HSPI against models served on different real hardware and find that in a white-box setting we can distinguish between different GPUs with between 83.9% and 100% accuracy. Even in a black-box setting we are able to achieve results that are up to three times higher than random guess accuracy.",
+      "paper_id": "pmlr:v267:zhang25u",
+      "title": "Hardware and Software Platform Inference",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74882-74895",
+          "pmlr_id": "zhang25u",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In recent years, while generative AI has advanced significantly in image generation, video generation continues to face challenges in controllability, length, and detail quality, which hinder its application. We present MimicMotion, a framework for generating high-quality human videos of arbitrary length using motion guidance. Our approach has several highlights. Firstly, we introduce confidence-aware pose guidance that ensures high frame quality and temporal smoothness. Secondly, we introduce regional loss amplification based on pose confidence, which reduces image distortion in key regions. Lastly, we propose a progressive latent fusion strategy to generate long and smooth videos. Experiments demonstrate the effectiveness of our approach in producing high-quality human motion videos. Videos and comparisons are available at https://tencent.github.io/MimicMotion.",
+      "paper_id": "pmlr:v267:zhang25v",
+      "title": "MimicMotion: High-Quality Human Motion Video Generation with Confidence-aware Pose Guidance",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74896-74910",
+          "pmlr_id": "zhang25v",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advancements in Vision-Language-Action (VLA) models have leveraged pre-trained Vision-Language Models (VLMs) to improve the generalization capabilities. VLMs, typically pre-trained on vision-language understanding tasks, provide rich semantic knowledge and reasoning abilities. However, prior research has shown that VLMs often focus on high-level semantic content and neglect low-level features, limiting their ability to capture detailed spatial information and understand physical dynamics. These aspects, which are crucial for embodied control tasks, remain underexplored in existing pre-training paradigms. In this paper, we investigate the training paradigm for VLAs, and introduce UP-VLA , a U nified VLA model training with both multi-modal U nderstanding and future P rediction objectives, enhancing both high-level semantic comprehension and low-level spatial understanding. Experimental results show that UP-VLA achieves a 33% improvement on the Calvin ABC-D benchmark compared to the previous state-of-the-art method. Additionally, UP-VLA demonstrates improved success rates in real-world manipulation tasks, particularly those requiring precise spatial information.",
+      "paper_id": "pmlr:v267:zhang25w",
+      "title": "UP-VLA: A Unified Understanding and Prediction Model for Embodied Agent",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74911-74922",
+          "pmlr_id": "zhang25w",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Randomized response (RR) mechanisms constitute a fundamental and effective technique for ensuring label differential privacy (LabelDP). However, existing RR methods primarily focus on the response labels while overlooking the influence of covariates and often do not fully address optimality. To address these challenges, this paper explores optimal LabelDP procedures using RR mechanisms, focusing on achieving optimal estimation and inference in binary response models. We first analyze the asymptotic behaviors of RR binary response models and then optimize the procedure by maximizing the trace of the Fisher Information Matrix within the $\\varepsilon$- and $(\\varepsilon,\\delta)$-LabelDP constraints. Our theoretical results indicate that the proposed methods achieve optimal LabelDP guarantees while maintaining statistical accuracy in binary response models under mild conditions. Furthermore, we develop private confidence intervals with nominal coverage for statistical inference. Extensive simulation studies and real-world applications confirm that our methods outperform existing approaches in terms of precise estimation, privacy protection, and reliable inference.",
+      "paper_id": "pmlr:v267:zhang25x",
+      "title": "Differentially Private Analysis for Binary Response Models: Optimality, Estimation, and Inference",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74923-74937",
+          "pmlr_id": "zhang25x",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Class-incremental learning (CIL) enables models to learn new classes continually without forgetting previously acquired knowledge. Multi-label CIL (MLCIL) extends CIL to a real-world scenario where each sample may belong to multiple classes, introducing several challenges: label absence, which leads to incomplete historical information due to missing labels, and class imbalance, which results in the model bias toward majority classes. To address these challenges, we propose Label-Augmented Analytic Adaptation (L3A), an exemplar-free approach without storing past samples. L3A integrates two key modules. The pseudo-label (PL) module implements label augmentation by generating pseudo-labels for current phase samples, addressing the label absence problem. The weighted analytic classifier (WAC) derives a closed-form solution for neural networks. It introduces sample-specific weights to adaptively balance the class contribution and mitigate class imbalance. Experiments on MS-COCO and PASCAL VOC datasets demonstrate that L3A outperforms existing methods in MLCIL tasks. Our code is available at https://github.com/scut-zx/L3A.",
+      "paper_id": "pmlr:v267:zhang25y",
+      "title": "L3A: Label-Augmented Analytic Adaptation for Multi-Label Class Incremental Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74938-74949",
+          "pmlr_id": "zhang25y",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Diffusion-based generative models (diffusion models) often require a large amount of data to train a score-based model that learns the score function of the data distribution through denoising score matching. However, collecting and cleaning such data can be expensive, time-consuming, and even infeasible. In this paper, we present a novel theoretical insight for diffusion models that two factors, i.e., the denoiser function hypothesis space and the number of training samples, can affect the denoising score matching error of all training samples. Based on this theoretical insight, it is evident that minimizing the total denoising score matching error is challenging within the denoiser function hypothesis space in existing methods, when training diffusion models with limited data. To address this, we propose a new diffusion model called Limited Data Diffusion (LD-Diffusion), which consists of two main components: a compressing model and a novel mixed augmentation with fixed probability (MAFP) strategy. Specifically, the compressing model can constrain the complexity of the denoiser function hypothesis space and MAFP can effectively increase the training samples by providing more informative guidance than existing data augmentation methods in the compressed hypothesis space. Extensive experiments on several datasets demonstrate that LD-Diffusion can achieve better performance compared to other diffusion models. Codes are available at https://github.com/zzhang05/LD-Diffusion.",
+      "paper_id": "pmlr:v267:zhang25z",
+      "title": "Training Diffusion-based Generative Models with Limited Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74950-74965",
+          "pmlr_id": "zhang25z",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Sampling-based search, a simple paradigm for utilizing test-time compute, involves generating multiple candidate responses and selecting the best one—typically by verifying each response for correctness. In this paper, we study the scaling trends governing sampling-based search. Among our findings is that simply scaling up a minimalist implementation that uses only random sampling and direct self-verification results in sustained performance improvements that, for example, elevate the Gemini v1.5 Pro model’s reasoning capabilities past that of o1-Preview on popular benchmarks. We partially attribute the scalability of sampling-based search to a phenomenon of implicit scaling, where sampling a larger pool of responses in turn improves verification accuracy. We further identify two useful principles for improving self-verification capabilities with test-time compute: (1) comparing across responses provides helpful signals about the locations of errors and hallucinations, and (2) different model output styles are useful for different contexts—chains of thought are useful for reasoning but harder to verify. We also find that, though accurate verification can be elicited, frontier models demonstrate remarkably weak out-of-box verification capabilities and introduce a benchmark to measure progress on these deficiencies.",
+      "paper_id": "pmlr:v267:zhao25a",
+      "title": "Sample, Scrutinize and Scale: Effective Inference-Time Search by Scaling Verification",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77272-77309",
+          "pmlr_id": "zhao25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) are vulnerable to jailbreak attacks – resulting in harmful, unethical, or biased text generations. However, existing jailbreaking methods are computationally costly. In this paper, we propose the weak-to-strong jailbreaking attack, an efficient inference time attack for aligned LLMs to produce harmful text. Our key intuition is based on the observation that jailbroken and aligned models only differ in their initial decoding distributions. The weak-to-strong attack’s key technical insight is using two smaller models (a safe and an unsafe one) to adversarially modify a significantly larger safe model’s decoding probabilities. We evaluate the weak-to-strong attack on 5 diverse open-source LLMs from 3 organizations. The results show our method can increase the misalignment rate to over 99% on two datasets with just one forward pass per example. Our study exposes an urgent safety issue that needs to be addressed when aligning LLMs. As an initial attempt, we propose a defense strategy to protect against such attacks, but creating more advanced defenses remains challenging. The code for replicating the method is available at https://github.com/XuandongZhao/weak-to-strong.",
+      "paper_id": "pmlr:v267:zhao25aa",
+      "title": "Weak-to-Strong Jailbreaking on Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77822-77843",
+          "pmlr_id": "zhao25aa",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) achieve remarkable performance across tasks but incur substantial computational costs due to their deep, multi-layered architectures. Layer pruning has emerged as a strategy to alleviate these inefficiencies, but conventional static pruning methods overlook two critical dynamics inherent to LLM inference: (1) horizontal dynamics , where token-level heterogeneity demands context-aware pruning decisions, and (2) vertical dynamics , where the distinct functional roles of MLP and self-attention layers necessitate component-specific pruning policies. We introduce SkipGPT , a dynamic layer pruning framework designed to optimize computational resource allocation through two core innovations: (1) global token-aware routing to prioritize critical tokens and (2) decoupled pruning policies for MLP and self-attention components. To mitigate training instability, we propose a two-stage optimization paradigm: first, a disentangled training phase that learns routing strategies via soft parameterization to avoid premature pruning decisions, followed by parameter-efficient LoRA fine-tuning to restore performance impacted by layer removal. Extensive experiments demonstrate that SkipGPT reduces over 40% model parameters while matching or exceeding the performance of the original dense model across benchmarks. By harmonizing dynamic efficiency with preserved expressivity, SkipGPT advances the practical deployment of scalable, resource-aware LLMs. Our code is publicly available at: https://github.com/EIT-NLP/SkipGPT.",
+      "paper_id": "pmlr:v267:zhao25ab",
+      "title": "SkipGPT: Each Token is One of a Kind",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77844-77863",
+          "pmlr_id": "zhao25ab",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advances in Reinforcement Learning from Human Feedback (RLHF) have shown that KL-regularization plays a pivotal role in improving the efficiency of RL fine-tuning for large language models (LLMs). Despite its empirical advantage, the theoretical difference between KL-regularized RL and standard RL remains largely under-explored. While there is a recent line of work on the theoretical analysis of KL-regularized objective in decision making (Xiong et al., 2024a; Xie et al., 2024; Zhao et al., 2024), these analyses either reduce to the traditional RL setting or rely on strong coverage assumptions. In this paper, we propose an optimism-based KL-regularized online contextual bandit algorithm, and provide a novel analysis of its regret. By carefully leveraging the benign optimization landscape induced by the KL-regularization and the optimistic reward estimation, our algorithm achieves an $\\mathcal{O}\\big(\\eta\\log (N_{\\mathcal R} T)\\cdot d_{\\mathcal R}\\big)$ logarithmic regret bound, where $\\eta, N_{\\mathcal R},T,d_{\\mathcal R}$ denote the KL-regularization parameter, the cardinality of the reward function class, number of rounds, and the complexity of the reward function class. Furthermore, we extend our algorithm and analysis to reinforcement learning by developing a novel decomposition over transition steps and also obtain a similar logarithmic regret bound.",
+      "paper_id": "pmlr:v267:zhao25ac",
+      "title": "Logarithmic Regret for Online KL-Regularized Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77864-77884",
+          "pmlr_id": "zhao25ac",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Long-context LLMs are increasingly in demand for applications such as retrieval-augmented generation. To defray the cost of pretraining LLMs over long contexts, recent work takes an approach of synthetic context extension: fine-tuning LLMs with synthetically-generated long-context data. However, it remains unclear how and why this synthetic context extension imparts abilities for downstream long-context tasks. In this paper, we investigate fine-tuning on synthetic data for three long-context tasks that require retrieval and reasoning. We vary the realism of \"needle” concepts to be retrieved and diversity of the surrounding \"haystack” context, from using LLMs to construct synthetic documents to using templated relations and creating symbolic datasets. Although models trained on synthetic data underperform models trained on the real data, the impacts of both training settings can be understood via a shared feature of the attention computation, retrieval heads (Wu et al., 2024). The retrieval heads learned from synthetic data have high overlap with retrieval heads learned on real data. Furthermore, there is a strong correlation between the recall of heads learned and the downstream performance of a model, allowing us to interpret and predict the performance of models trained in different settings. Our results shed light on how to interpret synthetic data fine-tuning performance and how to approach creating better data for learning real-world LLM capabilities over long contexts.",
+      "paper_id": "pmlr:v267:zhao25ad",
+      "title": "Understanding Synthetic Context Extension via Retrieval Heads",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77885-77910",
+          "pmlr_id": "zhao25ad",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) face significant deployment challenges due to their substantial resource requirements. While low-bit quantized weights can reduce memory usage and improve inference efficiency, current hardware lacks native support for mixed-precision General Matrix Multiplication (mpGEMM), resulting in inefficient dequantization-based implementations. Moreover, uniform quantization methods often fail to capture weight distributions adequately, leading to performance degradation. We propose GANQ (GPU-Adaptive Non-Uniform Quantization), a layer-wise post-training non-uniform quantization framework optimized for hardware-efficient lookup table-based mpGEMM. GANQ achieves superior quantization performance by utilizing a training-free, GPU-adaptive optimization algorithm to efficiently reduce layer-wise quantization errors. Extensive experiments demonstrate GANQ’s ability to reduce the perplexity gap from the FP16 baseline compared to state-of-the-art methods for both 3-bit and 4-bit quantization. Furthermore, when deployed on a single NVIDIA RTX 4090 GPU, GANQ’s quantized models achieve up to 2.57$\\times$ speedup over the baseline, advancing memory and inference efficiency in LLM deployment.",
+      "paper_id": "pmlr:v267:zhao25ae",
+      "title": "GANQ: GPU-Adaptive Non-Uniform Quantization for Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77911-77925",
+          "pmlr_id": "zhao25ae",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The rapid growth of Large Language Models has driven demand for effective model compression techniques to reduce memory and computation costs. Low-rank pruning has gained attention for its GPU compatibility across all densities. However, low-rank pruning struggles to match the performance of semi-structured pruning, often doubling perplexity at similar densities. In this paper, we propose Pi voting Fa ctorization ( PIFA ), a novel lossless meta low-rank representation that unsupervisedly learns a compact form of any low-rank representation, effectively eliminating redundant information. PIFA identifies pivot rows (linearly independent rows) and expresses non-pivot rows as linear combinations, achieving 24.2% additional memory savings and 24.6% faster inference over low-rank layers at rank = 50% of dimension. To mitigate the performance degradation caused by low-rank pruning, we introduce a novel, retraining-free reconstruction method that m inimizes error accumulation ( M ). MPIFA , combining M and PIFA into an end-to-end framework, significantly outperforms existing low-rank pruning methods, and achieves performance comparable to semi-structured pruning, while surpassing it in GPU efficiency and compatibility. Our code is available at https://github.com/biomedical-cybernetics/pivoting-factorization.",
+      "paper_id": "pmlr:v267:zhao25af",
+      "title": "Pivoting Factorization: A Compact Meta Low-Rank Representation of Sparsity for Efficient Inference in Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77926-77947",
+          "pmlr_id": "zhao25af",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Characterizing the ground state properties of quantum systems is fundamental to capturing their behavior but computationally challenging. Recent advances in AI have introduced novel approaches, with diverse machine learning (ML) and deep learning (DL) models proposed for this purpose. However, the necessity and specific role of DL models in these tasks remain unclear, as prior studies often employ varied or impractical quantum resources to construct datasets, resulting in unfair comparisons. To address this, we systematically benchmark DL models against traditional ML approaches across three families of Hamiltonian, scaling up to $127$ qubits in three crucial ground-state learning tasks while enforcing equivalent quantum resource usage. Our results reveal that ML models often achieve performance comparable to or even exceeding that of DL approaches across all tasks. Furthermore, a randomization test demonstrates that measurement input features have minimal impact on DL models’ prediction performance. These findings challenge the necessity of current DL models in many quantum system learning scenarios and provide valuable insights into their effective utilization.",
+      "paper_id": "pmlr:v267:zhao25ag",
+      "title": "Rethink the Role of Deep Learning towards Large-scale Quantum Systems",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77948-77975",
+          "pmlr_id": "zhao25ag",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The growing demands on GPU memory posed by the increasing number of neural network parameters call for training approaches that are more memory-efficient. Previous memory reduction training techniques, such as Low-Rank Adaptation (LoRA) and ReLoRA, face challenges, with LoRA being constrained by its low-rank structure, particularly during intensive tasks like pre-training, and ReLoRA suffering from saddle point issues. In this paper, we propose S parse S pectral T raining (SST) to optimize memory usage for pre-training . SST updates all singular values and selectively updates singular vectors through a multinomial sampling method weighted by the magnitude of the singular values. Furthermore, SST employs singular value decomposition to initialize and periodically reinitialize low-rank parameters, reducing distortion relative to full-rank training compared to other low-rank methods. Through comprehensive testing on both Euclidean and hyperbolic neural networks across various tasks, SST demonstrates its ability to outperform existing memory reduction training methods and is comparable to full-rank training in various cases. On LLaMA-1.3B, with only 18.7% of the parameters trainable compared to full-rank training (using a rank equivalent to 6% of the embedding dimension), SST reduces the perplexity gap between other low-rank methods and full-rank training by 97.4% . This result highlights SST as an effective parameter-efficient technique for model pre-training.",
+      "paper_id": "pmlr:v267:zhao25ah",
+      "title": "Sparse Spectral Training and Inference on Euclidean and Hyperbolic Neural Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77976-78002",
+          "pmlr_id": "zhao25ah",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Test-time adaptation aims to adapt a well-trained model using test data only, without accessing training data. It is a crucial topic in machine learning, enabling a wide range of applications in the real world, especially when it comes to data privacy. While existing works on test-time adaptation primarily focus on Euclidean data, research on non-Euclidean graph data remains scarce. Prevalent graph neural network methods could encounter serious performance degradation in the face of test-time domain shifts. In this work, we propose a novel method named Adaptive Subgraph-based Selection and Regularized Prototype Supervision (ASSESS) for reliable test-time adaptation on graphs. Specifically, to achieve flexible selection of reliable test graphs, ASSESS adopts an adaptive selection strategy based on fine-grained individual-level subgraph mutual information. Moreover, to utilize the information from both training and test graphs, ASSESS constructs semantic prototypes from the well-trained model as prior knowledge from the unknown training graphs and optimizes the posterior given the unlabeled test graphs. We also provide a theoretical analysis of the proposed algorithm. Extensive experiments verify the effectiveness of ASSESS against various baselines.",
+      "paper_id": "pmlr:v267:zhao25ai",
+      "title": "Test-time Adaptation on Graphs via Adaptive Subgraph-based Selection and Regularized Prototypes",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "78003-78022",
+          "pmlr_id": "zhao25ai",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph Neural Networks (GNNs) have emerged as powerful tools for graph learning, and one key challenge arising in GNNs is the development of effective pooling operations for learning meaningful graph representations. In this paper, we propose a novel Edge-Node Attention-based Hierarchical Pooling (ENAHPool) operation for GNNs. Unlike existing cluster-based pooling methods that suffer from ambiguous node assignments and uniform edge-node information aggregation, ENAHPool assigns each node exclusively to a cluster and employs attention mechanisms to perform weighted aggregation of both node features within clusters and edge connectivity strengths between clusters, resulting in more informative hierarchical representations. To further enhance the model performance, we introduce a Multi-Distance Message Passing Neural Network (MD-MPNN) that utilizes edge connectivity strength information to enable direct and selective message propagation across multiple distances, effectively mitigating the over-squashing problem in classical MPNNs. Experimental results demonstrate the effectiveness of the proposed method.",
+      "paper_id": "pmlr:v267:zhao25b",
+      "title": "ENAHPool: The Edge-Node Attention-based Hierarchical Pooling for Graph Neural Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77310-77320",
+          "pmlr_id": "zhao25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Existing training-time safety alignment techniques for large language models (LLMs) remain vulnerable to jailbreak attacks. Direct preference optimization (DPO), a widely deployed alignment method, exhibits limitations in both experimental and theoretical contexts as its loss function proves suboptimal for refusal learning. Through gradient-based analysis, we identify these shortcomings and propose an improved safety alignment that disentangles DPO objectives into two components: (1) robust refusal training, which encourages refusal even when partial unsafe generations are produced, and (2) targeted unlearning of harmful knowledge. This approach significantly increases LLM robustness against a wide range of jailbreak attacks, including prefilling, suffix, and multi-turn attacks across both in-distribution and out-of-distribution scenarios. Furthermore, we introduce a method to emphasize critical refusal tokens by incorporating a reward-based token-level weighting mechanism for refusal learning, which further improves the robustness against adversarial exploits. Our research also suggests that robustness to jailbreak attacks is correlated with token distribution shifts in the training process and internal representations of refusal and harmful tokens, offering valuable directions for future research in LLM safety alignment. The code is available at https://github.com/wicai24/DOOR-Alignment.",
+      "paper_id": "pmlr:v267:zhao25c",
+      "title": "Improving LLM Safety Alignment with Dual-Objective Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77321-77341",
+          "pmlr_id": "zhao25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advancements have integrated various deep-learning methodologies into physical design, aiming for workflows acceleration and surpasses human-devised solutions. However, prior research has primarily concentrated on developing task-specific networks, which necessitate a significant investment of time to construct large, specialized datasets, and the unintended isolation of models across different tasks. In this paper, we introduce DeepLayout, the first general representation learning framework specifically designed for backend circuit design. To address the distinct characteristics of post-placement circuits, including topological connectivity and geometric distribution, we propose a hybrid encoding architecture that integrates GNN with spatial transformers. Additionally, the framework includes a flexible decoder module that accommodates a variety of task types, supporting multiple hierarchical outputs such as nets and layouts. To mitigate the high annotation costs associated with layout data, we introduce a mask-based self-supervised learning approach designed explicitly for layout representation. This strategy involves a carefully devised masking approach tailored to layout features, precise reconstruction guidance, and most critically—two key supervised learning tasks. We conduct extensive experiments on large-scale industrial datasets, demonstrating that DeepLayout surpasses state-of-the-art (SOTA) methods specialized for individual tasks on two crucial layout quality assessment benchmarks. The experiment results underscore the framework’s robust capability to learn the intrinsic properties of circuits.",
+      "paper_id": "pmlr:v267:zhao25d",
+      "title": "DeepLayout: Learning Neural Representations of Circuit Placement Layout",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77342-77352",
+          "pmlr_id": "zhao25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Due to the challenges of processing temporal information, most trackers depend solely on visual discriminability and overlook the unique temporal coherence of video data. In this paper, we propose a lightweight and plug-and-play motion prompt tracking method. It can be easily integrated into existing vision-based trackers to build a joint tracking framework leveraging both motion and vision cues, thereby achieving robust tracking through efficient prompt learning. A motion encoder with three different positional encodings is proposed to encode the long-term motion trajectory into the visual embedding space, while a fusion decoder and an adaptive weight mechanism are designed to dynamically fuse visual and motion features. We integrate our motion module into three different trackers with five models in total. Experiments on seven challenging tracking benchmarks demonstrate that the proposed motion module significantly improves the robustness of vision-based trackers, with minimal training costs and negligible speed sacrifice. Code is available at https://github.com/zj5559/Motion-Prompt-Tracking.",
+      "paper_id": "pmlr:v267:zhao25e",
+      "title": "Efficient Motion Prompt Learning for Robust Visual Tracking",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77353-77370",
+          "pmlr_id": "zhao25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Reinforcement learning from human feedback (RLHF), which aligns a diffusion model with input prompt, has become a crucial step in building reliable generative AI models. Most works in this area uses a discrete-time formulation, which is prone to induced errors, and often not applicable to models with higher-order/black-box solvers. The objective of this study is to develop a disciplined approach to fine-tuning diffusion models using continuous-time RL, formulated as a stochastic control problem with a reward function that aligns the end result (terminal state) with input prompt. The key idea is to treat score matching as controls or actions, and thereby connecting to policy optimization and regularization in continuous-time RL. To carry out this idea, we lay out a new policy optimization framework for continuous-time RL, and illustrate its potential in enhancing the value networks design space via leveraging the structural property of diffusion models. We validate the advantages of our method by experiments in downstream tasks of fine-tuning large-scale Text2Image models, Stable Diffusion v1.5.",
+      "paper_id": "pmlr:v267:zhao25f",
+      "title": "Score as Action: Fine Tuning Diffusion Generative Models by Continuous-time Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77371-77389",
+          "pmlr_id": "zhao25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Scaling multi-dimensional transformers to long sequences is indispensable across various domains. However, the challenges of large memory requirements and slow speeds of such sequences necessitate sequence parallelism. All existing approaches fall under the category of embedded sequence parallelism, which are limited to shard along a single sequence dimension, thereby introducing significant communication overhead. However, the nature of multi-dimensional transformers involves independent calculations across multiple sequence dimensions. To this end, we propose Dynamic Sequence Parallelism (DSP) as a novel abstraction of sequence parallelism. DSP dynamically switches the parallel dimension among all sequences according to the computation stage with efficient resharding strategy. DSP offers significant reductions in communication costs, adaptability across modules, and ease of implementation with minimal constraints. Experimental evaluations demonstrate DSP’s superiority over state-of-the-art embedded sequence parallelism methods by remarkable throughput improvements ranging from 32.2% to 10x, with less than 25% communication volume.",
+      "paper_id": "pmlr:v267:zhao25g",
+      "title": "DSP: Dynamic Sequence Parallelism for Multi-Dimensional Transformers",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77390-77404",
+          "pmlr_id": "zhao25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We investigate learning approximate Nash equilibrium (NE) policy profiles in two-player zero-sum imperfect information extensive-form games (IIEFGs) with last-iterate convergence guarantees. Existing algorithms either rely on full-information feedback or provide only asymptotic convergence rates. In contrast, we focus on the bandit feedback setting, where players receive feedback solely from the rewards associated with the experienced information set and action pairs in each episode. Our proposed algorithm employs a negentropy regularizer weighted by a \"virtual transition\" over the information set-action space to facilitate an efficient approximate policy update. Through a carefully designed virtual transition and leveraging the entropy regularization technique, we demonstrate finite-time last-iterate convergence to the NE with a rate of $\\widetilde{\\mathcal{O}}(k^{-\\frac{1}{8}})$ under bandit feedback in each episode $k$. Empirical evaluations across various IIEFG instances show its competitive performance compared to baseline methods.",
+      "paper_id": "pmlr:v267:zhao25h",
+      "title": "Learning Imperfect Information Extensive-form Games with Last-iterate Convergence under Bandit Feedback",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77405-77440",
+          "pmlr_id": "zhao25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Neural network minima are often connected by curves along which train and test loss remain nearly constant, a phenomenon known as mode connectivity. While this property has enabled applications such as model merging and fine-tuning, its theoretical explanation remains unclear. We propose a new approach to exploring the connectedness of minima using parameter space symmetry. By linking the topology of symmetry groups to that of the minima, we derive the number of connected components of the minima of linear networks and show that skip connections reduce this number. We then examine when mode connectivity and linear mode connectivity hold or fail, using parameter symmetries which account for a significant part of the minimum. Finally, we provide explicit expressions for connecting curves in the minima induced by symmetry. Using the curvature of these curves, we derive conditions under which linear mode connectivity approximately holds. Our findings highlight the role of continuous symmetries in understanding the neural network loss landscape.",
+      "paper_id": "pmlr:v267:zhao25i",
+      "title": "Understanding Mode Connectivity via Parameter Space Symmetry",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77441-77460",
+          "pmlr_id": "zhao25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The advancement of Large Vision-Language Models (LVLMs) has increasingly highlighted the critical issue of their tendency to hallucinate non-existing objects in the images. To address this issue, previous works focused on using specially curated datasets or powerful LLMs to rectify the outputs of LVLMs. However, these approaches require either costly training or fine-tuning, or API access to proprietary LLMs for post-generation correction. In response to these limitations, we propose Mitigating hallucinAtion via image-gRounded guIdaNcE (MARINE), a framework that is both training-free and API-free. MARINE effectively and efficiently reduces object hallucinations during inference by introducing image-grounded guidance to LVLMs. This is achieved by leveraging open-source vision models to extract object-level information, thereby enhancing the precision of LVLM-generated content. Our framework’s flexibility further allows for the integration of multiple vision models, enabling more reliable and robust object-level guidance. Through comprehensive evaluations across 5 popular LVLMs with diverse evaluation metrics and benchmarks, we demonstrate the effectiveness of MARINE, which even outperforms existing fine-tuning-based methods. Remarkably, it reduces hallucinations consistently in GPT-4V-assisted evaluation while maintaining the detailedness of LVLMs’ generations. We release our code at https://github.com/Linxi-ZHAO/MARINE.",
+      "paper_id": "pmlr:v267:zhao25j",
+      "title": "Mitigating Object Hallucination in Large Vision-Language Models via Image-Grounded Guidance",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77461-77486",
+          "pmlr_id": "zhao25j",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Nonparametric contextual bandit is an important model of sequential decision making problems. Under $\\alpha$-Tsybakov margin condition, existing research has established a regret bound of $\\tilde{O}\\left(T^{1-\\frac{\\alpha+1}{d+2}}\\right)$ for bounded supports. However, the optimal regret with unbounded contexts has not been analyzed. The challenge of solving contextual bandit problems with unbounded support is to achieve both exploration-exploitation tradeoff and bias-variance tradeoff simultaneously. In this paper, we solve the nonparametric contextual bandit problem with unbounded contexts. We propose two nearest neighbor methods combined with UCB exploration. The first method uses a fixed $k$. Our analysis shows that this method achieves minimax optimal regret under a weak margin condition and relatively light-tailed context distributions. The second method uses adaptive $k$. By a proper data-driven selection of $k$, this method achieves an expected regret of $\\tilde{O}\\left(T^{1-\\frac{(\\alpha+1)\\beta}{\\alpha+(d+2)\\beta}}+T^{1-\\beta}\\right)$, in which $\\beta$ is a parameter describing the tail strength. This bound matches the minimax lower bound up to logarithm factors, indicating that the second method is approximately optimal.",
+      "paper_id": "pmlr:v267:zhao25k",
+      "title": "Contextual Bandits for Unbounded Context Distributions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77487-77520",
+          "pmlr_id": "zhao25k",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Improving the generalization of multi-camera 3D object detection is essential for safe autonomous driving in the real world. In this paper, we consider a realistic yet more challenging scenario, which aims to improve the generalization when only single source data available for training, as gathering diverse domains of data and collecting annotations is time-consuming and labor-intensive. To this end, we propose the Fourier Cross-View Learning (FCVL) framework including Fourier Hierarchical Augmentation (FHiAug), an augmentation strategy in the frequency domain to boost domain diversity, and Fourier Cross-View Semantic Consistency Loss to facilitate the model to learn more domain-invariant features from adjacent perspectives. Furthermore, we provide theoretical guarantees via augmentation graph theory. To the best of our knowledge, this is the first study to explore generalizable multi-camera 3D object detection with a single source. Extensive experiments on various testing domains have demonstrated that our approach achieves the best performance across various domain generalization methods.",
+      "paper_id": "pmlr:v267:zhao25l",
+      "title": "Generalizable Multi-Camera 3D Object Detection from a Single Source via Fourier Cross-View Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77521-77538",
+          "pmlr_id": "zhao25l",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advancements in video generation have enabled models to synthesize high-quality, minute-long videos. However, generating even longer videos with temporal coherence remains a major challenge and existing length extrapolation methods lead to temporal repetition or motion deceleration. In this work, we systematically analyze the role of frequency components in positional embeddings and identify an intrinsic frequency that primarily governs extrapolation behavior. Based on this insight, we propose RIFLEx, a minimal yet effective approach that reduces the intrinsic frequency to suppress repetition while preserving motion consistency, without requiring any additional modifications. RIFLEx offers a true free lunch—achieving high-quality $2\\times$ extrapolation on state-of-the-art video diffusion transformers in a completely training-free manner. Moreover, it enhances quality and enables $3\\times$ extrapolation by minimal fine-tuning without long videos.",
+      "paper_id": "pmlr:v267:zhao25m",
+      "title": "RIFLEx: A Free Lunch for Length Extrapolation in Video Diffusion Transformers",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77539-77557",
+          "pmlr_id": "zhao25m",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "ANN-to-SNN conversion has emerged as a key approach to train Spiking Neural Networks (SNNs), particularly for Transformer architectures, as it maps pre-trained ANN parameters to SNN equivalents without requiring retraining, thereby preserving ANN accuracy while eliminating training costs. Among various coding methods used in ANN-to-SNN conversion, time-to-first-spike (TTFS) coding, which allows each neuron to at most one spike, offers significantly lower energy consumption. However, while previous TTFS-based SNNs have achieved comparable performance with convolutional ANNs, the attention mechanism and nonlinear layers in Transformer architectures remains a challenge by existing SNNs with TTFS coding. This paper proposes a new neuron structure for TTFS coding that expands its representational range and enhances the capability to process nonlinear functions, along with detailed designs of nonlinear neurons for different layers in Transformer. Experimental results on different models demonstrate that our proposed method can achieve high accuracy with significantly lower energy consumption. To the best of our knowledge, this is the first work to focus on converting Transformer to SNN with TTFS coding.",
+      "paper_id": "pmlr:v267:zhao25n",
+      "title": "TTFSFormer: A TTFS-based Lossless Conversion of Spiking Transformer",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77558-77571",
+          "pmlr_id": "zhao25n",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The number of agents can be an effective curriculum variable for controlling the difficulty of multi-agent reinforcement learning (MARL) tasks. Existing work typically uses manually defined curricula such as linear schemes. We identify two potential flaws while applying existing reward-based automatic curriculum learning methods in MARL: (1) The expected episode return used to measure task difficulty has high variance; (2) Credit assignment difficulty can be exacerbated in tasks where increasing the number of agents yields higher returns which is common in many MARL tasks. To address these issues, we propose to control the curriculum by using a TD-error based learning progress measure and by letting the curriculum proceed from an initial context distribution to the final task specific one. Since our approach maintains a distribution over the number of agents and measures learning progress rather than absolute performance, which often increases with the number of agents, we alleviate problem (2). Moreover, the learning progress measure naturally alleviates problem (1) by aggregating returns. In three challenging sparse-reward MARL benchmarks, our approach outperforms state-of-the-art baselines.",
+      "paper_id": "pmlr:v267:zhao25o",
+      "title": "Learning Progress Driven Multi-Agent Curriculum",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77572-77588",
+          "pmlr_id": "zhao25o",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Spatial Transcriptomics (ST) technologies provide biologists with rich insights into single-cell biology by preserving spatial context of cells. Building foundational models for ST can significantly enhance the analysis of vast and complex data sources, unlocking new perspectives on the intricacies of biological tissues. However, modeling ST data is inherently challenging due to the need to extract multi-scale information from tissue slices containing vast numbers of cells. This process requires integrating macro-scale tissue morphology, micro-scale cellular microenvironment, and gene-scale gene expression profile. To address this challenge, we propose SToFM , a multi-scale S patial T ranscript o mics F oundation M odel. SToFM first performs multi-scale information extraction on each ST slice, to construct a set of ST sub-slices that aggregate macro-, micro- and gene-scale information. Then an SE(2) Transformer is used to obtain high-quality cell representations from the sub-slices. Additionally, we construct SToCorpus-88M , the largest high-resolution spatial transcriptomics corpus for pretraining. SToFM achieves outstanding performance on a variety of downstream tasks, such as tissue region semantic segmentation and cell type annotation, demonstrating its comprehensive understanding of ST data through capturing and integrating multi-scale information.",
+      "paper_id": "pmlr:v267:zhao25p",
+      "title": "SToFM: a Multi-scale Foundation Model for Spatial Transcriptomics",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "77589-77607",
+          "pmlr_id": "zhao25p",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

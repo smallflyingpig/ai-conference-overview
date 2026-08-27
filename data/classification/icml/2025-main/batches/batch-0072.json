@@ -1,0 +1,747 @@
+{
+  "batch_index": 72,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "This paper studies meta-reinforcement learning with adaptation from human feedback. It aims to pre-train a meta-model that can achieve few-shot adaptation for new tasks from human preference queries without relying on reward signals. To solve the problem, we propose the framework adaptation via Preference-Order-preserving EMbedding (POEM). In the meta-training, the framework learns a task encoder, which maps tasks to a preference-order-preserving task embedding space, and a decoder, which maps the embeddings to the task-specific policies. In the adaptation from human feedback, the task encoder facilitates efficient task embedding inference for new tasks from the preference queries and then obtains the task-specific policy. We provide a theoretical guarantee for the convergence of the adaptation process to the task-specific optimal policy and experimentally demonstrate its state-of-the-art performance with substantial improvement over baseline methods.",
+      "paper_id": "pmlr:v267:xu25ao",
+      "title": "Meta-Reinforcement Learning with Adaptation from Human Feedback via Preference-Order-Preserving Task Embedding",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69967-69991",
+          "pmlr_id": "xu25ao",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) have expanded their capabilities beyond language generation to interact with external tools, enabling automation and real-world applications. However, tool hallucinations—where models either select inappropriate tools or misuse them—pose significant challenges, leading to erroneous task execution, increased computational costs, and reduced system reliability. To systematically address this issue, we define and categorize tool hallucinations into two main types: tool selection hallucination and tool usage hallucination. To evaluate and mitigate these issues, we introduce RelyToolBench, which integrates specialized test cases and novel metrics to assess hallucination-aware task success and efficiency. Finally, we propose Relign, a reliability alignment framework that expands the tool-use action space to include indecisive actions, allowing LLMs to defer tool use, seek clarification, or adjust tool selection dynamically. Through extensive experiments, we demonstrate that Relign significantly reduces tool hallucinations, improves task reliability, and enhances the efficiency of LLM tool interactions. The code and data will be publicly available.",
+      "paper_id": "pmlr:v267:xu25ap",
+      "title": "Reducing Tool Hallucination via Reliability Alignment",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69992-70006",
+          "pmlr_id": "xu25ap",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Deep neural networks (DNNs) excel in computer vision tasks, especially, few-shot learning (FSL), which is increasingly important for generalizing from limited examples. However, DNNs are computationally expensive with scalability issues in real world. Spiking Neural Networks (SNNs), with their event-driven nature and low energy consumption, are particularly efficient in processing sparse and dynamic data, though they still encounter difficulties in capturing complex spatiotemporal features and performing accurate cross-class comparisons. To further enhance the performance and efficiency of SNNs in few-shot learning, we propose a few-shot learning framework based on SNNs, which combines a self-feature extractor module and a cross-feature contrastive module to refine feature representation and reduce power consumption. We apply the combination of temporal efficient training loss and InfoNCE loss to optimize the temporal dynamics of spike trains and enhance the discriminative power. Experimental results show that the proposed FSL-SNN significantly improves the classification performance on the neuromorphic dataset N-Omniglot, and also achieves competitive performance to ANNs on static datasets such as CUB and miniImageNet with low power consumption.",
+      "paper_id": "pmlr:v267:xu25aq",
+      "title": "Self-cross Feature based Spiking Neural Networks for Efficient Few-shot Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "70007-70019",
+          "pmlr_id": "xu25aq",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Offline reinforcement learning is widely applied in multiple fields due to its advantages in efficiency and risk control. However, a major problem it faces is the distribution shift between offline datasets and online environments. This mismatch leads to out-of-distribution (OOD) state-action pairs that fall outside the scope of the training data. Therefore, existing conservative training policies may not provide reliable decisions when the test environment deviates greatly from the offline dataset. In this paper, we propose Test-time Adapted Reinforcement Learning (TARL) to address this problem. TARL constructs unsupervised test-time optimization objectives for discrete and continuous control tasks, using test data without depending on environmental rewards. In discrete control tasks, it minimizes the entropy of predicted action probabilities to decrease uncertainty and avoid OOD state-action pairs. For continuous control tasks, it represents and minimizes action uncertainty based on the normal distribution of policy network outputs. Moreover, to prevent model bias caused by overfitting and error accumulation during the test-time update process, TARL enforces a KL divergence constraint between the fine-tuned policy and the original policy. For efficiency, TARL only updates the layer normalization layer parameters during testing. Extensive experiments on popular Atari game benchmarks and the D4RL dataset demonstrate the superiority of our method. Our method achieved a significant improvement over CQL, with a 13.6% episode return relative increase on the hopper-expert-v2 task.",
+      "paper_id": "pmlr:v267:xu25ar",
+      "title": "Test-time Adapted Reinforcement Learning with Action Entropy Regularization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "70020-70031",
+          "pmlr_id": "xu25ar",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Domain Incremental Learning (DIL) aims to learn from non-stationary data streams across domains while retaining and utilizing past knowledge. Although prompt-based methods effectively store multi-domain knowledge in prompt parameters and obtain advanced performance through cross-domain prompt fusion, we reveal an intrinsic limitation: component-wise misalignment between domain-specific prompts leads to conflicting knowledge integration and degraded predictions. This arises from the random positioning of knowledge components within prompts, where irrelevant component fusion introduces interference. To address this, we propose Componential Prompt-Knowledge Alignment (KA-Prompt), a novel prompt-based DIL method that introduces component-aware prompt-knowledge alignment during training, significantly improving both the learning and inference capacity of the model. KA-Prompt operates in two phases: (1) Initial Componential Structure Configuring, where a set of old prompts containing knowledge relevant to the new domain are mined via greedy search, which is then exploited to initialize new prompts to achieve reusable knowledge transfer and establish intrinsic alignment between new and old prompts. (2) Online Alignment Preservation, which dynamically identifies the target old prompts and applies adaptive componential consistency constraints as new prompts evolve. Extensive experiments on DIL benchmarks demonstrate the effectiveness of our KA-Prompt. Our source code is available at https://github.com/zhoujiahuan1991/ICML2025-KA-Prompt.",
+      "paper_id": "pmlr:v267:xu25as",
+      "title": "Componential Prompt-Knowledge Alignment for Domain Incremental Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "70032-70046",
+          "pmlr_id": "xu25as",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "RWKV is a modern RNN architecture with comparable performance to Transformer, but still faces challenges when deployed to resource-constrained devices. Post Training Quantization (PTQ), which is a an essential technique to reduce model size and inference latency, has been widely used in Transformer models. However, it suffers significant degradation of performance when applied to RWKV. This paper investigates and identifies two key constraints inherent in the properties of RWKV: (1) Non-linear operators hinder the parameter-fusion of both smooth- and rotation-based quantization, introducing extra computation overhead. (2) The larger amount of uniformly distributed weights poses challenges for cluster-based quantization, leading to reduced accuracy. To this end, we propose RWKVQuant, a PTQ framework tailored for RWKV models, consisting of two novel techniques: (1) a coarse-to-fine proxy capable of adaptively selecting different quantization approaches by assessing the uniformity and identifying outliers in the weights, and (2) a codebook optimization algorithm that enhances the performance of cluster-based quantization methods for element-wise multiplication in RWKV. Experiments show that RWKVQuant can quantize RWKV-6-14B into about 3-bit with less than 1% accuracy loss and 2.14$\\times$ speed up.",
+      "paper_id": "pmlr:v267:xu25at",
+      "title": "RWKVQuant: Quantizing the RWKV Family with Proxy Guided Hybrid of Scalar and Vector Quantization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "70047-70064",
+          "pmlr_id": "xu25at",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Diplomacy is a complex multiplayer game that re- quires both cooperation and competition, posing significant challenges for AI systems. Traditional methods rely on equilibrium search to generate extensive game data for training, which demands substantial computational resources. Large Lan- guage Models (LLMs) offer a promising alterna- tive, leveraging pre-trained knowledge to achieve strong performance with relatively small-scale fine-tuning. However, applying LLMs to Diplo- macy remains challenging due to the exponential growth of possible action combinations and the intricate strategic interactions among players. To address this challenge, we propose DipLLM, a fine-tuned LLM-based agent that learns equilib- rium policies for Diplomacy. DipLLM employs an autoregressive factorization framework to sim- plify the complex task of multi-unit action assign- ment into a sequence of unit-level decisions. By defining an equilibrium policy within this frame- work as the learning objective, we fine-tune the model using only 1.5% of the data required by the state-of-the-art Cicero model, surpassing its per- formance. Our results demonstrate the potential of fine-tuned LLMs for tackling complex strategic decision-making in multiplayer games.",
+      "paper_id": "pmlr:v267:xu25b",
+      "title": "DipLLM: Fine-Tuning LLM for Strategic Decision-making in Diplomacy",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69078-69095",
+          "pmlr_id": "xu25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Fine-tuning large language models (LLMs) to align with user preferences is challenging due to the high cost of quality human annotations in Reinforcement Learning from Human Feedback (RLHF) and the generalizability limitations of AI Feedback. To address these challenges, we propose RLTHF, a human-AI hybrid framework that combines LLM-based initial alignment with selective human annotations to achieve full-human annotation alignment with minimal effort. RLTHF identifies hard-to-annotate samples mislabeled by LLMs using a reward model’s reward distribution and iteratively enhances alignment by integrating strategic human corrections while leveraging LLM’s correctly labeled samples. Evaluations on HH-RLHF and TL;DR datasets show that RLTHF reaches full-human annotation-level alignment with only 6-7% of the human annotation effort. Furthermore, models trained on RLTHF’s curated datasets for downstream tasks outperform those trained on fully human-annotated datasets, underscoring the effectiveness of RLTHF.",
+      "paper_id": "pmlr:v267:xu25c",
+      "title": "RLTHF: Targeted Human Feedback for LLM Alignment",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69096-69115",
+          "pmlr_id": "xu25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent theoretical studies (Kou et al., 2023; Cao et al., 2022) revealed a sharp phase transition from benign to harmful overfitting when the noise-to-feature ratio exceeds a threshold—a situation common in long-tailed data distributions where atypical data is prevalent. However, such harmful overfitting rarely happens in overparameterized neural networks. Further experimental results suggested that memorization is necessary for achieving near-optimal generalization error in long-tailed data distributions (Feldman & Zhang, 2020). We argue that this discrepancy between theoretical predictions and empirical observations arises because previous feature-noise data models overlook the heterogeneous nature of noise across different data classes. In this paper, we refine the feature-noise data model by incorporating class-dependent heterogeneous noise and re-examine the overfitting phenomenon in neural networks. Through a comprehensive analysis of the training dynamics, we establish test loss bounds for the refined model. Our findings reveal that neural networks can leverage \"data noise\" to learn implicit features that improve the classification accuracy for long-tailed data. Our analysis also provides a training-free metric for evaluating data influence on test performance. Experimental validation on both synthetic and real-world datasets supports our theoretical results.",
+      "paper_id": "pmlr:v267:xu25d",
+      "title": "Rethinking Benign Overfitting in Two-Layer Neural Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69116-69146",
+          "pmlr_id": "xu25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Event-based object detection has attracted increasing attention for its high temporal resolution, wide dynamic range, and asynchronous address-event representation. Leveraging these advantages, spiking neural networks (SNNs) have emerged as a promising approach, offering low energy consumption and rich spatiotemporal dynamics. To further enhance the performance of event-based object detection, this study proposes a novel hybrid spike vision Transformer (HsVT) model. The HsVT model integrates a spatial feature extraction module to capture local and global features, and a temporal feature extraction module to model time dependencies and long-term patterns in event sequences. This combination enables HsVT to capture spatiotemporal features, improving its capability in handling complex event-based object detection tasks. To support research in this area, we developed the Fall Detection dataset as a benchmark for event-based object detection tasks. The Fall DVS detection dataset protects facial privacy and reduces memory usage thanks to its event-based representation. Experimental results demonstrate that HsVT outperforms existing SNN methods and achieves competitive performance compared to ANN-based models, with fewer parameters and lower energy consumption.",
+      "paper_id": "pmlr:v267:xu25e",
+      "title": "Hybrid Spiking Vision Transformer for Object Detection with Event Cameras",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69147-69159",
+          "pmlr_id": "xu25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Blind Speech Separation (BSS) aims to separate multiple speech sources from audio mixtures recorded by a microphone array. The problem is challenging because it is a blind inverse problem, i.e., the microphone array geometry, the room impulse response (RIR), and the speech sources, are all unknown. We propose ArrayDPS to solve the BSS problem in an unsupervised, array-agnostic, and generative manner. The core idea builds on diffusion posterior sampling (DPS), but unlike DPS where the likelihood is tractable, ArrayDPS must approximate the likelihood by formulating a separate optimization problem. The solution to the optimization approximates room acoustics and the relative transfer functions between microphones. These approximations, along with the diffusion priors, iterate through the ArrayDPS sampling process and ultimately yield separated voice sources. We only need a simple single-speaker speech diffusion model as a prior, along with the mixtures recorded at the microphones; no microphone array information is necessary. Evaluation results show that ArrayDPS outperforms all baseline unsupervised methods while being comparable to supervised methods in terms of SDR. Audio demos and codes are provided at: https://arraydps.github.io/ArrayDPSDemo/ and https://github.com/ArrayDPS/ArrayDPS.",
+      "paper_id": "pmlr:v267:xu25f",
+      "title": "ArrayDPS: Unsupervised Blind Speech Separation with a Diffusion Prior",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69160-69188",
+          "pmlr_id": "xu25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We propose a novel method, namely Gaussian Smoothing with a Power-Transformed Objective (GS-PowerOpt), that solves global optimization problems in two steps: (1) perform a (exponential) power-$N$ transformation to the not necessarily differentiable objective $f:\\mathbb{R}^d\\rightarrow \\mathbb{R}$ and get $f_N$, and (2) optimize the Gaussian-smoothed $f_N$ with stochastic approximations. Under mild conditions on $f$, for any $\\delta>0$, we prove that with a sufficiently large power $N_\\delta$, this method converges to a solution in the $\\delta$-neighborhood of $f$’s global optimum point, at the iteration complexity of $O(d^4\\varepsilon^{-2})$. If we require that $f$ is differentiable and further assume the Lipschitz condition on $f$ and its gradient, the iteration complexity reduces to $O(d^2\\varepsilon^{-2})$, which is significantly faster than the standard homotopy method. In most of the experiments performed, our method produces better solutions than other algorithms that also apply the smoothing technique.",
+      "paper_id": "pmlr:v267:xu25g",
+      "title": "Global Optimization with a Power-Transformed Objective and Gaussian Smoothing",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69189-69216",
+          "pmlr_id": "xu25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language model (LLM) agents have recently demonstrated impressive capabilities in various domains like open-ended conversation and multi-step decision-making. However, it remains challenging for these agents to solve strategic language games, such as Werewolf, which demand both strategic decision-making and free-form language interactions. Existing LLM agents often suffer from intrinsic bias in their action distributions and limited exploration of the unbounded text action space, resulting in suboptimal performance. To address these challenges, we propose Latent Space Policy Optimization (LSPO), an iterative framework that combines game-theoretic methods with LLM fine-tuning to build strategic language agents. LSPO leverages the observation that while the language space is combinatorially large, the underlying strategy space is relatively compact. We first map free-form utterances into a finite latent strategy space, yielding an abstracted extensive-form game. Then we apply game-theoretic methods like Counterfactual Regret Minimization (CFR) to optimize the policy in the latent space. Finally, we fine-tune the LLM via Direct Preference Optimization (DPO) to align with the learned policy. By iteratively alternating between these steps, our LSPO agents progressively enhance both strategic reasoning and language communication. Experiment on the Werewolf game shows that our agents iteratively expand the strategy space with improving performance and outperform existing Werewolf agents, underscoring their effectiveness in free-form language games with strategic interactions.",
+      "paper_id": "pmlr:v267:xu25h",
+      "title": "Learning Strategic Language Agents in the Werewolf Game with Iterative Latent Space Policy Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69217-69239",
+          "pmlr_id": "xu25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Concept Bottleneck Models (CBMs) enhance interpretability by explaining predictions through human-understandable concepts but typically assume that training and test data share the same distribution. This assumption often fails under domain shifts, leading to degraded performance and poor generalization. To address these limitations and improve the robustness of CBMs, we propose the Concept-based Unsupervised Domain Adaptation (CUDA) framework. CUDA is designed to: (1) align concept representations across domains using adversarial training, (2) introduce a relaxation threshold to allow minor domain-specific differences in concept distributions, thereby preventing performance drop due to over-constraints of these distributions, (3) infer concepts directly in the target domain without requiring labeled concept data, enabling CBMs to adapt to diverse domains, and (4) integrate concept learning into conventional domain adaptation (DA) with theoretical guarantees, improving interpretability and establishing new benchmarks for DA. Experiments demonstrate that our approach significantly outperforms the state-of-the-art CBM and DA methods on real-world datasets.",
+      "paper_id": "pmlr:v267:xu25i",
+      "title": "Concept-Based Unsupervised Domain Adaptation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69240-69261",
+          "pmlr_id": "xu25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Generalizing multi-agent reinforcement learning (MARL) to accommodate variations in problem configurations remains a critical challenge in real-world applications, where even subtle differences in task setups can cause pre-trained policies to fail. To address this, we propose Context-Aware Identity Generation (CAID), a novel framework to enhance MARL performance under the Contextual MARL (CMARL) setting. CAID dynamically generates unique agent identities through the agent identity decoder built on a causal Transformer architecture. These identities provide contextualized representations that align corresponding agents across similar problem variants, facilitating policy reuse and improving sample efficiency. Furthermore, the action regulator in CAID incorporates these agent identities into the action-value space, enabling seamless adaptation to varying contexts. Extensive experiments on CMARL benchmarks demonstrate that CAID significantly outperforms existing approaches by enhancing both sample efficiency and generalization across diverse context variants.",
+      "paper_id": "pmlr:v267:xu25j",
+      "title": "Reidentify: Context-Aware Identity Generation for Contextual Multi-Agent Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69262-69278",
+          "pmlr_id": "xu25j",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We propose an imperceptible multi-bit text watermark embedded by paraphrasing with LLMs. We fine-tune a pair of LLM paraphrasers that are designed to behave differently so that their paraphrasing difference reflected in the text semantics can be identified by a trained decoder. To embed our multi-bit watermark, we use two paraphrasers alternatively to encode the pre-defined binary code at the sentence level. Then we use a text classifier as the decoder to decode each bit of the watermark. Through extensive experiments, we show that our watermarks can achieve over 99.99% detection AUC with small (1.1B) text paraphrasers while keeping the semantic information of the original sentence. More importantly, our pipeline is robust under word substitution and sentence paraphrasing perturbations and generalizes well to out-of-distributional data. We also show the stealthiness of our watermark with LLM-based evaluation.",
+      "paper_id": "pmlr:v267:xu25k",
+      "title": "Robust Multi-bit Text Watermark with LLM-based Paraphrasers",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69279-69292",
+          "pmlr_id": "xu25k",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In recent years there have been remarkable breakthroughs in image-to-video generation. However, the 3D consistency and camera controllability of generated frames have remained unsolved. Recent studies have attempted to incorporate camera control into the generation process, but their results are often limited to simple trajectories or lack the ability to generate consistent videos from multiple distinct camera paths for the same scene. To address these limitations, we introduce Cavia, a novel framework for camera-controllable, multi-view video generation, capable of converting an input image into multiple spatiotemporally consistent videos. Our framework extends the spatial and temporal attention modules into view-integrated attention modules, improving both viewpoint and temporal consistency. This flexible design allows for joint training with diverse curated data sources, including scene-level static videos, object-level synthetic multi-view dynamic videos, and real-world monocular dynamic videos. To the best of our knowledge, Cavia is the first framework that enables users to generate multiple videos of the same scene with precise control over camera motion, while simultaneously preserving object motion. Extensive experiments demonstrate that Cavia surpasses state-of-the-art methods in terms of geometric consistency and perceptual quality.",
+      "paper_id": "pmlr:v267:xu25l",
+      "title": "Cavia: Camera-controllable Multi-view Video Diffusion with View-Integrated Attention",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69293-69317",
+          "pmlr_id": "xu25l",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Foundation model-based agents are increasingly used to automate complex tasks, enhancing efficiency and productivity. However, their access to sensitive resources and autonomous decision-making also introduce significant security risks, where successful attacks could lead to severe consequences. To systematically uncover these vulnerabilities, we propose AdvAgent, a black-box red-teaming framework for attacking web agents. Unlike existing approaches, AdvAgent employs a reinforcement learning-based pipeline to train an adversarial prompter model that optimizes adversarial prompts using feedback from the black-box agent. With careful attack design, these prompts effectively exploit agent weaknesses while maintaining stealthiness and controllability. Extensive evaluations demonstrate that AdvAgent achieves high success rates against state-of-the-art GPT-4-based web agents across diverse web tasks. Furthermore, we find that existing prompt-based defenses provide only limited protection, leaving agents vulnerable to our framework. These findings highlight critical vulnerabilities in current web agents and emphasize the urgent need for stronger defense mechanisms. We release code at https://ai-secure.github.io/AdvAgent/.",
+      "paper_id": "pmlr:v267:xu25m",
+      "title": "AdvAgent: Controllable Blackbox Red-teaming on Web Agents",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69318-69330",
+          "pmlr_id": "xu25m",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent Large Language Models (LLMs) have reported high accuracy on reasoning benchmarks. However, it is still unclear whether the observed results arise from true “reasoning” or from statistical recall of the training set. Inspired by the ladder of causation (Pearl, 2009) and its three levels (associations, interventions and counterfactuals), this paper introduces RE-IMAGINE: a framework to characterize a hierarchy of reasoning ability in LLMs, alongside an automated pipeline to generate problem variations at different levels of the hierarchy. By altering problems in an intermediate symbolic representation, RE-IMAGINE generates arbitrarily many problems that are not solvable using memorization alone. Moreover, the framework is general and can work across reasoning domains, including math, code, and logic. We demonstrate our framework on four widely-used benchmarks to evaluate several families of LLMs, and observe reductions in performance when the models are queried with problem variations. These assessments indicate a degree of reliance on statistical recall for past performance, and open the door to further research targeting skills across the reasoning hierarchy.",
+      "paper_id": "pmlr:v267:xu25n",
+      "title": "RE-IMAGINE: Symbolic Benchmark Synthesis for Reasoning Evaluation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69331-69362",
+          "pmlr_id": "xu25n",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We reveal that feedforward network (FFN) layers, rather than attention layers, are the primary contributors to Vision Transformer (ViT) inference latency, with their impact signifying as model size increases. This finding highlights a critical opportunity for optimizing the efficiency of large-scale ViTs by focusing on FFN layers. In this work, we propose a novel channel idle mechanism that facilitates post-training structural reparameterization for efficient FFN layers during testing. Specifically, a set of feature channels remains idle and bypasses the nonlinear activation function in each FFN layer, thereby forming a linear pathway that enables structural reparameterization during inference. This mechanism results in a family of RePa rameterizable Vi sion T ransformers (RePaViTs), which achieve remarkable latency reductions with acceptable sacrifices (sometimes gains) in accuracy across various ViTs. The benefits of our method scale consistently with model sizes, demonstrating greater speed improvements and progressively narrowing accuracy gaps or even higher accuracies on larger models. In particular, RePa-ViT-Large and RePa-ViT-Huge enjoy 66.8% and 68.7% speed-ups with +1.7% and +1.1% higher top-1 accuracies under the same training strategy, respectively. RePaViT is the first to employ structural reparameterization on FFN layers to expedite ViTs to our best knowledge, and we believe that it represents an auspicious direction for efficient ViTs. Source code is available at https://github.com/Ackesnal/RePaViT.",
+      "paper_id": "pmlr:v267:xu25o",
+      "title": "RePaViT: Scalable Vision Transformer Acceleration via Structural Reparameterization on Feedforward Network Layers",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69363-69376",
+          "pmlr_id": "xu25o",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In this paper, we derive refined generalization bounds for the Deep Ritz Method (DRM) and Physics-Informed Neural Networks (PINNs). For the DRM, we focus on two prototype elliptic partial differential equations (PDEs): Poisson equation and static Schrödinger equation on the $d$-dimensional unit hypercube with the Neumann boundary condition. Furthermore, sharper generalization bounds are derived based on the localization techniques under the assumptions that the exact solutions of the PDEs lie in the Barron spaces or the general Sobolev spaces. For the PINNs, we investigate the general linear second order elliptic PDEs with Dirichlet boundary condition using the local Rademacher complexity in the multi-task learning setting. Finally, we discuss the generalization error in the setting of over-parameterization when solutions of PDEs belong to Barron space.",
+      "paper_id": "pmlr:v267:xu25p",
+      "title": "Refined generalization analysis of the Deep Ritz Method and Physics-Informed Neural Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69377-69431",
+          "pmlr_id": "xu25p",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We present a Transformer-based framework for Constraint Satisfaction Problems (CSPs). CSPs find use in many applications and thus accelerating their solution with machine learning is of wide interest. Most existing approaches rely on supervised learning from feasible solutions or reinforcement learning, paradigms that require either feasible solutions to these NP-Complete CSPs or large training budgets and a complex expert-designed reward signal. To address these challenges, we propose ConsFormer, a self-supervised framework that leverages a Transformer as a solution refiner. ConsFormer constructs a solution to a CSP iteratively in a process that mimics local search. Instead of using feasible solutions as labeled data, we devise differentiable approximations to the discrete constraints of a CSP to guide model training. Our model is trained to improve random assignments for a single step but is deployed iteratively at test time, circumventing the bottlenecks of supervised and reinforcement learning. Experiments on Sudoku, Graph Coloring, Nurse Rostering, and MAXCUT demonstrate that our method can tackle out-of-distribution CSPs simply through additional iterations.",
+      "paper_id": "pmlr:v267:xu25q",
+      "title": "Self-Supervised Transformers as Iterative Solution Improvers for Constraint Satisfaction",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69432-69450",
+          "pmlr_id": "xu25q",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Model merging offers an effective way to integrate the capabilities of multiple fine-tuned models. However, the performance degradation of the merged model remains a challenge, particularly when none or few data are available. This paper first highlights the necessity of domain-specific data for model merging by proving that data-agnostic algorithms can have arbitrarily bad worst-case performances. Building on this theoretical insight, we explore the relationship between model merging and distillation, introducing a novel few-shot merging algorithm, ProDistill (Progressive Layer-wise Distillation). Unlike common belief that layer-wise training hurts performance, we show that layer-wise teacher-student distillation not only enhances the scalability but also improves model merging performance. We conduct extensive experiments to show that compared to existing few-shot merging methods,ProDistill achieves state-of-the-art performance, with up to 6.14% and 6.61% improvements in vision and NLU tasks. Furthermore, we extend the experiments to models with over 10B parameters, showcasing the exceptional scalability of ProDistill.",
+      "paper_id": "pmlr:v267:xu25r",
+      "title": "Scalable Model Merging with Progressive Layer-wise Distillation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69451-69477",
+          "pmlr_id": "xu25r",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Contradiction retrieval refers to identifying and extracting documents that explicitly disagree with or refute the content of a query, which is important to many downstream applications like fact checking and data cleaning. To retrieve contradiction argument to the query from large document corpora, existing methods such as similarity search and cross-encoder models exhibit different limitations. To address these challenges, we introduce a novel approach: SparseCL that leverages specially trained sentence embeddings designed to preserve subtle, contradictory nuances between sentences. Our method utilizes a combined metric of cosine similarity and a sparsity function to efficiently identify and retrieve documents that contradict a given query. This approach dramatically enhances the speed of contradiction detection by reducing the need for exhaustive document comparisons to simple vector calculations. We conduct contradiction retrieval experiments on Arguana, MSMARCO, and HotpotQA, where our method produces an average improvement of $11.0%$ across different models. We also validate our method on downstream tasks like natural language inference and cleaning corrupted corpora. This paper outlines a promising direction for non-similarity-based information retrieval which is currently underexplored.",
+      "paper_id": "pmlr:v267:xu25s",
+      "title": "Contradiction Retrieval via Contrastive Learning with Sparsity",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69478-69506",
+          "pmlr_id": "xu25s",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Physics-Informed Neural Networks (PINNs) are a kind of deep-learning-based numerical solvers for partial differential equations (PDEs). Existing PINNs often suffer from failure modes of being unable to propagate patterns of initial conditions. We discover that these failure modes are caused by the simplicity bias of neural networks and the mismatch between PDE’s continuity and PINN’s discrete sampling. We reveal that the State Space Model (SSM) can be a continuous-discrete articulation allowing initial condition propagation, and that simplicity bias can be eliminated by aligning a sequence of moderate granularity. Accordingly, we propose PINNMamba, a novel framework that introduces sub-sequence modeling with SSM. Experimental results show that PINNMamba can reduce errors by up to 86.3% compared with state-of-the-art architecture. Our code is available at Supplementary Material.",
+      "paper_id": "pmlr:v267:xu25t",
+      "title": "Sub-Sequential Physics-Informed Learning with State Space Model",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69507-69525",
+          "pmlr_id": "xu25t",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce a novel kernel learning framework toward efficiently solving nonlinear partial differential equations (PDEs). In contrast to the state-of-the-art kernel solver that embeds differential operators within kernels, posing challenges with a large number of collocation points, our approach eliminates these operators from the kernel. We model the solution using a standard kernel interpolation form and differentiate the interpolant to compute the derivatives. Our framework obviates the need for complex Gram matrix construction between solutions and their derivatives, allowing for a straightforward implementation and scalable computation. As an instance, we allocate the collocation points on a grid and adopt a product kernel, which yields a Kronecker product structure in the interpolation. This structure enables us to avoid computing the full Gram matrix, reducing costs and scaling efficiently to a large number of collocation points. We provide a proof of the convergence and rate analysis of our method under appropriate regularity assumptions. In numerical experiments, we demonstrate the advantages of our method in solving several benchmark PDEs.",
+      "paper_id": "pmlr:v267:xu25u",
+      "title": "Toward Efficient Kernel-Based Solvers for Nonlinear PDEs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69526-69544",
+          "pmlr_id": "xu25u",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Interference, a key concept in causal inference, extends the reward modeling process by accounting for the impact of one unit’s actions on the rewards of others. In contextual bandit (CB) settings where multiple units are present in the same round, interference can significantly affect the estimation of expected rewards for different arms, thereby influencing the decision-making process. Although some prior work has explored multi-agent and adversarial bandits in interference-aware settings, how to model interference in CB remains significantly underexplored. In this paper, we introduce a systematic framework to address interference in Linear CB (LinCB), bridging the gap between causal inference and online decision-making. We propose a series of algorithms that explicitly quantify the interference effect in the reward modeling process and provide comprehensive theoretical guarantees, including sublinear regret bounds, finite sample upper bounds, and asymptotic properties. The effectiveness of our approach is demonstrated through simulations and a synthetic data generated based on MovieLens data.",
+      "paper_id": "pmlr:v267:xu25v",
+      "title": "Linear Contextual Bandits With Interference",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69545-69582",
+          "pmlr_id": "xu25v",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Automatic evaluation methods based on large language models (LLMs) are emerging as the standard tool for assessing the instruction-following abilities of LLM-based agents. The most common method in this paradigm, pairwise comparisons with a baseline model, critically depends on the assumption of transitive preferences. However, the validity of this assumption remains largely unexplored. In this study, we investigate the presence of non-transitivity within the AlpacaEval framework and analyze its effects on model rankings. We find that LLM judges exhibit non-transitive preferences, leading to rankings that are sensitive to the choice of the baseline model. To mitigate this issue, we show that round-robin tournaments combined with Bradley-Terry models of preference can produce more reliable rankings. Notably, our method increases both the Spearman correlation and the Kendall correlation with Chatbot Arena (95.0% $\\rightarrow$ 96.4% and 82.1% $\\rightarrow$ 86.3% respectively). To address the computational cost of round-robin tournaments, we propose Swiss-Wise Iterative Matchmaking (Swim) tournaments, using a dynamic matching strategy to capture the benefits of round-robin tournaments while maintaining computational efficiency.",
+      "paper_id": "pmlr:v267:xu25w",
+      "title": "Investigating Non-Transitivity in LLM-as-a-Judge",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69583-69612",
+          "pmlr_id": "xu25w",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Looped Transformers provide advantages in parameter efficiency, computational capabilities, and generalization for reasoning tasks. However, their expressive power regarding function approximation remains underexplored. In this paper, we establish the approximation rate of Looped Transformers by defining the modulus of continuity for sequence-to-sequence functions. This reveals a limitation specific to the looped architecture. That is, the analysis prompts the incorporation of scaling parameters for each loop, conditioned on timestep encoding. Experiments validate the theoretical results, showing that increasing the number of loops enhances performance, with further gains achieved through the timestep encoding.",
+      "paper_id": "pmlr:v267:xu25x",
+      "title": "On Expressive Power of Looped Transformers: Theoretical Analysis and Enhancement via Timestep Encoding",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69613-69646",
+          "pmlr_id": "xu25x",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Analyzing the long-term behavior of high-dimensional nonlinear dynamical systems remains a significant challenge. While the Koopman operator framework provides a powerful global linearization tool, current methods for approximating its spectral components often face theoretical limitations and depend on predefined dictionaries. Residual Dynamic Mode Decomposition (ResDMD) advanced the field by introducing the spectral residual to assess Koopman operator approximation accuracy; however, its approach of only filtering precomputed spectra prevents the discovery of the operator’s complete spectral information, a limitation known as the ‘spectral inclusion’ problem. We introduce ResKoopNet (Residual-based Koopman-learning Network), a novel method that directly addresses this by explicitly minimizing the spectral residual to compute Koopman eigenpairs. This enables the identification of a more precise and complete Koopman operator spectrum. Using neural networks, our approach provides theoretical guarantees while maintaining computational adaptability. Experiments on a variety of physical and biological systems show that ResKoopNet achieves more accurate spectral approximations than existing methods, particularly for high-dimensional systems and those with continuous spectra, which demonstrates its effectiveness as a tool for analyzing complex dynamical systems.",
+      "paper_id": "pmlr:v267:xu25y",
+      "title": "ResKoopNet: Learning Koopman Representations for Complex Dynamics with Spectral Residuals",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69647-69674",
+          "pmlr_id": "xu25y",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Understanding the various properties of glycans with machine learning has shown some preliminary promise. However, previous methods mainly focused on modeling the backbone structure of glycans as graphs of monosaccharides (i.e., sugar units), while they neglected the atomic structures underlying each monosaccharide, which are actually important indicators of glycan properties. We fill this blank by introducing the GlycanAA model for All-Atom-wise Glycan modeling. GlycanAA models a glycan as a heterogeneous graph with monosaccharide nodes representing its global backbone structure and atom nodes representing its local atomic-level structures. Based on such a graph, GlycanAA performs hierarchical message passing to capture from local atomic-level interactions to global monosaccharide-level interactions. To further enhance model capability, we pre-train GlycanAA on a high-quality unlabeled glycan dataset, deriving the PreGlycanAA model. We design a multi-scale mask prediction algorithm to endow the model about different levels of dependencies in a glycan. Extensive benchmark results show the superiority of GlycanAA over existing glycan encoders and verify the further improvements achieved by PreGlycanAA. We maintain all resources at https://github.com/kasawa1234/GlycanAA.",
+      "paper_id": "pmlr:v267:xu25z",
+      "title": "Modeling All-Atom Glycan Structures via Hierarchical Message Passing and Multi-Scale Pre-training",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "69675-69688",
+          "pmlr_id": "xu25z",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Reinforcement Learning (RL) with linear transition kernels and reward functions has recently attracted growing attention due to its computational efficiency and theoretical advancements. However, prior theoretical research in RL has primarily focused on single-objective problems, resulting in limited theoretical development for multi-objective reinforcement learning (MORL). To bridge this gap, we examine MORL under lexicographic reward structures, where rewards comprise $m$ hierarchically ordered objectives. In this framework, the agent the agent maximizes objectives sequentially, prioritizing the highest-priority objective before considering subsequent ones. We introduce the first MORL algorithm with provable regret guarantees. For any objective $i \\in \\\\{1, 2, \\ldots, m\\\\}$, our algorithm achieves a regret bound of $\\widetilde{O}(\\Lambda^i(\\lambda) \\cdot \\sqrt{d^2H^4 K})$, where $\\Lambda^i(\\lambda) = 1 + \\lambda + \\cdots + \\lambda^{i-1}$, $\\lambda$ quantifies the trade-off between conflicting objectives, $d$ is the feature dimension, $H$ is the episode length, and $K$ is the number of episodes. Furthermore, our algorithm can be applied in the misspecified setting, where the regret bound for the $i$-th objective becomes $\\widetilde{O}(\\Lambda^i(\\lambda)\\cdot(\\sqrt{d^2H^4K}+\\epsilon dH^2K))$, with $\\epsilon$ denoting the degree of misspecification.",
+      "paper_id": "pmlr:v267:xue25a",
+      "title": "Multi-objective Linear Reinforcement Learning with Lexicographic Rewards",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "70065-70085",
+          "pmlr_id": "xue25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "To learn from data collected in diverse dynamics, Imitation from Observation (IfO) methods leverage expert state trajectories based on the premise that recovering expert state distributions in other dynamics facilitates policy learning in the current one. However, Imitation Learning inherently imposes a performance upper bound of learned policies. Additionally, as the environment dynamics change, certain expert states may become inaccessible, rendering their distributions less valuable for imitation. To address this, we propose a novel framework that integrates reward maximization with IfO, employing F-distance regularized policy optimization. This framework enforces constraints on globally accessible states—those with nonzero visitation frequency across all considered dynamics—mitigating the challenge posed by inaccessible states. By instantiating F-distance in different ways, we derive two theoretical analysis and develop a practical algorithm called Accessible State Oriented Policy Regularization (ASOR). ASOR serves as a general-purpose module that can be incorporated into various RL approaches, including offline RL and off-policy RL. Extensive experiments across multiple benchmarks demonstrate ASOR’s effectiveness in enhancing state-of-the-art cross-domain policy transfer algorithms, significantly improving their performance.",
+      "paper_id": "pmlr:v267:xue25b",
+      "title": "Policy Regularization on Globally Accessible States in Cross-Dynamics Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "70086-70104",
+          "pmlr_id": "xue25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "While contrastive multi-view clustering has achieved remarkable success, it implicitly assumes balanced class distribution. However, real-world multi-view data primarily exhibits class imbalance distribution. Consequently, existing methods suffer performance degradation due to their inability to perceive and model such imbalance. To address this challenge, we present the first systematic study of imbalanced multi-view clustering, focusing on two fundamental problems: i. perceiving class imbalance distribution , and ii. mitigating representation degradation of minority samples . We propose PROTOCOL, a novel PaRtial Optimal TranspOrt-enhanced COntrastive Learning framework for imbalanced multi-view clustering. First, for class imbalance perception, we map multi-view features into a consensus space and reformulate the imbalanced clustering as a partial optimal transport (POT) problem, augmented with progressive mass constraints and weighted KL divergence for class distributions. Second, we develop a POT-enhanced class-rebalanced contrastive learning at both feature and class levels, incorporating logit adjustment and class-sensitive learning to enhance minority sample representations. Extensive experiments demonstrate that PROTOCOL significantly improves clustering performance on imbalanced multi-view data, filling a critical research gap in this field.",
+      "paper_id": "pmlr:v267:xue25c",
+      "title": "PROTOCOL: Partial Optimal Transport-enhanced Contrastive Learning for Imbalanced Multi-view Clustering",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "70105-70119",
+          "pmlr_id": "xue25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Weak-to-Strong Generalization (W2SG), where a weak model supervises a stronger one, serves as an important analogy for understanding how humans might guide superhuman intelligence in the future. Promising empirical results revealed that a strong model can surpass its weak supervisor. While recent work has offered theoretical insights into this phenomenon, a clear understanding of the interactions between weak and strong models that drive W2SG remains elusive. We investigate W2SG through a theoretical lens and show that it can be characterized using kernels derived from the principal components of weak and strong models’ internal representations. These kernels can be used to define a space that, at a high level, captures what the weak model is unable to learn but is learnable by the strong model. The projection of labels onto this space quantifies how much the strong model falls short of its full potential due to weak supervision. This characterization also provides insights into how certain errors in weak supervision can be corrected by the strong model, regardless of overfitting. Our theory has significant practical implications, providing a representation-based metric that predicts W2SG performance trends without requiring labels, as shown in experiments on molecular predictions with transformers and 5 NLP tasks involving 52 LLMs.",
+      "paper_id": "pmlr:v267:xue25d",
+      "title": "Representations Shape Weak-to-Strong Generalization: Theoretical Insights and Empirical Predictions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "70120-70159",
+          "pmlr_id": "xue25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph neural networks (GNNs) have demonstrated remarkable success in graph representation learning and various sampling approaches have been proposed to scale GNNs to applications with large-scale graphs. A class of promising GNN training algorithms take advantage of historical embeddings to reduce the computation and memory cost while maintaining the model expressiveness of GNNs. However, they incur significant computation bias due to the stale feature history. In this paper, we provide a comprehensive analysis of their staleness and inferior performance on large-scale problems. Motivated by our discoveries, we propose a simple yet highly effective training algorithm (REST) to effectively reduce feature staleness, which leads to significantly improved performance and convergence across varying batch sizes, especially when staleness is predominant. The proposed algorithm seamlessly integrates with existing solutions, boasting easy implementation, while comprehensive experiments underscore its superior performance and efficiency on large-scale benchmarks. Specifically, our improvements to state-of-the-art historical embedding methods result in a 2.7% and 3.6% performance enhancement on the ogbn-papers100M and ogbn-products dataset respectively, accompanied by notably accelerated convergence. The code can be found at https://github.com/RXPHD/REST.",
+      "paper_id": "pmlr:v267:xue25e",
+      "title": "Haste Makes Waste: A Simple Approach for Scaling Graph Neural Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "70160-70182",
+          "pmlr_id": "xue25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In principle, explanations are intended as a way to increase trust in machine learning models and are often obligated by regulations. However, many circumstances where these are demanded are adversarial in nature, meaning the involved parties have misaligned interests and are incentivized to manipulate explanations for their purpose. As a result, explainability methods fail to be operational in such settings despite the demand. In this paper, we take a step towards operationalizing explanations in adversarial scenarios with Zero-Knowledge Proofs (ZKPs), a cryptographic primitive. Specifically we explore ZKP-amenable versions of the popular explainability algorithm LIME and evaluate their performance on Neural Networks and Random Forests. Our code is publicly available at : https://github.com/emlaufer/ExpProof.",
+      "paper_id": "pmlr:v267:yadav25a",
+      "title": "ExpProof : Operationalizing Explanations for Confidential Models with ZKPs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "70183-70204",
+          "pmlr_id": "yadav25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We propose Plausible Token Amplification (PTA) to improve the accuracy of Differentially Private In-Context Learning (DP-ICL) using DP synthetic demonstrations. While Tang et al. empirically improved the accuracy of DP-ICL by limiting vocabulary space during DP synthetic demonstration generation, its theoretical basis remains unexplored. By interpreting ICL as implicit Bayesian inference on a concept underlying demonstrations, we not only provide theoretical evidence supporting Tang et al.’s empirical method but also introduce PTA, a refined method for modifying next-token probability distribution. Through the modification, PTA highlights tokens that distinctly represent the ground-truth concept underlying the original demonstrations. As a result, generated DP synthetic demonstrations guide the Large Language Model to successfully infer the ground-truth concept, which improves the accuracy of DP-ICL. Experimental evaluations on both synthetic and real-world text-classification datasets validated the effectiveness of PTA.",
+      "paper_id": "pmlr:v267:yamasaki25a",
+      "title": "Plausible Token Amplification for Improving Accuracy of Differentially Private In-Context Learning Based on Implicit Bayesian Inference",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "70205-70248",
+          "pmlr_id": "yamasaki25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Causal inference seeks to estimate the effect given a treatment such as a medicine or the dosage of a medication. To reduce the confounding bias caused by the non-randomized treatment assignment, most existing methods reduce the shift between subpopulations receiving different treatments. However, these methods split limited training samples into smaller groups, which cuts down the number of samples in each group, while precise distribution estimation and alignment highly rely on a sufficient number of training samples. In this paper, we propose a distribution alignment paradigm without data splitting, which can be naturally applied in the settings of binary and continuous treatments. To this end, we characterize the confounding bias by considering different probability measures of the same set including all the training samples, and exploit the optimal transport theory to analyze the confounding bias and outcome estimation error. Based on this, we propose to learn balanced representations by reducing the bias between the marginal distribution and the conditional distribution of a treatment. As a result, data reduction caused by splitting is avoided, and the outcome prediction model trained on one treatment group can be generalized to the entire population. The experiments on both binary and continuous treatment settings demonstrate the effectiveness of our method.",
+      "paper_id": "pmlr:v267:yan25a",
+      "title": "Reducing Confounding Bias without Data Splitting for Causal Inference via Optimal Transport",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "70249-70267",
+          "pmlr_id": "yan25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Detecting AI-generated images (AIGIs), such as natural images or face images, has become increasingly important yet challenging. In this paper, we start from a new perspective to excavate the reason behind the failure generalization in AIGI detection, named the asymmetry phenomenon, where a naively trained detector tends to favor overfitting to the limited and monotonous fake patterns, causing the feature space to become highly constrained and low-ranked, which is proved seriously limiting the expressivity and generalization. One potential remedy is incorporating the pre-trained knowledge within the vision foundation models (higher-ranked) to expand the feature space, alleviating the model’s overfitting to fake. To this end, we employ Singular Value Decomposition (SVD) to decompose the original feature space into two orthogonal subspaces. By freezing the principal components and adapting only the remained components, we preserve the pre-trained knowledge while learning fake patterns. Compared to existing full-parameters and LoRA-based tuning methods, we explicitly ensure orthogonality, enabling the higher rank of the whole feature space, effectively minimizing overfitting and enhancing generalization. We finally identify a crucial insight: our method implicitly learns a vital prior that fakes are actually derived from the real, indicating a hierarchical relationship rather than independence. Modeling this prior, we believe, is essential for achieving superior generalization. Our codes are publicly available at https://github.com/YZY-stack/Effort-AIGI-Detection.",
+      "paper_id": "pmlr:v267:yan25b",
+      "title": "Orthogonal Subspace Decomposition for Generalizable AI-Generated Image Detection",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "70268-70288",
+          "pmlr_id": "yan25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

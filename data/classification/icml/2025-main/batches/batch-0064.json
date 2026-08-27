@@ -1,0 +1,747 @@
+{
+  "batch_index": 64,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "One-shot subset selection serves as an effective tool to reduce deep learning training costs by identifying an informative data subset based on the information extracted by an information extractor (IE). Traditional IEs, typically pre-trained on the target dataset, are inherently dataset-dependent. Foundation models (FMs) offer a promising alternative, potentially mitigating this limitation. This work investigates two key questions: (1) Can FM-based subset selection outperform traditional IE-based methods across diverse datasets? (2) Do all FMs perform equally well as IEs for subset selection? Extensive experiments uncovered surprising insights: FMs consistently outperform traditional IEs on fine-grained datasets, whereas their advantage diminishes on coarse-grained datasets with noisy labels. Motivated by these finding, we propose RAM-APL (RAnking Mean-Accuracy of Pseudo-class Labels), a method tailored for fine-grained image datasets. RAM-APL leverages multiple FMs to enhance subset selection by exploiting their complementary strengths. Our approach achieves state-of-the-art performance on fine-grained datasets, including Oxford-IIIT Pet, Food-101, and Caltech-UCSD Birds-200-2011.",
+      "paper_id": "pmlr:v267:wan25f",
+      "title": "Foundation Model Insights and a Multi-Model Approach for Superior Fine-Grained One-shot Subset Selection",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62084-62101",
+          "pmlr_id": "wan25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advancements in Large Language Models (LLMs) and Reinforcement Learning (RL) have shown significant promise in decision-making tasks. Nevertheless, for large-scale industrial decision problems, both approaches face distinct challenges: LLMs lack real-time long-sequence decision-making capabilities, while RL struggles with sample efficiency in vast action spaces. To bridge this gap, we propose A gents C o- E volution (ACE), a synergistic framework between LLMs and RL agent for large-scale decision-making scenarios. ACE introduces a dual-role trajectory refinement mechanism where LLMs act as both Policy Actor and Value Critic during RL’s training: the Actor refines suboptimal actions via multi-step reasoning and environment validation, while the Critic performs temporal credit assignment through trajectory-level reward shaping. Concurrently, RL agent enhance LLMs’ task-specific decision-making via prioritized experience replay. Through extensive experiments across multiple power grid operation challenges with action spaces exceeding 60K discrete actions, ACE demonstrates superior performance over existing RL methods and LLM-based methods.",
+      "paper_id": "pmlr:v267:wan25g",
+      "title": "Think Twice, Act Once: A Co-Evolution Framework of LLM and RL for Large-Scale Decision Making",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62102-62120",
+          "pmlr_id": "wan25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Incremental learning (IL) aims to sequentially learn new tasks while mitigating catastrophic forgetting. Among various IL strategies, parameter-isolation methods stand out by using mask techniques to allocate distinct parameters to each task, explicitly addressing forgetting. However, existing approaches often disregard parameter dependencies, resulting in an over-reliance on newly allocated parameters. To address this issue, we propose Probabilistic Group Mask selection (PGM), a group-wise approach that captures parameter dependencies by exploring candidate masks within each group. Specifically, PGM partitions parameters into groups with multiple candidate masks, assigning probabilities to these masks and leveraging Gumbel-Softmax for differentiable sampling, enabling efficient optimization of the discrete mask selection process. Our theoretical analysis demonstrates that incorporating parameter dependencies enhances sub-network selection. Experiments conducted on standard benchmarks confirm its superior effectiveness compared to existing IL approaches. The source code is available at: https://github.com/njustkmg/ICML25-PGM.",
+      "paper_id": "pmlr:v267:wan25h",
+      "title": "Probabilistic Group Mask Guided Discrete Optimization for Incremental Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62121-62134",
+          "pmlr_id": "wan25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Imitation learning (IL) has shown promise in various applications (e.g. robot locomotion) but is often limited to learning a single expert policy, constraining behavior diversity and robustness in unpredictable real-world scenarios. To address this, we introduce Quality Diversity Inverse Reinforcement Learning (QD-IRL), a novel framework that integrates quality-diversity optimization with IRL methods, enabling agents to learn diverse behaviors from limited demonstrations. This work introduces Extrinsic Behavioral Curiosity (EBC), which allows agents to receive additional curiosity rewards from an external critic based on how novel the behaviors are with respect to a large behavioral archive. To validate the effectiveness of EBC in exploring diverse locomotion behaviors, we evaluate our method on multiple robot locomotion tasks. EBC improves the performance of QD-IRL instances with GAIL, VAIL, and DiffAIL across all included environments by up to 185%, 42%, and 150%, even surpassing expert performance by 20% in Humanoid. Furthermore, we demonstrate that EBC is applicable to Gradient-Arborescence-based Quality Diversity Reinforcement Learning (QD-RL) algorithms, where it substantially improves performance and provides a generic technique for learning behavioral diverse policies. The source code of this work is provided at https://github.com/vanzll/EBC.",
+      "paper_id": "pmlr:v267:wan25i",
+      "title": "Diversifying Policy Behaviors with Extrinsic Behavioral Curiosity",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62135-62154",
+          "pmlr_id": "wan25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce the task of Audible Action Temporal Localization, which aims to identify the spatio-temporal coordinates of audible movements. Unlike conventional tasks such as action recognition and temporal action localization, which broadly analyze video content, our task focuses on the distinct kinematic dynamics of audible actions. It is based on the premise that key actions are driven by inflectional movements; for example, collisions that produce sound often involve abrupt changes in motion. To capture this, we propose $TA^{2}Net$, a novel architecture that estimates inflectional flow using the second derivative of motion to determine collision timings without relying on audio input. $TA^{2}Net$ also integrates a self-supervised spatial localization strategy during training, combining contrastive learning with spatial analysis. This dual design improves temporal localization accuracy and simultaneously identifies sound sources within video frames. To support this task, we introduce a new benchmark dataset, $Audible623$, derived from Kinetics and UCF101 by removing non-essential vocalization subsets. Extensive experiments confirm the effectiveness of our approach on $Audible623$ and show strong generalizability to other domains, such as repetitive counting and sound source localization. Code and dataset are available at https://github.com/WenlongWan/Audible623.",
+      "paper_id": "pmlr:v267:wan25j",
+      "title": "Action Dubber: Timing Audible Actions via Inflectional Flow",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62155-62171",
+          "pmlr_id": "wan25j",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Sparse linear solvers or generalized deconvolution are fundamental to science and engineering, applied in partial differential equations (PDEs), scientific computing, computer vision, and beyond. Indirect solvers possess characteristics that make them undesirable as stable differentiable modules; existing direct solvers, though reliable, are too expensive to be adopted in neural architectures. We substantially accelerate direct sparse solvers by up to three orders of magnitude, violating common assumptions that direct solvers are too slow. We \"condense\" a sparse Laplacian matrix into a dense tensor, a compact data structure that batch-wise stores the Dirichlet-to-Neumann matrices, reducing the sparse solving to recursively merging pairs of dense matrices that are much smaller. The batched small dense systems are sliced and inverted in parallel to take advantage of dense GPU BLAS kernels, highly optimized in the era of deep learning. Our method is efficient, qualified as a strong zero-shot baseline for AI-based PDE solving, and a reliable differentiable module integrable into machine learning pipelines.",
+      "paper_id": "pmlr:v267:wang25a",
+      "title": "Schwarz–Schur Involution: Lightspeed Differentiable Sparse Linear Solvers",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62172-62221",
+          "pmlr_id": "wang25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Few-shot point cloud semantic segmentation effectively addresses data scarcity by identifying unlabeled query samples through semantic prototypes generated from a small set of labeled support samples. However, pre-training-based methods suffer from domain shifts and increased training time. Additionally, existing methods using DGCNN as the backbone have limited geometric structure modeling capabilities and struggle to bridge the categorical information gap between query and support sets. To address these challenges, we propose DyPolySeg, a pre-training-free Dynamic Polynomial fitting network for few-shot point cloud semantic segmentation. Specifically, we design a unified Dynamic Polynomial Convolution (DyPolyConv) that extracts flat and detailed features of local geometry through Low-order Convolution (LoConv) and Dynamic High-order Convolution (DyHoConv), complemented by Mamba Block for capturing global context information. Furthermore, we propose a lightweight Prototype Completion Module (PCM) that reduces structural differences through self-enhancement and interactive enhancement between query and support sets. Experiments demonstrate that DyPolySeg achieves state-of-the-art performance on S3DIS and ScanNet datasets.",
+      "paper_id": "pmlr:v267:wang25aa",
+      "title": "DyPolySeg: Taylor Series-Inspired Dynamic Polynomial Fitting Network for Few-shot Point Cloud Semantic Segmentation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62845-62856",
+          "pmlr_id": "wang25aa",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Black-Box Discrete Prompt Learning (BDPL) is a prompt-tuning method that optimizes discrete prompts without accessing model parameters or gradients, making the prompt tuning on a cloud-based Large Language Model (LLM) feasible. Adapting Federated Learning (FL) to BDPL could further enhance prompt tuning performance by leveraging data from diverse sources. However, all previous research on federated black-box prompt tuning had neglected the substantial query cost associated with the cloud-based LLM service. To address this gap, we conducted a theoretical analysis of query efficiency within the context of federated black-box prompt tuning. Our findings revealed that degrading FedAvg to activate only one client per round, a strategy we called FedOne , enabled optimal query efficiency in federated black-box prompt learning. Building on this insight, we proposed the FedOne framework, a federated black-box discrete prompt learning method designed to maximize query efficiency when interacting with cloud-based LLMs. We conducted numerical experiments on various aspects of our framework, demonstrating a significant improvement in query efficiency, which aligns with our theoretical results.",
+      "paper_id": "pmlr:v267:wang25ab",
+      "title": "FedOne: Query-Efficient Federated Learning for Black-box Discrete Prompt Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62857-62889",
+          "pmlr_id": "wang25ab",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advancements in Retrieval-Augmented Generation (RAG) systems have significantly enhanced the capabilities of large language models (LLMs) by incorporating external knowledge retrieval. However, the sole reliance on retrieval is often inadequate for mining deep, domain-specific knowledge and for performing logical reasoning from specialized datasets. To tackle these challenges, we present an approach, which is designed to extract, comprehend, and utilize domain knowledge while constructing a coherent rationale. At the heart of our approach lie four pivotal components: a knowledge atomizer that extracts atomic questions from raw data, a query proposer that generates subsequent questions to facilitate the original inquiry, an atomic retriever that locates knowledge based on atomic knowledge alignments, and an atomic selector that determines which follow-up questions to pose guided by the retrieved information. Through this approach, we implement a knowledge-aware task decomposition strategy that adeptly extracts multifaceted knowledge from segmented data and iteratively builds the rationale in alignment with the initial query and the acquired knowledge. We conduct comprehensive experiments to demonstrate the efficacy of our approach across various benchmarks, particularly those requiring multihop reasoning steps. The results indicate a significant enhancement in performance, up to 12.6% over the second-best method, underscoring the potential of the approach in complex, knowledge-intensive applications.",
+      "paper_id": "pmlr:v267:wang25ac",
+      "title": "From Complex to Atomic: Enhancing Augmented Generation via Knowledge-Aware Dual Rewriting and Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62890-62915",
+          "pmlr_id": "wang25ac",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In aligning large language models (LLMs), reward models have played an important role, but are standardly trained as discriminative models and rely only on labeled human preference data. In this paper, we explore methods that train reward models using both unlabeled and labeled data. Building on the generative models in LLMs, we develop a generative reward model that is first trained via large-scale unsupervised learning and then fine-tuned via supervised learning. We also show that by using label smoothing, we are in fact optimizing a regularized pairwise ranking loss. This result, in turn, provides a new view of training reward models, which links generative models and discriminative models under the same class of training objectives. The outcome of these techniques is a foundation reward model, which can be applied to a wide range of tasks with little or no further fine-tuning effort. Extensive experiments show that this model generalizes well across several tasks, including response ranking, reinforcement learning from human feedback, and task adaptation with fine-tuning, achieving significant performance improvements over several strong baseline models.",
+      "paper_id": "pmlr:v267:wang25ad",
+      "title": "GRAM: A Generative Foundation Reward Model for Reward Generalization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62916-62936",
+          "pmlr_id": "wang25ad",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The growing computational demands of training large language models (LLMs) necessitate more efficient methods. Quantized training presents a promising solution by enabling low-bit arithmetic operations to reduce these costs. While FP8 precision has demonstrated feasibility, leveraging FP4 remains a challenge due to significant quantization errors and limited representational capacity. This work introduces the first FP4 training framework for LLMs, addressing these challenges with two key innovations: a differentiable quantization estimator for precise weight updates and an outlier clamping and compensation strategy to prevent activation collapse. To ensure stability, the framework integrates a mixed-precision training scheme and vector-wise quantization. Experimental results demonstrate that our FP4 framework achieves accuracy comparable to BF16 and FP8, with minimal degradation, scaling effectively to 13B-parameter LLMs trained on up to 100B tokens. With the emergence of next-generation hardware supporting FP4, our framework sets a foundation for efficient ultra-low precision training.",
+      "paper_id": "pmlr:v267:wang25ae",
+      "title": "Optimizing Large Language Model Training Using FP4 Quantization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62937-62957",
+          "pmlr_id": "wang25ae",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Reinforcement Learning from Human Feedback (RLHF) has shown promise in aligning large language models (LLMs). Yet its reliance on a singular reward model often overlooks the diversity of human preferences. Recent approaches address this limitation by leveraging multi-dimensional feedback to fine-tune corresponding reward models and train LLMs using reinforcement learning. However, the process is costly and unstable, especially given the competing and heterogeneous nature of human preferences. In this paper, we propose Mixing Preference Optimization (MPO), a post-processing framework for aggregating single-objective policies as an alternative to both multi-objective RLHF (MORLHF) and MaxMin-RLHF. MPO avoids alignment from scratch. Instead, it log-linearly combines existing policies into a unified one with the weight of each policy computed via a batch stochastic mirror descent. Empirical results demonstrate that MPO achieves balanced performance across diverse preferences, outperforming or matching existing models with significantly reduced computational costs.",
+      "paper_id": "pmlr:v267:wang25af",
+      "title": "MPO: An Efficient Post-Processing Framework for Mixing Diverse Preference Alignment",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62958-62979",
+          "pmlr_id": "wang25af",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Retrosynthesis, the process of breaking down a target molecule into simpler precursors through a series of valid reactions, stands at the core of organic chemistry and drug development. Although recent machine learning (ML) research has advanced single-step retrosynthetic modeling and subsequent route searches, these solutions remain restricted by the extensive combinatorial space of possible pathways. Concurrently, large language models (LLMs) have exhibited remarkable chemical knowledge, hinting at their potential to tackle complex decision-making tasks in chemistry. In this work, we explore whether LLMs can successfully navigate the highly constrained, multi-step retrosynthesis planning problem. We introduce an efficient scheme for encoding reaction pathways and present a new route-level search strategy, moving beyond the conventional step-by-step reactant prediction. Through comprehensive evaluations, we show that our LLM-augmented approach excels at retrosynthesis planning and extends naturally to the broader challenge of synthesizable molecular design.",
+      "paper_id": "pmlr:v267:wang25ag",
+      "title": "LLM-Augmented Chemical Synthesis and Design Decision Programs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62980-63001",
+          "pmlr_id": "wang25ag",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Polymer conformation generation is a critical task that enables atomic-level studies of diverse polymer materials. While significant advances have been made in designing conformation generation methods for small molecules and proteins, these methods struggle to generate polymer conformations due to their unique structural characteristics. Meanwhile, the scarcity of polymer conformation datasets further limits progress, making this important area largely unexplored. In this work, we propose PolyConf, a pioneering tailored polymer conformation generation method that leverages hierarchical generative models to unlock new possibilities. Specifically, we decompose the polymer conformation into a series of local conformations (i.e., the conformations of its repeating units), generating these local conformations through an autoregressive model, and then generating their orientation transformations via a diffusion model to assemble them into the complete polymer conformation. Moreover, we develop the first benchmark with a high-quality polymer conformation dataset derived from molecular dynamics simulations to boost related research in this area. The comprehensive evaluation demonstrates that PolyConf consistently outperforms existing conformation generation methods, thus facilitating advancements in polymer modeling and simulation. The whole work is available at https://polyconf-icml25.github.io.",
+      "paper_id": "pmlr:v267:wang25ah",
+      "title": "PolyConf: Unlocking Polymer Conformation Generation through Hierarchical Generative Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63002-63015",
+          "pmlr_id": "wang25ah",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large audio-language models (LALMs), built upon powerful Large Language Models (LLMs), have exhibited remarkable audio comprehension and reasoning capabilities. However, the training of LALMs demands a large corpus of audio-language pairs, which requires substantial costs in both data collection and training resources. In this paper, we propose MATS , an audio-language multimodal LLM designed to handle M ultiple A udio task using solely T ext-only S upervision. By leveraging pre-trained audio-language alignment models such as CLAP, we develop a text-only training strategy that projects the shared audio-language latent space into LLM latent space, endowing the LLM with audio comprehension capabilities without relying on audio data during training. To further bridge the modality gap between audio and language embeddings within CLAP, we propose the S trongly-rel a ted n oisy t ext with a udio ( Santa ) mechanism. Santa maps audio embeddings into CLAP language embedding space while preserving essential information from the audio input. Extensive experiments demonstrate that MATS, despite being trained exclusively on text data, achieves competitive performance compared to recent LALMs trained on large-scale audio-language pairs. The code is publicly available in https://github.com/wangwen-banban/MATS",
+      "paper_id": "pmlr:v267:wang25ai",
+      "title": "MATS: An Audio Language Model under Text-only Supervision",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63016-63035",
+          "pmlr_id": "wang25ai",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We propose a novel prompt design paradigm that challenges conventional wisdom in large language model (LLM) prompting. While conventional wisdom prioritizes well-crafted instructions and demonstrations for in-context learning (ICL), we show that pruning random demonstrations into seemingly incoherent ”gibberish” can remarkably improve performance across diverse tasks. Notably, the ”gibberish” always matches or surpasses state-of-the-art automatic prompt optimization techniques, achieving substantial gains regardless of LLM alignment. Nevertheless, discovering an effective pruning strategy is non-trivial, as existing attribution methods and prompt compression algorithms fail to deliver robust results, let alone human intuition. In terms of this, we propose a self-discover prompt optimization framework, PromptQuine, an evolutionary search framework that automatically searches for the pruning strategy by itself using only low-data regimes. Much like the emergent complexity in nature—such as symbiosis and self-organization—arising in response to resource constraints, our framework evolves and refines unconventional yet highly effective prompts by leveraging only the tokens present within the context. We demonstrate its effectiveness across classification, multi-choice question answering, generation and math reasoning tasks across LLMs, while achieving decent runtime efficiency. We hope our findings can guide mechanistic studies on in-context learning, and provide a call to action, to pave the way for more open-ended search algorithms for more effective LLM prompting.",
+      "paper_id": "pmlr:v267:wang25aj",
+      "title": "Evolving Prompts In-Context: An Open-ended, Self-replicating Perspective",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63036-63087",
+          "pmlr_id": "wang25aj",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Fine-tuning significantly improves the performance of Large Language Models (LLMs), yet its underlying mechanisms remain poorly understood. This paper aims to provide an in-depth interpretation of the fine-tuning process through circuit analysis, a popular tool in Mechanistic Interpretability (MI) . Unlike previous studies (Prakash et al. 2024, Chhabra et al. 2024) that focus on tasks where pre-trained models already perform well, we develop a set of mathematical tasks where fine-tuning yields substantial performance gains, bringing the setup closer to real-world scenarios. In our experiments, we identify circuits at various checkpoints during fine-tuning and examine the interplay between circuit analysis, fine-tuning methods, and task complexities. First, we find that while circuits maintain high node similarity before and after fine-tuning, their edges undergo significant changes, contrasting with previous work (Prakash et al. 2024, Chhabra et al. 2024) that reported only small circuit additions after fine-tuning. Based on these observations, we develop a circuit-aware Low-Rank Adaptation (LoRA) method that assigns ranks to layers according to edge changes in the circuits. Experimental results demonstrate that our circuit-based LoRA achieves an average improvement of 2.46% over standard LoRA with comparable parameter sizes. Furthermore, we explore how combining circuits from subtasks can enhance fine-tuning in compositional tasks, offering new insights into task design and deepening our understanding of circuit dynamics and fine-tuning mechanisms.",
+      "paper_id": "pmlr:v267:wang25ak",
+      "title": "Towards Understanding Fine-Tuning Mechanisms of LLMs via Circuit Analysis",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63088-63112",
+          "pmlr_id": "wang25ak",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Pre-trained interatomic potentials have become a new paradigm for atomistic materials simulations, enabling accurate and efficient predictions across diverse chemical systems. Despite their promise, fine-tuning is often required for complex tasks to achieve high accuracy. Traditional parameter-efficient fine-tuning approaches are effective in NLP and CV. However, when applied to SO(3) equivariant pre-trained interatomic potentials, these methods will inevitably break equivariance—a critical property for preserving physical symmetries. In this paper, we introduce ELoRA (Equivariant Low-Rank Adaptation), a novel fine-tuning method designed specifically for SO(3) equivariant Graph Neural Networks (GNNs), the backbones in multiple pre-trained interatomic potentials. ELoRA adopts a path-dependent decomposition for weights updating which offers two key advantages: (1) it preserves SO(3) equivariance throughout the fine-tuning process, ensuring physically consistent predictions, and (2) it leverages low-rank adaptations to significantly improve data efficiency. We prove that ELoRA maintains equivariance and demonstrate its effectiveness through comprehensive experiments. On the rMD17 organic dataset, ELoRA achieves a 25.5% improvement in energy prediction accuracy and a 23.7% improvement in force prediction accuracy compared to full-parameter fine-tuning. Similarly, across 10 inorganic datasets, ELoRA achieves average improvements of 12.3% and 14.4% in energy and force predictions, respectively. Code will be made publicly available at https://github.com/hyjwpk/ELoRA.",
+      "paper_id": "pmlr:v267:wang25al",
+      "title": "ELoRA: Low-Rank Adaptation for Equivariant GNNs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63113-63135",
+          "pmlr_id": "wang25al",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Density ratio estimation (DRE) is a paramount task in machine learning, for its broad applications across multiple domains, such as covariate shift adaptation, causal inference, independence tests and beyond. Parametric methods for estimating the density ratio possibly lead to biased results if models are misspecified, while conventional non-parametric methods suffer from the curse of dimensionality when the dimension of data is large. To address these challenges, in this paper, we propose a novel approach for DRE based on the projection pursuit (PP) approximation. The proposed method leverages PP to mitigate the impact of high dimensionality while retaining the model flexibility needed for the accuracy of DRE. We establish the consistency and the convergence rate for the proposed estimator. Experimental results demonstrate that our proposed method outperforms existing alternatives in various applications.",
+      "paper_id": "pmlr:v267:wang25am",
+      "title": "Projection Pursuit Density Ratio Estimation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63136-63168",
+          "pmlr_id": "wang25am",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Fusing heterogeneous information remains a persistent challenge in modern data analysis. While significant progress has been made, existing approaches often fail to account for the inherent heterogeneity of object patterns across different semantic spaces. To address this limitation, we propose the Cooperation of Experts (CoE) framework, which encodes multi-typed information into unified heterogeneous multiplex networks. By transcending modality and connection differences, CoE provides a powerful and flexible model for capturing the intricate structures of real-world complex data. In our framework, dedicated encoders act as domain-specific experts, each specializing in learning distinct relational patterns in specific semantic spaces. To enhance robustness and extract complementary knowledge, these experts collaborate through a novel large margin mechanism supported by a tailored optimization strategy. Rigorous theoretical analyses guarantee the framework’s feasibility and stability, while extensive experiments across diverse benchmarks demonstrate its superior performance and broad applicability.",
+      "paper_id": "pmlr:v267:wang25an",
+      "title": "Cooperation of Experts: Fusing Heterogeneous Information with Large Margin",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63169-63185",
+          "pmlr_id": "wang25an",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "K-Means clustering is a classical and effective unsupervised learning method attributed to its simplicity and efficiency. However, it faces notable challenges, including sensitivity to random initial centroid selection, a limited ability to discover the intrinsic manifold structures within nonlinear datasets, and difficulty in achieving balanced clustering in practical scenarios. To overcome these weaknesses, we introduce a novel framework for K-Means that leverages manifold learning. This approach eliminates the need for centroid calculation and utilizes a cluster indicator matrix to align the manifold structures, thereby enhancing clustering accuracy. Beyond the traditional Euclidean distance, our model incorporates Gaussian kernel distance, K-nearest neighbor distance, and low-pass filtering distance to effectively manage data that is not linearly separable. Furthermore, we introduce a balanced regularizer to achieve balanced clustering results. The detailed experimental results demonstrate the efficacy of our proposed methodology.",
+      "paper_id": "pmlr:v267:wang25ao",
+      "title": "Unified K-Means Clustering with Label-Guided Manifold Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63186-63199",
+          "pmlr_id": "wang25ao",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) that integrate multiple input roles (e.g., system instructions, user queries, external tool outputs) are increasingly prevalent in practice. Ensuring that the model accurately distinguishes messages from each role—a concept we call role separation —is crucial for consistent multi-role behavior. Although recent work often targets state-of-the-art prompt injection defenses, it remains unclear whether such methods truly teach LLMs to differentiate roles or merely memorize known triggers. In this paper, we examine role-separation learning : the process of teaching LLMs to robustly distinguish system and user tokens. Through a simple, controlled experimental framework , we find that fine-tuned models often rely on two proxies for role identification: (1) task type exploitation, and (2) proximity to begin-of-text. Although data augmentation can partially mitigate these shortcuts, it generally leads to iterative patching rather than a deeper fix. To address this, we propose reinforcing invariant signals that mark role boundaries by adjusting token-wise cues in the model’s input encoding. In particular, modifying position IDs helps the model learn clearer distinctions and reduces reliance on superficial proxies. By focusing on this mechanism-centered perspective, our work illuminates how LLMs can more reliably maintain consistent multi-role behavior without merely memorizing known prompts or triggers.",
+      "paper_id": "pmlr:v267:wang25ap",
+      "title": "The Illusion of Role Separation: Hidden Shortcuts in LLM Role Learning (and How to Fix Them)",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63200-63210",
+          "pmlr_id": "wang25ap",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Dynamic pricing strategies are crucial for firms to maximize revenue by adjusting prices based on market conditions and customer characteristics. However, designing optimal pricing strategies becomes challenging when historical data are limited, as is often the case when launching new products or entering new markets. One promising approach to overcome this limitation is to leverage information from related products or markets to inform the focal pricing decisions. In this paper, we explore transfer learning for nonparametric contextual dynamic pricing under a covariate shift model, where the marginal distributions of covariates differ between source and target domains while the reward functions remain the same. We propose a novel Transfer Learning for Dynamic Pricing (TLDP) algorithm that can effectively leverage pre-collected data from a source domain to enhance pricing decisions in the target domain. The regret upper bound of TLDP is established under a simple Lipschitz condition on the reward function. To establish the optimality of TLDP, we further derive a matching minimax lower bound, which includes the target-only scenario as a special case and is presented for the first time in the literature. Extensive numerical experiments validate our approach, demonstrating its superiority over existing methods and highlighting its practical utility in real-world applications.",
+      "paper_id": "pmlr:v267:wang25aq",
+      "title": "Transfer Learning for Nonparametric Contextual Dynamic Pricing",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63211-63244",
+          "pmlr_id": "wang25aq",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Customized Image Generation, generating customized images with user-specified concepts, has raised significant attention due to its creativity and novelty. With impressive progress achieved in subject customization, some pioneer works further explored the customization of action and interaction beyond entity (i.e., human, animal, and object) appearance. However, these approaches only focus on basic actions and interactions between two entities, and their effects are limited by insufficient ”exactly same” reference images. To extend customized image generation to more complex scenes for general real-world applications, we propose a new task: event-customized image generation. Given a single reference image, we define the ”event” as all specific actions, poses, relations, or interactions between different entities in the scene. This task aims at accurately capturing the complex event and generating customized images with various target entities. To solve this task, we proposed a novel training-free event customization method: FreeEvent. Specifically, FreeEvent introduces two extra paths alongside the general diffusion denoising process: 1) Entity switching path: it applies cross-attention guidance and regulation for target entity generation. 2) Event transferring path: it injects the spatial feature and self-attention maps from the reference image to the target image for event generation. To further facilitate this new task, we collected two evaluation benchmarks: SWiG-Event and Real-Event. Extensive experiments and ablations have demonstrated the effectiveness of FreeEvent.",
+      "paper_id": "pmlr:v267:wang25ar",
+      "title": "Event-Customized Image Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63245-63265",
+          "pmlr_id": "wang25ar",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Bridge models in image restoration construct a diffusion process from degraded to clear images. However, existing methods typically require training a bridge model from scratch for each specific type of degradation, resulting in high computational costs and limited performance. This work aims to efficiently leverage pretrained generative priors within existing image restoration bridges to eliminate this requirement. The main challenge is that standard generative models are typically designed for a diffusion process that starts from pure noise, while restoration tasks begin with a low-quality image, resulting in a mismatch in the state distributions between the two processes. To address this challenge, we propose a transition equation that bridges two diffusion processes with the same endpoint distribution. Based on this, we introduce the IRBridge framework, which enables the direct utilization of generative models within image restoration bridges, offering a more flexible and adaptable approach to image restoration. Extensive experiments on six image restoration tasks demonstrate that IRBridge efficiently integrates generative priors, resulting in improved robustness and generalization performance. Code will be available at GitHub.",
+      "paper_id": "pmlr:v267:wang25as",
+      "title": "IRBridge: Solving Image Restoration Bridge with Pre-trained Generative Diffusion Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63266-63289",
+          "pmlr_id": "wang25as",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "High-resolution (HR) image perception remains a key challenge in multimodal large language models (MLLMs). To drive progress beyond the limits of heuristic methods, this paper advances HR perception capabilities of MLLMs by harnessing cutting-edge long-context techniques such as retrieval-augmented generation (RAG). Towards this end, this paper presents the first study exploring the use of RAG to address HR perception challenges. Specifically, we propose Retrieval-Augmented Perception (RAP), a training-free framework that retrieves and fuses relevant image crops while preserving spatial context using the proposed Spatial-Awareness Layout. To accommodate different tasks, the proposed Retrieved-Exploration Search (RE-Search) dynamically selects the optimal number of crops based on model confidence and retrieval scores. Experimental results on HR benchmarks demonstrate the significant effectiveness of RAP, with LLaVA-v1.5-13B achieving a 43% improvement on $V^*$ Bench and 19% on HR-Bench. Code is available at https://github.com/DreamMr/RAP.",
+      "paper_id": "pmlr:v267:wang25at",
+      "title": "Retrieval-Augmented Perception: High-resolution Image Perception Meets Visual RAG",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63290-63307",
+          "pmlr_id": "wang25at",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Equipping large language models (LLMs) with latent-space memory has attracted increasing attention as they can extend the context window of existing language models. However, retaining information from the distant past remains a challenge. For example, MemoryLLM (Wang et al., 2024a), as a representative work with latent-space memory, compresses past information into hidden states across all layers, forming a memory pool of 1B parameters. While effective for sequence lengths up to 16k tokens, it struggles to retain knowledge beyond 20k tokens. In this work, we address this limitation by introducing M+, a memory-augmented model based on MemoryLLM that significantly enhances long-term information retention. M+ integrates a long-term memory mechanism with a co-trained retriever, dynamically retrieving relevant information during text generation. We evaluate M+ on diverse benchmarks, including long-context understanding and knowledge retention tasks. Experimental results show that M+ significantly outperforms MemoryLLM and recent strong baselines, extending knowledge retention from under 20k to over 160k tokens with similar GPU memory overhead.",
+      "paper_id": "pmlr:v267:wang25au",
+      "title": "M+: Extending MemoryLLM with Scalable Long-Term Memory",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63308-63323",
+          "pmlr_id": "wang25au",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Time-series data are critical in diverse applications, such as industrial monitoring, medical diagnostics, and climate research. However, effectively integrating these high-dimensional temporal signals with natural language for dynamic, interactive tasks remains a significant challenge. To address this, we introduce the Time-Series Question Answering (Time-Series QA) task and release EngineMT-QA, the first large-scale, multi-task, temporal-textual QA dataset designed to capture complex interactions between time-series signals and natural language. Building on this resource, we propose the Instruct Time Transformer (ITFormer), a novel framework that bridges time-series encoders with frozen large language models (LLMs). ITFormer effectively extracts, aligns, and fuses temporal and textual features, achieving a strong improvement in QA accuracy over strong baselines with fewer than 1% additional trainable parameters. By combining computational efficiency with robust cross-modal modeling, our work establishes a adaptable paradigm for integrating temporal data with natural language, paving the way for new research and applications in multi-modal AI. More details about the project, including datasets and code, are available at: https://pandalin98.github.io/itformer_site/.",
+      "paper_id": "pmlr:v267:wang25av",
+      "title": "ITFormer: Bridging Time Series and Natural Language for Multi-Modal QA with Large-Scale Multitask Dataset",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63324-63344",
+          "pmlr_id": "wang25av",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The GPT-4o’s excellent duplex speech interaction ability has given users an impressive experience. Researchers have recently proposed several multimodal LLMs to achieve user-agent speech-to-speech conversations. In this paper, we propose a novel speech-text multimodal LLM architecture called Freeze-Omni, and our main contribution is that the speech input and output modalities can be easily connected to a textual LLM while keeping the LLM’s parameters frozen throughout the training process. We effectively ensure that the intelligence of the Freeze-Omni in the speech modality is at the same level as that in the text modality of its backbone LLM while achieving low latency in the end-to-end spoken response. In addition, we also designed a method to achieve duplex dialogue ability through multitask training, giving Freeze-Omni a more natural style of dialogue ability between users and agents. In summary, Freeze-Omni holds great potential to conduct speech-to-speech dialogue based on a multimodal LLM under the condition of a frozen LLM, avoiding the catastrophic forgetting problem caused by limited data and training resources.",
+      "paper_id": "pmlr:v267:wang25aw",
+      "title": "Freeze-Omni: A Smart and Low Latency Speech-to-speech Dialogue Model with Frozen LLM",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63345-63354",
+          "pmlr_id": "wang25aw",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Motion transfer is to transfer pose in driving video to object of source image, so that object of source image moves. Although great progress has been made recently in unsupervised motion transfer, many unsupervised methods still struggle to accurately model large displacement motions when large motion differences occur between source and driving images. To solve the problem, we propose an unsupervised anytime interpolation based large displacement motion transfer method, which can generate a series of anytime interpolated images between source and driving images. By decomposing large displacement motion into many small displacement motions, difficulty of large displacement motion estimation is reduced. In the process, we design a selector that can select optimal interpolated image from generated interpolated images for downstream tasks. Since there are no real images as labels in the interpolation process, we propose a bidirectional training strategy. Some constraints are added to optimal interpolated image to generate a reasonable interpolated image. To encourage network to generate high-quality images, a pre-trained Vision Transformer model is used to design constraint losses. Finally, experiments show that compared with the large displacement motion between source and driving images, small displacement motion between interpolated and driving images is easier to realize motion transfer. Compared with existing state-of-art methods, our method has significant improvements in motion-related metrics.",
+      "paper_id": "pmlr:v267:wang25ax",
+      "title": "Large Displacement Motion Transfer with Unsupervised Anytime Interpolation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63355-63364",
+          "pmlr_id": "wang25ax",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Multi-View Reinforcement Learning (MVRL) seeks to provide agents with multi-view observations, enabling them to perceive environment with greater effectiveness and precision. Recent advancements in MVRL focus on extracting latent representations from multiview observations and leveraging them in control tasks. However, it is not straightforward to learn compact and task-relevant representations, particularly in the presence of redundancy, distracting information, or missing views. In this paper, we propose M ulti-view F usion S tate for C ontrol ( MFSC ), firstly incorporating bisimulation metric learning into MVRL to learn task-relevant representations. Furthermore, we propose a multiview-based mask and latent reconstruction auxiliary task that exploits shared information across views and improves MFSC’s robustness in missing views by introducing a mask token. Extensive experimental results demonstrate that our method outperforms existing approaches in MVRL tasks. Even in more realistic scenarios with interference or missing views, MFSC consistently maintains high performance. The project code is available at https://github.com/zpwdev/MFSC.",
+      "paper_id": "pmlr:v267:wang25ay",
+      "title": "Learning Fused State Representations for Control from Multi-View Observations",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63365-63386",
+          "pmlr_id": "wang25ay",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Inference latency stands as a critical bottleneck in the large-scale deployment of Large Language Models (LLMs). Speculative decoding methods have recently shown promise in accelerating inference without compromising the output distribution. However, existing work typically relies on a dualistic draft-verify framework and lacks rigorous theoretical grounding. In this paper, we introduce a novel polybasic speculative decoding framework, underpinned by a comprehensive theoretical analysis. Specifically, we prove a fundamental theorem that characterizes the optimal inference time for multi-model speculative decoding systems, shedding light on how to extend beyond the dualistic approach to a more general polybasic paradigm. Through our theoretical investigation of multi-model token generation, we expose and optimize the interplay between model capabilities, acceptance lengths, and overall computational cost. Our framework supports both standalone implementation and integration with existing speculative techniques, leading to accelerated performance in practice. Experimental results across multiple model families demonstrate that our approach yields speedup ratios ranging from $3.31\\times$ to $4.01\\times$ for LLaMA2-Chat 7B, up to $3.87 \\times$ for LLaMA3-8B, up to $4.43 \\times$ for Vicuna-7B and up to $3.85 \\times$ for Qwen2-7B—all while preserving the original output distribution. We release our theoretical proofs and implementation code to facilitate further investigation into polybasic speculative decoding.",
+      "paper_id": "pmlr:v267:wang25az",
+      "title": "polybasic Speculative Decoding Through a Theoretical Perspective",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63387-63398",
+          "pmlr_id": "wang25az",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The scaling of the optimal AdamW weight decay hyperparameter with model and dataset size is critical as we seek to build larger models, but is poorly understood. We show that weights learned by AdamW can be understood as an exponential moving average (EMA) of recent updates. This gives critical insights for how to set the weight decay in AdamW, and how the weight decay should scale with model and dataset size. In particular, the key hyperparameter for an exponential moving average is the EMA timescale. Intuitively, the EMA timescale can be understood as the number of recent iterations the EMA averages over. We find that the optimal timescale, measured in epochs, is roughly constant as we change model and dataset size. Moreover, given a learning rate, there is a one-to-one mapping from the EMA timescale to the weight decay hyperparameter. Thus, if the optimal EMA timescale is constant, that implies that as the dataset size increases, the optimal weight decay should fall and as the model size increases, the optimal weight decay should increase (if we follow the muP recommendation for scaling the learning rate). We validate these scaling rules on ResNet-18 and Vision Transformers trained on CIFAR-10 and ImageNet, and on NanoGPT pre-training on OpenWebText. Finally, we found that as training progresses, muP’s learning rate scaling breaks down for AdamW unless weight decay is scaled appropriately.",
+      "paper_id": "pmlr:v267:wang25b",
+      "title": "How to set AdamW’s weight decay as you scale model and dataset size",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62222-62250",
+          "pmlr_id": "wang25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Diffusion models, praised for their success in generative tasks, are increasingly being applied to robotics, demonstrating exceptional performance in behavior cloning. However, their slow generation process stemming from iterative denoising steps poses a challenge for real-time applications in resource-constrained robotics setups and dynamically changing environments. In this paper, we introduce the One-Step Diffusion Policy (OneDP), a novel approach that distills knowledge from pre-trained diffusion policies into a single-step action generator, significantly accelerating response times for robotic control tasks. We ensure the distilled generator closely aligns with the original policy distribution by minimizing the Kullback-Leibler (KL) divergence along the diffusion chain, requiring only $2%$-$10%$ additional pre-training cost for convergence. We evaluated OneDP on 6 challenging simulation tasks as well as 4 self-designed real-world tasks using the Franka robot. The results demonstrate that OneDP not only achieves state-of-the-art success rates but also delivers an order-of-magnitude improvement in inference speed, boosting action prediction frequency from 1.5 Hz to 62 Hz, establishing its potential for dynamic and computationally constrained robotic applications. A video demo is provided at our project page, and the code will be publicly available.",
+      "paper_id": "pmlr:v267:wang25ba",
+      "title": "One-Step Diffusion Policy: Fast Visuomotor Policies via Diffusion Distillation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63399-63416",
+          "pmlr_id": "wang25ba",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) have demonstrated considerable reasoning abilities in various tasks such as mathematics and coding. However, recent studies indicate that even the best models lack true comprehension of their reasoning processes. In this paper, we explore how self-play can enhance the rationality of models in the reasoning process without supervision from humans or superior models. We design a $\\textit{\\textbf{C}ritic-\\textbf{D}iscernment \\textbf{G}ame} (\\textbf{CDG})$ in which a prover first provides a solution to a given problem and is subsequently challenged by critiques of its solution. These critiques either aim to assist or mislead the prover. The objective of the prover is to maintain the correct answer when faced with misleading comments, while correcting errors in response to constructive feedback. Our experiments on tasks involving mathematical reasoning, stepwise error detection, self-correction, and long-chain reasoning demonstrate that CDG training can significantly improve the ability of well-aligned LLMs to comprehend their reasoning process.",
+      "paper_id": "pmlr:v267:wang25bb",
+      "title": "Improving Rationality in the Reasoning Process of Language Models through Self-playing Game",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63417-63438",
+          "pmlr_id": "wang25bb",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We investigate the problem of identifying the optimal scoring rule within the principal-agent framework for online information acquisition problem. We focus on the principal’s perspective, seeking to determine the desired scoring rule through interactions with the agent. To address this challenge, we propose two algorithms: OIAFC and OIAFB, tailored for fixed confidence and fixed budget settings, respectively. Our theoretical analysis demonstrates that OIAFC can extract the desired $(\\epsilon, \\delta)$-scoring rule with a efficient instance-dependent sample complexity or an instance-independent sample complexity. Our analysis also shows that OIAFB matches the instance-independent performance bound of OIAFC, while both algorithms share the same complexity across fixed confidence and fixed budget settings.",
+      "paper_id": "pmlr:v267:wang25bc",
+      "title": "Provably Efficient Algorithm for Best Scoring Rule Identification in Online Principal-Agent Information Acquisition",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63439-63466",
+          "pmlr_id": "wang25bc",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Confidence calibration is critical for the safe deployment of machine learning models in the real world. However, such issue in vision-language models like CLIP, particularly after fine-tuning, has not been fully addressed. In this work, we demonstrate that existing prompt tuning methods usually lead to a trade-off of calibration between base and new classes: the cross-entropy loss used in standard fine-tuning (e.g., CoOp) causes overconfidence in new classes by increasing textual label divergence, whereas regularization-based tuning (e.g., KgCoOp) maintains the confidence level but results in underconfidence in base classes due to the improved accuracy. Inspired by the observations, we introduce Dynamic Outlier Regularization (DOR) to ensure the confidence calibration on both base and new classes after fine-tuning. In particular, we propose to minimize the feature deviation of novel textual labels (instead of base classes) sampled from a large vocabulary. In effect, DOR prevents the increase in textual divergence for new labels while easing restrictions on base classes. Extensive experiments demonstrate that DOR can enhance the calibration performance of current fine-tuning methods on base and new classes.",
+      "paper_id": "pmlr:v267:wang25bd",
+      "title": "Understanding and Mitigating Miscalibration in Prompt Tuning for Vision-Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63467-63489",
+          "pmlr_id": "wang25bd",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Wasserstein Barycenter (WB) is a fundamental geometric optimization problem in machine learning, whose objective is to find a representative probability measure that minimizes the sum of Wasserstein distances to given distributions. WB has a number of applications in various areas. However, WB may lead to unfair outcome towards underrepresented groups in some applications (e.g., a \"minority” distribution may be far away from the obtained WB under Wasserstein distance). To address this issue, we propose an alternative objective called \"Wasserstein Ball Center (WBC)”. Specifically, WBC is a distribution that encompasses all input distributions within the minimum Wasserstein distance, which can be formulated as a “minmax” optimization problem. We show that the WBC problem with fixed support is equivalent to solving a large-scale linear programming (LP) instance, which is quite different from the previously studied LP model for WB. By incorporating some novel observations on the induced normal equation, we propose an efficient algorithm that accelerates the interior point method by $O(\\min(N^2m, Nm^2, m^4))$ times (\"$N$” is the number of distributions and \"$m$” is the support size). Finally, we conduct a set of experiments on both synthetic and real-world datasets, demonstrating the computational efficiency of our algorithm, and showing its ability to provide more fairness for input distributions.",
+      "paper_id": "pmlr:v267:wang25be",
+      "title": "Finding Wasserstein Ball Center: Efficient Algorithm and The Applications in Fairness",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63490-63515",
+          "pmlr_id": "wang25be",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph neural networks (GNNs) have shown strong performance in graph fairness learning, which aims to ensure that predictions are unbiased with respect to sensitive attributes. However, existing approaches usually assume that training and test data share the same distribution, which rarely holds in the real world. To tackle this challenge, we propose a novel approach named Dual Unbiased Expansion with Group-acquired Alignment (DANCE) for graph fairness learning under distribution shifts. The core idea of our DANCE is to synthesize challenging yet unbiased virtual graph data in both graph and hidden spaces, simulating distribution shifts from a data-centric view. Specifically, we introduce the unbiased Mixup in the hidden space, prioritizing minor groups to address the potential imbalance of sensitive attributes. Simultaneously, we conduct fairness-aware adversarial learning in the graph space to focus on challenging samples and improve model robustness. To further bridge the domain gap, we propose a group-acquired alignment objective that prioritizes negative pair groups with identical sensitive labels. Additionally, a representation disentanglement objective is adopted to decorrelate sensitive attributes and target representations for enhanced fairness. Extensive experiments demonstrate the superior effectiveness of the proposed DANCE.",
+      "paper_id": "pmlr:v267:wang25bf",
+      "title": "DANCE: Dual Unbiased Expansion with Group-acquired Alignment for Out-of-distribution Graph Fairness Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63516-63529",
+          "pmlr_id": "wang25bf",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Multi-Label Online Continual Learning (MOCL) requires models to learn continuously from endless multi-label data streams, facing complex challenges including persistent catastrophic forgetting, potential missing labels, and uncontrollable imbalanced class distributions. While existing MOCL methods attempt to address these challenges through various techniques, they all overlook label-specific region identifying and feature learning - a fundamental solution rooted in multi-label learning but challenging to achieve in the online setting with incremental and partial supervision. To this end, we first leverage the inherent structural information of input data to evaluate and verify the innate localization capability of different pre-trained models. Then, we propose CUTER (CUT-out-and-Experience-Replay), a simple yet versatile strategy that provides fine-grained supervision signals by further identifying, strengthening and cutting out label-specific regions for efficient experience replay. It not only enables models to simultaneously address catastrophic forgetting, missing labels, and class imbalance challenges, but also serves as an orthogonal solution that seamlessly integrates with existing approaches. Extensive experiments on multiple multi-label image benchmarks demonstrate the superiority of our proposed method. The code is available at https://github.com/wxr99/Cut-Replay",
+      "paper_id": "pmlr:v267:wang25bg",
+      "title": "Cut out and Replay: A Simple yet Versatile Strategy for Multi-Label Online Continual Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63530-63548",
+          "pmlr_id": "wang25bg",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

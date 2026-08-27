@@ -1,0 +1,747 @@
+{
+  "batch_index": 52,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "A key challenge in training Large Language Models (LLMs) is properly aligning them with human preferences. Reinforcement Learning with Human Feedback (RLHF) uses pairwise comparisons from human annotators to train reward functions and has emerged as a popular alignment method. However, input datasets in RLHF can be unbalanced due to adversarial manipulation or inadvertent repetition. Therefore, we want RLHF algorithms to perform well even when the set of alternatives is not uniformly distributed. Drawing on insights from social choice theory, we introduce robustness to approximate clones, a desirable property of RLHF algorithms which requires that adding near-duplicate alternatives does not significantly change the learned reward function. We first demonstrate that the standard RLHF algorithm based on regularized maximum likelihood estimation (MLE) fails to satisfy this property. We then propose the weighted MLE, a new RLHF algorithm that modifies the standard regularized MLE by weighting alternatives based on their similarity to other alternatives. This new algorithm guarantees robustness to approximate clones while preserving desirable theoretical properties.",
+      "paper_id": "pmlr:v267:procaccia25a",
+      "title": "Clone-Robust AI Alignment",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "49903-49926",
+          "pmlr_id": "procaccia25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Secure Aggregation (SA) is a cornerstone of Federated Learning (FL), ensuring that user updates remain hidden from servers. The advanced Flamingo (S&P’23) has realized multi-round aggregation and improved efficiency. However, it still faces several key challenges: scalability issues with dynamic user participation, a lack of verifiability for server-side aggregation results, and vulnerability to Model Inconsistency Attacks (MIA) caused by a malicious server distributing inconsistent models. To address these issues, we propose $\\textit{Janus}$, a generic SA scheme based on dual-server architecture. Janus ensures security against up to $n-2$ colluding clients (where $n$ is the total client count), which prevents privacy breaches for non-colluders. Additionally, Janus is model-independent, ensuring applicability across any FL model without specific adaptations. Furthermore, Janus introduces a new cryptographic primitive, Separable Homomorphic Commitment, which enables clients to efficiently verify the correctness of aggregation. Finally, extensive experiments show that Janus not only significantly enhances security but also reduces per-client communication and computation overhead from logarithmic to constant scale, with a tolerable impact on model performance.",
+      "paper_id": "pmlr:v267:pu25a",
+      "title": "Janus: Dual-Server Multi-Round Secure Aggregation with Verifiability for Federated Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "49927-49945",
+          "pmlr_id": "pu25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recently, numerous cross-modal hashing (CMH) methods have been proposed, yielding remarkable progress. As a static learning paradigm, existing CMH methods often implicitly assume that all modalities are prepared before processing. However, in practice applications (such as multi-modal medical diagnosis), it is very challenging to collect paired multi-modal data simultaneously. Specifically, they are collected chronologically, forming streaming-media data (SMA). To handle this, all previous CMH methods require retraining on data from all modalities, which inevitably limits the scalability and flexibility of the model. In this paper, we propose a novel CMH paradigm named Streaming-media Hashing rEtrieval (SHE) that enables parallel training of each modality. Specifically, we first propose a knowledge library mining module (KLM) that extracts a prototype knowledge library for each modality, thereby revealing the commonality distribution of the instances from each modality. Then, we propose a knowledge library transfer module (KLT) that updates and aligns the new knowledge by utilizing the historical knowledge library, ensuring semantic consistency. Finally, to enhance intra-class semantic relevance and inter-class semantic disparity, we develop a discriminative hashing learning module (DHL). Comprehensive experiments on four benchmark datasets demonstrate the superiority of our SHE compared to 14 competitors.",
+      "paper_id": "pmlr:v267:pu25b",
+      "title": "SHE: Streaming-media Hashing Retrieval",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "49946-49958",
+          "pmlr_id": "pu25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The in-context learning paradigm with LLMs has been instrumental in advancing a wide range of natural language processing tasks. The selection of few-shot examples (exemplars / demonstration samples) is essential for constructing effective prompts under context-length budget constraints. In this paper, we formulate the exemplar selection task as a top-m best arms identification problem. A key challenge in this setup is the exponentially large number of arms that need to be evaluated to identify the m-best arms. We propose CASE (Challenger Arm Sampling for Exemplar selection), a novel sample-efficient selective exploration strategy that maintains a shortlist of “challenger” arms, which are current candidates for the top-m arms. In each iteration, only one of the arms from this shortlist or the current top-m set is pulled, thereby reducing sample complexity and, consequently, the number of LLM evaluations. Furthermore, we model the scores of exemplar subsets (arms) using a parameterized linear scoring function, leading to stochastic linear bandits setting. CASE achieves remarkable efficiency gains of up to 7$\\times$ speedup in runtime while requiring 7$\\times$ fewer LLM calls (87% reduction) without sacrificing performance compared to state-of-the-art exemplar selection methods. We release our code and data (https://github.com/kiranpurohit/CASE).",
+      "paper_id": "pmlr:v267:purohit25a",
+      "title": "Sample Efficient Demonstration Selection for In-Context Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "49959-49982",
+          "pmlr_id": "purohit25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Fine-Grained Openset Detection (FGOD) poses a fundamental challenge due to the similarity between the openset classes and those closed-set ones. Since real-world objects/entities tend to form a hierarchical structure, the fine-grained relationship among the closed-set classes as captured by the hierarchy could potentially improve the FGOD performance. Intuitively, the hierarchical dependency among different classes allows the model to recognize their subtle differences, which in turn makes it better at differentiating similar open-set classes even they may share the same parent. However, simply performing openset detection in a top-down fashion by building a local detector for each node may result in a poor detection performance. Our theoretical analysis also reveals that maximizing the probability of the path leading to the ground-truth leaf node also results in a sub-optimal training process. To systematically address this issue, we propose to formulate a novel state-based node representation, which constructs a state space based upon the entire hierarchical structure. We prove that the state-based representation guarantees to maximize the probability on the path leading to the ground-truth leaf node. Extensive experiments on multiple real-world hierarchical datasets clearly demonstrate the superior performance of the proposed method.",
+      "paper_id": "pmlr:v267:pyakurel25a",
+      "title": "Learning State-Based Node Representations from a Class Hierarchy for Fine-Grained Open-Set Detection",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "49983-50005",
+          "pmlr_id": "pyakurel25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Federated Distillation (FedKD) relies on lightweight knowledge carriers like logits for efficient client-server communication. Although logit-based methods have demonstrated promise in addressing statistical and architectural heterogeneity in federated learning (FL), current approaches remain constrained by suboptimal temperature calibration during knowledge fusion. To address these limitations, we propose ReT-FHD, a framework featuring: 1) Multi-level Elastic Temperature, which dynamically adjusts distillation intensities across model layers, achieving optimized knowledge transfer between heterogeneous local models; 2) Category-Aware Global Temperature Scaling that implements class-specific temperature calibration based on confidence distributions in global logits, enabling personalized distillation policies; 3) Z-Score Guard, a blockchain-verified validation mechanism mitigating 44% of label-flipping and model poisoning attacks. Evaluations across diverse benchmarks with varying model/data heterogeneity demonstrate that the ReT-FHD achieves significant accuracy improvements over baseline methods while substantially reducing communication costs compared to existing approaches. Our work establishes that properly calibrated logits can serve as self-sufficient carriers for building scalable and secure heterogeneous FL systems.",
+      "paper_id": "pmlr:v267:qi25a",
+      "title": "Rethinking the Temperature for Federated Heterogeneous Distillation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50006-50023",
+          "pmlr_id": "qi25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We establish a continuous-time framework for analyzing Deep Q-Networks (DQNs) via stochastic control and Forward-Backward Stochastic Differential Equations (FBSDEs). Considering a continuous-time Markov Decision Process (MDP) driven by a square-integrable martingale, we analyze DQN approximation properties. We show that DQNs can approximate the optimal Q-function on compact sets with arbitrary accuracy and high probability, leveraging residual network approximation theorems and large deviation bounds for the state-action process. We then analyze the convergence of a general Q-learning algorithm for training DQNs in this setting, adapting stochastic approximation theorems. Our analysis emphasizes the interplay between DQN layer count, time discretization, and the role of viscosity solutions (primarily for the value function $V^*$) in addressing potential non-smoothness of the optimal Q-function. This work bridges deep reinforcement learning and stochastic control, offering insights into DQNs in continuous-time settings, relevant for applications with physical systems or high-frequency data.",
+      "paper_id": "pmlr:v267:qi25b",
+      "title": "Universal Approximation Theorem of Deep Q-Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50024-50046",
+          "pmlr_id": "qi25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Federated Graph Learning (FGL) proposes an effective approach to collaboratively training Graph Neural Networks (GNNs) while maintaining privacy. Nevertheless, communication efficiency becomes a critical bottleneck in environments with limited resources. In this context, one-shot FGL emerges as a promising solution by restricting communication to a single round. However, prevailing FGL methods face two key challenges in the one-shot setting: 1) They heavily rely on gradual personalized optimization over multiple rounds, undermining the capability of the global model to efficiently generalize across diverse graph structures. 2) They are prone to overfitting to local data distributions due to extreme structural bias, leading to catastrophic forgetting. To address these issues, we introduce GHOST , an innovative one-shot FGL framework. In GHOST, we establish a proxy model for each client to leverage diverse local knowledge and integrate it to train the global model. During training, we identify and consolidate parameters essential for capturing topological knowledge, thereby mitigating catastrophic forgetting. Extensive experiments on real-world tasks demonstrate the superiority and generalization capability of GHOST. The code is available at https://github.com/JiaruQian/GHOST.",
+      "paper_id": "pmlr:v267:qian25a",
+      "title": "GHOST: Generalizable One-Shot Federated Graph Learning with Proxy-Based Topology Knowledge Retention",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50047-50065",
+          "pmlr_id": "qian25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Many real-world applications collect data in a streaming environment, where learning tasks are encountered sequentially. This necessitates continual learning (CL) to update models online, enabling adaptation to new tasks while preserving past knowledge to prevent catastrophic forgetting. Nowadays, with the flourish of large pre-trained models (LPMs), efficiency has become increasingly critical for CL, due to their substantial computational demands and growing parameter sizes. In this paper, we introduce TreeLoRA (K-D Tree of Low-Rank Adapters), a novel approach that constructs layer-wise adapters by leveraging hierarchical gradient similarity to enable efficient CL, particularly for LPMs. To reduce the computational burden of task similarity estimation, we employ bandit techniques to develop an algorithm based on lower confidence bounds to efficiently explore the task structure. Furthermore, we use sparse gradient updates to facilitate parameter optimization, making the approach better suited for LPMs. Theoretical analysis is provided to justify the rationale behind our approach, and experiments on both vision transformers (ViTs) and large language models (LLMs) demonstrate the effectiveness and efficiency of our approach across various domains, including vision and natural language processing tasks.",
+      "paper_id": "pmlr:v267:qian25b",
+      "title": "TreeLoRA: Efficient Continual Learning via Layer-Wise LoRAs Guided by a Hierarchical Gradient-Similarity Tree",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50066-50085",
+          "pmlr_id": "qian25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In this paper, we focus on the out-of-distribution (OOD) generalization of self-supervised learning (SSL). By analyzing the mini-batch construction during the SSL training phase, we first give one plausible explanation for SSL having OOD generalization. Then, from the perspective of data generation and causal inference, we analyze and conclude that SSL learns spurious correlations during the training process, which leads to a reduction in OOD generalization. To address this issue, we propose a post-intervention distribution (PID) grounded in the Structural Causal Model. PID offers a scenario where the spurious variable and label variable is mutually independent. Besides, we demonstrate that if each mini-batch during SSL training satisfies PID, the resulting SSL model can achieve optimal worst-case OOD performance. This motivates us to develop a batch sampling strategy that enforces PID constraints through the learning of a latent variable model. Through theoretical analysis, we demonstrate the identifiability of the latent variable model and validate the effectiveness of the proposed sampling strategy. Experiments conducted on various downstream OOD tasks demonstrate the effectiveness of the proposed sampling strategy.",
+      "paper_id": "pmlr:v267:qiang25a",
+      "title": "On the Out-of-Distribution Generalization of Self-Supervised Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50086-50112",
+          "pmlr_id": "qiang25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This paper addresses the challenge of graph domain adaptation on evolving, multiple out-of-distribution (OOD) graphs. Conventional graph domain adaptation methods are confined to single-step adaptation, making them ineffective in handling continuous domain shifts and prone to catastrophic forgetting. This paper introduces the Graph Continual Adaptive Learning (GCAL) method, designed to enhance model sustainability and adaptability across various graph domains. GCAL employs a bilevel optimization strategy. The \"adapt\" phase uses an information maximization approach to fine-tune the model with new graph domains while re-adapting past memories to mitigate forgetting. Concurrently, the \"generate memory\" phase, guided by a theoretical lower bound derived from information bottleneck theory, involves a variational memory graph generation module to condense original graphs into memories. Extensive experimental evaluations demonstrate that GCAL substantially outperforms existing methods in terms of adaptability and knowledge retention.",
+      "paper_id": "pmlr:v267:qiao25a",
+      "title": "GCAL: Adapting Graph Models to Evolving Domain Shifts",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50113-50129",
+          "pmlr_id": "qiao25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Ensemble learning is a powerful approach for improving generalization under distribution shifts, but its effectiveness heavily depends on how individual models are combined. Existing methods often optimize ensemble weights based on validation data, which may not represent unseen test distributions, leading to suboptimal performance in out-of-distribution (OoD) settings. Inspired by Distributionally Robust Optimization (DRO), we propose Structure-informed Risk Minimization (SRM), a principled framework that learns robust ensemble weights without access to test data. Unlike standard DRO, which defines uncertainty sets based on divergence metrics alone, SRM incorporates structural information of training distributions, ensuring that the uncertainty set aligns with plausible real-world shifts. This approach mitigates the over-pessimism of traditional worst-case optimization while maintaining robustness. We introduce a computationally efficient optimization algorithm with theoretical guarantees and demonstrate that SRM achieves superior OoD generalization compared to existing ensemble combination strategies across diverse benchmarks. Code is available at: https://github.com/deep-real/SRM.",
+      "paper_id": "pmlr:v267:qiao25b",
+      "title": "Structure-informed Risk Minimization for Robust Ensemble Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50130-50141",
+          "pmlr_id": "qiao25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This paper investigates decentralized unlearning, aiming to eliminate the impact of a specific client on the whole decentralized system. However, decentralized communication characterizations pose new challenges for effective unlearning: the indirect connections make it difficult to trace the specific client’s impact, while the dynamic topology limits the scalability of retraining-based unlearning methods. In this paper, we propose the first P rovable D ecentralized U nlearning algorithm under D ynamic T opologies called PDUDT. It allows clients to eliminate the influence of a specific client without additional communication or retraining. We provide rigorous theoretical guarantees for PDUDT, showing it is statistically indistinguishable from perturbed retraining. Additionally, it achieves an efficient convergence rate of $\\mathcal{O}(\\frac{1}{T})$ in subsequent learning, where $T$ is the total communication rounds. This rate matches state-of-the-art results. Experimental results show that compared with the Retrain method, PDUDT saves more than 99% of unlearning time while achieving comparable unlearning performance.",
+      "paper_id": "pmlr:v267:qiao25c",
+      "title": "PDUDT: Provable Decentralized Unlearning under Dynamic Topologies",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50142-50170",
+          "pmlr_id": "qiao25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This paper examines the theoretical performance of distributed diffusion models in environments where computational resources and data availability vary significantly among workers. Traditional models centered on single-worker scenarios fall short in such distributed settings, particularly when some workers are resource-constrained. This discrepancy in resources and data diversity challenges the assumption of accurate score function estimation foundational to single-worker models. We establish the inaugural generation error bound for distributed diffusion models in resource-limited settings, establishing a linear relationship with the data dimension $d$ and consistency with established single-worker results. Our analysis highlights the critical role of hyperparameter selection in influencing the training dynamics, which are key to the performance of model generation. This study provides a streamlined theoretical approach to optimizing distributed diffusion models, paving the way for future research in this area.",
+      "paper_id": "pmlr:v267:qiao25d",
+      "title": "How Distributed Collaboration Influences the Diffusion Model Training? A Theoretical Perspective",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50171-50188",
+          "pmlr_id": "qiao25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Continual Instruction Tuning (CIT) is adopted to continually instruct Large Models to follow human intent data by data. It is observed that existing gradient update would heavily destroy the performance on previous datasets during CIT process. Instead, Exponential Moving Average (EMA), owns the ability to trace previous parameters, which can aid in decreasing forgetting. Nonetheless, its stable balance weight fails to deal with the ever-changing datasets, leading to the out-of-balance between plasticity and stability. In this paper, we propose a general continual instruction tuning framework to address the challenge. Starting from the trade-off prerequisite and EMA update, we propose the plasticity and stability ideal condition. Based on Taylor expansion in the loss function, we find the optimal balance weight can be automatically determined by the gradients and learned parameters. Therefore, we propose a stable-plasticity balanced coefficient to avoid knowledge interference. Based on the semantic similarity of the instructions, we can determine whether to retrain or expand the training parameters and allocate the most suitable parameters for the testing instances. Extensive experiments across multiple continual instruction tuning benchmarks demonstrate that our approach not only enhances anti-forgetting capabilities but also significantly improves overall continual tuning performance. Our code is available at https://github.com/JingyangQiao/CoIN.",
+      "paper_id": "pmlr:v267:qiao25e",
+      "title": "Large Continual Instruction Assistant",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50189-50213",
+          "pmlr_id": "qiao25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Spectral Graph Neural Networks process graph signals using the spectral properties of the normalized graph Laplacian matrix. However, the frequent occurrence of repeated eigenvalues limits the expressiveness of spectral GNNs. To address this, we propose a higher-dimensional sheaf Laplacian matrix, which not only encodes the graph’s topological information but also increases the upper bound on the number of distinct eigenvalues. The sheaf Laplacian matrix is derived from carefully designed perturbations of the block form of the normalized graph Laplacian, yielding a perturbed sheaf Laplacian (PSL) matrix with more distinct eigenvalues. We provide a theoretical analysis of the expressiveness of spectral GNNs equipped with the PSL and establish perturbation bounds for the eigenvalues. Extensive experiments on benchmark datasets for node classification demonstrate that incorporating the perturbed sheaf Laplacian enhances the performance of spectral GNNs.",
+      "paper_id": "pmlr:v267:qin25a",
+      "title": "Enhancing Spectral GNNs: From Topology and Perturbation Perspectives",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50214-50234",
+          "pmlr_id": "qin25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Multi-view clustering aims to improve the final performance by taking advantages of complementary and consistent information of all views. In real world, data samples with partially available information are common and the issue regarding the clustering for incomplete multi-view data is inevitably raised. To deal with the partial data with large scales, some fast clustering approaches for incomplete multi-view data have been presented. Despite the significant success, few of these methods pay attention to learning anchors with high quality in a unified framework for incomplete multi-view clustering, while ensuring the scalability for large-scale incomplete datasets. In addition, most existing approaches based on incomplete multi-view clustering ignore to build the relation between anchor graph and similarity matrix in symmetric nonnegative matrix factorization and then directly conduct graph partition based on the anchor graph to reduce the space and time consumption. In this paper, we propose a novel fast incomplete multi-view clustering method for the data with large scales, termed Fast Incomplete Multi-view clustering by flexible anchor Learning (FIML), where graph construction, anchor learning and graph partition are simultaneously integrated into a unified framework for fast incomplete multi-view clustering. To be specific, we learn a shared anchor graph to guarantee the consistency among multiple views and employ a adaptive weight coefficient to balance the impact for each view. The relation between anchor graph and similarity matrix in symmetric nonnegative matrix factorization can also be built, i.e., each entry in the anchor graph can characterize the similarity between the anchor and original data sample. We then adopt an alternative algorithm for solving the formulated problem. Experiments conducted on different datasets confirm the superiority of FIML compared with other clustering methods for incomplete multi-view data.",
+      "paper_id": "pmlr:v267:qin25b",
+      "title": "Fast Incomplete Multi-view Clustering by Flexible Anchor Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50235-50245",
+          "pmlr_id": "qin25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Parameter-sharing (PS) techniques have been widely adopted in cooperative Multi-Agent Reinforcement Learning (MARL). In PS, all the agents share a policy network with identical parameters, which enjoys good sample efficiency. However, PS could lead to homogeneous policies that limit MARL performance. We tackle this problem from the angle of gradient conflict among agents. We find that the existence of futile neurons whose update is canceled out by gradient conflicts among agents leads to poor learning efficiency and diversity. To address this deficiency, we propose GradPS, a gradient-based PS method. It dynamically creates multiple clones for each futile neuron. For each clone, a group of agents with low gradient-conflict shares the neuron’s parameters. Our method can enjoy good sample efficiency by sharing the gradients among agents of the same clone neuron. Moreover, it can encourage diverse behaviors through independently updating an exclusive clone neuron. Through extensive experiments, we show that GradPS can learn diverse policies with promising performance. The source code for GradPS is available in https://github.com/xmu-rl-3dv/GradPS.",
+      "paper_id": "pmlr:v267:qin25c",
+      "title": "GradPS: Resolving Futile Neurons in Parameter Sharing Network for Multi-Agent Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50246-50268",
+          "pmlr_id": "qin25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph generative models are essential across diverse scientific domains by capturing complex distributions over relational data. Among them, graph diffusion models achieve superior performance but face inefficient sampling and limited flexibility due to the tight coupling between training and sampling stages. We introduce DeFoG, a novel graph generative framework that disentangles sampling from training, enabling a broader design space for more effective and efficient model optimization. DeFoG employs a discrete flow-matching formulation that respects the inherent symmetries of graphs. We theoretically ground this disentangled formulation by explicitly relating the training loss to the sampling algorithm and showing that DeFoG faithfully replicates the ground truth graph distribution. Building on these foundations, we thoroughly investigate DeFoG’s design space and propose novel sampling methods that significantly enhance performance and reduce the required number of refinement steps. Extensive experiments demonstrate state-of-the-art performance across synthetic, molecular, and digital pathology datasets, covering both unconditional and conditional generation settings. It also outperforms most diffusion-based models with just 5–10% of their sampling steps.",
+      "paper_id": "pmlr:v267:qin25d",
+      "title": "DeFoG: Discrete Flow Matching for Graph Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50269-50326",
+          "pmlr_id": "qin25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "As a leading unsupervised classification algorithm in artificial intelligence, multi-view subspace clustering segments unlabeled data from different subspaces. Recent works based on the anchor have been proposed to decrease the computation complexity for the datasets with large scales in multi-view clustering. The major differences among these methods lie on the objective functions they define. Despite considerable success, these works pay few attention to guaranting the robustness of learned consensus anchors via effective manner for efficient multi-view clustering and investigating the specific local distribution of cluster in the affine subspace. Besides, the robust consensus anchors as well as the common cluster structure shared by different views are not able to be simultaneously learned. In this paper, we propose Robust Consensus anchors learning for efficient multi-view Subspace Clustering (RCSC). We first show that if the data are sufficiently sampled from independent subspaces, and the objective function meets some conditions, the achieved anchor graph has the block-diagonal structure. As a special case, we provide a model based on Frobenius norm, non-negative and affine constraints in consensus anchors learning, which guarantees the robustness of learned consensus anchors for efficient multi-view clustering and investigates the specific local distribution of cluster in the affine subspace. While it is simple, we theoretically give the geometric analysis regarding the formulated RCSC. The union of these three constraints is able to restrict how each data point is described in the affine subspace with specific local distribution of cluster for guaranting the robustness of learned consensus anchors. RCSC takes full advantages of correlation among consensus anchors, which encourages the grouping effect and groups highly correlated consensus anchors together with the guidance of view-specific projection. The anchor graph construction, partition and robust anchor learning are jointly integrated into a unified framework. It ensures the mutual enhancement for these procedures and helps lead to more discriminative consensus anchors as well as the cluster indicator. We then adopt an alternative optimization strategy for solving the formulated problem. Experiments performed on eight multi-view datasets confirm the superiority of RCSC based on the effectiveness and efficiency.",
+      "paper_id": "pmlr:v267:qin25e",
+      "title": "Robust Consensus Anchor Learning for Efficient Multi-view Subspace Clustering",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50327-50337",
+          "pmlr_id": "qin25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advancements in predictive models have demonstrated exceptional capabilities in predicting the future state of objects and scenes. However, the lack of categorization based on inherent characteristics continues to hinder the progress of predictive model development. Additionally, existing benchmarks are unable to effectively evaluate higher-capability, highly embodied predictive models from an embodied perspective. In this work, we classify the functionalities of predictive models into a hierarchy and take the first step in evaluating World Simulators by proposing a dual evaluation framework called WorldSimBench. WorldSimBench includes Explicit Perceptual Evaluation and Implicit Manipulative Evaluation, encompassing human preference assessments from the visual perspective and action-level evaluations in embodied tasks, covering three representative embodied scenarios: Open-Ended Embodied Environment, Autonomous, Driving, and Robot Manipulation. In the Explicit Perceptual Evaluation, we introduce the HF-Embodied Dataset, a video assessment dataset based on fine-grained human feedback, which we use to train a Human Preference Evaluator that aligns with human perception and explicitly assesses the visual fidelity of World Simulater. In the Implicit Manipulative Evaluation, we assess the video-action consistency of World Simulators by evaluating whether the generated situation-aware video can be accurately translated into the correct control signals in dynamic environments. Our comprehensive evaluation offers key insights that can drive further innovation in video generation models, positioning World Simulators as a pivotal advancement toward embodied artificial intelligence.",
+      "paper_id": "pmlr:v267:qin25f",
+      "title": "WorldSimBench: Towards Video Generation Models as World Simulators",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50338-50362",
+          "pmlr_id": "qin25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Combinatorial CRISPR screening enables large-scale identification of synergistic gene pairs for combination therapies, but exhaustive experimentation is infeasible. We introduce NAIAD, an active learning framework that efficiently discovers optimal gene pairs by leveraging single-gene perturbation effects and adaptive gene embeddings that scale with the training data size, mitigating overfitting in small-sample learning while capturing complex gene interactions as more data is collected. Evaluated on four CRISPR datasets with over 350,000 interactions, NAIAD trained on small datasets outperforms existing models by up to 40%. Its recommendation system prioritizes gene pairs with maximum predicted effects, accelerating discovery with fewer experiments. We also extend NAIAD to optimal drug combination identification among 2,000 candidates. Overall, NAIAD enhances combinatorial perturbation design and drives advances in genomics research and therapeutic development in combination therapy. Our code is publicly available at: https://github.com/NeptuneBio/NAIAD",
+      "paper_id": "pmlr:v267:qin25g",
+      "title": "Active Learning for Efficient Discovery of Optimal Combinatorial Perturbations",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50363-50383",
+          "pmlr_id": "qin25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Machine learning relies heavily on data, yet the continuous growth of real-world data poses challenges for efficient dataset construction and training. A fundamental yet unsolved question is: given our current model and data, does a new data (sample/batch) need annotation/learning? Conventional approaches retain all available data, leading to non-optimal data and training efficiency. Active learning aims to reduce data redundancy by selecting a subset of samples to annotate, while it increases pipeline complexity and introduces bias. In this work, we propose Info-Coevolution, a novel framework that efficiently enables models and data to coevolve through online selective annotation with no bias. Leveraging task-specific models (and open-source models), it selectively annotates and integrates online and web data to improve datasets efficiently. For real-world datasets like ImageNet-1K, Info-Coevolution reduces annotation and training costs by 32% without performance loss. It is able to automatically give the saving ratio without tuning the ratio. It can further reduce the annotation ratio to 50% with semi-supervised learning. We also explore retrieval-based dataset enhancement using unlabeled open-source data. Code is available at https://github.com/NUS-HPC-AI-Lab/Info-Coevolution/.",
+      "paper_id": "pmlr:v267:qin25h",
+      "title": "Info-Coevolution: An Efficient Framework for Data Model Coevolution",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50384-50396",
+          "pmlr_id": "qin25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This paper focuses on implanting multiple heterogeneous backdoor triggers in bridge-based diffusion models designed for complex and arbitrary input distributions. Existing backdoor formulations mainly address single-attack scenarios and are limited to Gaussian noise input models. To fill this gap, we propose MixBridge, a novel diffusion Schrödinger bridge (DSB) framework to cater to arbitrary input distributions (taking I2I tasks as special cases). Beyond this trait, we demonstrate that backdoor triggers can be injected into MixBridge by directly training with poisoned image pairs. This eliminates the need for the cumbersome modifications to stochastic differential equations required in previous studies, providing a flexible tool to study backdoor behavior for bridge models. However, a key question arises: can a single DSB model train multiple backdoor triggers? Unfortunately, our theory shows that when attempting this, the model ends up following the geometric mean of benign and backdoored distributions, leading to performance conflict across backdoor tasks. To overcome this, we propose a Divide-and-Merge strategy to mix different bridges, where models are independently pre-trained for each specific objective (Divide) and then integrated into a unified model (Merge). In addition, a Weight Reallocation Scheme (WRS) is also designed to enhance the stealthiness of MixBridge. Empirical studies across diverse generation tasks speak to the efficacy of MixBridge. The code is available at: https://github.com/qsx830/MixBridge.",
+      "paper_id": "pmlr:v267:qin25i",
+      "title": "MixBridge: Heterogeneous Image-to-Image Backdoor Attack through Mixture of Schrödinger Bridges",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50397-50434",
+          "pmlr_id": "qin25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Deep neural networks incorporating discrete latent variables have shown significant potential in sequence modeling. A notable approach is to leverage vector quantization (VQ) to generate discrete representations within a codebook. However, its discrete nature prevents the use of standard backpropagation, which has led to challenges in efficient codebook training. In this work, we introduce Meta-Quantization (MQ) , a novel vector quantization training framework inspired by meta-learning. Our method separates the optimization of the codebook and the auto-encoder into two levels. Furthermore, we introduce a hyper-net to replace the embedding-parameterized codebook, enabling the codebook to be dynamically generated based on the feedback from the auto-encoder. Different from previous VQ objectives, our innovation results in a meta-objective that makes the codebook training task-aware. We validate the effectiveness of MQ with VQVAE and VQGAN architecture on image reconstruction and generation tasks. Experimental results showcase the superior generative performance of MQ, underscoring its potential as a robust alternative to existing VQ methods.",
+      "paper_id": "pmlr:v267:qin25j",
+      "title": "Learning to Quantize for Training Vector-Quantized Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50435-50447",
+          "pmlr_id": "qin25j",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In this work, we study the online convex optimization problem with curved losses and delayed feedback. When losses are strongly convex, existing approaches obtain regret bounds of order $d_{\\max} \\ln T$, where $d_{\\max}$ is the maximum delay and $T$ is the time horizon. However, in many cases, this guarantee can be much worse than $\\sqrt{d_{\\mathrm{tot}}}$ as obtained by a delayed version of online gradient descent, where $d_{\\mathrm{tot}}$ is the total delay. We bridge this gap by proposing a variant of follow-the-regularized-leader that obtains regret of order $\\min\\{\\sigma_{\\max}\\ln T, \\sqrt{d_{\\mathrm{tot}}}\\}$, where $\\sigma_{\\max}$ is the maximum number of missing observations. We then consider exp-concave losses and extend the Online Newton Step algorithm to handle delays with an adaptive learning rate tuning, achieving regret $\\min\\{d_{\\max} n\\ln T, \\sqrt{d_{\\mathrm{tot}}}\\}$ where $n$ is the dimension. To our knowledge, this is the first algorithm to achieve such a regret bound for exp-concave losses. We further consider the problem of unconstrained online linear regression and achieve a similar guarantee by designing a variant of the Vovk-Azoury-Warmuth forecaster with a clipping trick. Finally, we implement our algorithms and conduct experiments under various types of delay and losses, showing an improved performance over existing methods.",
+      "paper_id": "pmlr:v267:qiu25a",
+      "title": "Exploiting Curvature in Online Convex Optimization with Delayed Feedback",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50448-50479",
+          "pmlr_id": "qiu25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Deep learning-based watermarking models play a crucial role in copyright protection across various applications. However, many high-performance models are limited in practical deployment due to their large number of parameters. Meanwhile, the robustness and invisibility performance of existing lightweight models are unsatisfactory. This presents a pressing need for a watermarking model that combines lightweight capacity with satisfactory performance. Our research identifies a key reason that limits the performance of existing watermarking frameworks: a mismatch between commonly used decoding losses (e.g., mean squared error and binary cross-entropy loss) and the actual decoding goal, leading to parameter redundancy. We propose two innovative solutions: (1) Decoding-oriented surrogate loss (DO), which redesigns the loss function to mitigate the influence of decoding-irrelevant optimization directions; and (2) Detachable projection head (PH), which incorporates a detachable redundant module during training to handle these irrelevant directions and is discarded during inference. Additionally, we propose a novel watermarking framework comprising five submodules, allowing for independent parameter reduction in each component. Our proposed model achieves better efficiency, invisibility, and robustness while utilizing only 2.2% of the parameters compared to the state-of-the-art frameworks. By improving efficiency while maintaining robust copyright protection, our model is well suited for practical applications in resource-constrained environments. The DO and PH methods are designed to be plug-and-play, facilitating seamless integration into future lightweight models.",
+      "paper_id": "pmlr:v267:qiu25b",
+      "title": "Lightweight-Mark: Rethinking Deep Learning-Based Watermarking",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50480-50501",
+          "pmlr_id": "qiu25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Blind face restoration (BFR), which involves converting low-quality (LQ) images into high-quality (HQ) images, remains challenging due to complex and unknown degradations. While previous diffusion-based methods utilize feature extractors from LQ images as guidance, using raw LQ images directly as the starting point for the reverse diffusion process offers a theoretically optimal solution. In this work, we propose Pseudo-Hashing Image-to-image Schrödinger Bridge (P-I2SB), a novel framework inspired by optimal mass transport problems, which enhances the restoration potential of Schrödinger Bridge (SB) by correcting data distributions and effectively learning the optimal transport path between any two data distributions. Notably, we theoretically explore and identify that existing methods are limited by the optimality and reversibility of solutions in SB, leading to suboptimal performance. Our approach involves preprocessing HQ images during training by hashing them into pseudo-samples according to a rule related to LQ images, ensuring structural similarity in distribution. This guarantees optimal and reversible solutions in SB, enabling the inference process to learn effectively and allowing P-I2SB to achieve state-of-the-art results in BFR, with more natural textures and retained inference speed compared to previous methods.",
+      "paper_id": "pmlr:v267:qiu25c",
+      "title": "Feature out! Let Raw Image as Your Condition for Blind Face Restoration",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50502-50525",
+          "pmlr_id": "qiu25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The training and deployment of large language models (LLMs) create a feedback loop with human users: models learn human beliefs from data, reinforce these beliefs with generated content, reabsorb the reinforced beliefs, and feed them back to users again and again. This dynamic resembles an echo chamber. We hypothesize that this feedback loop entrenches the existing values and beliefs of users, leading to a loss of diversity in human ideas and potentially the lock-in of false beliefs. We formalize this hypothesis and test it empirically with agent-based LLM simulations and real-world GPT usage data. Analysis reveals sudden but sustained drops in diversity after the release of new GPT iterations, consistent with the hypothesized human-AI feedback loop. Website: https://thelockinhypothesis.com",
+      "paper_id": "pmlr:v267:qiu25d",
+      "title": "The Lock-in Hypothesis: Stagnation by Algorithm",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50526-50571",
+          "pmlr_id": "qiu25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Decoding functional magnetic resonance imaging (fMRI) signals into text has been a key challenge in the neuroscience community, with the potential to advance brain-computer interfaces and uncover deeper insights into brain mechanisms. However, existing approaches often struggle with suboptimal predictive performance, limited task variety, and poor generalization across subjects. In response to this, we propose MindLLM, a model designed for subject-agnostic and versatile fMRI-to-text decoding. MindLLM consists of an fMRI encoder and an off-the-shelf LLM. The fMRI encoder employs a neuroscience-informed attention mechanism, which is capable of accommodating subjects with varying input shapes and thus achieves high-performance subject-agnostic decoding. Moreover, we introduce Brain Instruction Tuning (BIT), a novel approach that enhances the model’s ability to capture diverse semantic representations from fMRI signals, facilitating more versatile decoding. We evaluate MindLLM on comprehensive fMRI-to-text benchmarks. Results demonstrate that our model outperforms the baselines, improving downstream tasks by $12.0%$, unseen subject generalization by $24.5%$, and novel task adaptation by $25.0%$. Furthermore, the attention patterns in MindLLM provide interpretable insights into its decision-making process.",
+      "paper_id": "pmlr:v267:qiu25e",
+      "title": "MindLLM: A Subject-Agnostic and Versatile Model for fMRI-to-text Decoding",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50572-50593",
+          "pmlr_id": "qiu25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph Neural Networks (GNNs) have emerged as a fundamental tool for modeling complex graph structures across diverse applications. However, directly applying pretrained GNNs to varied downstream tasks without fine-tuning-based continual learning remains challenging, as this approach incurs high computational costs and hinders the development of Large Graph Models (LGMs). In this paper, we investigate an efficient and generalizable dataset distillation framework for Graph Continual Learning (GCL) across multiple downstream tasks, implemented through a novel Lightweight Graph Neural Tangent Kernel (LIGHTGNTK). Specifically, LIGHTGNTK employs a low-rank approximation of the Laplacian matrix via Bernoulli sampling and linear association within the GNTK. This design enables efficient capture of both structural and feature relationships while supporting gradient-based dataset distillation. Additionally, LIGHTGNTK incorporates a unified subgraph anchoring strategy, allowing it to handle graph-level, node-level, and edge-level tasks under diverse input structures. Comprehensive experiments on several datasets show that LIGHTGNTK achieves state-of-the-art performance in GCL scenarios, promoting the development of adaptive and scalable LGMs.",
+      "paper_id": "pmlr:v267:qiu25f",
+      "title": "Efficient Graph Continual Learning via Lightweight Graph Neural Tangent Kernels-based Dataset Distillation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50594-50618",
+          "pmlr_id": "qiu25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Structure-Based Drug Design (SBDD) is crucial for identifying bioactive molecules. Recent deep generative models are faced with challenges in geometric structure modeling. A major bottleneck lies in the twisted probability path of multi-modalities—continuous 3D positions and discrete 2D topologies—which jointly determine molecular geometries. By establishing the fact that noise schedules decide the Variational Lower Bound (VLB) for the twisted probability path, we propose VLB-Optimal Scheduling (VOS) strategy in this under-explored area, which optimizes VLB as a path integral for SBDD. Our model effectively enhances molecular geometries and interaction modeling, achieving state-of-the-art PoseBusters passing rate of 95.9% on CrossDock, more than 10% improvement upon strong baselines, while maintaining high affinities and robust intramolecular validity evaluated on held-out test set. Code is available at https://github.com/AlgoMole/MolCRAFT.",
+      "paper_id": "pmlr:v267:qiu25g",
+      "title": "Piloting Structure-Based Drug Design via Modality-Specific Optimal Schedule",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50619-50644",
+          "pmlr_id": "qiu25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Structure-based molecule optimization (SBMO) aims to optimize molecules with both continuous coordinates and discrete types against protein targets. A promising direction is to exert gradient guidance on generative models given its remarkable success in images, but it is challenging to guide discrete data and risks inconsistencies between modalities. To this end, we leverage a continuous and differentiable space derived through Bayesian inference, presenting Molecule Joint Optimization (MolJO), the gradient-based SBMO framework that facilitates joint guidance signals across different modalities while preserving SE(3)-equivariance. We introduce a novel backward correction strategy that optimizes within a sliding window of the past histories, allowing for a seamless trade-off between explore-and-exploit during optimization. MolJO achieves state-of-the-art performance on CrossDocked2020 benchmark (Success Rate 51.3%, Vina Dock -9.05 and SA 0.78), more than 4x improvement in Success Rate compared to the gradient-based counterpart, and 2x “Me-Better” Ratio as much as 3D baselines. Furthermore, we extend MolJO to a wide range of optimization settings, including multi-objective optimization and challenging tasks in drug design such as R-group optimization and scaffold hopping, further underscoring its versatility. Code is available at https://github.com/AlgoMole/MolCRAFT.",
+      "paper_id": "pmlr:v267:qiu25h",
+      "title": "Empower Structure-Based Molecule Optimization with Gradient Guided Bayesian Flow Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50645-50671",
+          "pmlr_id": "qiu25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "De novo peptide sequencing is a critical task in proteomics. However, the performance of current deep learning-based methods is limited by the inherent complexity of mass spectrometry data and the heterogeneous distribution of noise signals, leading to data-specific biases. We present RankNovo, the first deep reranking framework that enhances de novo peptide sequencing by leveraging the complementary strengths of multiple sequencing models. RankNovo employs a list-wise reranking approach, modeling candidate peptides as multiple sequence alignments and utilizing axial attention to extract informative features across candidates. Additionally, we introduce two new metrics, PMD ( P eptide M ass D eviation) and RMD ( R esidual M ass D eviation), which offer delicate supervision by quantifying mass differences between peptides at both the sequence and residue levels. Extensive experiments demonstrate that RankNovo not only surpasses its base models used to generate training candidates for reranking pre-training, but also sets a new state-of-the-art benchmark. Moreover, RankNovo exhibits strong zero-shot generalization to unseen models—those whose generations were not exposed during training, highlighting its robustness and potential as a universal reranking framework for peptide sequencing. Our work presents a novel reranking strategy that fundamentally challenges existing single-model paradigms and advances the frontier of accurate de novo sequencing. Our source code is provided on GitHub.",
+      "paper_id": "pmlr:v267:qiu25i",
+      "title": "Universal Biological Sequence Reranking for Improved De Novo Peptide Sequencing",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50672-50696",
+          "pmlr_id": "qiu25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "What scaling limits govern neural network training dynamics when model size and training time grow in tandem? We show that despite the complex interactions between architecture, training algorithms, and data, compute-optimally trained models exhibit a remarkably precise universality. Specifically, loss curves from models of varying sizes collapse onto a single universal curve when training compute and loss are normalized to unity at the end of training. With learning rate decay, the collapse becomes so tight that differences in the normalized curves across models fall below the noise floor of individual loss curves across random seeds, a phenomenon we term supercollapse. We observe supercollapse across learning rate schedules, datasets, and architectures, including transformers trained on next-token prediction, and find it breaks down when hyperparameters are scaled suboptimally, providing a precise and practical indicator of good scaling. We explain these phenomena by connecting collapse to the power-law structure in typical neural scaling laws, and analyzing a simple yet surprisingly effective model of SGD noise dynamics that accurately predicts loss curves across various learning rate schedules and quantitatively explains the origin of supercollapse.",
+      "paper_id": "pmlr:v267:qiu25j",
+      "title": "Scaling Collapse Reveals Universal Dynamics in Compute-Optimally Trained Neural Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50697-50720",
+          "pmlr_id": "qiu25j",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The Max-$k$-Cut problem is a fundamental combinatorial optimization challenge that generalizes the classic $\\mathcal{NP}$-complete Max-Cut problem. While relaxation techniques are commonly employed to tackle Max-$k$-Cut, they often lack guarantees of equivalence between the solutions of the original problem and its relaxation. To address this issue, we introduce the Relax-Optimize-and-Sample (ROS) framework. In particular, we begin by relaxing the discrete constraints to the continuous probability simplex form. Next, we pre-train and fine-tune a graph neural network model to efficiently optimize the relaxed problem. Subsequently, we propose a sampling-based construction algorithm to map the continuous solution back to a high-quality Max-$k$-Cut solution. By integrating geometric landscape analysis with statistical theory, we establish the consistency of function values between the continuous solution and its mapped counterpart. Extensive experimental results on random regular graphs and the Gset benchmark demonstrate that the proposed ROS framework effectively scales to large instances with up to $20,000$ nodes in just a few seconds, outperforming state-of-the-art algorithms. Furthermore, ROS exhibits strong generalization capabilities across both in-distribution and out-of-distribution instances, underscoring its effectiveness for large-scale optimization tasks.",
+      "paper_id": "pmlr:v267:qiu25k",
+      "title": "ROS: A GNN-based Relax-Optimize-and-Sample Framework for Max-$k$-Cut Problems",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50721-50743",
+          "pmlr_id": "qiu25k",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "3D Geometric Graph Neural Networks (GNNs) have emerged as transformative tools for modeling molecular data. Despite their predictive power, these models often suffer from limited interpretability, raising concerns for scientific applications that require reliable and transparent insights. While existing methods have primarily focused on explaining molecular substructures in 2D GNNs, the transition to 3D GNNs introduces unique challenges, such as handling the implicit dense edge structures created by a cutoff radius. To tackle this, we introduce a novel explanation method specifically designed for 3D GNNs, which localizes the explanation to the immediate neighborhood of each node within the 3D space. Each node is assigned an radius of influence, defining the localized region within which message passing captures spatial and structural interactions crucial for the model’s predictions. This method leverages the spatial and geometric characteristics inherent in 3D graphs. By constraining the subgraph to a localized radius of influence, the approach not only enhances interpretability but also aligns with the physical and structural dependencies typical of 3D graph applications, such as molecular learning.",
+      "paper_id": "pmlr:v267:qu25a",
+      "title": "RISE: Radius of Influence based Subgraph Extraction for 3D Molecular Graph Explanation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50744-50761",
+          "pmlr_id": "qu25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Temporal Graph Neural Networks (TGNNs) are widely used to model dynamic systems where relationships and features evolve over time. Although TGNNs demonstrate strong predictive capabilities in these domains, their complex architectures pose significant challenges for explainability. Counterfactual explanation methods provide a promising solution by illustrating how modifications to input graphs can influence model predictions. To address this challenge, we present CoDy—Counterfactual Explainer for Dynamic Graphs—a model-agnostic, instance-level explanation approach that identifies counterfactual subgraphs to interpret TGNN predictions. CoDy employs a search algorithm that combines Monte Carlo Tree Search with heuristic selection policies, efficiently exploring a vast search space of potential explanatory subgraphs by leveraging spatial, temporal, and local event impact information. Extensive experiments against state-of-the-art factual and counterfactual baselines demonstrate CoDy’s effectiveness, with improvements of 16% in AUFSC+ over the strongest baseline. Our code is available at: https://github.com/daniel-gomm/CoDy",
+      "paper_id": "pmlr:v267:qu25b",
+      "title": "CoDy: Counterfactual Explainers for Dynamic Graphs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50762-50785",
+          "pmlr_id": "qu25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce Pallatom, an innovative protein generation model capable of producing protein structures with all-atom coordinates. Pallatom directly learns and models the joint distribution $P(\\textit{structure}, \\textit{seq})$ by focusing on $P(\\textit{all-atom})$, effectively addressing the interdependence between sequence and structure in protein generation. To achieve this, we propose a novel network architecture specifically designed for all-atom protein generation. Our model employs a dual-track framework that tokenizes proteins into token-level and atomic-level representations, integrating them through a multi-layer decoding process with \"traversing\" representations and recycling mechanism. We also introduce the $\\texttt{atom14}$ representation method, which unifies the description of unknown side-chain coordinates, ensuring high fidelity between the generated all-atom conformation and its physical structure. Experimental results demonstrate that Pallatom excels in key metrics of protein design, including designability, diversity, and novelty, showing significant improvements across the board. Our model not only enhances the accuracy of protein generation but also exhibits excellent sampling efficiency, paving the way for future applications in larger and more complex systems.",
+      "paper_id": "pmlr:v267:qu25c",
+      "title": "P(all-atom) Is Unlocking New Path For Protein Design",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50786-50816",
+          "pmlr_id": "qu25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The long-standing dominance of gradient-boosted decision trees on tabular data is currently challenged by tabular foundation models using In-Context Learning (ICL): setting the training data as context for the test data and predicting in a single forward pass without parameter updates. While TabPFNv2 foundation model excels on tables with up to 10K samples, its alternating column- and row-wise attentions make handling large training sets computationally prohibitive. So, can ICL be effectively scaled and deliver a benefit for larger tables? We introduce TabICL, a tabular foundation model for classification, pretrained on synthetic datasets with up to 60K samples and capable of handling 500K samples on affordable resources. This is enabled by a novel two-stage architecture: a column-then-row attention mechanism to build fixed-dimensional embeddings of rows, followed by a transformer for efficient ICL. Across 200 classification datasets from the TALENT benchmark, TabICL is on par with TabPFNv2 while being systematically faster (up to 10 times), and significantly outperforms all other approaches. On 53 datasets with over 10K samples, TabICL surpasses both TabPFNv2 and CatBoost, demonstrating the potential of ICL for large data. Pretraining code, inference code, and pre-trained models are available at https://github.com/soda-inria/tabicl.",
+      "paper_id": "pmlr:v267:qu25d",
+      "title": "TabICL: A Tabular Foundation Model for In-Context Learning on Large Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "50817-50847",
+          "pmlr_id": "qu25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

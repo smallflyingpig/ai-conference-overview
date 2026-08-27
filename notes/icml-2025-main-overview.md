@@ -1,9 +1,18 @@
-# ICML 2025 Main Conference 论文集说明
+# ICML 2025 主会论文分析
 
-- 收录论文：3330
-- 排除记录：0
-- 待处理记录：0
-- 缺少英文摘要：0
-- 缺少 PDF：0
-- 缺少 DOI：3330
-- 论文集：https://proceedings.mlr.press/v267/（已正式发布）
+- 论文总数：3330
+- 分析范围：单年主题分布与研究热点，不判断时间趋势。
+- 获奖论文：8
+
+## 主题分布
+
+- Applications：126（3.78%）
+- Data and Retrieval：81（2.43%）
+- Evaluation：111（3.33%）
+- Foundation Models：386（11.59%）
+- Learning and Optimization：1831（54.98%）
+- Multilingual and Inclusive NLP：6（0.18%）
+- Multimodal Models：165（4.95%）
+- NLP/CV Core Tasks：62（1.86%）
+- Reasoning and Agents：208（6.25%）
+- Trustworthiness：354（10.63%）

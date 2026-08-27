@@ -1,0 +1,747 @@
+{
+  "batch_index": 50,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "One approach to reducing the massive costs of large language models (LLMs) is the use of quantized or sparse representations for training or deployment. While post-training compression methods are very popular, the question of obtaining even more accurate compressed models by directly training over such representations, i.e., Quantization-Aware Training (QAT) , is still open: for example, a recent study put the \"optimal\" bit-width at which models can be trained using QAT, while staying accuracy-competitive with standard FP16/BF16 precision, at 8-bits weights and activations. We advance this state-of-the-art via a new method called QuEST, for which we demonstrate optimality at 4-bits and stable convergence as low as 1-bit weights and activations. QuEST achieves this by improving two key aspects of QAT methods: (1) accurate and fast quantization of the (continuous) distributions of weights and activations via Hadamard normalization and MSE-optimal fitting; (2) a new trust gradient estimator based on the idea of explicitly minimizing the error between the noisy gradient computed over quantized states and the \"true\" (but unknown) full-precision gradient. Experiments on Llama-type architectures show that QuEST induces stable scaling laws across the entire range of hardware-supported precisions, and can be extended to sparse representations. We provide GPU kernel support showing that models produced by QuEST can be executed efficiently. Our code is available at https://github.com/IST-DASLab/QuEST.",
+      "paper_id": "pmlr:v267:panferov25a",
+      "title": "QuEST: Stable Training of LLMs with 1-Bit Weights and Activations",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "47820-47836",
+          "pmlr_id": "panferov25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent studies show that in supervised fine-tuning (SFT) of large language models (LLMs), data quality matters more than quantity. While most data cleaning methods concentrate on filtering entire samples, the quality of individual tokens within a sample can vary significantly. After pre-training, even in high-quality samples, patterns or phrases that are not task-related can be redundant, uninformative, or even harmful. Continuing to fine-tune on these patterns may offer limited benefit and even degrade downstream task performance. In this paper, we investigate token quality from a noisy-label perspective and propose a generic token cleaning pipeline for SFT tasks. Our method filters out uninformative tokens while preserving those carrying key task-specific information. Specifically, we first evaluate token quality by examining the influence of model updates on each token, then apply a threshold-based separation. The token influence can be measured in a single pass with a fixed reference model or iteratively with self-evolving reference models. The benefits and limitations of both methods are analyzed theoretically by error upper bounds. Extensive experiments show that our framework consistently improves downstream performance. Code is available at https://github.com/UCSC-REAL/TokenCleaning.",
+      "paper_id": "pmlr:v267:pang25a",
+      "title": "Token Cleaning: Fine-Grained Data Selection for LLM Supervised Fine-Tuning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "47837-47858",
+          "pmlr_id": "pang25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "White-box targeted adversarial attacks reveal core vulnerabilities in Deep Neural Networks (DNNs), yet two key challenges persist: (i) How many target classes can be attacked simultaneously in a specified order, known as the ordered top-$K$ attack problem ($K \\geq 1$)? (ii) How to compute the corresponding adversarial perturbations for a given benign image directly in the image space? We address both by showing that ordered top-$K$ perturbations can be learned via iteratively optimizing linear combinations of the $\\underline{ri}ght\\text{ } \\underline{sing}ular$ vectors of the adversarial Jacobian (i.e., the logit-to-image Jacobian constrained by target ranking). These vectors span an orthogonal, informative subspace in the image domain. We introduce RisingAttacK , a novel Sequential Quadratic Programming (SQP)-based method that exploits this structure. We propose a holistic figure-of-merits (FoM) metric combining attack success rates (ASRs) and $\\ell_p$-norms ($p=1,2,\\infty$). Extensive experiments on ImageNet-1k across six ordered top-$K$ levels ($K=1, 5, 10, 15, 20, 25, 30$) and four models (ResNet-50, DenseNet-121, ViT-B, DEiT-B) show RisingAttacK consistently surpasses the state-of-the-art QuadAttacK.",
+      "paper_id": "pmlr:v267:paniagua25a",
+      "title": "Adversarial Perturbations Are Formed by Iteratively Learning Linear Combinations of the Right Singular Vectors of the Adversarial Jacobian",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "47859-47878",
+          "pmlr_id": "paniagua25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Generative modeling of graphs with spatial structure is essential across many applications from computer graphics to spatial genomics. Recent flow-based generative models have achieved impressive results by gradually adding and then learning to remove noise from these graphs. Existing models, however, use graph neural network architectures that are independent of the noise level, limiting their expressiveness. To address this issue, we introduce Noise-Conditioned Graph Networks (NCGNs), a class of graph neural networks that dynamically modify their architecture according to the noise level during generation. Our theoretical and empirical analysis reveals that as noise increases, (1) graphs require information from increasingly distant neighbors and (2) graphs can be effectively represented at lower resolutions. Based on these insights, we develop Dynamic Message Passing (DMP), a specific instantiation of NCGNs that adapts both the range and resolution of message passing to the noise level. DMP consistently outperforms noise independent architectures on a variety of domains including $3$D point clouds, spatiotemporal transcriptomics, and images.",
+      "paper_id": "pmlr:v267:pao-huang25a",
+      "title": "Geometric Generative Modeling with Noise-Conditioned Graph Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "47879-47901",
+          "pmlr_id": "pao-huang25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent work reported that simple Bayesian optimization (BO) methods perform well for high-dimensional real-world tasks, seemingly contradicting prior work and tribal knowledge. This paper investigates why. We identify underlying challenges that arise in high-dimensional BO and explain why recent methods succeed. Our empirical analysis shows that vanishing gradients caused by Gaussian process (GP) initialization schemes play a major role in the failures of high-dimensional Bayesian optimization (HDBO) and that methods that promote local search behaviors are better suited for the task. We find that maximum likelihood estimation (MLE) of GP length scales suffices for state-of-the-art performance. Based on this, we propose a simple variant of MLE called MSR that leverages these findings to achieve state-of-the-art performance on a comprehensive set of real-world applications. We present targeted experiments to illustrate and confirm our findings.",
+      "paper_id": "pmlr:v267:papenmeier25a",
+      "title": "Understanding High-Dimensional Bayesian Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "47902-47923",
+          "pmlr_id": "papenmeier25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph Neural Networks (GNNs) effectively learn from relational data by leveraging graph symmetries. However, many real-world systems—such as biological or social networks—feature multi-way interactions that GNNs fail to capture. Topological Deep Learning (TDL) addresses this by modeling and leveraging higher-order structures, with Combinatorial Complex Neural Networks (CCNNs) offering a general and expressive approach that has been shown to outperform GNNs. However, TDL lacks the principled and standardized frameworks that underpin GNN development, restricting its accessibility and applicability. To address this issue, we introduce Generalized CCNNs (GCCNs), a simple yet powerful family of TDL models that can be used to systematically transform any (graph) neural network into its TDL counterpart. We prove that GCCNs generalize and subsume CCNNs, while extensive experiments on a diverse class of GCCNs show that these architectures consistently match or outperform CCNNs, often with less model complexity. In an effort to accelerate and democratize TDL, we introduce TopoTune, a lightweight software for defining, building, and training GCCNs with unprecedented flexibility and ease.",
+      "paper_id": "pmlr:v267:papillon25a",
+      "title": "TopoTune: A Framework for Generalized Combinatorial Complex Neural Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "47924-47952",
+          "pmlr_id": "papillon25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Constrained optimization problems arise in various engineering systems such as inventory management and power grids. Standard deep neural network (DNN) based machine learning proxies are ineffective in practical settings where labeled data is scarce and training times are limited. We propose a semi-supervised Bayesian Neural Networks (BNNs) based optimization proxy for this complex regime, wherein training commences in a sandwiched fashion, alternating between a supervised learning step for minimizing cost, and an unsupervised learning step for enforcing constraint feasibility. We show that the proposed semi-supervised BNN outperforms DNN architectures on important non-convex constrained optimization problems from energy network operations, achieving up to a tenfold reduction in expected maximum equality gap and halving the inequality gaps. Further, the BNN’s ability to provide posterior samples is leveraged to construct practically meaningful probabilistic confidence bounds on performance using a limited validation data, unlike prior methods.",
+      "paper_id": "pmlr:v267:pareek25a",
+      "title": "Optimization Proxies using Limited Labeled Data and Training Time – A Semi-Supervised Bayesian Neural Network Approach",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "47953-47970",
+          "pmlr_id": "pareek25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Hallucinations in LLMs pose a significant concern to their safe deployment in real-world applications. Recent approaches have leveraged the latent space of LLMs for hallucination detection, but their embeddings, optimized for linguistic coherence rather than factual accuracy, often fail to clearly separate truthful and hallucinated content. To this end, we propose the T ruthfulness S eparator V ector ( TSV ), a lightweight and flexible steering vector that reshapes the LLM’s representation space during inference to enhance the separation between truthful and hallucinated outputs, without altering model parameters. Our two-stage framework first trains TSV on a small set of labeled exemplars to form compact and well-separated clusters. It then augments the exemplar set with unlabeled LLM generations, employing an optimal transport-based algorithm for pseudo-labeling combined with a confidence-based filtering process. Extensive experiments demonstrate that TSV achieves state-of-the-art performance with minimal labeled data, exhibiting strong generalization across datasets and providing a practical solution for real-world LLM applications.",
+      "paper_id": "pmlr:v267:park25a",
+      "title": "Steer LLM Latents for Hallucination Detection",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "47971-47990",
+          "pmlr_id": "park25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Plasticity loss, a critical challenge in neural network training, limits a model’s ability to adapt to new tasks or shifts in data distribution. While widely used techniques like L2 regularization and Layer Normalization have proven effective in mitigating this issue, Dropout remains notably ineffective. This paper introduces AID (Activation by Interval-wise Dropout), a novel method inspired by Dropout, designed to address plasticity loss. Unlike Dropout, AID generates subnetworks by applying Dropout with different probabilities on each preactivation interval. Theoretical analysis reveals that AID regularizes the network, promoting behavior analogous to that of deep linear networks, which do not suffer from plasticity loss. We validate the effectiveness of AID in maintaining plasticity across various benchmarks, including continual learning tasks on standard image classification datasets such as CIFAR10, CIFAR100, and TinyImageNet. Furthermore, we show that AID enhances reinforcement learning performance in the Arcade Learning Environment benchmark.",
+      "paper_id": "pmlr:v267:park25b",
+      "title": "Activation by Interval-wise Dropout: A Simple Way to Prevent Neural Networks from Plasticity Loss",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "47991-48026",
+          "pmlr_id": "park25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Despite significant advancements in Vision-Language Models (VLMs), the performance of existing VLMs remains hindered by object hallucination, a critical challenge to achieving accurate visual understanding. To address this issue, we propose SECOND: Selective and Contrastive Decoding, a novel approach that enables VLMs to effectively leverage multi-scale visual information with an object-centric manner, closely aligning with human visual perception. SECOND progressively selects and integrates multi-scale visual information, facilitating a more precise interpretation of images. By contrasting these visual information iteratively, SECOND significantly reduces perceptual hallucinations and outperforms a wide range of benchmarks. Our theoretical analysis and experiments highlight the largely unexplored potential of multi-scale application in VLMs, showing that prioritizing and contrasting across scales outperforms existing methods.",
+      "paper_id": "pmlr:v267:park25c",
+      "title": "SECOND: Mitigating Perceptual Hallucination in Vision-Language Models via Selective and Contrastive Decoding",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48027-48040",
+          "pmlr_id": "park25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Interpretability for machine learning models is becoming more and more important as machine learning models become more complex. The functional ANOVA model, which decomposes a high-dimensional function into a sum of lower dimensional functions (commonly referred to as components), is one of the most popular tools for interpretable AI, and recently, various neural networks have been developed for estimating each component in the functional ANOVA model. However, such neural networks are highly unstable when estimating each component since the components themselves are not uniquely defined. That is, there are multiple functional ANOVA decompositions for a given function. In this paper, we propose a novel neural network which guarantees a unique functional ANOVA decomposition and thus is able to estimate each component stably. We call our proposed neural network ANOVA Tensor Product Neural Network (ANOVA-TPNN) since it is motivated by the tensor product basis expansion. Theoretically, we prove that ANOVA-TPNN can approximate any smooth function well. Empirically, we show that ANOVA-TPNN provide much more stable estimation of each component and thus much more stable interpretation when training data and initial values of the model parameters vary than existing neural networks do. Our source code is released at https://github.com/ParkSeokhun/ANOVA-TPNN",
+      "paper_id": "pmlr:v267:park25d",
+      "title": "Tensor Product Neural Networks for Functional ANOVA Model",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48041-48085",
+          "pmlr_id": "park25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recently, forecasting future abnormal events has emerged as an important scenario to tackle realworld necessities. However, the solution of predicting specific future time points when anomalies will occur, known as Anomaly Prediction (AP), remains under-explored. Existing methods dealing with time series data fail in AP, focusing only on immediate anomalies or failing to provide precise predictions for future anomalies. To address AP, we propose a novel framework called Anomaly to Prompt (A2P), comprised of Anomaly-Aware Forecasting (AAF) and Synthetic Anomaly Prompting (SAP). To enable the forecasting model to forecast abnormal time points, we adopt a strategy to learn the relationships of anomalies. For the robust detection of anomalies, our proposed SAP introduces a learnable Anomaly Prompt Pool (APP) that simulates diverse anomaly patterns using signal-adaptive prompt. Comprehensive experiments on multiple real-world datasets demonstrate the superiority of A2P over state-of-the-art methods, showcasing its ability to predict future anomalies.",
+      "paper_id": "pmlr:v267:park25e",
+      "title": "When Will It Fail?: Anomaly to Prompt for Forecasting Future Anomalies in Time Series",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48086-48103",
+          "pmlr_id": "park25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We present flow Q-learning (FQL), a simple and performant offline reinforcement learning (RL) method that leverages an expressive flow-matching policy to model arbitrarily complex action distributions in data. Training a flow policy with RL is a tricky problem, due to the iterative nature of the action generation process. We address this challenge by training an expressive one-step policy with RL, rather than directly guiding an iterative flow policy to maximize values. This way, we can completely avoid unstable recursive backpropagation, eliminate costly iterative action generation at test time, yet still mostly maintain expressivity. We experimentally show that FQL leads to strong performance across 73 challenging state- and pixel-based OGBench and D4RL tasks in offline RL and offline-to-online RL.",
+      "paper_id": "pmlr:v267:park25f",
+      "title": "Flow Q-Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48104-48127",
+          "pmlr_id": "park25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Spatiotemporal learning is challenging due to the intricate interplay between spatial and temporal dependencies, the high dimensionality of the data, and scalability constraints. These challenges are further amplified in scientific domains, where data is often irregularly distributed (e.g., missing values from sensor failures) and high-volume (e.g., high-fidelity simulations), posing additional computational and modeling difficulties. In this paper, we present SCENT, a novel framework for scalable and continuity-informed spatiotemporal representation learning. SCENT unifies interpolation, reconstruction, and forecasting within a single architecture. Built on a transformer-based encoder-processor-decoder backbone, SCENT introduces learnable queries to enhance generalization and a query-wise cross-attention mechanism to effectively capture multi-scale dependencies. To ensure scalability in both data size and model complexity, we incorporate a sparse attention mechanism, enabling flexible output representations and efficient evaluation at arbitrary resolutions. We validate SCENT through extensive simulations and real-world experiments, demonstrating state-of-the-art performance across multiple challenging tasks while achieving superior scalability.",
+      "paper_id": "pmlr:v267:park25g",
+      "title": "SCENT: Robust Spatiotemporal Learning for Continuous Scientific Data via Scalable Conditioned Neural Fields",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48128-48152",
+          "pmlr_id": "park25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Sortformer is an encoder-based speaker diarization model designed for supervising speaker tagging in speech-to-text models. Instead of relying solely on permutation invariant loss (PIL), Sortformer introduces Sort Loss to resolve the permutation problem, either independently or in tandem with PIL. In addition, we propose a streamlined multi-speaker speech-to-text architecture that leverages Sortformer for speaker supervision, embedding speaker labels into the encoder using sinusoidal kernel functions. This design addresses the speaker permutation problem through sorted objectives, effectively bridging timestamps and tokens to supervise speaker labels in the output transcriptions. Experiments demonstrate that Sort Loss can boost speaker diarization performance, and incorporating the speaker supervision from Sortformer improves multi-speaker transcription accuracy. We anticipate that the proposed Sortformer and multi-speaker architecture will enable the seamless integration of speaker tagging capabilities into foundational speech-to-text systems and multimodal large language models (LLMs), offering an easily adoptable and user-friendly mechanism to enhance their versatility and performance in speaker-aware tasks. The code and trained models are made publicly available through the NVIDIA NeMo Framework.",
+      "paper_id": "pmlr:v267:park25h",
+      "title": "Sortformer: A Novel Approach for Permutation-Resolved Speaker Supervision in Speech-to-Text Systems",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48153-48169",
+          "pmlr_id": "park25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Neural network ensembles have proven effective in improving performance across a range of tasks; however, their high computational cost limits their applicability in resource-constrained environments or for large models. Ensemble distillation, the process of transferring knowledge from an ensemble teacher to a smaller student model, offers a promising solution to this challenge. The key is to ensure that the student model is both cost-efficient and achieves performance comparable to the ensemble teacher. With this in mind, we propose a novel ensemble distribution distillation method, which leverages flow matching to effectively transfer the diversity from the ensemble teacher to the student model. Our extensive experiments demonstrate the effectiveness of our proposed method compared to existing ensemble distillation approaches.",
+      "paper_id": "pmlr:v267:park25i",
+      "title": "Ensemble Distribution Distillation via Flow Matching",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48170-48191",
+          "pmlr_id": "park25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Vision Language Models (VLMs) are impressive at visual question answering and image captioning. But they underperform on multi-step visual reasoning—even compared to LLMs on the same tasks presented in text form—giving rise to perceptions of modality imbalance or brittleness . Towards a systematic study of such issues, we introduce a synthetic framework for assessing the ability of VLMs to perform algorithmic visual reasoning, comprising three tasks: Table Readout, Grid Navigation, and Visual Analogy. Each has two levels of difficulty, SIMPLE and HARD, and even the SIMPLE versions are difficult for frontier VLMs. We propose strategies for training on the SIMPLE version of tasks that improve performance on the corresponding HARD task, i.e., simple-to-hard (S2H) generalization. This controlled setup, where each task also has an equivalent text-only version, allows a quantification of the modality imbalance and how it is impacted by training strategy. We show that 1) explicit image-to-text conversion is important in promoting S2H generalization on images, by transferring reasoning from text; 2) conversion can be internalized at test time. We also report results of mechanistic study of this phenomenon. We identify measures of gradient alignment that can identify training strategies that promote better S2H generalization. Ablations highlight the importance of chain-of-thought.",
+      "paper_id": "pmlr:v267:park25j",
+      "title": "Generalizing from SIMPLE to HARD Visual Reasoning: Can We Mitigate Modality Imbalance in VLMs?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48192-48244",
+          "pmlr_id": "park25j",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We consider the generative modeling of speech over multiple minutes, a requirement for long-form multimedia generation and audio-native voice assistants. However, textless spoken language models struggle to generate plausible speech past tens of seconds, due to high temporal resolution of speech tokens causing loss of coherence, architectural issues with long-sequence training or extrapolation, and memory costs at inference time. From these considerations we derive SpeechSSM , the first speech language model family to learn from and sample long-form spoken audio (e.g., 16 minutes of read or extemporaneous speech) in a single decoding session without text intermediates. SpeechSSMs leverage recent advances in linear-time sequence modeling to greatly surpass current Transformer spoken LMs in coherence and efficiency on multi-minute generations while still matching them at the utterance level. As we found current spoken language evaluations uninformative, especially in this new long-form setting, we also introduce: LibriSpeech-Long , a benchmark for long-form speech evaluation; new embedding-based and LLM-judged metrics; and quality measurements over length and time. Speech samples, the LibriSpeech-Long dataset, and any future code or model releases can be found at https://google.github.io/tacotron/publications/speechssm/.",
+      "paper_id": "pmlr:v267:park25k",
+      "title": "Long-Form Speech Generation with Spoken Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48245-48261",
+          "pmlr_id": "park25k",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) are often asked to generate structured outputs that obey precise syntactic rules, such as code snippets or formatted data. Grammar-constrained decoding (GCD) can guarantee that LLM outputs matches such rules by masking out tokens that will provably lead to outputs that do not belong to a specified context-free grammar (CFG). To guarantee soundness, GCD algorithms have to compute how a given LLM subword tokenizer can “align” with the tokens used by a given context-free grammar and compute token masks based on this information. Doing so efficiently is challenging and existing GCD algorithms require tens of minutes to preprocess common grammars. We present a new GCD algorithm together with an implementation that offers 17.71x faster offline preprocessing than existing approaches while preserving state-of-the-art efficiency in online mask computation.",
+      "paper_id": "pmlr:v267:park25l",
+      "title": "Flexible and Efficient Grammar-Constrained Decoding",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48262-48275",
+          "pmlr_id": "park25l",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "As the space of causal sequence modeling architectures continues to grow, the need to develop a general framework for their analysis becomes increasingly important. With this aim, we draw insights from classical signal processing and control theory, to develop a quantitative measure of memory utilization : the internal mechanisms through which a model stores past information to produce future outputs. This metric, which we call effective state-size (ESS), is tailored to the fundamental class of systems with input-invariant and input-varying linear operators , encompassing a variety of computational units such as variants of attention, convolutions, and recurrences. Unlike prior work on memory utilization, which either relies on raw operator visualizations (e.g. attention maps), or simply the total memory capacity (i.e. cache size) of a model, our metrics provide highly interpretable and actionable measurements. In particular, we show how ESS can be leveraged to improve initialization strategies, inform novel regularizers and advance the performance-efficiency frontier through model distillation. Furthermore, we demonstrate that the effect of context delimiters (such as end-of-speech tokens) on ESS highlights cross-architectural differences in how large language models utilize their available memory to recall information. Overall, we find that ESS provides valuable insights into the dynamics that dictate memory utilization, enabling the design of more efficient and effective sequence models.",
+      "paper_id": "pmlr:v267:parnichkun25a",
+      "title": "Quantifying Memory Utilization with Effective State-Size",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48276-48334",
+          "pmlr_id": "parnichkun25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We define the local complexity of a neural network with continuous piecewise linear activations as a measure of the density of linear regions over an input data distribution. We show theoretically that ReLU networks that learn low-dimensional feature representations have a lower local complexity. This allows us to connect recent empirical observations on feature learning at the level of the weight matrices with concrete properties of the learned functions. In particular, we show that the local complexity serves as an upper bound on the total variation of the function over the input data distribution and thus that feature learning can be related to adversarial robustness. Lastly, we consider how optimization drives ReLU networks towards solutions with lower local complexity. Overall, this work contributes a theoretical framework towards relating geometric properties of ReLU networks to different aspects of learning such as feature learning and representation cost.",
+      "paper_id": "pmlr:v267:patel25a",
+      "title": "On the Local Complexity of Linear Regions in Deep ReLU Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48335-48370",
+          "pmlr_id": "patel25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Function calling, also called tool use, refers to an LLM’s ability to invoke external functions, APIs, or user-defined tools in response to user queries—an essential capability for agentic LLM applications. Despite its prominence, there did not exist a standard benchmark to evaluate function calling abilities, due to two reasons – the challenging nature of evaluating when a function call is valid, and the challenge of acquiring diverse, real-world functions. We present the Berkeley Function Calling Leaderboard (BFCL), a comprehensive benchmark designed to evaluate function calling capabilities in a wide range of real-world settings. The BFCL benchmark evaluates serial and parallel function calls, across various programming languages using a novel Abstract Syntax Tree (AST) evaluation method that can easily scale to thousands of functions. We construct the benchmark using a combination of expert curated, and user-contributed functions and associated prompts. Finally, BFCL benchmark evaluates the ability of models to abstain and reason in stateful multi-step agentic setting. Evaluating a wide range of models, we observe that while state-of-the-art LLMs excel at singleturn calls, memory, dynamic decision-making, and long-horizon reasoning remain open challenges. Since its preview, BFCL has become the defacto standard for evaluating function-calls, and can be accessed at gorilla.cs.berkeley.edu/leaderboard.html.",
+      "paper_id": "pmlr:v267:patil25a",
+      "title": "The Berkeley Function Calling Leaderboard (BFCL): From Tool Use to Agentic Evaluation of Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48371-48392",
+          "pmlr_id": "patil25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "While the activations of neurons in deep neural networks usually do not have a simple human-understandable interpretation, sparse autoencoders (SAEs) can be used to transform these activations into a higher-dimensional latent space which can be more easily interpretable. However, SAEs can have millions of distinct latents, making it infeasible for humans to manually interpret each one. In this work, we build an open-source automated pipeline to generate and evaluate natural language interpretations for SAE latents using LLMs. We test our framework on SAEs of varying sizes, activation functions, and losses, trained on two different open-weight LLMs. We introduce five new techniques to score the quality of interpretations that are cheaper to run than the previous state of the art. One of these techniques, intervention scoring, evaluates the interpretability of the effects of intervening on a latent, which we find explains latents that are not recalled by existing methods. We propose guidelines for generating better interpretations that remain valid for a broader set of activating contexts, and discuss pitfalls with existing scoring techniques. Our code is available at https://github.com/EleutherAI/delphi.",
+      "paper_id": "pmlr:v267:paulo25a",
+      "title": "Automatically Interpreting Millions of Features in Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48393-48421",
+          "pmlr_id": "paulo25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "With the rise in global greenhouse gas emissions, accurate large-scale tree canopy height maps are essential for understanding forest structure, estimating above-ground biomass, and monitoring ecological disruptions. To this end, we present a novel approach to generate large-scale, high-resolution canopy height maps over time. Our model accurately predicts canopy height over multiple years given Sentinel 2 time series satellite data. Using GEDI LiDAR data as the ground truth for training the model, we present the first 10 m resolution temporal canopy height map of the European continent for the period 2019–2022. As part of this product, we also offer a detailed canopy height map for 2020, providing more precise estimates than previous studies. Our pipeline and the resulting temporal height map are publicly available, enabling comprehensive large-scale monitoring of forests and, hence, facilitating future research and ecological analyses. For an interactive viewer, see https://europetreemap.projects.earthengine.app/view/europeheight.",
+      "paper_id": "pmlr:v267:pauls25a",
+      "title": "Capturing Temporal Dynamics in Large-Scale Canopy Tree Height Estimation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48422-48438",
+          "pmlr_id": "pauls25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) are vulnerable to jailbreaking attacks that lead to generation of inappropriate or harmful content. Manual red-teaming requires a time-consuming search for adversarial prompts, whereas automatic adversarial prompt generation often leads to semantically meaningless attacks that do not scale well. In this paper, we present a novel method that uses another LLM, called AdvPrompter , to generate human-readable adversarial prompts in seconds. AdvPrompter, which is trained using an alternating optimization algorithm, generates suffixes that veil the input instruction without changing its meaning, such that the TargetLLM is lured to give a harmful response. Experimental results on popular open source TargetLLM show highly competitive results on the AdvBench and HarmBench datasets, that also transfer to closed-source black-box LLMs. We also show that training on adversarial suffixes generated by AdvPrompter is a promising strategy for improving the robustness of LLMs to jailbreaking attacks.",
+      "paper_id": "pmlr:v267:paulus25a",
+      "title": "AdvPrompter: Fast Adaptive Adversarial Prompting for LLMs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48439-48469",
+          "pmlr_id": "paulus25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Red teaming aims to assess how large language models (LLMs) can produce content that violates norms, policies, and rules set forth during their safety training. However, most existing automated methods in literature are not representative of the way common users exploit the multi-turn conversational nature of AI models. While manual testing addresses this gap, it is an inefficient and often expensive process. To address these limitations, we introduce the Generative Offensive Agent Tester (GOAT), an automated agentic red teaming system that simulates plain language adversarial conversations while leveraging multiple adversarial prompting techniques to identify vuLnerabilities in LLMs. We instantiate GOAT with 7 red teaming attacks by prompting a general purpose model in a way that encourages reasoning through the choices of methods available, the current target model’s response, and the next steps. Our approach is designed to be extensible and efficient, allowing human testers to focus on exploring new areas of risk while automation covers the scaled adversarial stress-testing of known risk territory. We present the design and evaluation of GOAT, demonstrating its effectiveness in identifying vulnerabilities in state-of-the-art LLMs, with an ASR@10 of 96% against smaller models such as Llama 3.1 8B, and 91% against Llama 3.1 70B and 94% for GPT-4o when evaluated against larger models on the JailbreakBench dataset.",
+      "paper_id": "pmlr:v267:pavlova25a",
+      "title": "Automated Red Teaming with GOAT: the Generative Offensive Agent Tester",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48470-48487",
+          "pmlr_id": "pavlova25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In reinforcement learning, offline value function learning is the procedure of using an offline dataset to estimate the expected discounted return from each state when taking actions according to a fixed target policy. The stability of this procedure, i.e., whether it converges to its fixed-point, critically depends on the representations of the state-action pairs. Poorly learned representations can make value function learning unstable, or even divergent. Therefore, it is critical to stabilize value function learning by explicitly shaping the state-action representations. Recently, the class of bisimulation-based algorithms have shown promise in shaping representations for control. However, it is still unclear if this class of methods can stabilize value function learning. In this work, we investigate this question and answer it affirmatively. We introduce a bisimulation-based algorithm called kernel representations for offline policy evaluation (krope). krope uses a kernel to shape state-action representations such that state-action pairs that have similar immediate rewards and lead to similar next state-action pairs under the target policy also have similar representations. We show that krope: 1) learns stable representations and 2) leads to lower value error than baselines. Our analysis provides new theoretical insight into the stability properties of bisimulation-based methods and suggests that practitioners can use these methods to improve the stability and accuracy of offline evaluation of reinforcement learning agents.",
+      "paper_id": "pmlr:v267:pavse25a",
+      "title": "Stable Offline Value Function Learning with Bisimulation-based Representations",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48488-48517",
+          "pmlr_id": "pavse25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce \"representative generation,\" extending the theoretical framework for generation proposed by Kleinberg et al. (2024) and formalized by Li et al. (2024), to additionally address diversity and bias concerns in generative models. Our notion requires outputs of a generative model to proportionally represent groups of interest from the training data. We characterize representative uniform and non-uniform generation, introducing the “group closure dimension” as a key combinatorial quantity. For representative generation in the limit, we analyze both information-theoretic and computational aspects, demonstrating feasibility for countably infinite hypothesis classes and collections of groups under certain conditions, but proving a negative result for computability using only membership queries. This contrasts with Kleinberg et al.’s (2024) positive results for standard generation in the limit. Our findings provide a rigorous foundation for developing more diverse and representative generative models.",
+      "paper_id": "pmlr:v267:peale25a",
+      "title": "Representative Language Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48518-48541",
+          "pmlr_id": "peale25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Group equivariant neural networks have proven effective in modelling a wide range of tasks where the data lives in a classical geometric space and exhibits well-defined group symmetries. However, these networks are not suitable for learning from data that lives in a non-commutative geometry, described formally by non-commutative $\\mathcal{C}^{\\ast}$-algebras, since the $\\mathcal{C}^{\\ast}$-algebra of continuous functions on a compact matrix group is commutative. To address this limitation, we derive the existence of a new type of equivariant neural network, called compact matrix quantum group equivariant neural networks, which encode symmetries that are described by compact matrix quantum groups. We characterise the weight matrices that appear in these neural networks for the easy compact matrix quantum groups, which are defined by set partitions. As a result, we obtain new characterisations of equivariant weight matrices for some compact matrix groups that have not appeared previously in the machine learning literature.",
+      "paper_id": "pmlr:v267:pearce-crump25a",
+      "title": "Compact Matrix Quantum Group Equivariant Neural Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48563-48594",
+          "pmlr_id": "pearce-crump25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Incorporating permutation equivariance into neural networks has proven to be useful in ensuring that models respect symmetries that exist in data. Symmetric tensors, which naturally appear in statistics, machine learning, and graph theory, are essential for many applications in physics, chemistry, and materials science, amongst others. However, existing research on permutation equivariant models has not explored symmetric tensors as inputs, and most prior work on learning from these tensors has focused on equivariance to Euclidean groups. In this paper, we present two different characterisations of all linear permutation equivariant functions between symmetric power spaces of $\\mathbb{R}^{n}$. We show on two tasks that these functions are highly data efficient compared to standard MLPs and have potential to generalise well to symmetric tensors of different sizes.",
+      "paper_id": "pmlr:v267:pearce-crump25b",
+      "title": "Permutation Equivariant Neural Networks for Symmetric Tensors",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48595-48634",
+          "pmlr_id": "pearce-crump25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The performance of embodied agents has been shown to improve by increasing model parameters, dataset size, and compute. This has been demonstrated in domains from robotics to video games, when generative learning objectives on offline datasets (pre-training) are used to model an agent’s behavior (imitation learning) or their environment (world modeling). This paper characterizes the role of scale in these tasks more precisely. Going beyond the simple intuition that ‘bigger is better’, we show that the same types of power laws found in language modeling also arise in world modeling and imitation learning (e.g. between loss and optimal model size). However, the coefficients of these laws are heavily influenced by the tokenizer, task & architecture – this has important implications on the optimal sizing of models and data.",
+      "paper_id": "pmlr:v267:pearce25a",
+      "title": "Scaling Laws for Pre-training Agents and World Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48542-48562",
+          "pmlr_id": "pearce25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Autoregressive surrogate models (or emulators ) of spatiotemporal systems provide an avenue for fast, approximate predictions, with broad applications across science and engineering. At inference time however, these models are generally unable to provide predictions over long time rollouts due to accumulation of errors leading to diverging trajectories. In essence, emulators operate out of distribution, and controlling the online distribution quickly becomes intractable in large-scale settings. To address this fundamental issue, and focusing on time-stationary systems admitting an invariant measure, we leverage diffusion models to obtain an implicit estimator of the score of this invariant measure. We show that this model of the score function can be used to stabilize autoregressive emulator rollouts by applying on-the-fly denoising during inference, a process we call thermalization . Thermalizing an emulator rollout is shown to extend the time horizon of stable predictions by two orders of magnitude in complex systems exhibiting turbulent and chaotic behavior, opening up a novel application of diffusion models in the context of neural emulation.",
+      "paper_id": "pmlr:v267:pedersen25a",
+      "title": "Thermalizer: Stable autoregressive neural emulation of spatiotemporal chaos",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48635-48661",
+          "pmlr_id": "pedersen25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Pseudo-labeling is a widely used strategy in semi-supervised learning. Existing methods typically select predicted labels with high confidence scores and high training stationarity, as pseudo-labels to augment training sets. In contrast, this paper explores the pseudo-labeling potential of predicted labels that do not exhibit these characteristics. We discover a new type of predicted labels suitable for pseudo-labeling, termed two-phase labels , which exhibit a two-phase pattern during training: they are initially predicted as one category in early training stages and switch to another category in subsequent epochs. Case studies show the two-phase labels are informative for decision boundaries. To effectively identify the two-phase labels, we design a 2- phasic metric that mathematically characterizes their spatial and temporal patterns. Furthermore, we propose a loss function tailored for two-phase pseudo-labeling learning, allowing models not only to learn correct correlations but also to eliminate false ones. Extensive experiments on eight datasets show that our proposed 2- phasic metric acts as a powerful booster for existing pseudo-labeling methods by additionally incorporating the two-phase labels, achieving an average classification accuracy gain of 1.73% on image datasets and 1.92% on graph datasets.",
+      "paper_id": "pmlr:v267:pei25a",
+      "title": "Non-Stationary Predictions May Be More Informative: Exploring Pseudo-Labels with a Two-Phase Pattern of Training Dynamics",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48662-48678",
+          "pmlr_id": "pei25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The diffusion-based adversarial purification methods attempt to drown adversarial perturbations into a part of isotropic noise through the forward process, and then recover the clean images through the reverse process. Due to the lack of distribution information about adversarial perturbations in the pixel domain, it is often unavoidable to damage normal semantics. We turn to the frequency domain perspective, decomposing the image into amplitude spectrum and phase spectrum. We find that for both spectra, the damage caused by adversarial perturbations tends to increase monotonically with frequency. This means that we can extract the content and structural information of the original clean sample from the frequency components that are less damaged. Meanwhile, theoretical analysis indicates that existing purification methods indiscriminately damage all frequency components, leading to excessive damage to the image. Therefore, we propose a purification method that can eliminate adversarial perturbations while maximizing the preservation of the content and structure of the original image. Specifically, at each time step during the reverse process, for the amplitude spectrum, we replace the low-frequency components of the estimated image’s amplitude spectrum with the corresponding parts of the adversarial image. For the phase spectrum, we project the phase of the estimated image into a designated range of the adversarial image’s phase spectrum, focusing on the low frequencies. Empirical evidence from extensive experiments demonstrates that our method significantly outperforms most current defense methods.",
+      "paper_id": "pmlr:v267:pei25b",
+      "title": "Diffusion-based Adversarial Purification from the Perspective of the Frequency Domain",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48679-48698",
+          "pmlr_id": "pei25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Trajectory prediction for surrounding agents is a challenging task in autonomous driving due to its inherent uncertainty and underlying multimodality. Unlike prevailing data-driven methods that primarily rely on supervised learning, in this paper, we introduce a novel G raph- o riented I nverse R einforcement L earning (GoIRL) framework, which is an IRL-based predictor equipped with vectorized context representations. We develop a feature adaptor to effectively aggregate lane-graph features into grid space, enabling seamless integration with the maximum entropy IRL paradigm to infer the reward distribution and obtain the policy that can be sampled to induce multiple plausible plans. Furthermore, conditioned on the sampled plans, we implement a hierarchical parameterized trajectory generator with a refinement module to enhance prediction accuracy and a probability fusion strategy to boost prediction confidence. Extensive experimental results showcase our approach not only achieves state-of-the-art performance on the large-scale Argoverse & nuScenes motion forecasting benchmarks but also exhibits superior generalization abilities compared to existing supervised models.",
+      "paper_id": "pmlr:v267:pei25c",
+      "title": "GoIRL: Graph-Oriented Inverse Reinforcement Learning for Multimodal Trajectory Prediction",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48699-48713",
+          "pmlr_id": "pei25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce a novel generative framework for functions by integrating Implicit Neural Representations (INRs) and Transformer-based hypernetworks into latent variable models. Unlike prior approaches that rely on MLP-based hypernetworks with scalability limitations, our method employs a Transformer-based decoder to generate INR parameters from latent variables, addressing both representation capacity and computational efficiency. Our framework extends latent diffusion models (LDMs) to INR generation by replacing standard decoders with a Transformer-based hypernetwork, which can be trained either from scratch or via hyper-transforming—a strategy that fine-tunes only the decoder while freezing the pre-trained latent space. This enables efficient adaptation of existing generative models to INR-based representations without requiring full retraining. We validate our approach across multiple modalities, demonstrating improved scalability, expressiveness, and generalization over existing INR-based generative models. Our findings establish a unified and flexible framework for learning structured function representations.",
+      "paper_id": "pmlr:v267:peis25a",
+      "title": "Hyper-Transforming Latent Diffusion Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48714-48733",
+          "pmlr_id": "peis25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Deep neural networks have reshaped modern machine learning by learning powerful latent representations that often align with the manifold hypothesis: high-dimensional data lie on lower-dimensional manifolds. In this paper, we establish a connection between manifold learning and computational algebra by demonstrating how vanishing ideals can characterize the latent manifolds of deep networks. To that end, we propose a new neural architecture that (i) truncates a pretrained network at an intermediate layer, (ii) approximates each class manifold via polynomial generators of the vanishing ideal, and (iii) transforms the resulting latent space into linearly separable features through a single polynomial layer. The resulting models have significantly fewer layers than their pretrained baselines, while maintaining comparable accuracy, achieving higher throughput, and utilizing fewer parameters. Furthermore, drawing on spectral complexity analysis, we derive sharper theoretical guarantees for generalization, showing that our approach can in principle offer tighter bounds than standard deep networks. Numerical experiments confirm the effectiveness and efficiency of the proposed approach.",
+      "paper_id": "pmlr:v267:pelleriti25a",
+      "title": "Approximating Latent Manifolds in Neural Networks via Vanishing Ideals",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48734-48761",
+          "pmlr_id": "pelleriti25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Concept Bottleneck Models (CBMs) propose to enhance the trustworthiness of AI systems by constraining their decisions on a set of human understandable concepts. However, CBMs typically rely on datasets with assumedly accurate concept labels—an assumption often violated in practice which we show can significantly degrade performance. To address this, we introduce the Concept Preference Optimization (CPO) objective, a new loss function based on Direct Preference Optimization, which effectively mitigates the negative impact of concept mislabeling on CBM performance. We provide an analysis on some key properties of the CPO objective showing it directly optimizes for the concept’s posterior distribution, and contrast it against Binary Cross Entropy (BCE) where we show CPO is inherently less sensitive to concept noise. We empirically confirm our analysis finding that CPO consistently outperforms BCE in three real-world datasets with and without added label noise",
+      "paper_id": "pmlr:v267:penaloza25a",
+      "title": "Addressing Concept Mislabeling in Concept Bottleneck Models Through Preference Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48762-48788",
+          "pmlr_id": "penaloza25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Medical multi-modal learning requires an effective fusion capability of various heterogeneous modalities. One vital challenge is how to effectively fuse modalities when their data quality varies across different modalities and patients. For example, in the TCGA benchmark, the performance of the same modality can differ between types of cancer. Moreover, data collected at different times, locations, and with varying reagents can introduce inter-modal data quality differences ($i.e.$, $\\textbf{Modality Batch Effect}$). In response, we propose ${\\textbf{A}}$daptive ${\\textbf{M}}$odality Token Re-Balan${\\textbf{C}}$ing ($\\texttt{AMC}$), a novel top-down dynamic multi-modal fusion approach. The core of $\\texttt{AMC}$ is to quantify the significance of each modality (Top) and then fuse them according to the modality importance (Down). Specifically, we access the quality of each input modality and then replace uninformative tokens with inter-modal tokens, accordingly. The more important a modality is, the more informative tokens are retained from that modality. The self-attention will further integrate these mixed tokens to fuse multi-modal knowledge. Comprehensive experiments on both medical and general multi-modal datasets demonstrate the effectiveness and generalizability of $\\texttt{AMC}$.",
+      "paper_id": "pmlr:v267:peng25a",
+      "title": "Modalities Contribute Unequally: Enhancing Medical Multi-modal Learning through Adaptive Modality Token Re-balancing",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48789-48807",
+          "pmlr_id": "peng25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Conformal prediction is a powerful tool for constructing prediction intervals for black-box models, providing a finite sample coverage guarantee for exchangeable data. However, this exchangeability is compromised when some entries of the test feature are contaminated, such as in the case of cellwise outliers. To address this issue, this paper introduces a novel framework called detect-then-impute conformal prediction . This framework first employs an outlier detection procedure on the test feature and then utilizes an imputation method to fill in those cells identified as outliers. To quantify the uncertainty in the processed test feature, we adaptively apply the detection and imputation procedures to the calibration set, thereby constructing exchangeable features for the conformal prediction interval of the test label. We develop two practical algorithms, $\\texttt{PDI-CP}$ and $\\texttt{JDI-CP}$, and provide a distribution-free coverage analysis under some commonly used detection and imputation procedures. Notably, $\\texttt{JDI-CP}$ achieves a finite sample $1-2\\alpha$ coverage guarantee. Numerical experiments on both synthetic and real datasets demonstrate that our proposed algorithms exhibit robust coverage properties and comparable efficiency to the oracle baseline.",
+      "paper_id": "pmlr:v267:peng25b",
+      "title": "Conformal Prediction with Cellwise Outliers: A Detect-then-Impute Approach",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "48808-48831",
+          "pmlr_id": "peng25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

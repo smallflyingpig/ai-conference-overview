@@ -1,0 +1,747 @@
+{
+  "batch_index": 78,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Multiphysics simulation, which models the interactions between multiple physical processes, and multi-component simulation of complex structures are critical in fields like nuclear and aerospace engineering. Previous studies use numerical solvers or ML-based surrogate models for these simulations. However, multiphysics simulations typically require integrating multiple specialized solvers-each for a specific physical process-into a coupled program, which introduces significant development challenges. Furthermore, existing numerical algorithms struggle with highly complex large-scale structures in multi-component simulations. Here we propose compositional Multiphysics and Multi-component PDE Simulation with Diffusion models (M2PDE) to overcome these challenges. During diffusion-based training, M2PDE learns energy functions modeling the conditional probability of one physical process/component conditioned on other processes/components. In inference, M2PDE generates coupled multiphysics and multi-component solutions by sampling from the joint probability distribution. We evaluate M2PDE on two multiphysics tasks-reaction-diffusion and nuclear thermal coupling–where it achieves more accurate predictions than surrogate models in challenging scenarios. We then apply it to a multi-component prismatic fuel element problem, demonstrating that M2PDE scales from single-component training to a 64-component structure and outperforms existing domain-decomposition and graph-based approaches. The code is available at github.com/AI4Science-WestlakeU/M2PDE.",
+      "paper_id": "pmlr:v267:zhang25bb",
+      "title": "M2PDE: Compositional Generative Multiphysics and Multi-component PDE Simulation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75638-75666",
+          "pmlr_id": "zhang25bb",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) have demonstrated the ability to solve a wide range of practical tasks within multi-agent systems. However, existing human-designed multi-agent frameworks are typically limited to a small set of pre-defined scenarios, while current automated design methods suffer from several limitations, such as the lack of tool integration, dependence on external training data, and rigid communication structures. In this paper, we propose MetaAgent , a finite state machine based framework that can automatically generate a multi-agent system. Given a task description, MetaAgent will design a multi-agent system and polish it through an optimization algorithm. When the multi-agent system is deployed, the finite state machine will control the agent’s actions and the state transitions. To evaluate our framework, we conduct experiments on both text-based tasks and practical tasks. The results indicate that the generated multi-agent system surpasses other auto-designed methods and can achieve a comparable performance with the human-designed multi-agent system, which is optimized for those specific tasks.",
+      "paper_id": "pmlr:v267:zhang25bc",
+      "title": "MetaAgent: Automatically Constructing Multi-Agent Systems Based on Finite State Machines",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75667-75694",
+          "pmlr_id": "zhang25bc",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We consider the problem of learning to exploit learning algorithms through repeated interactions in games. Specifically, we focus on the case of repeated two player, finite-action games, in which an optimizer aims to steer a no-regret learner to a Stackelberg equilibrium without knowledge of its payoffs. We first show that this is impossible if the optimizer only knows that the learner is using an algorithm from the general class of no-regret algorithms. This suggests that the optimizer requires more information about the learner’s objectives or algorithm to successfully exploit them. Building on this intuition, we reduce the problem for the optimizer to that of recovering the learner’s payoff structure. We demonstrate the effectiveness of this approach if the learner’s algorithm is drawn from a smaller class by analyzing two examples: one where the learner uses an ascent algorithm, and another where the learner uses stochastic mirror ascent with known regularizer and step sizes.",
+      "paper_id": "pmlr:v267:zhang25bd",
+      "title": "Learning to Steer Learners in Games",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75695-75733",
+          "pmlr_id": "zhang25bd",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Koopman operator theory provides a framework for nonlinear dynamical system analysis and time-series forecasting by mapping dynamics to a space of real-valued measurement functions, enabling a linear operator representation. Despite the advantage of linearity, the operator is generally infinite-dimensional. Therefore, the objective is to learn measurement functions that yield a tractable finite-dimensional Koopman operator approximation. In this work, we establish a connection between Koopman operator approximation and linear Recurrent Neural Networks (RNNs), which have recently demonstrated remarkable success in sequence modeling. We show that by considering an extended state consisting of lagged observations, we can establish an equivalence between a structured Koopman operator and linear RNN updates. Building on this connection, we present SKOLR, which integrates a learnable spectral decomposition of the input signal with a multilayer perceptron (MLP) as the measurement functions and implements a structured Koopman operator via a highly parallel linear RNN stack. Numerical experiments on various forecasting benchmarks and dynamical systems show that this streamlined, Koopman-theory-based design delivers exceptional performance. Our code is available at: https://github.com/networkslab/SKOLR.",
+      "paper_id": "pmlr:v267:zhang25be",
+      "title": "SKOLR: Structured Koopman Operator Linear RNN for Time-Series Forecasting",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75734-75756",
+          "pmlr_id": "zhang25be",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Continual Test-Time Adaptation (CTTA) seeks to adapt source pre-trained models to continually changing, unseen target domains. While existing CTTA methods assume structured domain changes with uniform durations, real-world environments often exhibit dynamic patterns where domains recur with varying frequencies and durations. Current approaches, which adapt the same parameters across different domains, struggle in such dynamic conditions—they face convergence issues with brief domain exposures, risk forgetting previously learned knowledge, or misapplying it to irrelevant domains. To remedy this, we propose DPCore , a method designed for robust performance across diverse domain change patterns while ensuring computational efficiency. DPCore integrates three key components: Visual Prompt Adaptation for efficient domain alignment, a Prompt Coreset for knowledge preservation, and a Dynamic Update mechanism that intelligently adjusts existing prompts for similar domains while creating new ones for substantially different domains. Extensive experiments on four benchmarks demonstrate that DPCore consistently outperforms various CTTA methods, achieving state-of-the-art performance in both structured and dynamic settings while reducing trainable parameters by 99% and computation time by 64% compared to previous approaches.",
+      "paper_id": "pmlr:v267:zhang25bf",
+      "title": "DPCore: Dynamic Prompt Coreset for Continual Test-Time Adaptation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75757-75778",
+          "pmlr_id": "zhang25bf",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language model inference is both memory-intensive and time-consuming, often requiring distributed algorithms to efficiently scale. Various model parallelism strategies are used in multi-gpu training and inference to partition computation across multiple devices, reducing memory load and computation time. However, using model parallelism necessitates communication of information between GPUs, which has been a major bottleneck and limits the gains obtained by scaling up the number of devices. We introduce Ladder Residual, a simple architectural modification applicable to all residual-based models that enables straightforward overlapping that effectively hides the latency of communication. Our insight is that in addition to systems optimization, one can also redesign the model architecture to decouple communication from computation. While Ladder Residual can allow communication-computation decoupling in conventional parallelism patterns, we focus on Tensor Parallelism in this paper, which is particularly bottlenecked by its heavy communication. For a Transformer model with 70B parameters, applying Ladder Residual to all its layers can achieve 29% end-to-end wall clock speed up at inference time with TP sharding over 8 devices. We refer the resulting Transformer model as the Ladder Transformer. We train a 1B and 3B Ladder Transformer from scratch and observe comparable performance to a standard dense transformer baseline. We also show that it is possible to convert parts of the Llama-3.1 8B model to our Ladder Residual architecture with minimal accuracy degradation by only retraining for 3B tokens.",
+      "paper_id": "pmlr:v267:zhang25bg",
+      "title": "Ladder-Residual: Parallelism-Aware Architecture for Accelerating Large Model Inference with Communication Overlapping",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75779-75792",
+          "pmlr_id": "zhang25bg",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Layer-wise preconditioning methods are a family of memory-efficient optimization algorithms that introduce preconditioners per axis of each layer’s weight tensors. These methods have seen a recent resurgence, demonstrating impressive performance relative to entry-wise (\"diagonal\") preconditioning methods such as Adam(W) on a wide range of neural network optimization tasks. Complementary to their practical performance, we demonstrate that layer-wise preconditioning methods are provably necessary from a statistical perspective. To showcase this, we consider two prototypical models, linear representation learning and single-index learning , which are widely used to study how typical algorithms efficiently learn useful features to enable generalization. In these problems, we show SGD is a suboptimal feature learner when extending beyond ideal isotropic inputs $\\mathbf{x} \\sim \\mathsf{N}(\\mathbf{0}, \\mathbf{I})$ and well-conditioned settings typically assumed in prior work. We demonstrate theoretically and numerically that this suboptimality is fundamental, and that layer-wise preconditioning emerges naturally as the solution. We further show that standard tools like Adam preconditioning and batch-norm only mildly mitigate these issues, supporting the unique benefits of layer-wise preconditioning.",
+      "paper_id": "pmlr:v267:zhang25bh",
+      "title": "On The Concurrence of Layer-wise Preconditioning Methods and Provable Feature Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75793-75833",
+          "pmlr_id": "zhang25bh",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Model (LLM)-empowered multi-agent systems extend the cognitive boundaries of individual agents through disciplined collaboration and interaction, while constructing these systems often requires labor-intensive manual designs. Despite the availability of methods to automate the design of agentic workflows, they typically seek to identify a static, complex, one-size-fits-all system, which, however, fails to dynamically allocate inference resources based on the difficulty and domain of each query. To address this challenge, we shift away from the pursuit of a monolithic agentic system, instead optimizing the agentic supernet , a probabilistic and continuous distribution of agentic architectures. We introduce MaAS , an automated framework that samples query-dependent agentic systems from the supernet, delivering high-quality solutions and tailored resource allocation ( e.g. , LLM calls, tool calls, token cost). Comprehensive evaluation across six benchmarks demonstrates that MaAS (I) requires only $6\\\\sim45\\%$ of the inference costs of existing handcrafted or automated multi-agent systems, \\textbf{(II)} surpasses them by $0.54\\%\\sim11.82\\%$, and \\textbf{(III)} enjoys superior cross-dataset and cross-LLM-backbone transferability.",
+      "paper_id": "pmlr:v267:zhang25bi",
+      "title": "Multi-agent Architecture Search via Agentic Supernet",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75834-75852",
+          "pmlr_id": "zhang25bi",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Actor-critic methods for decentralized multi-agent reinforcement learning (MARL) facilitate collaborative optimal decision making without centralized coordination, thus enabling a wide range of applications in practice. To date, however, most theoretical convergence studies for existing actor-critic decentralized MARL methods are limited to the guarantee of a stationary solution under the linear function approximation. This leaves a significant gap between the highly successful use of deep neural actor-critic for decentralized MARL in practice and the current theoretical understanding. To bridge this gap, in this paper, we make the first attempt to develop a deep neural actor-critic method for decentralized MARL, where both the actor and critic components are inherently non-linear. We show that our proposed method enjoys a global optimality guarantee with a finite-time convergence rate of $\\mathcal{O}(1/T)$, where $T$ is the total iteration times. This marks the first global convergence result for deep neural actor-critic methods in the MARL literature. We also conduct extensive numerical experiments, which verify our theoretical results.",
+      "paper_id": "pmlr:v267:zhang25bj",
+      "title": "Finite-Time Global Optimality Convergence in Deep Neural Actor-Critic Methods for Decentralized Multi-Agent Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75853-75877",
+          "pmlr_id": "zhang25bj",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Theory-of-mind (ToM) enables humans to infer mental states—such as beliefs, desires, and intentions—forming the foundation of social cognition. Existing computational ToM methods rely on structured workflows with ToM-specific priors or deep model fine-tuning but struggle with scalability in multimodal environments. They remain trapped within the gravitational pull of multi-step planning complexity, failing to generalize as task demands increase. To overcome these limitations, we propose a scalable Bayesian ToM planner. It breaks down ToM complexity into stepwise Bayesian updates. Meanwhile, weak-to-strong control specializes smaller LMs to refine ToM-specific likelihood estimation, transferring their ToM reasoning behavior to larger LMs (7B to 405B) for social and world knowledge integration. This synergistic approach enables scalability, aligning large-model inference with human mental states with Bayesian principles. Extensive experiments demonstrate a 4.6% improvement in accuracy over state-of-the-art methods on multimodal ToM benchmarks, including unseen scenarios, establishing a new standard for modeling human mental states in complex environments.",
+      "paper_id": "pmlr:v267:zhang25bk",
+      "title": "Overcoming Multi-step Complexity in Multimodal Theory-of-Mind Reasoning: A Scalable Bayesian Planner",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75878-75900",
+          "pmlr_id": "zhang25bk",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Ensemble clustering has demonstrated great success in practice; however, its theoretical foundations remain underexplored. This paper examines the generalization performance of ensemble clustering, focusing on generalization error, excess risk and consistency. We derive a convergence rate of generalization error bound and excess risk bound both of $\\mathcal{O}(\\sqrt{\\frac{\\log n}{m}}+\\frac{1}{\\sqrt{n}})$, with $n$ and $m$ being the numbers of samples and base clusterings. Based on this, we prove that when $m$ and $n$ approach infinity and $m$ is significantly larger than log $n$, i.e., $m,n\\to \\infty, m\\gg \\log n$, ensemble clustering is consistent. Furthermore, recognizing that $n$ and $m$ are finite in practice, the generalization error cannot be reduced to zero. Thus, by assigning varying weights to finite clusterings, we minimize the error between the empirical average clusterings and their expectation. From this, we theoretically demonstrate that to achieve better clustering performance, we should minimize the deviation (bias) of base clustering from its expectation and maximize the differences (diversity) among various base clusterings. Additionally, we derive that maximizing diversity is nearly equivalent to a robust (min-max) optimization model. Finally, we instantiate our theory to develop a new ensemble clustering algorithm. Compared with SOTA methods, our approach achieves average improvements of 6.0%, 7.3%, and 6.0% on 10 datasets w.r.t. NMI, ARI, and Purity. The code is available at https://github.com/xuz2019/GPEC.",
+      "paper_id": "pmlr:v267:zhang25bl",
+      "title": "Generalization Performance of Ensemble Clustering: From Theory to Algorithm",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75901-75927",
+          "pmlr_id": "zhang25bl",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Preference learning, or the task of aligning generative models to preference comparison data, has yet to reach the conceptual maturity of classification, density estimation, etc. To close this gap, this work presents a framework to understand preference learning starting from the sampling distribution of pairwise preference data. First, we prove that the only evaluation of a generative model that respects both preferences and prevalences in the data distribution is a form of win rate, justifying win rate as the focal point to understand preference learning. We then analyze preference learning methods as win rate optimization (WRO) or non-WRO. We present novel instances of WRO beyond existing examples (RLHF, NLHF) and identify two key theoretical benefits of all such methods. We prove that common non-WRO methods like DPO and SFT on preferred samples lack these properties and suggest ways to mitigate such theoretical limitations. We also show that WRO underperforms in practice due optimization difficulties and that optimization success predicts performance better than choices which affect the objective’s solution. Our analysis highlights best practices for existing methods and provides recommendations for future research, guided by the principle that one should either align non-WRO methods more closely with WRO or improve the optimization of WRO objectives.",
+      "paper_id": "pmlr:v267:zhang25bm",
+      "title": "Preference learning made easy: Everything should be understood through win rate",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75928-75950",
+          "pmlr_id": "zhang25bm",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Statistical adversarial data detection (SADD) detects whether an upcoming batch contains adversarial examples (AEs) by measuring the distributional discrepancies between clean examples (CEs) and AEs. In this paper, we explore the strength of SADD-based methods by theoretically showing that minimizing distributional discrepancy can help reduce the expected loss on AEs. Despite these advantages, SADD-based methods have a potential limitation: they discard inputs that are detected as AEs, leading to the loss of clean information within those inputs. To address this limitation, we propose a two-pronged adversarial defense method, named D istributional-discrepancy-based A dversarial D efense (DAD). In the training phase, DAD first optimizes the test power of the maximum mean discrepancy (MMD) to derive MMD-OPT, which is a stone that kills two birds . MMD-OPT first serves as a guiding signal to minimize the distributional discrepancy between CEs and AEs to train a denoiser. Then, it serves as a discriminator to differentiate CEs and AEs during inference. Overall, in the inference stage, DAD consists of a two-pronged process: (1) directly feeding the detected CEs into the classifier, and (2) removing noise from the detected AEs by the distributional-discrepancy-based denoiser. Extensive experiments show that DAD outperforms current state-of-the-art (SOTA) defense methods by simultaneously improving clean and robust accuracy on CIFAR-10 and ImageNet-1K against adaptive white-box attacks. Codes are publicly available at: https://github.com/tmlr-group/DAD.",
+      "paper_id": "pmlr:v267:zhang25bn",
+      "title": "One Stone, Two Birds: Enhancing Adversarial Defense Through the Lens of Distributional Discrepancy",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75951-75970",
+          "pmlr_id": "zhang25bn",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent research highlights concerns about the trustworthiness of third-party Pre-Trained Language Models (PTLMs) due to potential backdoor attacks. These backdoored PTLMs, however, are effective only for specific pre-defined downstream tasks. In reality, these PTLMs can be adapted to many other unrelated downstream tasks. Such adaptation may lead to unforeseen consequences in downstream model outputs, consequently raising user suspicion and compromising attack stealthiness. We refer to this phenomenon as backdoor complications. In this paper, we undertake the first comprehensive quantification of backdoor complications. Through extensive experiments using 4 prominent PTLMs and 16 text classification benchmark datasets, we demonstrate the widespread presence of backdoor complications in downstream models fine-tuned from backdoored PTLMs. The output distribution of triggered samples significantly deviates from that of clean samples. Consequently, we propose a backdoor complication reduction method leveraging multi-task learning to mitigate complications without prior knowledge of downstream tasks. The experimental results demonstrate that our proposed method can effectively reduce complications while maintaining the efficacy and consistency of backdoor attacks.",
+      "paper_id": "pmlr:v267:zhang25bo",
+      "title": "The Ripple Effect: On Unforeseen Complications of Backdoor Attacks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75971-75998",
+          "pmlr_id": "zhang25bo",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We explore the potential of AI-enhanced combinatorial optimization theory , taking online bipartite matching (OBM) as a case study. In the theoretical study of OBM, the hardness corresponds to a performance upper bound of a specific online algorithm or any possible online algorithms. Typically, these upper bounds derive from challenging instances meticulously designed by theoretical computer scientists. Zhang et al. (ICML 2024) recently provide an example demonstrating how reinforcement learning techniques enhance the hardness result of a specific OBM model. Their attempt is inspiring but preliminary. It is unclear whether their methods can be applied to other OBM problems with similar breakthroughs. This paper takes a further step by introducing DiMa, a unified and novel framework that aims at understanding the hardness of OBM problems based on denoising diffusion probabilistic models (DDPMs). DiMa models the process of generating hard instances as denoising steps, and optimizes them by a novel reinforcement learning algorithm, named shortcut policy gradient (SPG). We first examine DiMa on the classic OBM problem by reproducing its known hardest input instance in literature. Further, we apply DiMa to two well-known variants of OBM, for which the exact hardness remains an open problem, and we successfully improve their theoretical state-of-the-art upper bounds.",
+      "paper_id": "pmlr:v267:zhang25bp",
+      "title": "DiMa: Understanding the Hardness of Online Matching Problems via Diffusion Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "75999-76022",
+          "pmlr_id": "zhang25bp",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "While direct policy optimization methods exist, pioneering LLMs are fine-tuned with reinforcement learning from human feedback (RLHF) to generate better responses under the supervision of a reward model learned from preference data. One major challenge of RLHF is the inaccuracy of the intermediate reward model, especially in the tasks that requires complex reasoning for the reward model to score a response. We find that the reliability of the reward model varies across responses assigned with different rewards. This motivates us to filter the samples whose rewards may be unreliable to improve the signal-to-noise ratio during policy learning, resulting in Policy Filtration for Proximal Policy Optimization (PF-PPO). To choose a proper policy filtering strategy, we use the coefficient of determination ($R^2$) between the rewards and actual scores on filtered samples as the metrics to help us find promising strategies since it measures how well the rewards filtered by PF-PPO indicate real performance. We provide extensive experiments to validate the effectiveness of PF-PPO in code generation and math reasoning tasks. In code generation, PF-PPO achieves the state-of-the-art performance of 7-billion-parameter models on HumanEval (+7.9%), MBPP (+0.7%), and LeetCode Contest (+10.0%) which is a more challenging benchmark created by us. In math reasoning, PF-PPO yields performance increase using different reward models and benchmarks (Ape210K and CMATH).",
+      "paper_id": "pmlr:v267:zhang25bq",
+      "title": "Policy Filtration for RLHF to Mitigate Noise in Reward Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76023-76046",
+          "pmlr_id": "zhang25bq",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "While attention-based models have demonstrated the remarkable ability of in-context learning (ICL), the theoretical understanding of how these models acquired this ability through gradient descent training is still preliminary. Towards answering this question, we study the gradient descent dynamics of multi-head linear self-attention trained for in-context linear regression. We examine two parametrizations of linear self-attention: one with the key and query weights merged as a single matrix (common in theoretical studies), and one with separate key and query matrices (closer to practical settings). For the merged parametrization, we show that the training dynamics has two fixed points and the loss trajectory exhibits a single, abrupt drop. We derive an analytical time-course solution for a certain class of datasets and initialization. For the separate parametrization, we show that the training dynamics has exponentially many fixed points and the loss exhibits saddle-to-saddle dynamics, which we reduce to scalar ordinary differential equations. During training, the model implements principal component regression in context with the number of principal components increasing over training time. Overall, we provide a theoretical description of how ICL abilities evolve during gradient descent training of linear attention, revealing abrupt acquisition or progressive improvements depending on how the key and query are parametrized.",
+      "paper_id": "pmlr:v267:zhang25br",
+      "title": "Training Dynamics of In-Context Learning in Linear Attention",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76047-76087",
+          "pmlr_id": "zhang25br",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Adapting pre-trained large language models (LLMs) is crucial but challenging due to their enormous size. Parameter-efficient fine-tuning (PEFT) techniques typically employ additive adapters applied to frozen model weights. To further reduce memory usage, model weights are often compressed through quantization. However, existing PEFT methods often yield suboptimal model quality because they rely on restrictive assumptions, such as low-rank constraints on adapters to limit the number of trainable parameters. We find that sketching, a popular data compression technique, can serve as an efficient LLM adaptation strategy while avoiding the low-rank assumption. We introduce SketchTune, a compressive adaptation strategy that compresses LLM weights into compact fine-tunable sketches, integrating compression and adaptation into a unified framework. This integration eliminates the need for complex two-path computation in existing PEFT techniques, enabling faster and more memory-efficient training and inference. SketchTune is supported by mathematical insights into matrix classes that are better approximated using sketching rather than low-rank methods. Our extensive evaluations with Llama and Mistral models demonstrate that SketchTune outperforms leading PEFT methods across diverse tasks while using substantially smaller base models and comparable trainable parameters. As a highlight, SketchTune outperforms LoRA, DoRA, and S2FT on commonsense and math benchmarks using 2.6-3.5$\\times$ smaller base models and exceeds LoftQ in accuracy by 14.48% on GSM8K with 7.3$\\times$ fewer trainable parameters.",
+      "paper_id": "pmlr:v267:zhang25bs",
+      "title": "Sketch to Adapt: Fine-Tunable Sketches for Efficient LLM Adaptation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76088-76110",
+          "pmlr_id": "zhang25bs",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Building a virtual cell capable of accurately simulating cellular behaviors in silico has long been a dream in computational biology. We introduce CellFlux, an image-generative model that simulates cellular morphology changes induced by chemical and genetic perturbations using flow matching. Unlike prior methods, CellFlux models distribution-wise transformations from unperturbed to perturbed cell states, effectively distinguishing actual perturbation effects from experimental artifacts such as batch effects—a major challenge in biological data. Evaluated on chemical (BBBC021), genetic (RxRx1), and combined perturbation (JUMP) datasets, CellFlux generates biologically meaningful cell images that faithfully capture perturbation-specific morphological changes, achieving a 35% improvement in FID scores and a 12% increase in mode-of-action prediction accuracy over existing methods. Additionally, CellFlux enables continuous interpolation between cellular states, providing a potential tool for studying perturbation dynamics. These capabilities mark a significant step toward realizing virtual cell modeling for biomedical research. Project page: https://yuhui-zh15.github.io/CellFlux/.",
+      "paper_id": "pmlr:v267:zhang25bt",
+      "title": "CellFlux: Simulating Cellular Morphology Changes via Flow Matching",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76111-76138",
+          "pmlr_id": "zhang25bt",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce Domain2Vec , a novel approach that decomposes any dataset into a linear combination of several meta-domains , a new concept designed to capture the key underlying features of datasets. Domain2Vec maintains a vocabulary of meta-domains and uses a classifier to decompose any given dataset into a domain vector that corresponds to a distribution over this vocabulary. These domain vectors enable the identification of optimal data mixture for language model (LM) pretraining in a training-free manner under the D *istribution A lignment A ssumption (DA$^{2}$), which suggests that when the data distribution of the training set and the validation set is more aligned, a lower validation loss is achieved. Moreover, Domain2Vec can be seamlessly integrated into previous works to model the relationship between domain vectors and LM performance, greatly enhancing the efficiency and scalability of previous methods. Extensive experiments demonstrate that Domain2Vec helps find the data mixture that enhances downstream task performance with minimal computational overhead. Specifically, Domain2Vec achieves the same validation loss on Pile-CC using only $51.5$% of the compute required when training on the original mixture of The Pile Dataset. Under equivalent compute budget, Domain2Vec* improves downstream performance by an average of $2.83$%.",
+      "paper_id": "pmlr:v267:zhang25bu",
+      "title": "Domain2Vec: Vectorizing Datasets to Find the Optimal Data Mixture without Training",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76139-76158",
+          "pmlr_id": "zhang25bu",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large output spaces, also referred to as Extreme multilabel classification (XMC), is a setting that arises, e.g., in large-scale tagging and product-to-product recommendation, and is characterized by the number of labels ranging from hundreds of thousands to millions. This means that the linear classification head, usually only a tiny fraction of the overall model, turns into the main driver for compute and memory demand. Current state-of-the-art XMC methods predominantly rely on FP16-FP32 mixed-precision training, which we show can be unstable, and inefficient in terms of memory usage and computational overhead. Meanwhile, existing low-precision methods typically retain higher precision for the classification layer. In this work, we propose ELMO, a pure low-precision training framework for XMC models using BFloat16 and Float8 data types. By leveraging Kahan summation and stochastic rounding, we demonstrate that XMC models can be effectively trained entirely in Float8, without relying on single-precision master weights or tensor scaling. Low-precision training, combined with our proposed memory optimizations—gradient fusion and chunking—enables significant reductions in GPU memory usage. For example, we train a 3-million-label XMC model with only 6.6 GiB of GPU memory, compared to the 39.7GiB required by the optimized SOTA method, Renee without compromising accuracy.",
+      "paper_id": "pmlr:v267:zhang25bv",
+      "title": "ELMO : Efficiency via Low-precision and Peak Memory Optimization in Large Output Spaces",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76159-76174",
+          "pmlr_id": "zhang25bv",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent work has demonstrated that large-scale, multi-animal models are powerful tools for characterizing the relationship between neural activity and behavior. Current large-scale approaches, however, focus exclusively on either predicting neural activity from behavior (encoding) or predicting behavior from neural activity (decoding), limiting their ability to capture the bidirectional relationship between neural activity and behavior. To bridge this gap, we introduce a multimodal, multi-task model that enables simultaneous Neural Encoding and Decoding at Scale (NEDS). Central to our approach is a novel multi-task-masking strategy, which alternates between neural, behavioral, within-modality, and cross-modality masking. We pretrain our method on the International Brain Laboratory (IBL) repeated site dataset, which includes recordings from 83 animals performing the visual decision-making task. In comparison to other large-scale modeling approaches, we demonstrate that NEDS achieves state-of-the-art performance for both encoding and decoding when pretrained on multi-animal data and then fine-tuned on new animals. Surprisingly, NEDS’s learned embeddings exhibit emergent properties: even without explicit training, they are highly predictive of the brain regions in each recording. Altogether, our approach is a step towards a foundation model of the brain that enables seamless translation between neural activity and behavior.",
+      "paper_id": "pmlr:v267:zhang25bw",
+      "title": "Neural Encoding and Decoding at Scale",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76175-76192",
+          "pmlr_id": "zhang25bw",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We examine diverging preferences in human-labeled preference datasets. We develop a taxonomy of disagreement sources spanning ten categories across four high-level classes and find that the majority of disagreements are due to factors such as task underspecification or response style. Our findings challenge a standard assumption in reward modeling methods that annotator disagreements can be attributed to simple noise. We then explore how these findings impact two areas of LLM development: reward modeling training and evaluation. In our experiments, we demonstrate how standard reward modeling (e.g., Bradley-Terry) and LLM-as-Judge evaluation methods fail to account for divergence between annotators. These findings highlight challenges in LLM evaluations, which are greatly influenced by divisive features like response style, and in developing pluralistically aligned LLMs. To address these issues, we develop methods for identifying diverging preferences to mitigate their influence in evaluations and during LLM training.",
+      "paper_id": "pmlr:v267:zhang25bx",
+      "title": "Diverging Preferences: When do Annotators Disagree and do Models Know?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76193-76212",
+          "pmlr_id": "zhang25bx",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Out-of-distribution (OOD) detection is essential for enhancing the robustness and security of deep learning models in unknown and dynamic data environments. Gradient-based OOD detection methods, such as GAIA, analyse the explanation pattern representations of in-distribution (ID) and OOD samples by examining the sensitivity of model outputs w.r.t. model inputs, resulting in superior performance compared to traditional OOD detection methods. However, we argue that the non-zero gradient behaviors of OOD samples do not exhibit significant distinguishability, especially when ID samples are perturbed by random perturbations in high-dimensional spaces, which negatively impacts the accuracy of OOD detection. In this paper, we propose a novel OOD detection method called S & I based on layer S plitting and gradient I ntegration via Adversarial Gradient Attribution. Specifically, our approach involves splitting the model’s intermediate layers and iteratively updating adversarial examples layer-by-layer. We then integrate the attribution gradients from each intermediate layer along the attribution path from adversarial examples to the actual input, yielding true explanation pattern representations for both ID and OOD samples. Experiments demonstrate that our S & I algorithm achieves state-of-the-art results, with the average FPR95 of 29.05% (ResNet34)/38.61% (WRN40) and 37.31% (BiT-S) on the CIFAR100 and ImageNet benchmarks, respectively. Our code is available at: https://github.com/LMBTough/S-Ihttps://github.com/LMBTough/S-I",
+      "paper_id": "pmlr:v267:zhang25by",
+      "title": "Splitting & Integrating: Out-of-Distribution Detection via Adversarial Gradient Attribution",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76213-76224",
+          "pmlr_id": "zhang25by",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Designing experiments for causal effect estimation remains an enduring topic in both machine learning and statistics. While much of the existing statistical literature focuses on using central limit theorems to analyze asymptotic properties of estimators, a parallel line of research has emerged around theoretical tools that provide finite-sample error bounds, offering performance on par with—or superior to—the asymptotic approaches. These finite-sample results are especially relevant in active sampling settings where the sample size is limited (for instance, under privacy or cost constraints). In this paper, we develop a finite-sample estimator with sample complexity analysis and extend its applicability to social networks. Through simulations and real-world experiments, we show that our method achieves higher estimation accuracy with fewer samples than traditional estimators endowed with asymptotic normality and other estimators backed by finite-sample guarantees.",
+      "paper_id": "pmlr:v267:zhang25bz",
+      "title": "Active Treatment Effect Estimation via Limited Samples",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76225-76245",
+          "pmlr_id": "zhang25bz",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Tensors play a crucial role in numerous scientific and engineering fields. This paper addresses the low-multilinear-rank tensor completion problem, a fundamental task in tensor-related applications. By exploiting the manifold structure inherent to the fixed-multilinear-rank tensor set, we introduce a simple yet highly effective preconditioned Riemannian metric and propose the Preconditioned Riemannian Gradient Descent (PRGD) algorithm. Compared to the standard Riemannian Gradient Descent (RGD), PRGD achieves faster convergence while maintaining the same order of per-iteration computational complexity. Theoretically, we provide the recovery guarantee for PRGD under near-optimal sampling complexity. Numerical results highlight the efficiency of PRGD, outperforming state-of-the-art methods on both synthetic data and real-world video inpainting tasks.",
+      "paper_id": "pmlr:v267:zhang25c",
+      "title": "Preconditioned Riemannian Gradient Descent Algorithm for Low-Multilinear-Rank Tensor Completion",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "74490-74514",
+          "pmlr_id": "zhang25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "A recent work by Schlisselberg et al. (2025) studies a delay-as-payoff model for stochastic multi-armed bandits, where the payoff (either loss or reward) is delayed for a period that is proportional to the payoff. While this captures many real-world applications, the simple multi-armed bandit setting limits the practicality of their results. In this paper, we address this limitation by studying the delay-as-payoff model for contextual linear bandits. Specifically, we start from the case with a fixed action set and propose an efficient algorithm whose regret overhead compared to the standard no-delay case is only of order $D\\Delta_{\\max}\\log T$, where $T$ is the total horizon, $D$ is the maximum delay, and $\\Delta_{\\max}$ is the maximum suboptimality gap. When payoff is loss, we also show further improvement of the bound, demonstrating a separation between reward and loss similar to Schlisselberg et al. (2025). Contrary to standard linear bandit algorithms that construct least squares estimator and confidence ellipsoid, the main novelty of our algorithm is to apply a phased arm elimination procedure by only picking the volumetric spanners of the action set, which addresses challenges arising from both payoff-dependent delays and large action sets. We further extend our results to the case with varying action sets by adopting the reduction from Hanna et al. (2023). Finally, we implement our algorithm and showcase its effectiveness and superior performance in experiments.",
+      "paper_id": "pmlr:v267:zhang25ca",
+      "title": "Contextual Linear Bandits with Delay as Payoff",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76246-76272",
+          "pmlr_id": "zhang25ca",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) have made significant strides in code translation tasks. However, ensuring both the correctness and readability of translated code remains a challenge, limiting their effective adoption in real-world software development. In this work, we propose F2STrans, a function-to-style guiding paradigm designed to progressively improve the performance of LLMs in code translation. Our approach comprises two key stages: (1) Functional learning, which optimizes translation correctness using high-quality source-target code pairs mined from online programming platforms, and (2) Style learning, which improves translation readability by incorporating both positive and negative style examples. Additionally, we introduce a novel code translation benchmark that includes up-to-date source code, extensive test cases, and manually annotated ground-truth translations, enabling comprehensive functional and stylistic evaluations. Experiments on both our new benchmark and existing datasets demonstrate that our approach significantly improves code translation performance. Notably, our approach enables Qwen-1.5B to outperform prompt-enhanced Qwen-32B and GPT-4 on average across 20 diverse code translation scenarios.",
+      "paper_id": "pmlr:v267:zhang25cb",
+      "title": "Function-to-Style Guidance of LLMs for Code Translation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76273-76288",
+          "pmlr_id": "zhang25cb",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Peptide sequencing—the process of identifying amino acid sequences from mass spectrometry data—is a fundamental task in proteomics. Non-Autoregressive Transformers (NATs) have proven highly effective for this task, outperforming traditional methods. Unlike autoregressive models, which generate tokens sequentially, NATs predict all positions simultaneously, leveraging bidirectional context through unmasked self-attention. However, existing NAT approaches often rely on Connectionist Temporal Classification (CTC) loss, which presents significant optimization challenges due to CTC’s complexity and increases the risk of training failures. To address these issues, we propose an improved non-autoregressive peptide sequencing model that incorporates a structured protein sequence curriculum learning strategy. This approach adjusts protein’s learning difficulty based on the model’s estimated protein generational capabilities through a sampling process, progressively learning peptide generation from simple to complex sequences. Additionally, we introduce a self-refining inference-time module that iteratively enhances predictions using learned NAT token embeddings, improving sequence accuracy at a fine-grained level. Our curriculum learning strategy reduces NAT training failures frequency by more than 90% based on sampled training over various data distributions. Evaluations on nine benchmark species demonstrate that our approach outperforms all previous methods across multiple metrics and species. Model and source code are available at https://github.com/BEAM-Labs/denovo.",
+      "paper_id": "pmlr:v267:zhang25cc",
+      "title": "Curriculum Learning for Biological Sequence Prediction: The Case of De Novo Peptide Sequencing",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76289-76307",
+          "pmlr_id": "zhang25cc",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Online multiple hypothesis testing has attracted a lot of attention in many applications, e.g., anomaly status detection and stock market price monitoring. The state-of-the-art generalized $\\alpha$-investing (GAI) algorithms can control online false discovery rate (FDR) on p-values only under specific dependence structures, a situation that rarely occurs in practice. The e-LOND algorithm (Xu & Ramdas, 2024) utilizes e-values to achieve online FDR control under arbitrary dependence but suffers from a significant loss in power as testing levels are derived from pre-specified descent sequences. To address these limitations, we propose a novel framework on valid e-values named e-GAI. The proposed e-GAI can ensure provable online FDR control under more general dependency conditions while improving the power by dynamically allocating the testing levels. These testing levels are updated not only by relying on both the number of previous rejections and the prior costs, but also, differing from the GAI framework, by assigning less $\\alpha$-wealth for each rejection from a risk aversion perspective. Within the e-GAI framework, we introduce two new online FDR procedures, e-LORD and e-SAFFRON, and provide strategies for the long-term performance to address the issue of $\\alpha$-death, a common phenomenon within the GAI framework. Furthermore, we demonstrate that e-GAI can be generalized to conditionally super-uniform p-values. Both simulated and real data experiments demonstrate the advantages of both e-LORD and e-SAFFRON in FDR control and power.",
+      "paper_id": "pmlr:v267:zhang25cd",
+      "title": "e-GAI: e-value-based Generalized $α$-Investing for Online False Discovery Rate Control",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76308-76331",
+          "pmlr_id": "zhang25cd",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Global cooperation on climate change mitigation is essential to limit temperature increases while supporting long-term, equitable economic growth and sustainable development. Achieving such cooperation among diverse regions, each with different incentives, in a dynamic environment shaped by complex geopolitical and economic factors, without a central authority, is a profoundly challenging game-theoretic problem. This article introduces RICE-N, a multi-region integrated assessment model that simulates the global climate, economy, and climate negotiations and agreements. RICE-N uses multi-agent reinforcement learning (MARL) to encourage agents to develop strategic behaviors based on the environmental dynamics and the actions of the others. We present two negotiation protocols: (1) Bilateral Negotiation, an exemplary protocol and (2) Basic Club, inspired from Climate Clubs and the carbon border adjustment mechanism (Nordhaus, 2015; Comissions, 2022). We compare their impact against a no-negotiation baseline with various mitigation strategies, showing that both protocols significantly reduce temperature growth at the cost of a minor drop in production while ensuring a more equitable distribution of the emission reduction costs.",
+      "paper_id": "pmlr:v267:zhang25ce",
+      "title": "AI for Global Climate Cooperation: Modeling Global Climate Negotiations, Agreements, and Long-Term Cooperation in RICE-N",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76332-76360",
+          "pmlr_id": "zhang25ce",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We analyze the convergence of gradient descent (GD) with large, adaptive stepsizes for logistic regression on linearly separable data. The stepsize adapts to the current risk, scaled by a fixed base stepsize $\\eta$. We prove that once the number of iterates t surpasses a margin-dependent threshold, the averaged GD iterate achieves a risk upper bound of exp(-$\\Theta$($\\eta$t)), where $\\eta$can be chosen arbitrarily large. This implies that GD attains arbitrarily fast convergence rates via large stepsizes, although the risk evolution might not be monotonic. In contrast, prior adaptive stepsize GD analyses require a monotonic risk decrease, limiting their rates to exp(-$\\Theta$(t)). We further establish a margin-dependent lower bound on the iteration complexity for any first-order method to attain a small risk, justifying the necessity of the burn-in phase in our analysis. Our results generalize to a broad class of loss functions and two-layer networks under additional assumptions.",
+      "paper_id": "pmlr:v267:zhang25cf",
+      "title": "Gradient Descent Converges Arbitrarily Fast for Logistic Regression via Large and Adaptive Stepsizes",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76361-76384",
+          "pmlr_id": "zhang25cf",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Multimodal large language models (MLLMs) recently showed strong capacity in integrating data among multiple modalities, empowered by generalizable attention architecture. Advanced methods predominantly focus on language-centric tuning while less exploring multimodal tokens mixed through attention, posing challenges in high-level tasks that require fine-grained cognition and emotion understanding. In this work, we identify the attention deficit disorder problem in multimodal learning, caused by inconsistent cross-modal attention and layer-by-layer decayed attention activation. To address this, we propose a novel attention mechanism, termed MOdular Duplex Attention (MODA), simultaneously conducting the inner-modal refinement and inter-modal interaction. MODA employs a correct-after-align strategy to effectively decouple modality alignment from cross-layer token mixing. In the alignment phase, tokens are mapped to duplex modality spaces based on the basis vectors, enabling the interaction between visual and language modality. Further, the correctness of attention scores is ensured through adaptive masked attention, which enhances the model’s flexibility by allowing customizable masking patterns for different modalities. Extensive experiments on 21 benchmark datasets verify the effectiveness of MODA in perception, cognition, and emotion tasks.",
+      "paper_id": "pmlr:v267:zhang25cg",
+      "title": "MODA: MOdular Duplex Attention for Multimodal Perception, Cognition, and Emotion Understanding",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76385-76396",
+          "pmlr_id": "zhang25cg",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "An efficient attention implementation is essential for large models due to its quadratic time complexity. Fortunately, attention commonly exhibits sparsity, i.e., many values in the attention map are near zero, allowing for the omission of corresponding computations. Many studies have utilized the sparse pattern to accelerate attention. However, most existing works focus on optimizing attention within specific models by exploiting certain sparse patterns of the attention map. A universal sparse attention that guarantees both the speedup and end-to-end performance of diverse models remains elusive. In this paper, we propose SpargeAttn, a universal sparse and quantized attention for any model. Our method uses a two-stage online filter: in the first stage, we rapidly and accurately predict the attention map, enabling the skip of some matrix multiplications in attention. In the second stage, we design an online softmax-aware filter that incurs no extra overhead and further skips some matrix multiplications. Experiments show that our method significantly accelerates diverse models, including language, image, and video generation, without sacrificing end-to-end metrics.",
+      "paper_id": "pmlr:v267:zhang25ch",
+      "title": "SpargeAttention: Accurate and Training-free Sparse Attention Accelerating Any Model Inference",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76397-76413",
+          "pmlr_id": "zhang25ch",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In sequential decision-making, the reward function serves as the primary supervision signal, guiding agents to acquire the desired behaviors. Traditional reward modeling methods rely heavily on human expertise, limiting their scalability. Automated preference generation from suboptimal demonstrations has emerged as a promising alternative to address this limitation. This approach first generates preference data from suboptimal demonstrations and then trains reward models based on these preferences. Despite its potential, existing methods often struggle to generate preference data with sufficient coverage, limiting the accuracy and generalizability of the resulting reward models. To overcome this limitation, we propose APEC (Automated Preference generation with Enhanced Coverage), a novel method that improves the coverage of preference data. APEC achieves this by selecting policy pairs with significantly different iteration indices from the whole adversarial imitation learning process. We provide a theoretical analysis to validate that the selected policy pairs provably hold preference relationships. Experimental results demonstrate that APEC consistently outperforms baseline methods in generating preferences with broader coverage across both vector-based and pixel-based control tasks. Consequently, the reward models trained with APEC align more closely with ground-truth rewards, deriving improved policy performance.",
+      "paper_id": "pmlr:v267:zhang25ci",
+      "title": "Improving Reward Model Generalization from Adversarial Process Enhanced Preferences",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76414-76435",
+          "pmlr_id": "zhang25ci",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Mixture of Experts (MoE) have shown remarkable success in leveraging specialized expert networks for complex machine learning tasks. However, their susceptibility to adversarial attacks presents a critical challenge for deployment in robust applications. This paper addresses the critical question of how to incorporate robustness into MoEs while maintaining high natural accuracy. We begin by analyzing the vulnerability of MoE components, finding that expert networks are notably more susceptible to adversarial attacks than the router. Based on this insight, we propose a targeted robust training technique that integrates a novel loss function to enhance the adversarial robustness of MoE, requiring only the robustification of one additional expert without compromising training or inference efficiency. Building on this, we introduce a dual-model strategy that linearly combines a standard MoE model with our robustified MoE model using a smoothing parameter. This approach allows for flexible control over the robustness-accuracy trade-off. We further provide theoretical foundations by deriving certified robustness bounds for both the single MoE and the dual-model. To push the boundaries of robustness and accuracy, we propose a novel joint training strategy JTDMoE for the dual-model. This joint training enhances both robustness and accuracy beyond what is achievable with separate models. Experimental results on CIFAR-10 and TinyImageNet datasets using ResNet18 and Vision Transformer (ViT) architectures demonstrate the effectiveness of our proposed methods.",
+      "paper_id": "pmlr:v267:zhang25cj",
+      "title": "Optimizing Robustness and Accuracy in Mixture of Experts: A Dual-Model Approach",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76436-76450",
+          "pmlr_id": "zhang25cj",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The policy trained via reinforcement learning (RL) makes decisions based on sensor-derived state features. It is common for state features to evolve for reasons such as periodic sensor maintenance or the addition of new sensors for performance improvement. The deployed policy fails in new state space when state features are unseen during training. Previous work tackles this challenge by training a sensor-invariant policy or generating multiple policies and selecting the appropriate one with limited samples. However, both directions struggle to guarantee the performance when faced with unpredictable evolutions. In this paper, we formalize this problem as state evolvable reinforcement learning (SERL), where the agent is required to mitigate policy degradation after state evolutions without costly exploration. We propose Lapse by reusing policies learned from the old state space in two distinct aspects. On one hand, Lapse directly reuses the robust old policy by composing it with a learned state reconstruction model to handle vanishing sensors. On the other hand, the behavioral experience from the old policy is reused by Lapse to train a newly adaptive policy through offline learning, better utilizing new sensors. To leverage advantages of both policies in different scenarios, we further propose automatic ensemble weight adjustment to effectively aggregate them. Theoretically, we justify that robust policy reuse helps mitigate uncertainty and error from both evolution and reconstruction. Empirically, Lapse achieves a significant performance improvement, outperforming the strongest baseline by about $2\\times$ in benchmark environments.",
+      "paper_id": "pmlr:v267:zhang25ck",
+      "title": "Learning to Reuse Policies in State Evolvable Environments",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76451-76476",
+          "pmlr_id": "zhang25ck",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Model (LLM) agents equipped with external tools have become increasingly powerful for complex tasks such as web shopping, automated email replies, and financial trading. However, these advancements amplify the risks of adversarial attacks, especially when agents can access sensitive external functionalities. Nevertheless, manipulating LLM agents into performing targeted malicious actions or invoking specific tools remains challenging, as these agents extensively reason or plan before executing final actions. In this work, we present UDora, a unified red teaming framework designed for LLM agents that dynamically hijacks the agent’s reasoning processes to compel malicious behavior. Specifically, UDora first generates the model’s reasoning trace for the given task, then automatically identifies optimal points within this trace to insert targeted perturbations. The resulting perturbed reasoning is then used as a surrogate response for optimization. By iteratively applying this process, the LLM agent will then be induced to undertake designated malicious actions or to invoke specific malicious tools. Our approach demonstrates superior effectiveness compared to existing methods across three LLM agent datasets. The code is available at https://github.com/AI-secure/UDora.",
+      "paper_id": "pmlr:v267:zhang25cl",
+      "title": "UDora: A Unified Red Teaming Framework against LLM Agents by Dynamically Hijacking Their Own Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76477-76496",
+          "pmlr_id": "zhang25cl",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Traditional autonomous driving systems often struggle to connect high-level reasoning with low-level control, leading to suboptimal and sometimes unsafe behaviors. Recent advances in multimodal large language models (MLLMs), which process both visual and textual data, offer an opportunity to unify perception and reasoning. However, effectively embedding precise safety knowledge into MLLMs for autonomous driving remains a significant challenge. To address this, we propose SafeAuto, a framework that enhances MLLM-based autonomous driving by incorporating both unstructured and structured knowledge. First, we introduce a Position-Dependent Cross-Entropy (PDCE) loss to improve low-level control signal predictions when values are represented as text. Second, to explicitly integrate safety knowledge, we develop a reasoning component that translates traffic rules into first-order logic (e.g., \"red light =$>$ stop\") and embeds them into a probabilistic graphical model (e.g., Markov Logic Network) to verify predicted actions using recognized environmental attributes. Additionally, our Multimodal Retrieval-Augmented Generation (RAG) model leverages video, control signals, and environmental attributes to learn from past driving experiences. Integrating PDCE, MLN, and Multimodal RAG, SafeAuto outperforms existing baselines across multiple datasets, enabling more accurate, reliable, and safer autonomous driving. The code is available at https://github.com/AI-secure/SafeAuto.",
+      "paper_id": "pmlr:v267:zhang25cm",
+      "title": "SafeAuto: Knowledge-Enhanced Safe Autonomous Driving with Multimodal Foundation Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76497-76517",
+          "pmlr_id": "zhang25cm",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We introduce SWE-Flow , a novel data synthesis framework grounded in Test-Driven Development (TDD). Unlike existing software engineering data that rely on human-submitted issues, SWE-Flow automatically infers incremental development steps directly from unit tests, which inherently encapsulate high-level requirements. The core of SWE-Flow is the construction of a Runtime Dependency Graph (RDG), which precisely captures function interactions, enabling the generation of a structured, step-by-step development schedule . At each step, SWE-Flow produces a partial codebase, the corresponding unit tests, and the necessary code modifications, resulting in fully verifiable TDD tasks. With this approach, we generated 16,061 training instances and 2,020 test instances from real-world GitHub projects, creating the SWE-Flow-Eval benchmark. Our experiments show that fine-tuning open model on this dataset significantly improves performance in TDD-based coding. To facilitate further research, we release all code, datasets, models, and Docker images at Github.",
+      "paper_id": "pmlr:v267:zhang25cn",
+      "title": "Synthesizing Software Engineering Data in a Test-Driven Manner",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "76518-76540",
+          "pmlr_id": "zhang25cn",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

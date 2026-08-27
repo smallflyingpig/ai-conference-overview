@@ -1,0 +1,747 @@
+{
+  "batch_index": 65,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Diffusion models have demonstrated remarkable generation quality but at the cost of numerous function evaluations. Recently, advanced ODE-based solvers have been developed to mitigate the substantial computational demands of reverse-diffusion solving under limited sampling steps. However, these solvers, heavily inspired by Adams-like multistep methods, rely solely on t-related Lagrange interpolation. We show that t-related Lagrange interpolation is suboptimal for diffusion model and reveal a compact search space comprised of time steps and solver coefficients. Building on our analysis, we propose a novel differentiable solver search algorithm to identify more optimal solver. Equipped with the searched solver, rectified-flow models, e.g., SiT-XL/2 and FlowDCN-XL/2, achieve FID scores of 2.40 and 2.35, respectively, on ImageNet-$256\\times256$ with only 10 steps. Meanwhile, DDPM model, DiT-XL/2, reaches a FID score of 2.33 with only 10 steps. Notably, our searched solver outperforms traditional solvers by a significant margin. Moreover, our searched solver demonstrates generality across various model architectures, resolutions, and model sizes.",
+      "paper_id": "pmlr:v267:wang25bh",
+      "title": "Differentiable Solver Search for Fast Diffusion Sampling",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63549-63568",
+          "pmlr_id": "wang25bh",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Existing methods for code generation use code snippets as seed data, restricting the complexity and diversity of the synthesized data. In this paper, we introduce a novel feature tree-based synthesis framework, which revolves around hierarchical code features derived from high-level abstractions of code. The feature tree is constructed from raw data and refined iteratively to increase the quantity and diversity of the extracted features, which captures and recognizes more complex patterns and relationships within the code. By adjusting the depth and breadth of the sampled subtrees, our framework provides precise control over the complexity of the generated code, enabling functionalities that range from function-level operations to multi-file scenarios. We fine-tuned widely-used base models to obtain EpiCoder series, achieving state-of-the-art performance on multiple benchmarks at both the function and file levels. In particular, empirical evidence indicates that our approach shows significant potential in the synthesizing of repository-level code data. Our code and data are publicly available.",
+      "paper_id": "pmlr:v267:wang25bi",
+      "title": "EpiCoder: Encompassing Diversity and Complexity in Code Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63569-63606",
+          "pmlr_id": "wang25bi",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Fine-grained hashing has become a powerful solution for rapid and efficient image retrieval, particularly in scenarios requiring high discrimination between visually similar categories. To enable each hash bit to correspond to specific visual attributes, we propose a novel method that harnesses learnable queries for attribute-aware hash code learning. This method deploys a tailored set of queries to capture and represent nuanced attribute-level information within the hashing process, thereby enhancing both the interpretability and relevance of each hash bit. Building on this query-based optimization framework, we incorporate an auxiliary branch to help alleviate the challenges of complex landscape optimization often encountered with low-bit hash codes. This auxiliary branch models high-order attribute interactions, reinforcing the robustness and specificity of the generated hash codes. Experimental results on benchmark datasets demonstrate that our method generates attribute-aware hash codes and consistently outperforms state-of-the-art techniques in retrieval accuracy and robustness, especially for low-bit hash codes, underscoring its potential in fine-grained image hashing tasks.",
+      "paper_id": "pmlr:v267:wang25bj",
+      "title": "Learning Attribute-Aware Hash Codes for Fine-Grained Image Retrieval via Query Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63607-63620",
+          "pmlr_id": "wang25bj",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Vision foundation models (FMs) like CLIP have exhibited exceptional capabilities in visual and linguistic understanding, particularly in zero-shot inference tasks. However, these models struggle with data that significantly deviates from their training samples, necessitating fine-tuning, which is often infeasible in centralized settings due to data privacy concerns. Federated learning (FL) combined with parameter-efficient fine-tuning (PEFT) offers a potential solution, yet existing methods face issues with domain-specific characteristics and out-of-domain generalization. We propose a cross-silo Federated Adapter Generalization (FedAG), a novel federated fine-tuning approach that leverages multiple fine-grained adapters to capture domain-specific knowledge while enhancing out-of-domain generalization. Our method uses quality-aware in-domain mutual learning and attention-regularized cross-domain learning to integrate domain-specific insights effectively. Experiments of the CLIP model on three domain-shifting datasets, ImageCLEF-DA, Office-Home, and DomainNet, demonstrate the superior performance of FedAG in both in-domain and out-of-domain scenarios. We envision this work as a milestone for generalizing CLIP to handle the challenge of out-of-domain knowledge under federated learning setting.",
+      "paper_id": "pmlr:v267:wang25bk",
+      "title": "Enhancing Foundation Models with Federated Domain Knowledge Infusion",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63621-63635",
+          "pmlr_id": "wang25bk",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We study risk-sensitive RL where the goal is learn a history-dependent policy that optimizes some risk measure of cumulative rewards. We consider a family of risks called the optimized certainty equivalents (OCE), which captures important risk measures such as conditional value-at-risk (CVaR), entropic risk and Markowitz’s mean-variance. In this setting, we propose two meta-algorithms: one grounded in optimism and another based on policy gradients, both of which can leverage the broad suite of risk-neutral RL algorithms in an augmented Markov Decision Process (MDP). Via a reductions approach, we leverage theory for risk-neutral RL to establish novel OCE bounds in complex, rich-observation MDPs. For the optimism-based algorithm, we prove bounds that generalize prior results in CVaR RL and that provide the first risk-sensitive bounds for exogenous block MDPs. For the gradient-based algorithm, we establish both monotone improvement and global convergence guarantees under a discrete reward assumption. Finally, we empirically show that our algorithms learn the optimal history-dependent policy in a proof-of-concept MDP, where all Markovian policies provably fail.",
+      "paper_id": "pmlr:v267:wang25bl",
+      "title": "A Reductions Approach to Risk-Sensitive Reinforcement Learning with Optimized Certainty Equivalents",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63636-63661",
+          "pmlr_id": "wang25bl",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Curating data for instruction tuning is crucial for enhancing the performance of large language models (LLMs). This work aims to select training data for instruction tuning to improve the LLM performance on specific tasks. Existing methods often rely on next-token prediction (NTP) loss as a proxy for target task performance due to the non-differentiable nature of performance evaluation metrics. They select training data points that are most helpful in reducing validation loss. However, there is a discrepancy between minimizing NTP loss and maximizing performance (e.g., code pass rate in code generation). To remedy this, we introduce a novel Non-differentiable evaluation metric-based InfluenCe Estimation (NICE), which leverages the policy gradient to select the training data that improves the performance. Moreover, NICE can perform data selection in the absence of labels (ground-truth responses) when the evaluation metrics do not require labels (e.g., a reward model can output reward scores without supervision from labels). Experimental results show that our approach outperforms existing data selection baselines that use NTP loss in diverse and realistic scenarios. Notably, subsets selected by NICE often produce models that outperform those trained on the full dataset. Our code is available at https://github.com/JTWang2000/NICE.",
+      "paper_id": "pmlr:v267:wang25bm",
+      "title": "NICE Data Selection for Instruction Tuning in LLMs with Non-differentiable Evaluation Metric",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63662-63689",
+          "pmlr_id": "wang25bm",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph Neural Networks (GNNs) have demonstrated remarkable utility across diverse applications, and their growing complexity has made Machine Learning as a Service (MLaaS) a viable platform for scalable deployment. However, this accessibility also exposes GNN to serious security threats, most notably model extraction attacks (MEAs), in which adversaries strategically query a deployed model to construct a high-fidelity replica. In this work, we evaluate the vulnerability of GNNs to MEAs and explore their potential for cost-effective model acquisition in non-adversarial research settings. Importantly, adaptive node querying strategies can also serve a critical role in research, particularly when labeling data is expensive or time-consuming. By selectively sampling informative nodes, researchers can train high-performing GNNs with minimal supervision, which is particularly valuable in domains such as biomedicine, where annotations often require expert input. To address this, we propose a node querying strategy tailored to a highly practical yet underexplored scenario, where bulk queries are prohibited, and only a limited set of initial nodes is available. Our approach iteratively refines the node selection mechanism over multiple learning cycles, leveraging historical feedback to improve extraction efficiency. Extensive experiments on benchmark graph datasets demonstrate our superiority over comparable baselines on accuracy, fidelity, and F1 score under strict query-size constraints. These results highlight both the susceptibility of deployed GNNs to extraction attacks and the promise of ethical, efficient GNN acquisition methods to support low-resource research environments. Our implementation is publicly available at https://github.com/LabRAI/CEGA.",
+      "paper_id": "pmlr:v267:wang25bn",
+      "title": "CEGA: A Cost-Effective Approach for Graph-Based Model Extraction and Acquisition",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63690-63706",
+          "pmlr_id": "wang25bn",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The exploration & exploitation dilemma poses significant challenges in reinforcement learning (RL). Recently, curiosity-based exploration methods achieved great success in tackling hard-exploration problems. However, they necessitate extensive hyperparameter tuning on different environments, which heavily limits the applicability and accessibility of this line of methods. In this paper, we characterize this problem via analysis of the agent behavior, concluding the fundamental difficulty of choosing a proper hyperparameter. We then identify the difficulty and the instability of the optimization when the agent learns with curiosity. We propose our method, hyperparameter robust exploration ( Hyper ), which extensively mitigates the problem by effectively regularizing the visitation of the exploration and decoupling the exploitation to ensure stable training. We theoretically justify that Hyper is provably efficient under function approximation setting and empirically demonstrate its appealing performance and robustness in various environments.",
+      "paper_id": "pmlr:v267:wang25bo",
+      "title": "Hyper: Hyperparameter Robust Efficient Exploration in Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63707-63733",
+          "pmlr_id": "wang25bo",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Determining the direction of relationships between variables is fundamental for understanding complex systems across scientific domains. While observational data can uncover relationships between variables, it cannot distinguish between cause and effect without experimental interventions. To effectively uncover causality, previous works have proposed intervention strategies that sequentially optimize the intervention values. However, most of these approaches primarily maximized information-theoretic gains that may not effectively measure the reliability of direction determination. In this paper, we formulate the causal direction identification as a hypothesis-testing problem, and propose a Bayes factor-based intervention strategy, which can quantify the evidence strength of one hypothesis ( e.g. , causal) over the other ( e.g. , non-causal). To balance the immediate and future gains of testing strength, we propose a sequential intervention objective over intervention values in multiple steps. By analyzing the objective function, we develop a dynamic programming algorithm that reduces the complexity from non-polynomial to polynomial. Experimental results on bivariate systems, tree-structured graphs, and an embodied AI environment demonstrate the effectiveness of our framework in direction determination and its extensibility to both multivariate settings and real-world applications.",
+      "paper_id": "pmlr:v267:wang25bp",
+      "title": "Bayesian Active Learning for Bivariate Causal Discovery",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63734-63754",
+          "pmlr_id": "wang25bp",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) have recently been introduced to graph learning, aiming to extend their zero-shot generalization success to tasks where labeled graph data is scarce. Among these applications, inference over text-attributed graphs (TAGs) presents unique challenges: existing methods struggle with LLMs’ limited context length for processing large node neighborhoods and the misalignment between node embeddings and the LLM token space. To address these issues, we establish two key principles for ensuring generalization and derive the framework LLM-BP accordingly: (1) Unifying the attribute space with task-adaptive embeddings , where we leverage LLM-based encoders and task-aware prompting to enhance generalization of the text attribute embeddings; (2) Developing a generalizable graph information aggregation mechanism , for which we adopt belief propagation with LLM-estimated parameters that adapt across graphs. Evaluations on 11 real-world TAG benchmarks demonstrate that LLM-BP significantly outperforms existing approaches, achieving 8.10% improvement with task-conditional embeddings and an additional 1.71% gain from adaptive aggregation. The code and task-adaptive embeddings are publicly available.",
+      "paper_id": "pmlr:v267:wang25bq",
+      "title": "Generalization Principles for Inference over Text-Attributed Graphs with Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63755-63776",
+          "pmlr_id": "wang25bq",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "While differentiable control has emerged as a powerful paradigm combining model-free flexibility with model-based efficiency, the iterative Linear Quadratic Regulator (iLQR) remains underexplored as a differentiable component. The scalability of differentiating through extended iterations and horizons poses significant challenges, hindering iLQR from being an effective differentiable controller. This paper introduces DiLQR, a framework that facilitates differentiation through iLQR, allowing it to serve as a trainable and differentiable module, either as or within a neural network. A novel aspect of this framework is the analytical solution that it provides for the gradient of an iLQR controller through implicit differentiation, which ensures a constant backward cost regardless of iteration, while producing an accurate gradient. We evaluate our framework on imitation tasks on famous control benchmarks. Our analytical method demonstrates superior computational performance, achieving up to $\\textbf{128x}$ speedup and a minimum of $\\textbf{21x}$ speedup compared to automatic differentiation. Our method also demonstrates superior learning performance ($\\mathbf{10^6x}$) compared to traditional neural network policies and better model loss with differentiable controllers that lack exact analytical gradients. Furthermore, we integrate our module into a larger network with visual inputs to demonstrate the capacity of our method for high-dimensional, fully end-to-end tasks. Codes can be found on the project homepage https://sites.google.com/view/dilqr/.",
+      "paper_id": "pmlr:v267:wang25br",
+      "title": "DiLQR: Differentiable Iterative Linear Quadratic Regulator via Implicit Differentiation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63777-63791",
+          "pmlr_id": "wang25br",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Federated learning (FL) is a widely adopted privacy-preserving distributed learning framework, yet its generalization performance remains less explored compared to centralized learning. In FL, the generalization error consists of two components: the out-of-sample gap, which measures the gap between the empirical and true risk for participating clients, and the participation gap, which quantifies the risk difference between participating and non-participating clients. In this work, we apply an information-theoretic analysis via the conditional mutual information (CMI) framework to study FL’s two-level generalization. Beyond the traditional supersample-based CMI framework, we introduce a superclient construction to accommodate the two-level generalization setting in FL. We derive multiple CMI-based bounds, including hypothesis-based CMI bounds, illustrating how privacy constraints in FL can imply generalization guarantees. Furthermore, we propose fast-rate evaluated CMI bounds that recover the best-known convergence rate for two-level FL generalization in the small empirical risk regime. For specific FL model aggregation strategies and structured loss functions, we refine our bounds to achieve improved convergence rates with respect to the number of participating clients. Empirical evaluations confirm that our evaluated CMI bounds are non-vacuous and accurately capture the generalization behavior of FL algorithms.",
+      "paper_id": "pmlr:v267:wang25bs",
+      "title": "Generalization in Federated Learning: A Conditional Mutual Information Framework",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63792-63823",
+          "pmlr_id": "wang25bs",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Image steganography ensures secure information transmission and storage by concealing secret messages within images. Recently, the diffusion model has been incorporated into the generative image steganography task, with text prompts being employed to guide the entire process. However, existing methods are plagued by three problems: (1) the restricted control exerted by text prompts causes generated stego images resemble the secret images and seem unnatural, raising the severe detection risk; (2) inconsistent intermediate states between Denoising Diffusion Implicit Models and its inversion, coupled with limited control of text prompts degrade the revealed secret images; (3) the descriptive text of images(i.e. text prompts) are also deployed as the keys, but this incurs significant security risks for both the keys and the secret images.To tackle these drawbacks, we systematically propose the SSHR, which joints the Reference Images with the adaptive keys to govern the entire process, enhancing the naturalness and imperceptibility of stego images. Additionally, we methodically construct an Exact Reveal Process to improve the quality of the revealed secret images. Furthermore, adaptive Reference-Secret Image Related Symmetric Keys are generated to enhance the security of both the keys and the concealed secret images. Various experiments indicate that our model outperforms existing methods in terms of recovery quality and secret image security.",
+      "paper_id": "pmlr:v267:wang25bt",
+      "title": "SSHR: More Secure Generative Steganography with High-Quality Revealed Secret Images",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63824-63839",
+          "pmlr_id": "wang25bt",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Despite the popularity of transformers in practice, their architectures are empirically designed and neither mathematically justified nor interpretable. Moreover, as indicated by many empirical studies, some components of transformer architectures may be redundant. To derive a fully interpretable transformer architecture with only necessary components, we contend that the goal of representation learning is to compress a set of noisy initial token representations towards a mixture of low-dimensional subspaces. To compress these noisy token representations, an associated denoising operation naturally takes the form of a multi-head (subspace) self-attention. By unrolling such iterative denoising operations into a deep network, we arrive at a highly compact architecture that consists of only self-attention operators with skip connections at each layer. Moreover, we show that each layer performs highly efficient denoising: it improves the signal-to-noise ratio of token representations at a linear rate with respect to the number of layers. Despite its simplicity, extensive experiments on vision and language tasks demonstrate that such a transformer achieves performance close to that of standard transformer architectures such as GPT-2 and CRATE.",
+      "paper_id": "pmlr:v267:wang25bu",
+      "title": "Attention-Only Transformers via Unrolled Subspace Denoising",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63840-63859",
+          "pmlr_id": "wang25bu",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "A key challenge in personalized healthcare is identifying optimal intervention sequences to guide temporal systems toward target outcomes, a novel problem we formalize as counterfactual target achievement. In addressing this problem, directly adopting counterfactual estimation methods face compounding errors due to the unobservability of counterfactuals. To overcome this, we propose Variational Counterfactual Intervention Planning (VCIP), which reformulates the problem by modeling the conditional likelihood of achieving target outcomes, implemented through variational inference. By leveraging the g-formula to bridge the gap between interventional and observational log-likelihoods, VCIP enables reliable training from observational data. Experiments on both synthetic and real-world datasets show that VCIP significantly outperforms existing methods in target achievement accuracy.",
+      "paper_id": "pmlr:v267:wang25bv",
+      "title": "Variational Counterfactual Intervention Planning to Achieve Target Outcomes",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63860-63881",
+          "pmlr_id": "wang25bv",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Typographic attacks are often attributed to the ability of multimodal pre-trained models to fuse textual semantics into visual representations, yet the mechanisms and locus of such interference remain unclear. We examine whether such models genuinely encode textual semantics or primarily rely on texture-based visual features. To disentangle orthographic form from meaning, we introduce the ToT dataset, which includes controlled word pairs that either share semantics with distinct appearances (synonyms) or share appearance with differing semantics (paronyms). A layer-wise analysis of Intrinsic Dimension (ID) reveals that early layers exhibit competing dynamics between orthographic and semantic representations. In later layers, semantic accuracy increases as ID decreases, but this improvement largely stems from orthographic disambiguation. Notably, clear semantic differentiation emerges only in the final block, challenging the common assumption that semantic understanding is progressively constructed across depth. These findings reveal how current vision-language models construct text representations through texture-dependent processes, prompting a reconsideration of the gap between visual perception and semantic understanding. The code is available at: https://github.com/Ovsia/Textural-or-Textual",
+      "paper_id": "pmlr:v267:wang25bw",
+      "title": "Textural or Textual: How Vision-Language Models Read Text in Images",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63882-63896",
+          "pmlr_id": "wang25bw",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Despite the potential of language model-based agents to solve real-world tasks such as web navigation, current methods still struggle with long-horizon tasks with complex action trajectories. In contrast, humans can flexibly solve complex tasks by learning reusable task workflows from past experiences and using them to guide future actions. To build agents that can similarly benefit from this process, we introduce Agent Workflow Memory (AWM), a method for inducing commonly reused routines, i.e., workflows, and selectively providing workflows to the agent to guide subsequent generations. AWM flexibly applies to both offline and online scenarios, where agents induce workflows from training examples beforehand or from test queries on the fly. We experiment on two major web navigation benchmarks — Mind2Web and WebArena — that collectively cover 1000+ tasks from 200+ domains across travel, shopping, and social media, among others. AWM substantially improves the baseline results by 24.6% and 51.1% relative success rate on Mind2Web and WebArena while reducing the number of steps taken to solve WebArena tasks successfully. Furthermore, online AWM robustly generalizes in cross-task, website, and domain evaluations, surpassing baselines from 8.9 to 14.0 absolute points as train-test task distribution gaps widen.",
+      "paper_id": "pmlr:v267:wang25bx",
+      "title": "Agent Workflow Memory",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63897-63911",
+          "pmlr_id": "wang25bx",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Inspired by the impressive capabilities of GPT-4o, there is growing interest in enabling speech language models (SLMs) to engage in natural, fluid spoken interactions with humans. Recent advancements have led to the development of several SLMs that demonstrate promising results in this area. However, current approaches have yet to fully exploit dual-channel speech data, which inherently captures the structure and dynamics of human conversation. In this work, we systematically explore the use of dual-channel speech data in the context of modern large language models, and introduce a novel generative modeling paradigm—Next-Token-Pair Prediction (NTPP)—to enable speaker-independent dual-channel spoken dialogue learning using decoder-only architectures for the first time. We evaluate our approach on standard benchmarks, and empirical results show that our proposed method, NTPP, significantly improves the conversational abilities of SLMs in terms of turn-taking prediction, response coherence, and naturalness. Moreover, compared to existing methods, NTPP achieves substantially lower inference latency, highlighting its practical efficiency for real-time applications. Demo and code can be found at https://audio-3059.pages.dev.",
+      "paper_id": "pmlr:v267:wang25by",
+      "title": "NTPP: Generative Speech Language Modeling for Dual-Channel Spoken Dialogue via Next-Token-Pair Prediction",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63912-63928",
+          "pmlr_id": "wang25by",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Solving partial differential equations (PDEs) by numerical methods meet computational cost challenge for getting the accurate solution since fine grids and small time steps are required. Machine learning can accelerate this process, but struggle with weak generalizability, interpretability, and data dependency, as well as suffer in long-term prediction. To this end, we propose a PDE-embedded network with multiscale time stepping (MultiPDENet), which fuses the scheme of numerical methods and machine learning, for accelerated simulation of flows. In particular, we design a convolutional filter based on the structure of finite difference stencils with a small number of parameters to optimize, which estimates the equivalent form of spatial derivative on a coarse grid to minimize the equation’s residual. A Physics Block with a 4th-order Runge-Kutta integrator at the fine time scale is established that embeds the structure of PDEs to guide the prediction. To alleviate the curse of temporal error accumulation in long-term prediction, we introduce a multiscale time integration approach, where a neural network is used to correct the prediction error at a coarse time scale. Experiments across various PDE systems, including the Navier-Stokes equations, demonstrate that MultiPDENet can accurately predict long-term spatiotemporal dynamics, even given small and incomplete training data, e.g., spatiotemporally down-sampled datasets. MultiPDENet achieves the state-of-the-art performance compared with other neural baseline models, also with clear speedup compared to classical numerical methods",
+      "paper_id": "pmlr:v267:wang25bz",
+      "title": "MultiPDENet: PDE-embedded Learning with Multi-time-stepping for Accelerated Flow Simulation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63929-63951",
+          "pmlr_id": "wang25bz",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Despite the remarkable success of large foundation models across a range of tasks, they remain susceptible to security threats such as backdoor attacks. By injecting poisoned data containing specific triggers during training, adversaries can manipulate model predictions in a targeted manner. While prior work has focused on empirically designing and evaluating such attacks, a rigorous theoretical understanding of when and why they succeed is lacking. In this work, we analyze backdoor attacks that exploit the token selection process within attention mechanisms–a core component of transformer-based architectures. We show that single-head self-attention transformers trained via gradient descent can interpolate poisoned training data. Moreover, we prove that when the backdoor triggers are sufficiently strong but not overly dominant, attackers can successfully manipulate model predictions. Our analysis characterizes how adversaries manipulate token selection to alter outputs and identifies the theoretical conditions under which these attacks succeed. We validate our findings through experiments on synthetic datasets.",
+      "paper_id": "pmlr:v267:wang25c",
+      "title": "Backdoor Attacks in Token Selection of Attention Mechanism",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62251-62296",
+          "pmlr_id": "wang25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) have shown remarkable capabilities in text and multimodal processing, yet they fundamentally lack physical awareness–understanding of real-world physical phenomena. In this work, we present ACORN, a framework that teaches LLMs physical awareness through sound, focusing on fundamental physical phenomena like the Doppler effect, multipath effect, and spatial relationships. To overcome data scarcity, ACORN introduce a physics-based simulator combining real-world sound sources with controlled physical channels to generate diverse training data. Using this simulator, we build AQA-PHY, a comprehensive Audio Question-Answer dataset, and propose an audio encoder that processes both magnitude and phase information. By connecting our audio encoder to state-of-the-art LLMs, we demonstrate reasonable results in both simulated and real-world tasks, such as line-of-sight detection, Doppler effect estimation, and Direction-of-Arrival estimation, paving the way for enabling LLMs to understand physical world.",
+      "paper_id": "pmlr:v267:wang25ca",
+      "title": "Teaching Physical Awareness to LLMs through Sounds",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63952-63971",
+          "pmlr_id": "wang25ca",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Solving mathematical problems using computer-verifiable languages like Lean has significantly impacted the mathematical and computer science communities. State-of-the-art methods utilize a single Large Language Model (LLM) to generate complete proof or perform tree search, but they fail to balance these tasks. We propose MA-LoT : Model-CollAboration Lean-based Long Chain-of-Thought , a comprehensive framework for Lean4 theorem proving to solve this issue. It separates the cognition tasks of general NL for whole-proof generation and error analysis for proof correction using the model-collaboration method. We achieve this by structured interaction of the LLM and Lean4 verifier in Long CoT. To implement the framework, we propose the novel LoT-Transfer Learning training-inference pipeline, which enables the Long CoT thinking capability to LLMs without special data annotation. Extensive experiment shows that our framework achieves a 61.07% accuracy rate on the Lean4 version of the MiniF2F-Test dataset, largely outperforming DeepSeek-V3 (33.61%), single-model tree search (InternLM-Step-Prover, 50.70%), and whole-proof generation (Godel-Prover, 55.33%) baselines. Furthermore, our findings highlight the potential of combining Long CoT with formal verification for a more insightful generation in a broader perspective.",
+      "paper_id": "pmlr:v267:wang25cb",
+      "title": "MA-LoT: Model-Collaboration Lean-based Long Chain-of-Thought Reasoning enhances Formal Theorem Proving",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "63972-64004",
+          "pmlr_id": "wang25cb",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Contrast-enhanced MRI enhances pathological visualization but often necessitates Pre-Contrast images for accurate quantitative analysis and comparative assessment. However, Pre-Contrast images are frequently unavailable due to time, cost, or safety constraints, or they may suffer from degradation, making alignment challenging. This limitation hinders clinical diagnostics and the performance of tools requiring combined image types. To address this challenge, we propose a novel staged, physics-grounded learning framework with a hyperintensity prior to synthesize Pre-Contrast images directly from Post-Contrast MRIs. The proposed method can generate high-quality Pre-Contrast images, thus, enabling comprehensive diagnostics while reducing the need for additional imaging sessions, costs, and patient risks. To the best of our knowledge, this is the first Pre-Contrast synthesis model capable of generating images that may be interchangeably used with standard-of-care Pre-Contrast images. Extensive evaluations across multiple datasets, sites, anatomies, and downstream tasks demonstrate the model’s robustness and clinical applicability, positioning it as a valuable tool for contrast-enhanced MRI workflows.",
+      "paper_id": "pmlr:v267:wang25cc",
+      "title": "Staged and Physics-Grounded Learning Framework with Hyperintensity Prior for Pre-Contrast MRI Synthesis",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64005-64022",
+          "pmlr_id": "wang25cc",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "While powerful for generation, Diffusion Probabilistic Models (DPMs) face slow sampling challenges, for which various distillation-based methods have been proposed. However, they typically require significant additional training costs and model parameter storage, limiting their practicality. In this work, we propose P CA-based A daptive S earch (PAS), which optimizes existing solvers for DPMs with minimal additional costs. Specifically, we first employ PCA to obtain a few basis vectors to span the high-dimensional sampling space, which enables us to learn just a set of coordinates to correct the sampling direction; furthermore, based on the observation that the cumulative truncation error exhibits an “S\"-shape, we design an adaptive search strategy that further enhances the sampling efficiency and reduces the number of stored parameters to approximately 10. Extensive experiments demonstrate that PAS can significantly enhance existing fast solvers in a plug-and-play manner with negligible costs. E.g., on CIFAR10, PAS optimizes DDIM’s FID from 15.69 to 4.37 (NFE=10) using only 12 parameters and sub-minute training on a single A100 GPU. Code is available at https://github.com/onefly123/PAS.",
+      "paper_id": "pmlr:v267:wang25cd",
+      "title": "Diffusion Sampling Correction via Approximately 10 Parameters",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64023-64043",
+          "pmlr_id": "wang25cd",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Rectified-flow-based diffusion transformers like FLUX and OpenSora have demonstrated outstanding performance in the field of image and video generation. Despite their robust generative capabilities, these models often struggle with inversion inaccuracies, which could further limit their effectiveness in downstream tasks such as image and video editing. To address this issue, we propose RF-Solver, a novel training-free sampler that effectively enhances inversion precision by mitigating the errors in the ODE-solving process of rectified flow. Specifically, we derive the exact formulation of the rectified flow ODE and apply the high-order Taylor expansion to estimate its nonlinear components, significantly enhancing the precision of ODE solutions at each timestep. Building upon RF-Solver, we further propose RF-Edit, a general feature-sharing-based framework for image and video editing. By incorporating self-attention features from the inversion process into the editing process, RF-Edit effectively preserves the structural information of the source image or video while achieving high-quality editing results. Our approach is compatible with any pre-trained rectified-flow-based models for image and video tasks, requiring no additional training or optimization. Extensive experiments across generation, inversion, and editing tasks in both image and video modalities demonstrate the superiority and versatility of our method. The source code is available at https://github.com/wangjiangshan0725/RF-Solver-Edit.",
+      "paper_id": "pmlr:v267:wang25ce",
+      "title": "Taming Rectified Flow for Inversion and Editing",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64044-64058",
+          "pmlr_id": "wang25ce",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The primary goal of brain-computer interfaces (BCIs) is to establish a direct linkage between neural activities and behavioral actions via neural decoders. Due to the nonstationary property of neural signals, BCIs trained on one day usually obtain degraded performance on other days, hindering the user experience. Existing studies attempted to address this problem by aligning neural signals across different days. However, these neural adaptation methods may exhibit instability and poor performance when only a few trials are available for alignment, limiting their practicality in real-world BCI deployment. To achieve efficient and stable neural adaptation with few trials, we propose Flow-Based Distribution Alignment (FDA), a novel framework that utilizes flow matching to learn flexible neural representations with stable latent dynamics, thereby facilitating source-free domain alignment through likelihood maximization. The latent dynamics of FDA framework is theoretically proven to be stable using Lyapunov exponents, allowing for robust adaptation. Further experiments across multiple motor cortex datasets demonstrate the superior performance of FDA, achieving reliable results with fewer than five trials. Our FDA approach offers a novel and efficient solution for few-trial neural data adaptation, offering significant potential for improving the long-term viability of real-world BCI applications.",
+      "paper_id": "pmlr:v267:wang25cf",
+      "title": "Flow Matching for Few-Trial Neural Adaptation with Stable Latent Dynamics",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64059-64083",
+          "pmlr_id": "wang25cf",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Training safe LLMs remains a critical challenge. The most widely used method, Refusal Training (RT), struggles to generalize against various Out-of-Distribution (OOD) jailbreaking attacks. Although various advanced methods have been proposed to address this issue, we instead question whether OOD attacks inherently surpass the capability of vanilla RT. Evaluations using Best-of-N (BoN) reveal significant safety improvements as N increases, indicating models possess adequate latent safety knowledge but RT fails to consistently elicit it under OOD scenarios. Further domain adaptation analysis reveals that direct RT causes reliance on superficial shortcuts, resulting in non-generalizable representation mappings. Inspired by our findings, we propose training model to perform safety reasoning for each query. Specifically, we synthesize reasoning supervision aligned with specified guidelines that reflect diverse perspectives on safety knowledge. This encourages model to engage in deeper reasoning, explicitly eliciting and utilizing latent safety knowledge for each query. Extensive experiments show that our method significantly improves model generalization against OOD attacks.",
+      "paper_id": "pmlr:v267:wang25cg",
+      "title": "Safety Reasoning with Guidelines",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64084-64108",
+          "pmlr_id": "wang25cg",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Existing works on general time series forecasting build foundation models with heavy model parameters through large-scale multi-source pretraining. These models achieve superior generalization ability across various datasets at the cost of significant computational burdens and limitations in resource-constrained scenarios. This paper introduces LightGTS, a lightweight general time series forecasting model designed from the perspective of consistent periodical modeling. To handle diverse scales and intrinsic periods in multi-source pre-training, we introduce Periodical Tokenization, which extracts consistent periodic patterns across different datasets with varying scales. To better utilize the periodicity in the decoding process, we further introduce Periodical Parallel Decoding, which leverage historical tokens to improve forecasting. Based on the two techniques above which fully leverage the inductive bias of periods inherent in time series, LightGTS uses a lightweight model to achieve outstanding performance on general time series forecasting. It achieves state-of-the-art forecasting performance on 9 real-world benchmarks in both zero-shot and full-shot setting with much better efficiency compared with existing time series foundation models",
+      "paper_id": "pmlr:v267:wang25ch",
+      "title": "LightGTS: A Lightweight General Time Series Forecasting Model",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64109-64126",
+          "pmlr_id": "wang25ch",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "With the growing availability of multi-domain time series data, there is an increasing demand for general forecasting models pre-trained on multi-source datasets to support diverse downstream prediction scenarios. Existing time series foundation models primarily focus on scaling up pre-training datasets and model sizes to enhance generalization performance. In this paper, we take a different approach by addressing two critical aspects of general forecasting models: (1) how to derive unified representations from heterogeneous multi-domain time series data, and (2) how to effectively capture domain-specific features to enable adaptive transfer across various downstream scenarios. To address the first aspect, we propose Decomposed Frequency Learning as the pre-training task, which leverages frequency-based masking and reconstruction to decompose coupled semantic information in time series, resulting in unified representations across domains. For the second aspect, we introduce the Time Series Register, which captures domain-specific representations during pre-training and enhances adaptive transferability to downstream tasks. Our model achieves the state-of-the-art forecasting performance on seven real-world benchmarks, demonstrating remarkable few-shot and zero-shot capabilities.",
+      "paper_id": "pmlr:v267:wang25ci",
+      "title": "Towards a General Time Series Forecasting Model with Unified Representation and Adaptive Transfer",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64127-64151",
+          "pmlr_id": "wang25ci",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Tensor regression is a powerful tool for analyzing complex multi-dimensional data in fields such as neuroimaging and spatiotemporal analysis, but its effectiveness is often hindered by insufficient sample sizes. To overcome this limitation, we adopt a transfer learning strategy that leverages knowledge from related source tasks to improve performance in data-scarce target tasks. This approach, however, introduces additional challenges including model shifts, covariate shifts, and decentralized data management. We propose the Low-Rank Tensor Transitions (LoRT) framework, which incorporates a novel fusion regularizer and a two-step refinement to enable robust adaptation while preserving low-tubal-rank structure. To support decentralized scenarios, we extend LoRT to D-LoRT, a distributed variant that maintains statistical efficiency with minimal communication overhead. Theoretical analysis and experiments on tensor regression tasks, including compressed sensing and completion, validate the robustness and versatility of the proposed methods. These findings indicate the potential of LoRT as a robust method for tensor regression in settings with limited data and complex distributional structures.",
+      "paper_id": "pmlr:v267:wang25cj",
+      "title": "Low-Rank Tensor Transitions (LoRT) for Transferable Tensor Regression",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64152-64201",
+          "pmlr_id": "wang25cj",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The entropic-regularized optimal transport (OT) has gained massive attention in machine learning due to its ability to provide scalable solutions for OT-based tasks. However, most of the existing algorithms, including the Sinkhorn algorithm and its extensions, suffer from relatively slow convergence in many cases. More recently, some second-order methods have been proposed based on the idea of Hessian sparsification. Despite their promising results, they have two major issues: first, there is limited theoretical understanding on the effect of sparsification; second, in cases where the transport plan is dense, Hessian sparsification does not perform well. In this paper, we propose a new quasi-Newton method to address these problems. First, we develop new theoretical analyses to understand the benefits of Hessian sparsification, which lays the foundation for highly flexible sparsification schemes. Then we introduce an additional low-rank term in the approximate Hessian to better handle the dense case. Finally, the convergence properties of the proposed algorithm are rigorously analyzed, and various numerical experiments are conducted to demonstrate its improved performance in solving large-scale OT problems.",
+      "paper_id": "pmlr:v267:wang25ck",
+      "title": "The Sparse-Plus-Low-Rank Quasi-Newton Method for Entropic-Regularized Optimal Transport",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64202-64221",
+          "pmlr_id": "wang25ck",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Flow matching models have emerged as a powerful method for generative modeling on domains like images or videos, and even on irregular or unstructured data like 3D point clouds or even protein structures. These models are commonly trained in two stages: first, a data compressor is trained, and in a subsequent training stage a flow matching generative model is trained in the latent space of the data compressor. This two-stage paradigm sets obstacles for unifying models across data domains, as hand-crafted compressors architectures are used for different data modalities. To this end, we introduce INRFlow, a domain-agnostic approach to learn flow matching transformers directly in ambient space. Drawing inspiration from INRs, we introduce a conditionally independent point-wise training objective that enables INRFlow to make predictions continuously in coordinate space. Our empirical results demonstrate that INRFlow effectively handles different data modalities such as images, 3D point clouds and protein structure data, achieving strong performance in different domains and outperforming comparable approaches. INRFlow is a promising step towards domain-agnostic flow matching generative models that can be trivially adopted in different data domains.",
+      "paper_id": "pmlr:v267:wang25cl",
+      "title": "INRFlow: Flow Matching for INRs in Ambient Space",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64222-64243",
+          "pmlr_id": "wang25cl",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Distributionally robust policy learning aims to find a policy that performs well under the worst-case distributional shift, and yet most existing methods for robust policy learning consider the worst-case joint distribution of the covariate and the outcome. The joint-modeling strategy can be unnecessarily conservative when we have more information on the source of distributional shifts. This paper studies a more nuanced problem — robust policy learning under the concept drift , when only the conditional relationship between the outcome and the covariate changes. To this end, we first provide a doubly-robust estimator for evaluating the worst-case average reward of a given policy under a set of perturbed conditional distributions. We show that the policy value estimator enjoys asymptotic normality even if the nuisance parameters are estimated with a slower-than-root-$n$ rate. We then propose a learning algorithm that outputs the policy maximizing the estimated policy value within a given policy class $\\Pi$, and show that the sub-optimality gap of the proposed algorithm is of the order $\\kappa(\\Pi)n^{-1/2}$, where $\\kappa(\\Pi)$ is the entropy integral of $\\Pi$ under the Hamming distance and $n$ is the sample size. A matching lower bound is provided to show the optimality of the rate. The proposed methods are implemented and evaluated in numerical studies, demonstrating substantial improvement compared with existing benchmarks.",
+      "paper_id": "pmlr:v267:wang25cm",
+      "title": "Distributionally Robust Policy Learning under Concept Drifts",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64244-64281",
+          "pmlr_id": "wang25cm",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Autoregressive models (ARMs) have become the workhorse for sequence generation tasks, since many problems can be modeled as next-token prediction. While there appears to be a natural ordering for text (i.e., left-to-right), for many data types, such as graphs, the canonical ordering is less obvious. To address this problem, we introduce a variant of ARM that generates high-dimensional data using a probabilistic ordering that is sequentially inferred from data. This model incorporates a trainable probability distribution, referred to as an order-policy, that dynamically decides the autoregressive order in a state-dependent manner. To train the model, we introduce a variational lower bound on the exact log-likelihood, which we optimize with stochastic gradient estimation. We demonstrate experimentally that our method can learn meaningful autoregressive orderings in image and graph generation. On the challenging domain of molecular graph generation, we achieve state-of-the-art results on the QM9 and ZINC250k benchmarks, evaluated using the Fréchet ChemNet Distance (FCD), Synthetic Accessibility Score (SAS), Quantitative Estimate of Drug-likeness (QED).",
+      "paper_id": "pmlr:v267:wang25cn",
+      "title": "Learning-Order Autoregressive Models with Application to Molecular Graph Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64282-64301",
+          "pmlr_id": "wang25cn",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The emergence of multi-dimensional data presents significant challenges for traditional regression models based on matrices or vectors, particularly in capturing multi-directional correlations. In response, tensor regression has been proposed as a powerful framework for modeling linear relationships among multi-dimensional variables. In this paper, we introduce a high-dimensional tensor-response tensor regression model under low-dimensional structural assumptions, such as sparsity and low-rankness. Assuming the underlying tensor lies within an unknown low-dimensional subspace, we consider a least squares estimation framework with non-convex penalties. Theoretically, we derive general risk bounds for the resulting estimators and demonstrate that they achieve the oracle statistical rates under mild technical conditions. To compute the proposed estimators efficiently, we introduce an accelerated proximal gradient algorithm demonstrating rapid convergence in practice. Extensive experiments on synthetic and real-world datasets validate the effectiveness of the proposed regression model and showcase the practical utility of the theoretical findings.",
+      "paper_id": "pmlr:v267:wang25co",
+      "title": "High-Dimensional Tensor Regression With Oracle Properties",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64302-64342",
+          "pmlr_id": "wang25co",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The recent rapid adoption of large language models (LLMs) highlights the critical need for benchmarking their fairness. Conventional fairness metrics, which focus on discrete accuracy-based evaluations (i.e., prediction correctness), fail to capture the implicit impact of model uncertainty (e.g., higher model confidence about one group over another despite similar accuracy). To address this limitation, we propose an uncertainty-aware fairness metric, UCerf, to enable a fine-grained evaluation of model fairness that is more reflective of the internal bias in model decisions. Furthermore, observing data size, diversity, and clarity issues in current datasets, we introduce a new gender-occupation fairness evaluation dataset with 31,756 samples for co-reference resolution, offering a more diverse and suitable benchmark for modern LLMs. Combining our metric and dataset, we provide insightful comparisons of eight open-source LLMs. For example, Mistral-8B exhibits suboptimal fairness due to high confidence in incorrect predictions, a detail overlooked by Equalized Odds but captured by UCerF. Overall, this work provides a holistic framework for LLM evaluation by jointly assessing fairness and uncertainty, enabling the development of more transparent and accountable AI systems.",
+      "paper_id": "pmlr:v267:wang25cp",
+      "title": "Is Your Model Fairly Certain? Uncertainty-Aware Fairness Evaluation for LLMs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64343-64366",
+          "pmlr_id": "wang25cp",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Semi-supervised learning (SSL) has made notable advancements in medical image segmentation (MIS), particularly in scenarios with limited labeled data and significantly enhancing data utilization efficiency. Previous methods primarily focus on complex training strategies to utilize unlabeled data but neglect the importance of graph structural information. Different from existing methods, we propose a graph-based clustering for semi-supervised medical image segmentation (GraphCL) by jointly modeling graph data structure in a unified deep model. The proposed GraphCL model enjoys several advantages. Firstly, to the best of our knowledge, this is the first work to model the data structure information for semi-supervised medical image segmentation (SSMIS). Secondly, to get the clustered features across different graphs, we integrate both pairwise affinities between local image features and raw features as inputs. Extensive experimental results on three standard benchmarks show that the proposed GraphCL algorithm outperforms state-of-the-art semi-supervised medical image segmentation methods.",
+      "paper_id": "pmlr:v267:wang25cq",
+      "title": "GraphCL: Graph-based Clustering for Semi-Supervised Medical Image Segmentation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64367-64376",
+          "pmlr_id": "wang25cq",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In recent years, graph prompting has emerged as a promising research direction, enabling the learning of additional tokens or subgraphs appended to original graphs without requiring retraining of pre-trained graph models across various applications. This novel paradigm, shifting from the traditional \"pre-training and fine-tuning\" to \"pre-training and prompting,\" has shown significant empirical success in simulating graph data operations, with applications ranging from recommendation systems to biological networks and graph transferring. However, despite its potential, the theoretical underpinnings of graph prompting remain underexplored, raising critical questions about its fundamental effectiveness. The lack of rigorous theoretical proof of why and how much it works is more like a \"dark cloud\" over the graph prompting area for deeper research. To fill this gap, this paper introduces a theoretical framework that rigorously analyzes graph prompting from a data operation perspective. Our contributions are threefold: First , we provide a formal guarantee theorem, demonstrating graph prompts’ capacity to approximate graph transformation operators, effectively linking upstream and downstream tasks. Second , we derive upper bounds on the error of these data operations for a single graph and extend this discussion to batches of graphs, which are common in graph model training. Third , we analyze the distribution of data operation errors, extending our theoretical findings from linear graph models (e.g., GCN) to non-linear graph models (e.g., GAT). Extensive experiments support our theoretical results and confirm the practical implications of these guarantees.",
+      "paper_id": "pmlr:v267:wang25cr",
+      "title": "Does Graph Prompt Work? A Data Operation Perspective with Theoretical Analysis",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64377-64402",
+          "pmlr_id": "wang25cr",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The contextual multi-armed bandit (MAB) is a widely used framework for problems requiring sequential decision-making under uncertainty, such as recommendation systems. In applications involving a large number of users, the performance of contextual MAB can be significantly improved by facilitating collaboration among multiple users. This has been achieved by the clustering of bandits (CB) methods, which adaptively group the users into different clusters and achieve collaboration by allowing the users in the same cluster to share data. However, classical CB algorithms typically rely on numerical reward feedback, which may not be practical in certain real-world applications. For instance, in recommendation systems, it is more realistic and reliable to solicit preference feedback between pairs of recommended items rather than absolute rewards. To address this limitation, we introduce the first \"clustering of dueling bandit algorithms\" to enable collaborative decision-making based on preference feedback. We propose two novel algorithms: (1) Clustering of Linear Dueling Bandits (COLDB) which models the user reward functions as linear functions of the context vectors, and (2) Clustering of Neural Dueling Bandits (CONDB) which uses a neural network to model complex, non-linear user reward functions. Both algorithms are supported by rigorous theoretical analyses, demonstrating that user collaboration leads to improved regret bounds. Extensive empirical evaluations on synthetic and real-world datasets further validate the effectiveness of our methods, establishing their potential in real-world applications involving multiple users with preference-based feedback.",
+      "paper_id": "pmlr:v267:wang25cs",
+      "title": "Online Clustering of Dueling Bandits",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64403-64431",
+          "pmlr_id": "wang25cs",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Text-guided image-to-image diffusion models excel in translating images based on textual prompts, allowing for precise and creative visual modifications. However, such a powerful technique can be misused for spreading misinformation , infringing on copyrights , and evading content tracing . This motivates us to introduce the task of origin ID entification for text-guided I mage-to-image D iffusion models ( ID$\\mathbf{^2}$ ), aiming to retrieve the original image of a given translated query. A straightforward solution to ID$^2$ involves training a specialized deep embedding model to extract and compare features from both query and reference images. However, due to visual discrepancy across generations produced by different diffusion models, this similarity-based approach fails when training on images from one model and testing on those from another, limiting its effectiveness in real-world applications. To solve this challenge of the proposed ID$^2$ task, we contribute the first dataset and a theoretically guaranteed method, both emphasizing generalizability. The curated dataset, OriPID , contains abundant Ori gins and guided P rompts, which can be used to train and test potential ID entification models across various diffusion models. In the method section, we first prove the existence of a linear transformation that minimizes the distance between the pre-trained Variational Autoencoder embeddings of generated samples and their origins. Subsequently, it is demonstrated that such a simple linear transformation can be generalized across different diffusion models. Experimental results show that the proposed method achieves satisfying generalization performance, significantly surpassing similarity-based methods (+31.6% mAP), even those with generalization designs. The project is available at https://id2icml.github.io.",
+      "paper_id": "pmlr:v267:wang25ct",
+      "title": "Origin Identification for Text-Guided Image-to-Image Diffusion Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "64432-64447",
+          "pmlr_id": "wang25ct",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

@@ -1,0 +1,747 @@
+{
+  "batch_index": 42,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Multilayer matrix factorization (MMF) has recently emerged as a generalized model of, and potentially a more expressive approach than, the classic matrix factorization. This paper considers MMF under a probabilistic formulation, and our focus is on inference methods under variational inference. The challenge in this context lies in determining a variational process that leads to a computationally efficient and accurate approximation of the maximum likelihood inference. One well-known example is the variational autoencoder (VAE), which uses neural networks for the variational process. In this work, we take insight from variational diffusion models in the context of generative models to develop variational inference for MMF. We propose a dimension-reducing diffusion process that results in a new way to interact with the layered structures of the MMF model. Experimental results demonstrate that the proposed diffusion variational inference method leads to improved performance scores compared to several existing methods, including the VAE.",
+      "paper_id": "pmlr:v267:liu25n",
+      "title": "Multilayer Matrix Factorization via Dimension-Reducing Diffusion Variational Inference",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38365-38383",
+          "pmlr_id": "liu25n",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Despite Low-Rank Adaptation (LoRA)’s popularity for fine-tuning large models, it often exhibits a noticeable performance gap compared to full fine-tuning, particularly in complex tasks such as mathematical reasoning and code generation. Motivated by this discrepancy, we propose a novel fusion approach for LoRA fine-tuned models. Our key insight is that LoRA models trained with different random seeds on the same task often exhibit complementary strengths. In contrast to existing research that typically focuses on fusing models trained on diverse tasks, we explore the potential of combining multiple LoRA models fine-tuned on the same task with different random seeds. This intra-task fusion method aims to leverage the strengths of various fine-tuned models to create a more robust and effective adaptation. To validate our approach, we conducted comprehensive experiments across three key areas: mathematical reasoning, code generation, and general instruction-tuning tasks. The results demonstrate that our fusion method significantly enhances LoRA’s performance, outperforming both standalone LoRA models and current fusion methods. Notably, this advancement substantially narrows the gap between LoRA and full fine-tuning, thus offering a more effective approach to model adaptation without the GPU memory burden of full parameter fine-tuning.",
+      "paper_id": "pmlr:v267:liu25o",
+      "title": "SeedLoRA: A Fusion Approach to Efficient LLM Fine-Tuning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38384-38396",
+          "pmlr_id": "liu25o",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Continual reinforcement learning (CRL) refers to a naturalistic setting where an agent needs to endlessly evolve, by trial and error, to solve multiple tasks that are presented sequentially. One of the largest obstacles to CRL is that the agent may forget how to solve previous tasks when learning a new task, known as catastrophic forgetting. In this paper, we propose to address this challenge by planning with online world models. Specifically, we learn a Follow-The-Leader shallow model online to capture the world dynamics, in which we plan using model predictive control to solve a set of tasks specified by any reward functions. The online world model is immune to forgetting by construction with a proven regret bound of $\\mathcal{O}(\\sqrt{K^2D\\log(T)})$ under mild assumptions. The planner searches actions solely based on the latest online model, thus forming a FTL Online Agent (OA) that updates incrementally. To assess OA, we further design Continual Bench, a dedicated environment for CRL, and compare with several strong baselines under the same model-planning algorithmic framework. The empirical results show that OA learns continuously to solve new tasks while not forgetting old skills, outperforming agents built on deep world models with various continual learning techniques.",
+      "paper_id": "pmlr:v267:liu25p",
+      "title": "Continual Reinforcement Learning by Planning with Online World Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38397-38423",
+          "pmlr_id": "liu25p",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Neural processes (NPs) are a promising paradigm to enable skill transfer learning across tasks with the aid of the distribution of functions. The previous NPs employ the empirical risk minimization principle in optimization. However, the fast adaption ability to different tasks can vary widely, and the worst fast adaptation can be catastrophic in risk-sensitive tasks. To achieve robust neural processes modeling, we consider the problem of training models in a risk-averse manner, which can control the worst fast adaption cases at a certain probabilistic level. By transferring the risk minimization problem to a two-level finite sum minimax optimization problem, we can easily solve it via a double-looped stochastic mirror prox algorithm with a task-aware variance reduction mechanism via sampling samples across all tasks. The mirror prox technique ensures better handling of complex constraint sets and non-Euclidean geometries, making the optimization adaptable to various tasks. The final solution, by aggregating prox points with the adaptive learning rates, enables a stable and high-quality output. The proposed learning strategy can work with various NPs flexibly and achieves less biased approximation with a theoretical guarantee. To illustrate the superiority of the proposed model, we perform experiments on both synthetic and real-world data, and the results demonstrate that our approach not only helps to achieve more accurate performance but also improves model robustness.",
+      "paper_id": "pmlr:v267:liu25q",
+      "title": "Learning Robust Neural Processes with Risk-Averse Stochastic Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38424-38447",
+          "pmlr_id": "liu25q",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph sparsification serves as a foundation for many algorithms, such as approximation algorithms for graph cuts and Laplacian system solvers. As its natural generalization, hypergraph sparsification has recently gained increasing attention, with broad applications in graph machine learning and other areas. In this work, we propose the first quantum algorithm for hypergraph sparsification, addressing an open problem proposed by Apers and de Wolf (FOCS’20). For a weighted hypergraph with $n$ vertices, $m$ hyperedges, and rank $r$, our algorithm outputs a near-linear size $\\varepsilon$-spectral sparsifier in time $\\widetilde O(r\\sqrt{mn}/\\varepsilon)$. This algorithm matches the quantum lower bound for constant $r$ and demonstrates quantum speedup when compared with the state-of-the-art $\\widetilde O(mr)$-time classical algorithm. As applications, our algorithm implies quantum speedups for computing hypergraph cut sparsifiers, approximating hypergraph mincuts and hypergraph $s$-$t$ mincuts.",
+      "paper_id": "pmlr:v267:liu25r",
+      "title": "Quantum Speedup for Hypergraph Sparsification",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38448-38466",
+          "pmlr_id": "liu25r",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Reinforcement learning (RL) for continuous control often requires large amounts of online interaction data. Value-based RL methods can mitigate this burden by offering relatively high sample efficiency. Some studies further enhance sample efficiency by incorporating offline demonstration data to “kick-start” training, achieving promising results in continuous control. However, they typically compute the Q-function independently for each action dimension, neglecting interdependencies and making it harder to identify optimal actions when learning from suboptimal data, such as non-expert demonstration and online-collected data during the training process. To address these issues, we propose Auto-Regressive Soft Q-learning (ARSQ), a value-based RL algorithm that models Q-values in a coarse-to-fine, auto-regressive manner. First, ARSQ decomposes the continuous action space into discrete spaces in a coarse-to-fine hierarchy, enhancing sample efficiency for fine-grained continuous control tasks. Next, it auto-regressively predicts dimensional action advantages within each decision step, enabling more effective decision-making in continuous control tasks. We evaluate ARSQ on two continuous control benchmarks, RLBench and D4RL, integrating demonstration data into online training. On D4RL, which includes non-expert demonstrations, ARSQ achieves an average 1.62$\\times$ performance improvement over SOTA value-based baseline. On RLBench, which incorporates expert demonstrations, ARSQ surpasses various baselines, demonstrating its effectiveness in learning from suboptimal online-collected data.",
+      "paper_id": "pmlr:v267:liu25s",
+      "title": "Learning from Suboptimal Data in Continuous Control via Auto-Regressive Soft Q-Network",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38467-38488",
+          "pmlr_id": "liu25s",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Chain-of-thought (CoT) prompting has become a widely used strategy for improving large language and multimodal model performance. However, it is still an open question under which settings CoT systematically reduces performance. In this paper, we seek to identify the characteristics of tasks where CoT reduces performance by drawing inspiration from cognitive psychology, focusing on six representative tasks from the psychological literature where deliberation hurts performance in humans. In three of these tasks, state-of-the-art models exhibit significant performance drop-offs with CoT (up to 36.3% absolute accuracy for OpenAI o1-preview compared to GPT-4o), while in others, CoT effects are mixed, with positive, neutral, and negative changes. While models and humans do not exhibit perfectly parallel cognitive processes, considering cases where thinking has negative consequences for humans helps identify settings where it negatively impacts models. By connecting the literature on human verbal thinking and deliberation with evaluations of CoT, we offer a perspective for understanding the impact of inference-time reasoning.",
+      "paper_id": "pmlr:v267:liu25t",
+      "title": "Mind Your Step (by Step): Chain-of-Thought can Reduce Performance on Tasks where Thinking Makes Humans Worse",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38489-38517",
+          "pmlr_id": "liu25t",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) are expected to be predictable and trustworthy to support reliable decision-making systems. Yet current LLMs often show inconsistencies in their judgments. In this work, we examine logical preference consistency as a foundational requirement for building more dependable LLM systems, ensuring stable and coherent decision-making while minimizing erratic or contradictory outputs. To quantify the logical preference consistency, we propose a universal evaluation framework based on three fundamental properties: transitivity , commutativity and negation invariance . Through extensive experimentation across diverse LLMs, we demonstrate that these properties serve as strong indicators of judgment robustness. Furthermore, we introduce a data refinement and augmentation technique, REPAIR, that enhances logical consistency while maintaining alignment with human preferences. Finally, we show that improving consistency leads to better performance in LLM-driven logic-based algorithms, reinforcing stability and coherence in decision-making systems.",
+      "paper_id": "pmlr:v267:liu25u",
+      "title": "Aligning with Logic: Measuring, Evaluating and Improving Logical Preference Consistency in Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38518-38539",
+          "pmlr_id": "liu25u",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Subgraphs of a complete graph are usually distributed across multiple devices and can only be accessed locally because the raw data cannot be directly shared. However, existing node-level federated graph learning suffers from at least one of the following issues: 1) heavily relying on labeled graph samples that are difficult to obtain in real-world applications, and 2) partitioning a complete graph into several subgraphs inevitably causes missing links, leading to sub-optimal sample representations. To solve these issues, we propose a novel $\\underline{\\text{Fed}}$erated $\\underline{\\text{N}}$ode-level $\\underline{\\text{C}}$lustering $\\underline{\\text{N}}$etwork (FedNCN), which mends the destroyed cross-subgraph links using clustering prior knowledge. Specifically, within each client, we first design an MLP-based projector to implicitly preserve key clustering properties of a subgraph in a denoising learning-like manner, and then upload the resultant clustering signals that are hard to reconstruct for subsequent cross-subgraph links restoration. In the server, we maximize the potential affinity between subgraphs stemming from clustering signals by graph similarity estimation and minimize redundant links via the N-Cut criterion. Moreover, we employ a GNN-based generator to learn consensus prototypes from this mended graph, enabling the MLP-GNN joint-optimized learner to enhance data privacy during data transmission and further promote the local model for better clustering. Extensive experiments demonstrate the superiority of FedNCN.",
+      "paper_id": "pmlr:v267:liu25v",
+      "title": "Federated Node-Level Clustering Network with Cross-Subgraph Link Mending",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38540-38556",
+          "pmlr_id": "liu25v",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The success of large language models (LLMs) in text generation has inspired their application to image generation. However, existing methods either rely on specialized designs with inductive biases or adopt LLMs without fully exploring their potential in vision tasks. In this work, we systematically investigate the design space of LLMs for image generation and demonstrate that LLMs can achieve near state-of-the-art performance without domain-specific designs, simply by making proper choices in tokenization methods, modeling approaches, scan patterns, vocabulary design, and sampling strategies. We further analyze autoregressive models’ learning and scaling behavior, revealing how larger models effectively capture more useful information than the smaller ones. Additionally, we explore the inherent differences between text and image modalities, highlighting the potential of LLMs across domains. The exploration provides valuable insights to inspire more effective designs when applying LLMs to other domains. With extensive experiments, our proposed model, ELM achieves an FID of 1.54 on 256$\\times$256 ImageNet and an FID of 3.29 on 512$\\times$512 ImageNet, demonstrating the powerful generative potential of LLMs in vision tasks.",
+      "paper_id": "pmlr:v267:liu25w",
+      "title": "Elucidating the design space of language models for image generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38557-38581",
+          "pmlr_id": "liu25w",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Efficiently counting Markov equivalent directed acyclic graphs (DAGs) is crucial in graphical causal analysis. Wienöbst et al. (2023) introduced a polynomial-time algorithm, known as the Clique-Picking algorithm, to count the number of Markov equivalent DAGs for a given completed partially directed acyclic graph (CPDAG). This algorithm iteratively selects a root clique, determines fixed orientations with outgoing edges from the clique, and generates the unresolved undirected connected components (UCCGs). In this work, we propose a more efficient approach to UCCG generation by utilizing previously computed results for different root cliques. Our method introduces the concept of super cliques within rooted clique trees, enabling their efficient transfer between trees with different root cliques. The proposed algorithm effectively reduces the computational complexity of the Clique-Picking method, particularly when the number of cliques is substantially smaller than the number of vertices and edges.",
+      "paper_id": "pmlr:v267:liu25x",
+      "title": "An Improved Clique-Picking Algorithm for Counting Markov Equivalent DAGs via Super Cliques Transfer",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38582-38597",
+          "pmlr_id": "liu25x",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Spectral graph convolution, an important tool of data filtering on graphs, relies on two essential decisions: selecting spectral bases for signal transformation and parameterizing the kernel for frequency analysis. While recent techniques mainly focus on standard Fourier transform and vector-valued spectral functions, they fall short in flexibility to model signal distributions over large spatial ranges, and capacity of spectral function. In this paper, we present a novel wavelet-based graph convolution network, namely WaveGC, which integrates multi-resolution spectral bases and a matrix-valued filter kernel. Theoretically, we establish that WaveGC can effectively capture and decouple short-range and long-range information, providing superior filtering flexibility, surpassing existing graph wavelet neural networks. To instantiate WaveGC, we introduce a novel technique for learning general graph wavelets by separately combining odd and even terms of Chebyshev polynomials. This approach strictly satisfies wavelet admissibility criteria. Our numerical experiments showcase the consistent improvements in both short-range and long-range tasks. This underscores the effectiveness of the proposed model in handling different scenarios.",
+      "paper_id": "pmlr:v267:liu25y",
+      "title": "A General Graph Spectral Wavelet Convolution via Chebyshev Order Decomposition",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38598-38622",
+          "pmlr_id": "liu25y",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This paper proposes a simple yet effective jailbreak attack named FlipAttack against black-box LLMs. First, from the autoregressive nature, we reveal that LLMs tend to understand the text from left to right and find that they struggle to comprehend the text when the perturbation is added to the left side. Motivated by these insights, we propose to disguise the harmful prompt by constructing a left-side perturbation merely based on the prompt itself, then generalize this idea to 4 flipping modes. Second, we verify the strong ability of LLMs to perform the text-flipping task and then develop 4 variants to guide LLMs to understand and execute harmful behaviors accurately. These designs keep FlipAttack universal, stealthy, and simple, allowing it to jailbreak black-box LLMs within only 1 query. Experiments on 8 LLMs demonstrate the superiority of FlipAttack. Remarkably, it achieves $\\sim$78.97% attack success rate across 8 LLMs on average and $\\sim$98% bypass rate against 5 guard models on average.",
+      "paper_id": "pmlr:v267:liu25z",
+      "title": "FlipAttack: Jailbreak LLMs via Flipping",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "38623-38663",
+          "pmlr_id": "liu25z",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This paper presents a novel method for analyzing the latent space geometry of generative models, including statistical physics models and diffusion models, by reconstructing the Fisher information metric. The method approximates the posterior distribution of latent variables given generated samples and uses this to learn the log-partition function, which defines the Fisher metric for exponential families. Theoretical convergence guarantees are provided, and the method is validated on the Ising and TASEP models, outperforming existing baselines in reconstructing thermodynamic quantities. Applied to diffusion models, the method reveals a fractal structure of phase transitions in the latent space, characterized by abrupt changes in the Fisher metric. We demonstrate that while geodesic interpolations are approximately linear within individual phases, this linearity breaks down at phase boundaries, where the diffusion model exhibits a divergent Lipschitz constant with respect to the latent space. These findings provide new insights into the complex structure of diffusion model latent spaces and their connection to phenomena like phase transitions. Our source code is available at https://github.com/alobashev/hessian-geometry-of-diffusion-models.",
+      "paper_id": "pmlr:v267:lobashev25a",
+      "title": "Hessian Geometry of Latent Space in Generative Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40227-40252",
+          "pmlr_id": "lobashev25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Bridging contrastive language-image pre-training (CLIP) to video action recognition has attracted growing interest. Human actions are inherently rich in spatial and temporal contexts, involving dynamic interactions among people, objects, and the environment. Accurately recognizing actions requires effectively capturing these fine-grained elements and modeling their relationships with language. However, most existing methods rely on cosine similarity–practically equivalent to the Pearson correlation coefficient–between global tokens for video-language alignment. As a result, they have limited capacity to model complex dependencies and tend to overlook local tokens that encode critical spatio-temporal cues. To overcome these limitations, we propose BDC-CLIP, a novel framework that leverages Brownian Distance Covariance (BDC) to align visual and textual representations. Our method can capture complex relationships–both linear and nonlinear–between all visual and textual tokens, enabling fine-grained modeling in space, time, and language. BDC-CLIP achieves state-of-the-art performance across zero-shot, few-shot, base-to-novel, and fully supervised action recognition settings, demonstrating its effectiveness and broad applicability.",
+      "paper_id": "pmlr:v267:long25a",
+      "title": "BDC-CLIP: Brownian Distance Covariance for Adapting CLIP to Action Recognition",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40253-40269",
+          "pmlr_id": "long25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Modern physics simulation often involves multiple functions of interests, and traditional numerical approaches are known to be complex and computationally costly. While machine learning-based surrogate models can offer significant cost reductions, most focus on a single task, such as forward prediction, and typically lack uncertainty quantification — an essential component in many applications. To overcome these limitations, we propose Arbitrarily-Conditioned Multi-Functional Diffusion (ACM-FD), a versatile probabilistic surrogate model for multi-physics emulation. ACM-FD can perform a wide range of tasks within a single framework, including forward prediction, various inverse problems, and simulating data for entire systems or subsets of quantities conditioned on others. Specifically, we extend the standard Denoising Diffusion Probabilistic Model (DDPM) for multi-functional generation by modeling noise as Gaussian processes (GP). We propose a random-mask based, zero-regularized denoising loss to achieve flexible and robust conditional generation. We induce a Kronecker product structure in the GP covariance matrix, substantially reducing the computational cost and enabling efficient training and sampling. We demonstrate the effectiveness of ACM-FD across several fundamental multi-physics systems.",
+      "paper_id": "pmlr:v267:long25b",
+      "title": "Arbitrarily-Conditioned Multi-Functional Diffusion for Multi-Physics Emulation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40270-40289",
+          "pmlr_id": "long25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The widespread deployment of general-purpose AI (GPAI) systems introduces significant new risks. Yet the infrastructure, practices, and norms for reporting flaws in GPAI systems remain seriously underdeveloped, lagging far behind more established fields like software security. Based on a collaboration between experts from the fields of software security, machine learning, law, social science, and policy, we identify key gaps in the evaluation and reporting of flaws in GPAI systems. We call for three interventions to advance system safety. First, we propose using standardized AI flaw reports and rules of engagement for researchers in order to ease the process of submitting, reproducing, and triaging flaws in GPAI systems. Second, we propose GPAI system providers adopt broadly-scoped flaw disclosure programs, borrowing from bug bounties, with legal safe harbors to protect researchers. Third, we advocate for the development of improved infrastructure to coordinate distribution of flaw reports across the many stakeholders who may be impacted. These interventions are increasingly urgent, as evidenced by the prevalence of jailbreaks and other flaws that can transfer across different providers’ GPAI systems. By promoting robust reporting and coordination in the AI ecosystem, these proposals could significantly improve the safety, security, and accountability of GPAI systems.",
+      "paper_id": "pmlr:v267:longpre25a",
+      "title": "Position: In-House Evaluation Is Not Enough. Towards Robust Third-Party Evaluation and Flaw Disclosure for General-Purpose AI",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "81728-81758",
+          "pmlr_id": "longpre25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Despite the tremendous success of deep learning in computer vision, models still fall behind humans in generalizing to new input distributions. Existing benchmarks do not investigate the specific failure points of models by analyzing performance under many controlled conditions. Our study systematically dissects where and why models struggle with contour integration - a hallmark of human vision – by designing an experiment that tests object recognition under various levels of object fragmentation. Humans (n=50) perform at high accuracy, even with few object contours present. This is in contrast to models which exhibit substantially lower sensitivity to increasing object contours, with most of the over 1,000 models we tested barely performing above chance. Only at very large scales ($\\sim5B$ training dataset size) do models begin to approach human performance. Importantly, humans exhibit an integration bias - a preference towards recognizing objects made up of directional fragments over directionless fragments. We find that not only do models that share this property perform better at our task, but that this bias also increases with model training dataset size, and training models to exhibit contour integration leads to high shape bias. Taken together, our results suggest that contour integration is a hallmark of object vision that underlies object recognition performance, and may be a mechanism learned from data at scale.",
+      "paper_id": "pmlr:v267:lonnqvist25a",
+      "title": "Contour Integration Underlies Human-Like Vision",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40290-40311",
+          "pmlr_id": "lonnqvist25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Segmented regression is a statistical method that approximates a function $f$ by a piecewise function $\\hat{f}$ using noisy data samples. Min-$\\epsilon$ approaches aim to reduce the regression function’s mean squared error (MSE) for a given number of $k$ segments. An optimal solution for min-$\\epsilon$ segmented regression is found in $\\mathcal{O}(n^2)$ time (Bai & Perron, 1998; Yamamoto & Perron, 2013) for $n$ samples. For large datasets, current heuristics improve time complexity to $\\mathcal{O}(n\\log{n})$ (Acharya et al., 2016) but can result in large errors, especially when exactly $k$ segments are used. We present a method for min-$\\epsilon$ segmented regression that combines the scalability of top existing heuristic solutions with a statistical efficiency similar to the optimal solution. This is achieved by using a new method to merge an initial set of segments using precomputed matrices from samples, allowing both merging and error calculation in constant time. Our approach, using the same samples and parameter $k$, produces segments with up to 1,000 times lower MSE compared to Acharya et al. (2016) in about 100 times less runtime on data sets over $10^4$ samples.",
+      "paper_id": "pmlr:v267:losser25a",
+      "title": "Fast Min-$ε$ Segmented Regression using Constant-Time Segment Merging",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40312-40327",
+          "pmlr_id": "losser25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "With the rise of AIGC technologies, particularly diffusion models, highly realistic fake images that can deceive human visual perception has become feasible. Consequently, various forgery detection methods have emerged. However, existing methods treat the generation process of fake images as either a black-box or an auxiliary tool, offering limited insights into its underlying mechanisms. In this paper, we propose Spatio-Temporal Distribution Fitting Deviation (STD-FD) for AIGC forgery detection, which explores the generative process in detail. By decomposing and reconstructing data within generative diffusion models, initial experiments reveal temporal distribution fitting deviations during the image reconstruction process. These deviations are captured through reconstruction noise maps for each spatial semantic unit, derived via a super-resolution algorithm. Critical discriminative patterns, termed DFactors, are identified through statistical modeling of these deviations. Extensive experiments show that STD-FD effectively captures distribution patterns in AIGC-generated data, demonstrating strong robustness and generalizability while outperforming state-of-the-art (SOTA) methods on major datasets. The source code is available at this link.",
+      "paper_id": "pmlr:v267:lou25a",
+      "title": "STD-FD: Spatio-Temporal Distribution Fitting Deviation for AIGC Forgery Identification",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40328-40343",
+          "pmlr_id": "lou25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "With the integration of image modality, the semantic space of multimodal large language models (MLLMs) is more complex than text-only models, making their interpretability more challenging and their alignment less stable, particularly susceptible to low-quality data, which can lead to inconsistencies between modalities, hallucinations, and biased outputs. As a result, developing interpretability methods for MLLMs is crucial for improving alignment quality and efficiency. In text-only LLMs, Sparse Autoencoders (SAEs) have gained attention for their ability to interpret latent representations. However, extending SAEs to multimodal settings presents new challenges due to modality fusion and the difficulty of isolating cross-modal representations. To address these challenges, we introduce SAE-V, a mechanistic interpretability framework that extends the SAE paradigm to MLLMs. By identifying and analyzing interpretable features along with their corresponding data, SAE-V enables fine-grained interpretation of both model behavior and data quality, facilitating a deeper understanding of cross-modal interactions and alignment dynamics. Moreover, by utilizing cross-modal feature weighting, SAE-V provides an intrinsic data filtering mechanism to enhance model alignment without requiring additional models. Specifically, when applied to the alignment process of MLLMs, SAE-V-based data filtering methods could achieve more than 110% performance with less than 50% data. Our results highlight SAE-V’s ability to enhance interpretability and alignment in MLLMs, providing insights into their internal mechanisms.",
+      "paper_id": "pmlr:v267:lou25b",
+      "title": "SAE-V: Interpreting Multimodal Models for Enhanced Alignment",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40344-40360",
+          "pmlr_id": "lou25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Numerous studies have assessed the proficiency of AI systems, particularly large language models (LLMs), in facilitating everyday tasks such as email writing, question answering, and creative content generation. However, researchers face unique challenges and opportunities in leveraging LLMs for their own work, such as brainstorming research ideas, designing experiments, and writing or reviewing papers. In this study, we introduce AAAR-1.0, a benchmark dataset designed to evaluate LLM performance in three fundamental, expertise-intensive research tasks: (i) EquationInference, assessing the correctness of equations based on the contextual information in paper submissions; (ii) ExperimentDesign, designing experiments to validate research ideas and solutions; and (iii) PaperWeakness, identifying weaknesses in paper submissions. AAAR-1.0 differs from prior benchmarks in two key ways: first, it is explicitly research-oriented, with tasks requiring deep domain expertise; second, it is researcher-oriented, mirroring the primary activities that researchers engage in on a daily basis. An evaluation of both open-source and proprietary LLMs reveals their potential as well as limitations in conducting sophisticated research tasks. We will release the AAAR-1.0 and keep iterating it to new versions.",
+      "paper_id": "pmlr:v267:lou25c",
+      "title": "AAAR-1.0: Assessing AI’s Potential to Assist Research",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40361-40383",
+          "pmlr_id": "lou25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Despite the superior capability in complementary information exploration and consistent clustering structure learning, most current weight-based multi-modal clustering methods still contain three limitations: 1) lack of trustworthiness in learned weights; 2) isolated view weight learning; 3) extra weight parameters. Motivated by the peer-review mechanism in the academia, we in this paper give a new peer-review look on the multi-modal clustering problem and propose to iteratively treat one modality as \"author\" and the remaining modalities as \"reviewers\" so as to reach a peer-review score for each modality. It essentially explores the underlying relationships among modalities. To improve the trustworthiness, we further design a new trustworthy score with a self-supervision working mechanism. Following that, we propose a novel Peer-review Trustworthy Information Bottleneck (PTIB) method for weighted multi-modal clustering, where both the above scores are simultaneously taken into account for accurate and parameter-free modality weight learning. Extensive experiments on eight multi-modal datasets suggest that PTIB can outperform the state-of-the-art multi-modal clustering methods.",
+      "paper_id": "pmlr:v267:lou25d",
+      "title": "A Peer-review Look on Multi-modal Clustering: An Information Bottleneck Realization Method",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40384-40399",
+          "pmlr_id": "lou25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In an era of increasingly diverse information sources, multi-modal clustering (MMC) has become a key technology for processing multi-modal data. It can apply and integrate the feature information and potential relationships of different modalities. Although there is a wealth of research on MMC, due to the complexity of datasets, a major challenge remains in how to deeply explore the complex latent information and interdependencies between modalities. To address this issue, this paper proposes a method called super deep contrastive information bottleneck (SDCIB) for MMC, which aims to explore and utilize all types of latent information to the fullest extent. Specifically, the proposed SDCIB explicitly introduces the rich information contained in the encoder’s hidden layers into the loss function for the first time, thoroughly mining both modal features and the hidden relationships between modalities. Moreover, the proposed SDCIB performs dual optimization by simultaneously considering consistency information from both the feature distribution and clustering assignment perspectives, the proposed SDCIB significantly improves clustering accuracy and robustness. We conducted experiments on 4 multi-modal datasets and the accuracy of the method on the ESP dataset improved by 9.3%. The results demonstrate the superiority and clever design of the proposed SDCIB. The source code is available on https://github.com/ShizheHu.",
+      "paper_id": "pmlr:v267:lou25e",
+      "title": "Super Deep Contrastive Information Bottleneck for Multi-modal Clustering",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40400-40410",
+          "pmlr_id": "lou25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Resolving conflicts is critical for improving the reliability of multi-view classification. While prior work focuses on learning consistent and informative representations across views, it often assumes perfect alignment and equal importance of all views, an assumption rarely met in real-world scenarios, as some views may express distinct information. To address this, we develop a computational trust-based discounting method that enhances the Evidential Multi-view framework by accounting for the instance-wise reliability of each view through a probability-sensitive trust mechanism. We evaluate our method on six real-world datasets using Top-1 Accuracy, Fleiss’ Kappa, and a new metric, Multi-View Agreement with Ground Truth, to assess prediction reliability. We also assess the effectiveness of uncertainty in indicating prediction correctness via AUROC. Additionally, we test the scalability of our method through end-to-end training on a large-scale dataset. The experimental results show that computational trust can effectively resolve conflicts, paving the way for more reliable multi-view classification models in real-world applications. Codes available at: https://github.com/OverfitFlow/Trust4Conflict",
+      "paper_id": "pmlr:v267:lu25a",
+      "title": "Navigating Conflicting Views: Harnessing Trust for Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40411-40435",
+          "pmlr_id": "lu25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Protein dynamics play a crucial role in protein biological functions and properties, and their traditional study typically relies on time-consuming molecular dynamics (MD) simulations conducted in silico. Recent advances in generative modeling, particularly denoising diffusion models, have enabled efficient accurate protein structure prediction and conformation sampling by learning distributions over crystallographic structures. However, effectively integrating physical supervision into these data-driven approaches remains challenging, as standard energy-based objectives often lead to intractable optimization. In this paper, we introduce Energy-based Alignment (EBA), a method that aligns generative models with feedback from physical models, efficiently calibrating them to appropriately balance conformational states based on their energy differences. Experimental results on the MD ensemble benchmark demonstrate that EBA achieves state-of-the-art performance in generating high-quality protein ensembles. By improving the physical plausibility of generated structures, our approach enhances model predictions and holds promise for applications in structural biology and drug discovery.",
+      "paper_id": "pmlr:v267:lu25b",
+      "title": "Aligning Protein Conformation Ensemble Generation with Physical Feedback",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40436-40451",
+          "pmlr_id": "lu25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advancements in deep neural networks have significantly enhanced the performance of semantic segmentation. However, class imbalance and instance imbalance remain persistent challenges, where smaller instances and thin boundaries are often overshadowed by larger structures. To address the multiscale nature of segmented objects, various models have incorporated mechanisms such as spatial attention and feature pyramid networks. Despite these advancements, most loss functions are still primarily pixel-wise, while regional and boundary-focused loss functions often incur high computational costs or are restricted to small-scale regions. To address this limitation, we propose the complex wavelet mutual information (CWMI) loss, a novel loss function that leverages mutual information from subband images decomposed by a complex steerable pyramid. The complex steerable pyramid captures features across multiple orientations and preserves structural similarity across scales. Meanwhile, mutual information is well-suited to capturing high-dimensional directional features and offers greater noise robustness. Extensive experiments on diverse segmentation datasets demonstrate that CWMI loss achieves significant improvements in both pixel-wise accuracy and topological metrics compared to state-of-the-art methods, while introducing minimal computational overhead. Our code is available at https://github.com/lurenhaothu/CWMI",
+      "paper_id": "pmlr:v267:lu25c",
+      "title": "Complex Wavelet Mutual Information Loss: A Multi-Scale Loss Function for Semantic Segmentation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40452-40463",
+          "pmlr_id": "lu25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We propose a Weighted Autoregressive Varying gatE (WAVE) attention mechanism equipped with both Autoregressive (AR) and Moving-average (MA) components. It can adapt to various attention mechanisms, enhancing and decoupling their ability to capture long-range and local temporal patterns in time series data. In this paper, we first demonstrate that, for the time series forecasting (TSF) task, the previously overlooked decoder-only autoregressive Transformer model can achieve results comparable to the best baselines when appropriate tokenization and training methods are applied. Moreover, inspired by the ARMA model from statistics and recent advances in linear attention, we introduce the full ARMA structure into existing autoregressive attention mechanisms. By using an indirect MA weight generation method, we incorporate the MA term while maintaining the time complexity and parameter size of the underlying efficient attention models. We further explore how indirect parameter generation can produce implicit MA weights that align with the modeling requirements for local temporal impacts. Experimental results show that WAVE attention that incorporates the ARMA structure consistently improves the performance of various AR attentions on TSF tasks, achieving state-of-the-art results.",
+      "paper_id": "pmlr:v267:lu25d",
+      "title": "WAVE: Weighted Autoregressive Varying Gate for Time Series Forecasting",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40464-40490",
+          "pmlr_id": "lu25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Molecular pretrained representations (MPR) has emerged as a powerful approach for addressing the challenge of limited supervised data in applications such as drug discovery and material design. While early MPR methods relied on 1D sequences and 2D graphs, recent advancements have incorporated 3D conformational information to capture rich atomic interactions. However, these prior models treat molecules merely as discrete atom sets, overlooking the space surrounding them. We argue from a physical perspective that only modeling these discrete points is insufficient. We first present a simple yet insightful observation: naively adding randomly sampled virtual points beyond atoms can surprisingly enhance MPR performance. In light of this, we propose a principled framework that incorporates the entire 3D space spanned by molecules. We implement the framework via a novel Transformer-based architecture, dubbed SpaceFormer, with three key components: (1)grid-based space discretization; (2)grid sampling/merging; and (3)efficient 3D positional encoding. Extensive experiments show that SpaceFormer significantly outperforms previous 3D MPR models across various downstream tasks with limited data, validating the benefit of leveraging the additional 3D space beyond atoms in MPR models.",
+      "paper_id": "pmlr:v267:lu25e",
+      "title": "Beyond Atoms: Enhancing Molecular Pretrained Representations with 3D Space Modeling",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40491-40504",
+          "pmlr_id": "lu25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The complexity of code reviews has driven efforts to automate review comments, but prior approaches oversimplify this task by treating it as snippet-level code-to-text generation and relying on text similarity metrics like BLEU for evaluation. These methods overlook repository context, real-world merge request evaluation, and defect detection, limiting their practicality. To address these issues, we explore the full automation pipeline within the online recommendation service of a company with nearly 400 million daily active users, analyzing industry-grade C++ codebases comprising hundreds of thousands of lines of code. We identify four key challenges: 1) capturing relevant context, 2) improving key bug inclusion (KBI), 3) reducing false alarm rates (FAR), and 4) integrating human workflows. To tackle these, we propose 1) code slicing algorithms for context extraction, 2) a multi-role LLM framework for KBI, 3) a filtering mechanism for FAR reduction, and 4) a novel prompt design for better human interaction. Our approach, validated on real-world merge requests from historical fault reports, achieves a 2$\\times$ improvement over standard LLMs and a 10$\\times$ gain over previous baselines. While the presented results focus on C++, the underlying framework design leverages language-agnostic principles (e.g., AST-based analysis), suggesting potential for broader applicability.",
+      "paper_id": "pmlr:v267:lu25f",
+      "title": "Towards Practical Defect-Focused Automated Code Review",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40505-40536",
+          "pmlr_id": "lu25f",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) have shown great potential as general-purpose AI assistants across various domains. To fully leverage this potential in specific applications, many companies provide fine-tuning API services, enabling users to upload their own data for LLM customization. However, fine-tuning services introduce a new safety threat: user-uploaded data, whether harmful or benign, can break the model’s alignment, leading to unsafe outputs. Moreover, existing defense methods struggle to address the diversity of fine-tuning datasets (e.g., varying sizes, tasks), often sacrificing utility for safety or vice versa. To address this issue, we propose Safe Delta, a safety-aware post-training defense method that adjusts the delta parameters (i.e., the parameter change before and after fine-tuning). Specifically, Safe Delta estimates the safety degradation, selects delta parameters to maximize utility while limiting overall safety loss, and applies a safety compensation vector to mitigate residual safety loss. Through extensive experiments on four diverse datasets with varying settings, our approach consistently preserves safety while ensuring that the utility gain from benign datasets remains unaffected.",
+      "paper_id": "pmlr:v267:lu25g",
+      "title": "Safe Delta: Consistently Preserving Safety when Fine-Tuning LLMs on Diverse Datasets",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40537-40559",
+          "pmlr_id": "lu25g",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Machine unlearning addresses the problem of updating a machine learning model/system trained on a dataset $S$ so that the influence of a set of deletion requests $U \\subseteq S$ on the unlearned model is minimized. The gold standard definition of unlearning demands that the updated model, after deletion, be nearly identical to the model obtained by retraining. This definition is designed for a worst-case attacker (one who can recover not only the unlearned model but also the remaining data samples, i.e., $S \\setminus U$). Such a stringent definition has made developing efficient unlearning algorithms challenging. However, such strong attackers are also unrealistic. In this work, we propose a new definition, system-aware unlearning , which aims to provide unlearning guarantees against an attacker that can at best only gain access to the data stored in the system for learning/unlearning requests and not all of $S\\setminus U$. With this new definition, we use the simple intuition that if a system can store less to make its learning/unlearning updates, it can be more secure and update more efficiently against a system-aware attacker. Towards that end, we present an exact system-aware unlearning algorithm for linear classification using a selective sampling-based approach, and we generalize the method for classification with general function classes. We theoretically analyze the tradeoffs between deletion capacity, accuracy, memory, and computation time.",
+      "paper_id": "pmlr:v267:lu25h",
+      "title": "System-Aware Unlearning Algorithms: Use Lesser, Forget Faster",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40560-40592",
+          "pmlr_id": "lu25h",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Diffusion models have shown great promise in decision-making, also known as diffusion planning. However, the slow inference speeds limit their potential for broader real-world applications. Here, we introduce Habi , a general framework that transforms powerful but slow diffusion planning models into fast decision-making models, which mimics the cognitive process in the brain that costly goal-directed behavior gradually transitions to efficient habitual behavior with repetitive practice. Even using a laptop CPU, the habitized model can achieve an average 800+ Hz decision-making frequency (faster than previous diffusion planners by orders of magnitude) on standard offline reinforcement learning benchmarks D4RL, while maintaining comparable or even higher performance compared to its corresponding diffusion planner. Our work proposes a fresh perspective of leveraging powerful diffusion models for real-world decision-making tasks. We also provide robust evaluations and analysis, offering insights from both biological and engineering perspectives for efficient and effective decision-making.",
+      "paper_id": "pmlr:v267:lu25i",
+      "title": "Habitizing Diffusion Planning for Efficient and Effective Decision Making",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40593-40613",
+          "pmlr_id": "lu25i",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Factored Markov Decision Processes (FMDPs) offer a promising framework for overcoming the curse of dimensionality in reinforcement learning (RL) by decomposing high-dimensional MDPs into smaller and independently evolving components. Despite their potential, existing studies on FMDPs face three key limitations: reliance on perfectly factorizable models, suboptimal sample complexity guarantees for model-based algorithms, and the absence of model-free algorithms. To address these challenges, we introduce approximate factorization, which extends FMDPs to handle imperfectly factored models. Moreover, we develop a model-based algorithm and a model-free algorithm (in the form of variance-reduced Q-learning), both achieving the first near-minimax sample complexity guarantees for FMDPs. A key novelty in the design of these two algorithms is the development of a graph-coloring-based optimal synchronous sampling strategy. Numerical simulations based on the wind farm storage control problem corroborate our theoretical findings.",
+      "paper_id": "pmlr:v267:lu25j",
+      "title": "Overcoming the Curse of Dimensionality in Reinforcement Learning Through Approximate Factorization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40614-40664",
+          "pmlr_id": "lu25j",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Extensive research has shown that a wide range of machine learning problems can be formulated as bilevel optimization, where two levels of learning processes intertwine through distinct sets of optimization variables. However, prevailing approaches often impose stringent assumptions, such as strong convexity of the lower-level loss function or uniqueness of the optimal solution, to enable algorithmic development and convergence analysis. However, these assumptions tend to be overly restrictive in real-world scenarios. In this work, we explore a recently popularized Moreau envelope based reformulation of bilevel optimization problems, accommodating nonconvex objective functions at both levels. We propose a stochastic primal-dual method that incorporates smoothing on both sides, capable of finding Karush-Kuhn-Tucker solutions for this general class of nonconvex bilevel optimization problems. A key feature of our algorithm is its ability to dynamically weigh the lower-level problems, enhancing its performance, particularly in stochastic learning scenarios. Numerical experiments underscore the superiority of our proposed algorithm over existing penalty-based methods in terms of both the convergence rate and the test accuracy.",
+      "paper_id": "pmlr:v267:lu25k",
+      "title": "TSP: A Two-Sided Smoothed Primal-Dual Method for Nonconvex Bilevel Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40665-40708",
+          "pmlr_id": "lu25k",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Direct Preference Optimization (DPO) aligns text-to-image (T2I) generation models with human preferences using pairwise preference data. Although substantial resources are expended in collecting and labeling datasets, a critical aspect is often neglected: preferences vary across individuals and should be represented with more granularity. To address this, we propose SmPO-Diffusion, a novel method for modeling preference distributions to improve the DPO objective, along with a numerical upper bound estimation for the diffusion optimization objective. First, we introduce a smoothed preference distribution to replace the original binary distribution. We employ a reward model to simulate human preferences and apply preference likelihood averaging to improve the DPO loss, such that the loss function approaches zero when preferences are similar. Furthermore, we utilize an inversion technique to simulate the trajectory preference distribution of the diffusion model, enabling more accurate alignment with the optimization objective. Our approach effectively mitigates issues of excessive optimization and objective misalignment present in existing methods through straightforward modifications. Experimental results demonstrate that our method achieves state-of-the-art performance in preference evaluation tasks, surpassing baselines across various metrics, while reducing the training costs.",
+      "paper_id": "pmlr:v267:lu25l",
+      "title": "Smoothed Preference Optimization via ReNoise Inversion for Aligning Diffusion Models with Varied Human Preferences",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40709-40725",
+          "pmlr_id": "lu25l",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Direct Preference Optimization (DPO) has shown effectiveness in aligning multi-modal large language models (MLLM) with human preferences. However, existing methods exhibit an imbalanced responsiveness to the data of varying hardness, tending to overfit on the easy-to-distinguish data while underfitting on the hard-to-distinguish data. In this paper, we propose Data- and Model-aware DPO (DAMA) to dynamically adjust the optimization process from two key aspects: (1) a data-aware strategy that incorporates data hardness, and (2) a model-aware strategy that integrates real-time model responses. By combining the two strategies, DAMA enables the model to effectively adapt to data with varying levels of hardness. Extensive experiments on five benchmarks demonstrate that DAMA not only significantly enhances the trustworthiness, but also improves the effectiveness over general tasks. For instance, on the Object HalBench, our DAMA-7B reduces response-level and mentioned-level hallucination by 90.0% and 95.3%, respectively, surpassing the performance of GPT-4V.",
+      "paper_id": "pmlr:v267:lu25m",
+      "title": "DAMA: Data- and Model-aware Alignment of Multi-modal LLMs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40726-40740",
+          "pmlr_id": "lu25m",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent diffusion-based generative models achieve remarkable results by training on massive datasets, yet this practice raises concerns about memorization and copyright infringement. A proposed remedy is to train exclusively on noisy data with potential copyright issues, ensuring the model never observes original content. However, through the lens of deconvolution theory, we show that although it is theoretically feasible to learn the data distribution from noisy samples, the practical challenge of collecting sufficient samples makes successful learning nearly unattainable. To overcome this limitation, we propose to pretrain the model with a small fraction of clean data to guide the deconvolution process. Combined with our Stochastic Forward–Backward Deconvolution (SFBD) method, we attain FID 6.31 on CIFAR-10 with just 4% clean images (and 3.58 with 10%). We also provide theoretical guarantees that SFBD learns the true data distribution. These results underscore the value of limited clean pretraining, or pretraining on similar datasets. Empirical studies further validate and enrich our findings.",
+      "paper_id": "pmlr:v267:lu25n",
+      "title": "Stochastic Forward–Backward Deconvolution: Training Diffusion Models with Finite Noisy Datasets",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40741-40768",
+          "pmlr_id": "lu25n",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Despite the rapid development of large language models (LLMs), a fundamental challenge persists: the lack of high-quality optimization modeling datasets hampers LLMs’ robust modeling of practical optimization problems from natural language descriptions (NL). This data scarcity also contributes to the generalization difficulties experienced by learning-based methods. To address these challenges, we propose a scalable framework for synthesizing a high-quality dataset, named OptMATH. Starting from curated seed data with mathematical formulations (MF), this framework automatically generates problem data (PD) with controllable complexity. Then, a back-translation step is employed to obtain NL. To verify the correspondence between the NL and the PD, a forward modeling step followed by rejection sampling is used. The accepted pairs constitute the training part of OptMATH. Then a collection of rejected pairs is identified and further filtered. This collection serves as a new benchmark for optimization modeling, containing difficult instances whose lengths are much longer than these of NL4OPT and MAMO. Through extensive experiments, we demonstrate that models of various sizes (0.5B-32B parameters) trained on OptMATH achieve superior results on multiple modeling benchmarks, thereby validating the effectiveness and scalability of our approach. The OptMATH dataset and related resources are available at https://github.com/optsuite/OptMATH.",
+      "paper_id": "pmlr:v267:lu25o",
+      "title": "OptMATH: A Scalable Bidirectional Data Synthesis Framework for Optimization Modeling",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40769-40802",
+          "pmlr_id": "lu25o",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Feedback from peer review is essential to improve the quality of scientific articles. However, at present, many manuscripts do not receive sufficient external feedback for refinement before or during submission. Therefore, a system capable of providing detailed and professional feedback is crucial for enhancing research efficiency. In this paper, we have compiled the largest dataset of paper reviews to date by collecting historical open-access papers and their corresponding review comments and standardizing them using LLM. We then developed a multi-agent system that mimics real human review processes, based on LLMs. This system, named Agent Reviewers, includes the innovative introduction of multimodal reviewers to provide feedback on the visual elements of papers. Additionally, a shared memory pool that stores historical papers’ metadata is preserved, which supplies reviewer agents with background knowledge from different fields. Our system is evaluated using ICLR 2024 papers and achieves superior performance compared to existing AI-based review systems. Comprehensive ablation studies further demonstrate the effectiveness of each module and agent in this system.",
+      "paper_id": "pmlr:v267:lu25p",
+      "title": "Agent Reviewers: Domain-specific Multimodal Agents with Shared Memory for Paper Review",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "40803-40830",
+          "pmlr_id": "lu25p",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

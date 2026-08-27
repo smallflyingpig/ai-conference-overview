@@ -1,0 +1,747 @@
+{
+  "batch_index": 63,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "For text-based AI systems to interact in the real world, causal reasoning is an essential skill. Since interventional data is costly to generate, we study to what extent an agent can learn causal reasoning from passive data. Specifically, we consider an axiomatic training setup where an agent learns from multiple demonstrations of a causal axiom (or rule), rather than incorporating the axiom as an inductive bias or inferring it from data values. A key question is whether the agent would learn to generalize from the axiom demonstrations to new scenarios. For example, if a transformer model is trained on demonstrations of the causal transitivity axiom over small graphs, would it generalize to applying the transitivity axiom over large graphs? Our results, based on a novel axiomatic training scheme, indicate that such generalization is possible. We consider the task of inferring whether a variable causes another variable, given a causal graph structure. We find that a 67 million parameter transformer model, when trained on linear causal chains (along with some noisy variations) can generalize well to new kinds of graphs, including longer causal chains, causal chains with reversed order, and graphs with branching; even when it is not explicitly trained for such settings. Our model performs at par (or even better) than many larger language models such as GPT-4, Gemini Pro, and Phi-3. Overall, our axiomatic training framework provides a new paradigm of learning causal reasoning from passive data that can be used to learn arbitrary axioms, as long as sufficient demonstrations can be generated.",
+      "paper_id": "pmlr:v267:vashishtha25a",
+      "title": "Teaching Transformers Causal Reasoning through Axiomatic Training",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "60964-60983",
+          "pmlr_id": "vashishtha25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The expressive power of message-passing graph neural networks (MPNNs) is reasonably well understood, primarily through combinatorial techniques from graph isomorphism testing. However, MPNNs’ generalization abilities—making meaningful predictions beyond the training set—remain less explored. Current generalization analyses often overlook graph structure, limit the focus to specific aggregation functions, and assume the impractical, hard-to-optimize $0$-$1$ loss function. Here, we extend recent advances in graph similarity theory to assess the influence of graph structure, aggregation, and loss functions on MPNNs’ generalization abilities. Our empirical study supports our theoretical insights, improving our understanding of MPNNs’ generalization properties.",
+      "paper_id": "pmlr:v267:vasileiou25a",
+      "title": "Covered Forest: Fine-grained generalization analysis of graph neural networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "60984-61034",
+          "pmlr_id": "vasileiou25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Armijo line-search (Armijo-LS) is a standard method to set the step-size for gradient descent (GD). For smooth functions, Armijo-LS alleviates the need to know the global smoothness constant $L$ and adapts to the “local” smoothness, enabling GD to converge faster. Existing theoretical analyses show that GD with Armijo-LS ($\\texttt{GD-LS}$) can result in constant factor improvements over GD with a $1/L$ step-size (denoted as $\\texttt{GD(1/L)}$). We strengthen these results and show that if the objective function satisfies a certain non-uniform smoothness condition, $\\texttt{GD-LS}$ can result in a faster convergence rate than $\\texttt{GD(1/L)}$. In particular, we prove that for convex objectives corresponding to logistic regression and multi-class classification, $\\texttt{GD-LS}$ can converge to the optimum at a linear rate, and hence improves over the sublinear convergence of $\\texttt{GD(1/L)}$. Furthermore, for non-convex objectives satisfying gradient domination (e.g., those corresponding to the softmax policy gradient in RL or generalized linear models with a logistic link function), $\\texttt{GD-LS}$ can match the fast convergence of algorithms tailored for these specific settings. Finally, we analyze the convergence of stochastic GD with a stochastic line-search on convex losses under the interpolation assumption.",
+      "paper_id": "pmlr:v267:vaswani25a",
+      "title": "Armijo Line-search Can Make (Stochastic) Gradient Descent Provably Faster",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61035-61070",
+          "pmlr_id": "vaswani25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "In this paper, we investigate the properties of the Sliced Wasserstein Distance (SW) when employed as an objective functional. The SW metric has gained significant interest in the optimal transport and machine learning literature, due to its ability to capture intricate geometric properties of probability distributions while remaining computationally tractable, making it a valuable tool for various applications, including generative modeling and domain adaptation. Our study aims to provide a rigorous analysis of the critical points arising from the optimization of the SW objective. By computing explicit perturbations, we establish that stable critical points of SW cannot concentrate on segments. This stability analysis is crucial for understanding the behaviour of optimization algorithms for models trained using the SW objective. Furthermore, we investigate the properties of the SW objective, shedding light on the existence and convergence behavior of critical points. We illustrate our theoretical results through numerical experiments.",
+      "paper_id": "pmlr:v267:vauthier25a",
+      "title": "Towards Understanding Gradient Dynamics of the Sliced-Wasserstein Distance via Critical Point Analysis",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61071-61107",
+          "pmlr_id": "vauthier25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Modern methods for fine-tuning a Vision Transformer (ViT) like Low-Rank Adaptation (LoRA) and its variants demonstrate impressive performance. However, these methods ignore the high-dimensional nature of Multi-Head Attention (MHA) weight tensors. To address this limitation, we propose Canonical Rank Adaptation (CaRA). CaRA leverages tensor mathematics, first by tensorising the transformer into two different tensors; one for projection layers in MHA and the other for feed-forward layers. Second, the tensorised formulation is fine-tuned using the low-rank adaptation in Canonical-Polyadic Decomposition (CPD) form. Employing CaRA efficiently minimizes the number of trainable parameters. Experimentally, CaRA outperforms existing Parameter-Efficient Fine-Tuning (PEFT) methods in visual classification benchmarks such as Visual Task Adaptation Benchmark (VTAB)-1k and Fine-Grained Visual Categorization (FGVC).",
+      "paper_id": "pmlr:v267:veeramacheneni25a",
+      "title": "Canonical Rank Adaptation: An Efficient Fine-Tuning Strategy for Vision Transformers",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61108-61125",
+          "pmlr_id": "veeramacheneni25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Finding a minimum spanning tree (MST) for $n$ points in an arbitrary metric space is a fundamental primitive for hierarchical clustering and many other ML tasks, but this takes $\\Omega(n^2)$ time to even approximate. We introduce a framework for metric MSTs that first (1) finds a forest of trees using practical heuristics, and then (2) finds a small weight set of edges to connect disjoint components in the forest into a spanning tree. We prove that optimally solving step (2) still takes $\\Omega(n^2)$ time, but we provide a subquadratic 2.62-approximation algorithm. In the spirit of learning-augmented algorithms, we then show that if the heuristic forest found in step (1) overlaps with an optimal MST, we can approximate the original MST problem in subquadratic time, where the approximation factor depends on a measure of overlap. In practice, we find nearly optimal spanning trees for a wide range of metrics, while being orders of magnitude faster than exact algorithms.",
+      "paper_id": "pmlr:v267:veldt25a",
+      "title": "Approximate Forest Completion and Learning-Augmented Algorithms for Metric Minimum Spanning Trees",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61126-61149",
+          "pmlr_id": "veldt25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Existing biomedical benchmarks do not provide end-to-end infrastructure for training, evaluation, and inference of models that integrate multimodal biological data and a broad range of machine learning tasks in therapeutics. We present PyTDC, an open-source machine-learning platform providing streamlined training, evaluation, and inference software for multimodal biological AI models. PyTDC unifies distributed, heterogeneous, continuously updated data sources and model weights and standardizes benchmarking and inference endpoints. This paper discusses the components of PyTDC’s architecture and, to our knowledge, the first-of-its-kind case study on the introduced single-cell drug-target nomination ML task. We find state-of-the-art methods in graph representation learning and domain-specific methods from graph theory perform poorly on this task. Though we find a context-aware geometric deep learning method that outperforms the evaluated SoTA and domain-specific baseline methods, the model is unable to generalize to unseen cell types or incorporate additional modalities, highlighting PyTDC’s capacity to facilitate an exciting avenue of research developing multimodal, context-aware, foundation models for open problems in biomedical AI.",
+      "paper_id": "pmlr:v267:velez-arce25a",
+      "title": "PyTDC: A multimodal machine learning training, evaluation, and inference platform for biomedical foundation models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61150-61189",
+          "pmlr_id": "velez-arce25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "A key property of reasoning systems is the ability to make sharp decisions on their input data. For contemporary AI systems, a key carrier of sharp behaviour is the softmax function, with its capability to perform differentiable query-key lookups. It is a common belief that the predictive power of networks leveraging softmax arises from \"circuits\" which sharply perform certain kinds of computations consistently across many diverse inputs. However, for these circuits to be robust, they would need to generalise well to arbitrary valid inputs. In this paper, we dispel this myth: even for tasks as simple as finding the maximum key, any learned circuitry must disperse as the number of items grows at test time. We attribute this to a fundamental limitation of the softmax function to robustly approximate sharp functions with increasing problem size, prove this phenomenon theoretically, and propose adaptive temperature as an ad-hoc technique for improving the sharpness of softmax at inference time.",
+      "paper_id": "pmlr:v267:velickovic25a",
+      "title": "Softmax is not Enough (for Sharp Size Generalisation)",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61190-61211",
+          "pmlr_id": "velickovic25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Any well-behaved generative model over a variable $\\mathbf{x}$ can be expressed as a deterministic transformation of an exogenous ( outsourced’ ) Gaussian noise variable $\\mathbf{z}$: $\\mathbf{x}=f_\\theta(\\mathbf{z})$. In such a model ( eg , a VAE, GAN, or continuous-time flow-based model), sampling of the target variable $\\mathbf{x} \\sim p_\\theta(\\mathbf{x})$ is straightforward, but sampling from a posterior distribution of the form $p(\\mathbf{x}\\mid\\mathbf{y}) \\propto p_\\theta(\\mathbf{x})r(\\mathbf{x},\\mathbf{y})$, where $r$ is a constraint function depending on an auxiliary variable $\\mathbf{y}$, is generally intractable. We propose to amortize the cost of sampling from such posterior distributions with diffusion models that sample a distribution in the noise space ($\\mathbf{z}$). These diffusion samplers are trained by reinforcement learning algorithms to enforce that the transformed samples $f_\\theta(\\mathbf{z})$ are distributed according to the posterior in the data space ($\\mathbf{x}$). For many models and constraints, the posterior in noise space is smoother than in data space, making it more suitable for amortized inference. Our method enables conditional sampling under unconditional GAN, (H)VAE, and flow-based priors, comparing favorably with other inference methods. We demonstrate the proposed outsourced diffusion sampling in several experiments with large pretrained prior models: conditional image generation, reinforcement learning with human feedback, and protein structure generation.",
+      "paper_id": "pmlr:v267:venkatraman25a",
+      "title": "Outsourced Diffusion Sampling: Efficient Posterior Inference in Latent Spaces of Generative Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61212-61239",
+          "pmlr_id": "venkatraman25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Code Agent development is an extremely active research area, where a reliable performance metric is critical for tracking progress and guiding new developments. This demand is underscored by the meteoric rise in popularity of SWE-Bench – a benchmark that challenges code agents to generate patches addressing GitHub issues given the full repository as context. The correctness of generated patches is then evaluated by executing a human-written test suite extracted from the repository after the issue’s resolution. However, constructing benchmarks like SWE-Bench requires substantial manual effort to set up historically accurate execution environments for testing. Crucially, this severely limits the number of considered repositories, e.g., just 12 for SWE-Bench. Considering so few repositories, selected for their popularity runs the risk of leading to a distributional mismatch, i.e., the measured performance may not be representative of real-world scenarios running the riks of misguiding development efforts. In this work, we address this challenge and introduce SetUpAgent, a fully automated system capable of historically accurate dependency setup, test execution, and result parsing. Using SetUpAgent, we generate two new datasets: (i) SWEE-Bench an extended version of SWE-Bench encompassing hundreds of repositories, and (ii) SWA-Bench a benchmark focusing on applications rather than libraries. Comparing these datasets to SWE-Bench with respect to their characteristics and code agent performance, we find significant distributional differences, including lower issue description quality and detail level, higher fix complexity, and most importantly up to 60% lower agent success rates.",
+      "paper_id": "pmlr:v267:vergopoulos25a",
+      "title": "Automated Benchmark Generation for Repository-Level Coding Tasks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61240-61265",
+          "pmlr_id": "vergopoulos25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Increasing diversity in language models is a challenging yet essential objective. A common approach is to raise the decoding temperature. In this work, we investigate this approach through a simplistic yet common case to provide insights into why decreasing temperature can improve quality (Precision), while increasing it often fails to boost coverage (Recall). Our analysis reveals that for a model to be effectively tunable through temperature adjustments, it must be trained toward coverage. To address this, we propose rethinking loss functions in language models by leveraging the Precision-Recall framework. Our results demonstrate that this approach achieves a substantially better trade-off between Precision and Recall than merely combining negative log-likelihood training with temperature scaling. These findings offer a pathway toward more versatile and robust language modeling techniques.",
+      "paper_id": "pmlr:v267:verine25a",
+      "title": "Improving Diversity in Language Models: When Temperature Fails, Change the Loss",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61266-61300",
+          "pmlr_id": "verine25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Graph Edit Distance (GED) is a widely used metric for measuring similarity between two graphs. Computing the optimal GED is NP-hard, leading to the development of various neural and non-neural heuristics. While neural methods have achieved improved approximation quality compared to non-neural approaches, they face significant challenges: (1) They require large amounts of ground truth data, which is itself NP-hard to compute. (2) They operate as black boxes, offering limited interpretability. (3) They lack cross-domain generalization, necessitating expensive retraining for each new dataset. We address these limitations with GRAIL, introducing a paradigm shift in this domain. Instead of training a neural model to predict GED, GRAIL employs a novel combination of large language models (LLMs) and automated prompt tuning to generate a program that is used to compute GED. This shift from predicting GED to generating programs imparts various advantages, including end-to-end interpretability and an autonomous self-evolutionary learning mechanism without ground-truth supervision. Extensive experiments on seven datasets confirm that GRAIL not only surpasses state-of-the-art GED approximation methods in prediction quality but also achieves robust cross-domain generalization across diverse graph distributions.",
+      "paper_id": "pmlr:v267:verma25a",
+      "title": "GRAIL: Graph Edit Distance and Node Alignment using LLM-Generated Code",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61301-61322",
+          "pmlr_id": "verma25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The local inductive bias of message-passing graph neural networks (GNNs) hampers their ability to exploit key structural information (e.g., connectivity and cycles). Positional encoding (PE) and Persistent Homology (PH) have emerged as two promising approaches to mitigate this issue. PE schemes endow GNNs with location-aware features, while PH methods enhance GNNs with multiresolution topological features. However, a rigorous theoretical characterization of the relative merits and shortcomings of PE and PH has remained elusive. We bridge this gap by establishing that neither paradigm is more expressive than the other, providing novel constructions where one approach fails but the other succeeds. Our insights inform the design of a novel learnable method, PiPE (Persistence-informed Positional Encoding), which is provably more expressive than both PH and PE. PiPE demonstrates strong performance across a variety of tasks (e.g., molecule property prediction, graph classification, and out-of-distribution generalization), thereby advancing the frontiers of graph representation learning. Code is available at https://github.com/Aalto-QuML/PIPE",
+      "paper_id": "pmlr:v267:verma25b",
+      "title": "Positional Encoding meets Persistent Homology on Graphs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61323-61343",
+          "pmlr_id": "verma25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Automatic program generation has long been a fundamental challenge in computer science. Recent benchmarks have shown that large language models (LLMs) can effectively generate code at the function level, make code edits, and solve algorithmic coding tasks. However, to achieve full automation, LLMs should be able to generate production-quality, self-contained application modules. To evaluate the capabilities of LLMs in solving this challenge, we introduce BaxBench, a novel evaluation benchmark consisting of 392 tasks for the generation of backend applications. We focus on backends for three critical reasons: (i) they are practically relevant, building the core components of most modern web and cloud software, (ii) they are difficult to get right, requiring multiple functions and files to achieve the desired functionality, and (iii) they are security-critical, as they are exposed to untrusted third-parties, making secure solutions that prevent deployment-time attacks an imperative. BaxBench validates the functionality of the generated applications with comprehensive test cases, and assesses their security exposure by executing end-to-end exploits. Our experiments reveal key limitations of current LLMs in both functionality and security: (i) even the best model, OpenAI o1, achieves a mere 62% on code correctness; (ii) on average, we could successfully execute security exploits on around half of the correct programs generated by each LLM; and (iii) in less popular backend frameworks, models further struggle to generate correct and secure applications. Progress on BaxBench signifies important steps towards autonomous and secure software development with LLMs.",
+      "paper_id": "pmlr:v267:vero25a",
+      "title": "BaxBench: Can LLMs Generate Correct and Secure Backends?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61344-61390",
+          "pmlr_id": "vero25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Modern language models are internally—and mathematically—distributions over token strings rather than character strings, posing numerous challenges for programmers building user applications on top of them. For example, if a prompt is specified as a character string, it must be tokenized before passing it to the token-level language model. Thus, the tokenizer and consequent processing are very sensitive to the specification of the prompt (e.g., whether the prompt ends with a space or not). This paper presents algorithms for converting token-level language models to character-level ones. We present both exact and approximate algorithms. In the empirical portion of the paper, we benchmark the practical runtime and approximation quality. Across four publicly available language models, we find that—even with a small computation budget—our method is able to accurately approximate the character-level distribution at reasonably fast speeds, and that a significant improvement in the language model’s compression rate (bits/byte) is achieved.",
+      "paper_id": "pmlr:v267:vieira25a",
+      "title": "From Language Models over Tokens to Language Models over Characters",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61391-61412",
+          "pmlr_id": "vieira25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Modern language models represent probability distributions over character strings as distributions over (shorter) token strings derived via a deterministic tokenizer, such as byte-pair encoding. While this approach is highly effective at scaling up language models to large corpora, its current incarnations have a concerning property: the model assigns nonzero probability mass to an exponential number of noncanonical token encodings of each character string—these are token strings that decode to valid character strings but are impossible under the deterministic tokenizer (i.e., they will never be seen in any training corpus, no matter how large). This misallocation is both erroneous, as noncanonical strings never appear in training data, and wasteful, diverting probability mass away from plausible outputs. These are avoidable mistakes! In this work, we propose methods to enforce canonicality in token-level language models, ensuring that only canonical token strings are assigned positive probability. We present two approaches: (1) canonicality by conditioning, leveraging test-time inference strategies without additional training, and (2) canonicality by construction, a model parameterization that guarantees canonical outputs but requires training. We demonstrate that fixing canonicality mistakes improves the likelihood of held-out data for several models and corpora.",
+      "paper_id": "pmlr:v267:vieira25b",
+      "title": "Language Models over Canonical Byte-Pair Encodings",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61413-61443",
+          "pmlr_id": "vieira25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "This paper introduces the SOAR framework for imitation learning. SOAR is an algorithmic template which learns a policy from expert demonstrations with a primal-dual style algorithm which alternates cost and policy updates. Within the policy updates the SOAR framework prescribe to use an actor critic method with multiple critics to estimate the critic uncertainty and therefore build an optimistic critic fundamental to drive exploration. When instantiated to the tabular setting, we get a provable algorithms dubbed FRA with guarantees matching the best known results in $\\epsilon$. Practically, the SOAR template is shown to boost consistently the performance of primal dual IL algorithms building on actor critic routines for the policy updates. Approximately, thanks to SOAR, the required number of episodes to achieve the same performance is reduced by a half.",
+      "paper_id": "pmlr:v267:viel25a",
+      "title": "IL-SOAR : Imitation Learning with Soft Optimistic Actor cRitic",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61444-61479",
+          "pmlr_id": "viel25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Although Artificial Neural Networks (ANNs) have achieved remarkable success across various tasks, they still suffer from limited generalization. We hypothesize that this limitation arises from the traditional sample-based (0–dimensionnal) regularization used in ANNs. To overcome this, we introduce Deep Sturm-Liouville (DSL), a novel function approximator that enables continuous 1D regularization along field lines in the input space by integrating the Sturm-Liouville Theorem (SLT) into the deep learning framework. DSL defines field lines traversing the input space, along which a Sturm-Liouville problem is solved to generate orthogonal basis functions, enforcing implicit regularization thanks to the desirable properties of SLT. These basis functions are linearly combined to construct the DSL approximator. Both the vector field and basis functions are parameterized by neural networks and learned jointly. We demonstrate that the DSL formulation naturally arises when solving a Rank-1 Parabolic Eigenvalue Problem. DSL is trained efficiently using stochastic gradient descent via implicit differentiation and achieves competitive performance on diverse multivariate datasets, including high-dimensional image datasets such as MNIST and CIFAR-10.",
+      "paper_id": "pmlr:v267:vigouroux25a",
+      "title": "Deep Sturm–Liouville: From Sample-Based to 1D Regularization with Learnable Orthogonal Basis Functions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61480-61497",
+          "pmlr_id": "vigouroux25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Analog circuit topology synthesis is integral to Electronic Design Automation (EDA), enabling the automated creation of circuit structures tailored to specific design requirements. However, the vast design search space and strict constraint adherence make efficient synthesis challenging. Leveraging the versatility of Large Language Models (LLMs), we propose AUTOCIRCUIT-RL, a novel reinforcement learning (RL)-based framework for automated analog circuit synthesis. The framework operates in two phases: instruction tuning, where an LLM learns to generate circuit topologies from structured prompts encoding design constraints, and RL refinement, which further improves the instruction-tuned model using reward models that evaluate validity, efficiency, and output voltage. The refined model is then used directly to generate topologies that satisfy the design constraints. Empirical results show that AUTOCIRCUIT-RL generates 12% more valid circuits and improves efficiency by 14% compared to the best baselines, while reducing duplicate generation rates by 38%. It achieves over 60% success in synthesizing valid circuits with limited training data, demonstrating strong generalization. These findings highlight the framework’s effectiveness in scaling to complex circuits while maintaining efficiency and constraint adherence, marking a significant advancement in AI-driven circuit design.",
+      "paper_id": "pmlr:v267:vijayaraghavan25a",
+      "title": "AUTOCIRCUIT-RL: Reinforcement Learning-Driven LLM for Automated Circuit Topology Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61498-61512",
+          "pmlr_id": "vijayaraghavan25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Recent advances in geometric deep learning and generative modeling have enabled the design of novel proteins with a wide range of desired properties. However, current state-of-the-art approaches are typically restricted to generating proteins with only static target properties, such as motifs and symmetries. In this work, we take a step towards overcoming this limitation by proposing a framework to condition structure generation on flexibility, which is crucial for key functionalities such as catalysis or molecular recognition. We first introduce BackFlip, an equivariant neural network for predicting per-residue flexibility from an input backbone structure. Relying on BackFlip, we propose FliPS, an SE(3)-equivariant conditional flow matching model that solves the inverse problem, that is, generating backbones that display a target flexibility profile. In our experiments, we show that FliPS is able to generate novel and diverse protein backbones with the desired flexibility, verified by Molecular Dynamics (MD) simulations. FliPS and BackFlip are available at https://github.com/graeter-group/flips.",
+      "paper_id": "pmlr:v267:viliuga25a",
+      "title": "Flexibility-conditioned protein structure design with flow matching",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61513-61533",
+          "pmlr_id": "viliuga25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Predicting future scene representations is a crucial task for enabling robots to understand and interact with the environment. However, most existing methods rely on videos and simulations with precise action annotations, limiting their ability to leverage the large amount of available unlabeled video data. To address this challenge, we propose PlaySlot, an object-centric video prediction model that infers object representations and latent actions from unlabeled video sequences. It then uses these representations to forecast future object states and video frames. PlaySlot allows the generation of multiple possible futures conditioned on latent actions, which can be inferred from video dynamics, provided by a user, or generated by a learned action policy, thus enabling versatile and interpretable world modeling. Our results show that PlaySlot outperforms both stochastic and object-centric baselines for video prediction across different environments. Furthermore, we show that our inferred latent actions can be used to learn robot behaviors sample-efficiently from unlabeled video demonstrations. Videos and code are available on our project website.",
+      "paper_id": "pmlr:v267:villar-corrales25a",
+      "title": "PlaySlot: Learning Inverse Latent Dynamics for Controllable Object-Centric Video Prediction and Planning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61534-61563",
+          "pmlr_id": "villar-corrales25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "We present a novel method for efficiently computing optimal transport maps and Wasserstein barycenters in high-dimensional spaces. Our approach uses conditional normalizing flows to approximate the input distributions as invertible pushforward transformations from a common latent space. This makes it possible to directly solve the primal problem using gradient-based minimization of the transport cost, unlike previous methods that rely on dual formulations and complex adversarial optimization. We show how this approach can be extended to compute Wasserstein barycenters by solving a conditional variance minimization problem. A key advantage of our conditional architecture is that it enables the computation of barycenters for hundreds of input distributions, which was computationally infeasible with previous methods. Our numerical experiments illustrate that our approach yields accurate results across various high-dimensional tasks and compares favorably with previous state-of-the-art methods.",
+      "paper_id": "pmlr:v267:visentin25a",
+      "title": "Computing Optimal Transport Maps and Wasserstein Barycenters Using Conditional Normalizing Flows",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61564-61581",
+          "pmlr_id": "visentin25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Modern semi-supervised learning (SSL) methods rely on pseudolabeling and consistency regularization. Pseudolabeling is typically performed by comparing the model’s confidence scores and a predefined threshold. While several heuristics have been proposed to improve threshold selection, the underlying issues of overconfidence and miscalibration in confidence scores remain largely unaddressed, leading to inaccurate pseudolabels, degraded test accuracy, and prolonged training. We take a first-principles approach to learn confidence scores and thresholds with an explicit knob for error. This flexible framework addresses the fundamental question of optimal scores and threshold selection in pseudolabeling. Moreover, it gives practitioners a principled way to control the quality and quantity of pseudolabels. Such control is vital in SSL, where balancing pseudolabel quality and quantity directly affects model performance and training efficiency. Our experiments show that, by integrating this framework with modern SSL methods, we achieve significant improvements in accuracy and training efficiency. In addition, we provide novel insights on the trade-offs between the choices of the error parameter and the end model’s performance.",
+      "paper_id": "pmlr:v267:vishwakarma25a",
+      "title": "Rethinking Confidence Scores and Thresholds in Pseudolabeling-based SSL",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61582-61600",
+          "pmlr_id": "vishwakarma25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) are empowering decision-making in several applications, including tool or API usage and answering multiple-choice questions (MCQs). However, incorrect outputs pose significant risks in high-stakes domains like healthcare and finance. To quantify LLM uncertainty and thereby mitigate these risks, recent works employ conformal prediction (CP), a model- and distribution-agnostic framework that uses LLM outputs to generate a prediction set containing the true answer with high probability. Leveraging CP, we propose conformal revision of questions (CROQ), which revises the question by narrowing down the available choices to those in the prediction set and asking the LLM the revised question. We expect LLMs to be more accurate on revised questions with fewer choices. Furthermore, we expect CROQ to be effective when the prediction sets from CP are small. Commonly used logit scores often lead to large sets, diminishing CROQ’s effectiveness. To overcome this, we propose CP-OPT, an optimization framework to learn scores that minimize set sizes while maintaining coverage. Our extensive experiments on MMLU, ToolAlpaca, and TruthfulQA datasets with multiple LLMs show that CROQ improves accuracy over the standard inference, with more pronounced gains when paired with CP-OPT.",
+      "paper_id": "pmlr:v267:vishwakarma25b",
+      "title": "Prune ’n Predict: Optimizing LLM Decision-making with Conformal Prediction",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61601-61634",
+          "pmlr_id": "vishwakarma25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "As implied by the plethora of literature on graph rewiring, the choice of computational graph employed by a neural network can make a significant impact on its downstream performance. Certain effects related to the computational graph, such as under-reaching and over-squashing, may even render the model incapable of learning certain functions. Most of these effects have only been thoroughly studied in the domain of undirected graphs; however, recent years have seen a significant rise in interest in feedforward computational graphs: directed graphs without any back edges. In this paper, we study the desirable properties of a feedforward computational graph, discovering two important complementary measures: fidelity and mixing time, and evaluating a few popular choices of graphs through the lens of these measures. Our study is backed by both theoretical analyses of the metrics’ asymptotic behaviour for various graphs, as well as correlating these metrics to the performance of trained neural network models using the corresponding graphs.",
+      "paper_id": "pmlr:v267:vitvitskyi25a",
+      "title": "What Makes a Good Feedforward Computational Graph?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61635-61651",
+          "pmlr_id": "vitvitskyi25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) often exhibit strong biases, e.g, against women or in favor of the number 7. We investigate whether LLMs would be able to output less biased answers when allowed to observe their prior answers to the same question in a multi-turn conversation. To understand which types of questions invite more biased answers, we test LLMs on our proposed set of questions that span 9 topics and belong to three types: (1) Subjective; (2) Random; and (3) Objective. Interestingly, LLMs are able to \"de-bias\" themselves in a multi-turn conversation in response to questions that seek a Random, unbiased answer. Furthermore, we propose B-score, a novel metric that is effective in detecting biases in Subjective, Random, Easy, and Hard questions. On MMLU, HLE, and CSQA, leveraging B-score substantially improves the verification accuracy of LLM answers (i.e, accepting LLM correct answers and rejecting incorrect ones) compared to using verbalized confidence scores or the frequency of single-turn answers alone. Code and data are available at: b-score.github.io.",
+      "paper_id": "pmlr:v267:vo25a",
+      "title": "B-score: Detecting biases in large language models using response history",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61652-61688",
+          "pmlr_id": "vo25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "A neural functional network (NFN) is a specialized type of neural network designed to process and learn from entire neural networks as input data. Recent NFNs have been proposed with permutation and scaling equivariance based on either graph-based message-passing mechanisms or parameter-sharing mechanisms. Compared to graph-based models, parameter-sharing-based NFNs built upon equivariant linear layers exhibit lower memory consumption and faster running time. However, their expressivity is limited due to the large size of the symmetric group of the input neural networks. The challenge of designing a permutation and scaling equivariant NFN that maintains low memory consumption and running time while preserving expressivity remains unresolved. In this paper, we propose a novel solution with the development of MAGEP-NFN ( M onomial m A trix G roup E quivariant P olynomial NFN ). Our approach follows the parameter-sharing mechanism but differs from previous works by constructing a nonlinear equivariant layer represented as a polynomial in the input weights. This polynomial formulation enables us to incorporate additional relationships between weights from different input hidden layers, enhancing the model’s expressivity while keeping memory consumption and running time low, thereby addressing the aforementioned challenge. We provide empirical evidence demonstrating that MAGEP-NFN achieves competitive performance and efficiency compared to existing baselines.",
+      "paper_id": "pmlr:v267:vo25b",
+      "title": "Equivariant Polynomial Functional Networks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61689-61744",
+          "pmlr_id": "vo25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The idea of value-aware model learning, that models should produce accurate value estimates, has gained prominence in model-based reinforcement learning. The MuZero loss, which penalizes a model’s value function prediction compared to the ground-truth value function, has been utilized in several prominent empirical works in the literature. However, theoretical investigation into its strengths and weaknesses is limited. In this paper, we analyze the family of value-aware model learning losses, which includes the popular MuZero loss. We show that these losses, as normally used, are uncalibrated surrogate losses, which means that they do not always recover the correct model and value function. Building on this insight, we propose corrections to solve this issue. Furthermore, we investigate the interplay between the loss calibration, latent model architectures, and auxiliary losses that are commonly employed when training MuZero-style agents. We show that while deterministic models can be sufficient to predict accurate values, learning calibrated stochastic models is still advantageous.",
+      "paper_id": "pmlr:v267:voelcker25a",
+      "title": "Calibrated Value-Aware Model Learning with Probabilistic Environment Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61745-61768",
+          "pmlr_id": "voelcker25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Feature importance metrics are critical for interpreting machine learning models and understanding the relevance of individual features. However, real-world data often exhibit missingness, thereby complicating how feature importance should be evaluated. We introduce the distinction between two evaluation frameworks under missing data: (1) feature importance under the full data, as if every feature had been fully measured, and (2) feature importance under the observed data, where missingness is governed by the current measurement policy. While the full data perspective offers insights into the data generating process, it often relies on unrealistic assumptions and cannot guide decisions when missingness persists at model deployment. Since neither framework directly informs improvements in data collection, we additionally introduce the feature measurement importance gradient (FMIG), a novel, model-agnostic metric that identifies features that should be measured more frequently to enhance predictive performance. Using synthetic data, we illustrate key differences between these metrics and the risks of conflating them.",
+      "paper_id": "pmlr:v267:von-kleist25a",
+      "title": "Feature Importance Metrics in the Presence of Missing Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61769-61789",
+          "pmlr_id": "von-kleist25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The Euler Characteristic Transform (ECT) is an efficiently computable geometrical-topological invariant that characterizes the global shape of data. In this paper, we introduce the local Euler Characteristic Transform ($\\ell$-ECT), a novel extension of the ECT designed to enhance expressivity and interpretability in graph representation learning. Unlike traditional Graph Neural Networks (GNNs), which may lose critical local details through aggregation, the $\\ell$-ECT provides a lossless representation of local neighborhoods. This approach addresses key limitations in GNNs by preserving nuanced local structures while maintaining global interpretability. Moreover, we construct a rotation-invariant metric based on $\\ell$-ECTs for spatial alignment of data spaces. Our method demonstrates superior performance compared to standard GNNs on various benchmarking node classification tasks, while also offering theoretical guarantees of its effectiveness.",
+      "paper_id": "pmlr:v267:von-rohrscheidt25a",
+      "title": "Diss-l-ECT: Dissecting Graph Data with Local Euler Characteristic Transforms",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61790-61809",
+          "pmlr_id": "von-rohrscheidt25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "While state-of-the-art language models achieve impressive results through next-token prediction, they have inherent limitations such as the inability to revise already generated tokens. This has prompted exploration of alternative approaches such as discrete diffusion. However, masked diffusion, which has emerged as a popular choice due to its simplicity and effectiveness, reintroduces this inability to revise words. To overcome this, we generalize masked diffusion, deriving a new family of general interpolating discrete diffusion (GIDD) which offers greater flexibility in the design of the noising processes. Leveraging a novel diffusion ELBO, we achieve compute-matched state-of-the-art performance in diffusion language modeling. Exploiting GIDD’s flexibility, we explore a hybrid approach combining masking and uniform noise, leading to improved sample quality and unlocking the ability for the model to correct its own mistakes, an area where autoregressive models notoriously have struggled. Code: https://github.com/dvruette/gidd/",
+      "paper_id": "pmlr:v267:von-rutte25a",
+      "title": "Generalized Interpolating Discrete Diffusion",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61810-61843",
+          "pmlr_id": "von-rutte25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Multimodal Machine Learning systems, particularly those aligning text and image data like CLIP/BLIP models, have become increasingly prevalent, yet remain susceptible to adversarial attacks. While substantial research has addressed adversarial robustness in unimodal contexts, defense strategies for multimodal systems are underexplored. This work investigates the topological signatures that arise between image and text embeddings and shows how adversarial attacks disrupt their alignment, introducing distinctive signatures. We specifically leverage persistent homology and introduce two novel Topological-Contrastive losses based on Total Persistence and Multi-scale kernel methods to analyze the topological signatures introduced by adversarial perturbations. We observe a pattern of monotonic changes in the proposed topological losses emerging in a wide range of attacks on image-text alignments, as more adversarial samples are introduced in the data. By designing an algorithm to back-propagate these signatures to input samples, we are able to integrate these signatures into Maximum Mean Discrepancy tests, creating a novel class of tests that leverage topological signatures for better adversarial detection.",
+      "paper_id": "pmlr:v267:vu25a",
+      "title": "Topological Signatures of Adversaries in Multimodal Alignments",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61844-61867",
+          "pmlr_id": "vu25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Implicit Neural Representations (INRs) approximate discrete data through continuous functions and are commonly used for encoding 2D images. Traditional image-based INRs employ neural networks to map pixel coordinates to RGB values, capturing shapes, colors, and textures within the network’s weights. Recently, GaussianImage has been proposed as an alternative, using Gaussian functions instead of neural networks to achieve comparable quality and compression. Such a solution obtains a quality and compression ratio similar to classical INR models but does not allow image modification. In contrast, our work introduces a novel method, MiraGe, which uses mirror reflections to perceive 2D images in 3D space and employs flat-controlled Gaussians for precise 2D image editing. Our approach improves the rendering quality and allows realistic image modifications, including human-inspired perception of photos in the 3D world. Thanks to modeling images in 3D space, we obtain the illusion of 3D-based modification in 2D images. We also show that our Gaussian representation can be easily combined with a physics engine to produce physics-based modification of 2D images. Consequently, MiraGe allows for better quality than the standard approach and natural modification of 2D images.",
+      "paper_id": "pmlr:v267:waczynska25a",
+      "title": "MiraGe: Editable 2D Images using Gaussian Splatting",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61868-61884",
+          "pmlr_id": "waczynska25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Developing autonomous agents that quickly explore an environment and adapt their behavior online is a canonical challenge in robotics and machine learning. While humans are able to achieve such fast online exploration and adaptation, often acquiring new information and skills in only a handful of interactions, existing algorithmic approaches tend to rely on random exploration and slow, gradient-based behavior updates. How can we endow autonomous agents with such capabilities on par with humans? Taking inspiration from recent progress on both in-context learning and large-scale behavioral cloning, in this work we propose behavioral exploration: training agents to internalize what it means to explore and adapt in-context over the space of ”expert” behaviors. To achieve this, given access to a dataset of expert demonstrations, we train a long-context generative model to predict expert actions conditioned on a context of past observations and a measure of how ”exploratory” the expert’s behaviors are relative to this context. This enables the model to not only mimic the behavior of an expert, but also, by feeding its past history of interactions into its context, to select different expert behaviors than what have been previously selected, thereby allowing for fast online adaptation and targeted, ”expert-like” exploration. We demonstrate the effectiveness of our method in both simulated locomotion and manipulation settings, as well as on real-world robotic manipulation tasks, illustrating its ability to learn adaptive, exploratory behavior.",
+      "paper_id": "pmlr:v267:wagenmaker25a",
+      "title": "Behavioral Exploration: Learning to Explore via In-Context Adaptation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61885-61912",
+          "pmlr_id": "wagenmaker25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "The measurement tasks involved in evaluating generative AI (GenAI) systems lack sufficient scientific rigor, leading to what has been described as \"a tangle of sloppy tests [and] apples-to-oranges comparisons\" (Roose, 2024). In this position paper, we argue that the ML community would benefit from learning from and drawing on the social sciences when developing and using measurement instruments for evaluating GenAI systems. Specifically, our position is that evaluating GenAI systems is a social science measurement challenge. We present a four-level framework, grounded in measurement theory from the social sciences, for measuring concepts related to the capabilities, behaviors, and impacts of GenAI systems. This framework has two important implications: First, it can broaden the expertise involved in evaluating GenAI systems by enabling stakeholders with different perspectives to participate in conceptual debates. Second, it brings rigor to both conceptual and operational debates by offering a set of lenses for interrogating validity.",
+      "paper_id": "pmlr:v267:wallach25a",
+      "title": "Position: Evaluating Generative AI Systems Is a Social Science Measurement Challenge",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "82232-82251",
+          "pmlr_id": "wallach25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Coupled dynamical systems govern essential phenomena across physics, biology, and engineering, where components interact through complex dependencies. While Graph Ordinary Differential Equations (GraphODE) offer a powerful framework to model these systems, their generalization capabilities degrade severely under limited observational training data due to two fundamental flaws: (i) the entanglement of static attributes and dynamic states in the initialization process, and (ii) the reliance on context-specific coupling patterns during training, which hinders performance in unseen scenarios. In this paper, we propose a Generalizable GraphODE with disentanglement and regularization (GREAT) to address these challenges. Through systematic analysis via the Structural Causal Model, we identify backdoor paths that undermine generalization and design two key modules to mitigate their effects. The Dynamic-Static Equilibrium Decoupler (DyStaED) disentangles static and dynamic states via orthogonal subspace projections, ensuring robust initialization. Furthermore, the Causal Mediation for Coupled Dynamics (CMCD) employs variational inference to estimate latent causal factors, reducing spurious correlations and enhancing universal coupling dynamics. Extensive experiments across diverse dynamical systems demonstrate that ours outperforms state-of-the-art methods within both in-distribution and out-of-distribution.",
+      "paper_id": "pmlr:v267:wan25a",
+      "title": "Rethink GraphODE Generalization within Coupled Dynamical System",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61913-61928",
+          "pmlr_id": "wan25a",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Effective epidemic forecasting is critical for public health strategies and efficient medical resource allocation, especially in the face of rapidly spreading infectious diseases. However, existing deep-learning methods often overlook the dynamic nature of epidemics and fail to account for the specific mechanisms of disease transmission. In response to these challenges, we introduce an innovative end-to-end framework called Epidemiology-Aware Neural ODE with Continuous Disease Transmission Graph (EARTH) in this paper. To learn continuous and regional disease transmission patterns, we first propose EANO, which seamlessly integrates the neural ODE approach with the epidemic mechanism, considering the complex spatial spread process during epidemic evolution. Additionally, we introduce GLTG to model global infection trends and leverage these signals to guide local transmission dynamically. To accommodate both the global coherence of epidemic trends and the local nuances of epidemic transmission patterns, we build a cross-attention approach to fuse the most meaningful information for forecasting. Through the smooth synergy of both components, EARTH offers a more robust and flexible approach to understanding and predicting the spread of infectious diseases. Extensive experiments show EARTH superior performance in forecasting real-world epidemics compared to state-of-the-art methods. The code is available at https://github.com/GuanchengWan/EARTH.",
+      "paper_id": "pmlr:v267:wan25b",
+      "title": "EARTH: Epidemiology-Aware Neural ODE with Continuous Disease Transmission Graph",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61929-61941",
+          "pmlr_id": "wan25b",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Pipeline parallelism (PP) is widely used for training large language models (LLMs), yet its scalability is often constrained by high activation memory consumption as the number of in-flight microbatches grows with the degree of PP. In this paper, we focus on addressing this challenge by leveraging the under-explored memory offload strategy in PP. With empirical study, we discover that in the majority of standard configurations, at least half, and potentially all, of the activations can be offloaded with negligible overhead. In the cases where full overload is not possible, we introduce a novel selective offload strategy that decreases peak activation memory in a better-than-linear manner. Furthermore, we integrate memory offload with other techniques to jointly consider overall throughput and memory limitation. Our experiments proves that the per-device activation memory effectively reduces with the total number of stages, making PP a stronger alternative than TP, offering up to a 19% acceleration with even lower memory consumption.",
+      "paper_id": "pmlr:v267:wan25c",
+      "title": "PipeOffload: Improving Scalability of Pipeline Parallelism with Memory Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61942-61955",
+          "pmlr_id": "wan25c",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Continual learning (CL) is crucial for advancing human-level intelligence, but its theoretical understanding, especially regarding factors influencing forgetting, is still relatively limited. This work aims to build a unified theoretical framework for understanding CL using feature learning theory. Different from most existing studies that analyze forgetting under linear regression model or lazy training, we focus on a more practical two-layer convolutional neural network (CNN) with polynomial ReLU activation for sequential tasks within a signal-noise data model. Specifically, we theoretically reveal how the angle between task signal vectors influences forgetting that: acute or small obtuse angles lead to benign forgetting, whereas larger obtuse angles result in harmful forgetting . Furthermore, we demonstrate that the replay method alleviates forgetting by expanding the range of angles corresponding to benign forgetting. Our theoretical results suggest that mid-angle sampling, which selects examples with moderate angles to the prototype, can enhance the replay method’s ability to mitigate forgetting. Experiments on synthetic and real-world datasets confirm our theoretical results and highlight the effectiveness of our mid-angle sampling strategy.",
+      "paper_id": "pmlr:v267:wan25d",
+      "title": "Understanding the Forgetting of (Replay-based) Continual Learning via Feature Learning: Angle Matters",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "61956-62019",
+          "pmlr_id": "wan25d",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    },
+    {
+      "abstract": "Flow matching (FM) models extend ODE sampler based diffusion models into a general framework, significantly reducing sampling steps through learned vector fields. However, the theoretical understanding of FM models, particularly how their sample trajectories interact with underlying data geometry, remains underexplored. A rigorous theoretical analysis of FM ODE is essential for sample quality, stability, and broader applicability. In this paper, we advance the theory of FM models through a comprehensive analysis of sample trajectories. Central to our theory is the discovery that the denoiser, a key component of FM models, guides ODE dynamics through attracting and absorbing behaviors that adapt to the data geometry. We identify and analyze the three stages of ODE evolution: in the initial and intermediate stages, trajectories move toward the mean and local clusters of the data. At the terminal stage, we rigorously establish the convergence of FM ODE under weak assumptions, addressing scenarios where the data lie on a low-dimensional submanifold—cases that previous results could not handle. Our terminal stage analysis offers insights into the memorization phenomenon and establishes equivariance properties of FM ODEs. These findings bridge critical gaps in understanding flow matching models, with practical implications for optimizing sampling strategies and architectures guided by the intrinsic geometry of data.",
+      "paper_id": "pmlr:v267:wan25e",
+      "title": "Elucidating Flow Matching ODE Dynamics via Data Geometry and Denoisers",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {
+          "pages": "62020-62083",
+          "pmlr_id": "wan25e",
+          "volume": "267"
+        },
+        "subject_areas": [],
+        "track": "main",
+        "venue": "ICML",
+        "year": 2025
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}
