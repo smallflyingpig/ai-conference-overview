@@ -347,20 +347,35 @@ function displayAdvanceLocator(
   if (locator === "Inference from the linked ACL paper abstracts") {
     return "根据所列论文的 ACL Anthology 官方摘要综合分析";
   }
+  if (locator === "Official title and abstract for every linked paper") {
+    return "所列论文的官方标题与摘要";
+  }
+  if (locator === "Inference from the linked official paper abstracts") {
+    return "根据所列论文的官方摘要综合分析";
+  }
   return locator;
 }
 
 export function buildAdvances(release: LoadedOverview) {
   const paperById = new Map(release.papers.map((paper) => [paper.paper_id, paper]));
+  const topicByPaperId = new Map(
+    release.overview.assignments.map((assignment) => [assignment.paper_id, assignment.primary_topic]),
+  );
+  const unavailableTopics = new Set(
+    release.overview.theme_disclosures.map((disclosure) => disclosure.theme),
+  );
   return advanceCategories.map((category) => ({
     ...category,
     advances: release.overview.advances
       .filter((advance) => advance.category === category.artifactKey)
       .map((advance) => {
         const localized = advanceNarratives[advance.advance_id];
+        const supportingTopics = advance.supporting_paper_ids.map((paperId) => topicByPaperId.get(paperId));
         return {
           title: localized?.title ?? advance.title,
-          audited: advance.advance_id.startsWith("audited-evidence-"),
+          audited: advance.advance_id.startsWith("audited-evidence-") || supportingTopics.every(
+            (topic) => topic != null && !unavailableTopics.has(topic),
+          ),
           supportingPaperIds: advance.supporting_paper_ids,
           supportingPapers: advance.supporting_paper_ids.map((paperId) => ({
             paperId,
@@ -407,7 +422,7 @@ export function buildAdvanceConferenceIndexes(
         auditedCount: advances.filter((advance) => advance.audited).length,
       };
     })
-    .sort((left, right) => left.venue.localeCompare(right.venue) || right.year - left.year);
+    .sort((left, right) => left.venue.localeCompare(right.venue) || right.year - left.year || left.track.localeCompare(right.track));
 }
 
 export interface MethodologyView {

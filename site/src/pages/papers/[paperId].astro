@@ -1,33 +1,103 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { loadChineseContent } from "../../lib/content-data";
 import { loadPublishedOverviews } from "../../lib/data";
 import { paperRouteKey } from "../../lib/evidence";
 import { projectPath } from "../../lib/paths";
 
 export async function getStaticPaths() {
   const releases = await loadPublishedOverviews();
-  return releases
-    .filter((release) => release.overview.publication_context != null)
-    .flatMap((release) => release.papers.map((paper) => ({
-      params: { paperId: paperRouteKey(paper.paper_id) },
-      props: { paper, notice: release.overview.publication_context!.notice },
-    })));
+  const published = releases.filter(
+    (release) => release.overview.publication_context != null,
+  );
+  const routes = await Promise.all(
+    published.map(async (release) => {
+      const content = await loadChineseContent(release);
+      const summaryByPaperId = new Map(
+        content?.paperSummaries.map((summary) => [summary.paper_id, summary]),
+      );
+      return release.papers.map((paper) => ({
+        params: { paperId: paperRouteKey(paper.paper_id) },
+        props: {
+          paper,
+          summary: summaryByPaperId.get(paper.paper_id) ?? null,
+          notice: release.overview.publication_context!.notice,
+        },
+      }));
+    }),
+  );
+  return routes.flat();
 }
 
-const { paper, notice } = Astro.props;
+const { paper, summary, notice } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const trackLabel = paper.track === "findings"
+  ? "Findings"
+  : paper.track === "long"
+    ? "长论文"
+    : paper.track === "main"
+      ? "主会论文"
+      : paper.track;
 ---
 
-<BaseLayout title={`${paper.title} — AI Conference Overview`} description={`${paper.title} 的官方英文摘要。`} conferenceAvailable={true}>
+<BaseLayout
+  title={`${paper.title} — AI Conference Overview`}
+  description={summary?.one_sentence ?? `${paper.title} 的官方英文摘要。`}
+  conferenceAvailable={true}
+>
   <main class="paper-detail">
-    <p class="eyebrow">{paper.venue} {paper.year} · Main Conference</p>
+    <p class="eyebrow">{paper.venue} {paper.year} · {trackLabel}</p>
     <h1>{paper.title}</h1>
     <p class="paper-authors">{paper.authors.join(", ")}</p>
     <p class="preliminary-notice">{notice}</p>
-    <section aria-labelledby="abstract-title">
-      <h2 id="abstract-title">英文摘要</h2>
-      <p data-english-abstract>{paper.abstract ?? "官方数据暂未提供摘要"}</p>
-    </section>
+
+    {summary ? (
+      <>
+        <section class="paper-takeaway" aria-labelledby="takeaway-title">
+          <p class="data-label">快速理解</p>
+          <h2 id="takeaway-title">一句话看懂</h2>
+          <p>{summary.one_sentence}</p>
+        </section>
+
+        <section class="paper-chinese-summary" aria-labelledby="chinese-summary-title">
+          <h2 id="chinese-summary-title">中文摘要</h2>
+          <p>{summary.summary_zh}</p>
+        </section>
+
+        <section class="paper-reading-grid" aria-label="论文要点">
+          <article>
+            <p class="data-label">01 · Problem</p>
+            <h2>研究问题</h2>
+            <p>{summary.research_problem}</p>
+          </article>
+          <article>
+            <p class="data-label">02 · Method</p>
+            <h2>核心方法</h2>
+            <p>{summary.core_method}</p>
+          </article>
+          <article>
+            <p class="data-label">03 · Findings</p>
+            <h2>主要发现</h2>
+            <p>{summary.main_findings}</p>
+          </article>
+          <article>
+            <p class="data-label">04 · Scope</p>
+            <h2>适用范围</h2>
+            <p>{summary.scope_and_limitations}</p>
+          </article>
+        </section>
+
+        <details class="paper-original-abstract">
+          <summary>查看英文摘要</summary>
+          <p data-english-abstract>{paper.abstract ?? "官方页面暂未提供英文摘要"}</p>
+        </details>
+      </>
+    ) : (
+      <section aria-labelledby="abstract-title">
+        <h2 id="abstract-title">英文摘要</h2>
+        <p data-english-abstract>{paper.abstract ?? "官方数据暂未提供摘要"}</p>
+      </section>
+    )}
     <nav class="plate-links" aria-label="论文链接">
       <a href={paper.landing_url}>官方页面</a>
       {paper.pdf_url && <a href={paper.pdf_url}>PDF</a>}

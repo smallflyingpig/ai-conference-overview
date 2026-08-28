@@ -194,7 +194,7 @@ const publicationContextSchema = z.object({
       distribution: z.literal(true),
       trends: z.literal(false),
       advances: z.literal(true),
-      awards: z.literal(true),
+      awards: z.boolean(),
     }).strict(),
   ]),
 }).strict().superRefine((value, context) => {
@@ -968,6 +968,17 @@ export const overviewArtifactSchema = z
         code: z.ZodIssueCode.custom,
         path: ["assignments"],
         message: "every included paper requires exactly one assignment",
+      });
+    }
+    if (
+      distributionAvailable &&
+      value.publication_context != null &&
+      value.publication_context.analysis_availability.awards !== (value.awards.length > 0)
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["publication_context", "analysis_availability", "awards"],
+        message: "award availability does not match the published award inventory",
       });
     }
     if (

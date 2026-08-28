@@ -2141,9 +2141,8 @@ def _load_theme_audits(
                     ),
                     reason=EvidenceClaim(
                         claim=(
-                            "This assisted primary theme does not satisfy every "
-                            "stratified-audit and exhaustive low-confidence review "
-                            "gate and is excluded from headline claims."
+                            "该主题的 AI 辅助主分类未同时达到分层抽查和低置信度"
+                            "复查要求，因此暂不纳入主要方向总结。"
                         ),
                         evidence_type=EvidenceType.INFERENCE,
                         source_urls=[volume_url],

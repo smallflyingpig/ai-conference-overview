@@ -158,12 +158,12 @@ function changeComparisonContract(
 
 describe("conference routes", () => {
   it("builds and parses a shareable research-advance filter", () => {
-    expect(advanceFilterHref("/ai-conference-overview/", "ICML", 2025)).toBe(
-      "/ai-conference-overview/advances/?venue=ICML&year=2025#advance-ICML-2025",
+    expect(advanceFilterHref("/ai-conference-overview/", "ACL", 2026, "findings")).toBe(
+      "/ai-conference-overview/advances/?venue=ACL&year=2026&track=findings#advance-ACL-2026-findings",
     );
-    expect(parseAdvanceFilter("?venue=ICML&year=2025")).toEqual({ venue: "ICML", year: 2025 });
+    expect(parseAdvanceFilter("?venue=ACL&year=2026&track=findings")).toEqual({ venue: "ACL", year: 2026, track: "findings" });
     expect(parseAdvanceFilter("?venue=ICML")).toBeNull();
-    expect(parseAdvanceFilter("?venue=icml&year=2025")).toBeNull();
+    expect(parseAdvanceFilter("?venue=icml&year=2025&track=main")).toBeNull();
   });
 
   it("builds a shareable award filter and ignores incomplete filter state", async () => {

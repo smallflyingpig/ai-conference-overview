@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { advanceFilterHref } from "../lib/advance-filter";
 import { awardFilterHref } from "../lib/award-filter";
 import { paperFilterHref } from "../lib/paper-filter";
+import { projectPath } from "../lib/paths";
 import { auditStatusLabel, type ConferenceView } from "../lib/views";
 import DataStatus from "./DataStatus.astro";
 import TopicShareChart from "./TopicShareChart";
@@ -101,7 +102,7 @@ const papersHref = paperFilterHref(base, view.venue, view.year, view.track);
       {view.hotspots.length > 0 && (
         <section class="conference-advance-entry" aria-labelledby="conference-advance-title">
           <div><p class="eyebrow">研究进展</p><h3 id="conference-advance-title">继续阅读本届会议的完整研究进展。</h3><p>五条研究主线分别整理核心问题、技术变化、相关论文和适用范围。</p></div>
-          <a href={advanceFilterHref(base, view.venue, view.year)}>查看 {view.venue} {view.year} 研究进展</a>
+          <a href={advanceFilterHref(base, view.venue, view.year, view.track)}>查看 {view.venue} {view.year} {view.track === "findings" ? "Findings " : ""}研究进展</a>
         </section>
       )}
 
@@ -111,6 +112,11 @@ const papersHref = paperFilterHref(base, view.venue, view.year, view.track);
           <a href={awardFilterHref(base, view.venue, view.year)}>查看本届 {view.awardCount} 篇获奖论文解读</a>
         </section>
       )}
+
+      <section class="conference-advance-entry" aria-labelledby="conference-methodology-title">
+        <div><p class="eyebrow">分析方法</p><h3 id="conference-methodology-title">查看本论文集的数据来源和 AI 辅助复核结果。</h3><p>包括统计范围、缺失情况、主题分类抽查和暂不纳入主要分析的主题。</p></div>
+        <a href={`${projectPath(base, "methodology")}#methodology-${view.venue}-${view.year}-${view.track}`}>查看 {view.venue} {view.year} {view.track === "findings" ? "Findings " : ""}方法说明</a>
+      </section>
 
       <section class="representative-index" aria-labelledby="representative-title">
         <div class="section-line"><h3 id="representative-title">示例论文</h3><span>各主题中分类置信度最高的一篇论文</span></div>

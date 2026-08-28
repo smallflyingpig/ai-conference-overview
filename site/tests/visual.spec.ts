@@ -44,6 +44,26 @@ test("ICML 2025 单年分析可以检索并进入英文详情", async ({ page })
   expect(consoleErrors).toEqual([]);
 });
 
+test("ACL 2026 Findings 论文详情优先呈现中文摘要和阅读要点", async ({ page }) => {
+  const consoleErrors = watchConsoleErrors(page);
+  await page.goto(
+    `${basePath}papers/paper-a607052ca803a5e814d992ba303dccbb82dfbcd483a8a95ebc64a70a9589f7b1/`,
+  );
+
+  await expect(page.getByText("ACL 2026 · Findings", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "一句话看懂" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "中文摘要" })).toBeVisible();
+  for (const heading of ["研究问题", "核心方法", "主要发现", "适用范围"]) {
+    await expect(page.getByRole("heading", { name: heading, exact: true })).toBeVisible();
+  }
+  const english = page.locator(".paper-original-abstract");
+  await expect(english).not.toHaveAttribute("open", "");
+  await english.getByText("查看英文摘要", { exact: true }).click();
+  await expect(english.locator("[data-english-abstract]")).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
+  expect(consoleErrors).toEqual([]);
+});
+
 test("会议概览菜单进入会议列表而不是单个会议", async ({ page }, testInfo) => {
   const consoleErrors = watchConsoleErrors(page);
   await page.goto(basePath);
