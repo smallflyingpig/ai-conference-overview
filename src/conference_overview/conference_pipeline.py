@@ -479,7 +479,7 @@ def build_preliminary_release(
     *,
     write_release: bool,
 ) -> dict[str, object]:
-    if request.adapter not in {"icml_virtual", "pmlr"}:
+    if request.adapter not in {"acl_anthology", "icml_virtual", "pmlr"}:
         raise UnsupportedPipelineRoute(
             "papers-only release is not available for this route"
         )
@@ -488,14 +488,20 @@ def build_preliminary_release(
     assert_publishable(report)
     records, excluded, sources = load_scope_records(request, root)
     final = request.publication_status == "final_proceedings"
+    track_label = {
+        "findings": "Findings",
+        "long": "Long Papers",
+        "main": "Main Conference",
+    }.get(request.track or "", request.track or "Unknown Track")
+    source_label = f"{request.venue} {request.year} {track_label}"
     context = PublicationContext(
         status="final_proceedings" if final else "preliminary_official_program",
         final_source_status="available" if final else "not_published",
         final_source_url=request.final_source_url,
         notice=(
-            "来自 PMLR Volume 267 的 ICML 2025 正式论文集。"
+            f"来自官方论文集的 {source_label} 论文清单。"
             if final
-            else "来自 ICML 官方会议程序，等待 PMLR 最终对照。"
+            else f"来自官方会议程序的 {source_label} 论文清单，等待正式论文集对照。"
         ),
         analysis_availability=AnalysisAvailability(
             papers=True,
@@ -506,14 +512,15 @@ def build_preliminary_release(
         ),
     )
     note = (
-        f"# ICML {request.year} Main Conference 论文集说明\n\n"
+        f"# {source_label} 论文集说明\n\n"
         f"- 收录论文：{report.included_count}\n"
         f"- 排除记录：{report.excluded_count}\n"
         f"- 待处理记录：{len(report.unresolved_record_ids)}\n"
         f"- 缺少英文摘要：{len(report.missing_abstract_ids)}\n"
         f"- 缺少 PDF：{len(report.missing_pdf_ids)}\n"
         f"- 缺少 DOI：{len(report.missing_doi_ids)}\n"
-        f"- 论文集：{request.final_source_url}（{'已正式发布' if final else '尚未发布'}）\n"
+        f"- 官方来源：{request.final_source_url or request.volume_url}"
+        f"（{'已正式发布' if final else '尚未发布'}）\n"
     ).encode()
     _atomic_write(paths.notes, note)
     if write_release:
@@ -551,14 +558,17 @@ def analyze_scope(
     write_release: bool,
 ) -> dict[str, object]:
     paths = ScopePaths.for_request(Path(root), request)
-    if (
-        request.adapter in {"icml_virtual", "pmlr"}
-        and (paths.classification / "assignments.jsonl").exists()
-    ):
-        return analyze_classified_scope(request, root, write_release=write_release)
-    if request.adapter in {"icml_virtual", "pmlr"}:
+    assignments_exist = (paths.classification / "assignments.jsonl").exists()
+    if assignments_exist:
+        if request.adapter in {"icml_virtual", "pmlr"}:
+            return analyze_classified_scope(request, root, write_release=write_release)
+        if request.adapter == "acl_anthology":
+            return analyze_acl_scope(request, root, write_release=write_release)
+    if request.adapter in {"acl_anthology", "icml_virtual", "pmlr"}:
         return build_preliminary_release(request, root, write_release=write_release)
-    return analyze_acl_scope(request, root, write_release=write_release)
+    raise UnsupportedPipelineRoute(
+        f"unsupported pipeline route: {request.venue}/{request.year}/{request.track or '-'}"
+    )
 
 
 def analyze_classified_scope(

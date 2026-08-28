@@ -9,6 +9,7 @@ import yaml
 import conference_overview.pipeline as pipeline_module
 from conference_overview import conference_pipeline
 from conference_overview.conference_pipeline import (
+    analyze_scope,
     build_preliminary_release,
     collect_scope,
     rebuild_scope_from_snapshots,
@@ -89,6 +90,66 @@ def test_collect_scope_dispatches_registered_acl_findings(tmp_path: Path) -> Non
     }
     assert {row["track"] for row in rows} == {"findings"}
     assert validate_scope(request, tmp_path).publishable is True
+
+
+def test_acl_findings_without_assignments_builds_an_isolated_papers_only_release(
+    tmp_path: Path,
+) -> None:
+    fixture_root = Path(__file__).parent / "fixtures/acl"
+    request = normalize_request("ACL", 2026, "findings")
+    payloads = {
+        str(request.bibtex_url): (
+            fixture_root / "2026-findings-sample.bib"
+        ).read_bytes(),
+        str(request.volume_url): (
+            fixture_root / "2026-findings-sample.html"
+        ).read_bytes(),
+    }
+
+    def handler(incoming: httpx.Request) -> httpx.Response:
+        payload = payloads[str(incoming.url)]
+        return httpx.Response(
+            200,
+            content=payload,
+            headers={"content-length": str(len(payload))},
+            request=incoming,
+        )
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        collect_scope(request, tmp_path, client=client)
+    long_pointer = tmp_path / "data/releases/ACL/2026/current.json"
+    long_pointer.parent.mkdir(parents=True, exist_ok=True)
+    long_pointer.write_bytes(b'{"existing":"long-pointer"}\n')
+
+    summary = analyze_scope(request, tmp_path, write_release=True)
+
+    findings_root = tmp_path / "data/releases/ACL/2026/tracks/findings"
+    generation = resolve_current_release(findings_root)
+    overview = json.loads((generation / "overview.json").read_text())
+    assert sorted(path.name for path in generation.iterdir()) == [
+        "overview.json",
+        "overview.md",
+        "papers.csv",
+        "papers.json",
+        "provenance.json",
+        "validation.json",
+    ]
+    assert summary["included_count"] == 2
+    assert overview["paper_count"] == 2
+    assert overview["publication_context"]["analysis_availability"] == {
+        "papers": True,
+        "distribution": False,
+        "trends": False,
+        "advances": False,
+        "awards": False,
+    }
+    assert overview["assignments"] == []
+    assert overview["advances"] == []
+    assert overview["awards"] == []
+    assert long_pointer.read_bytes() == b'{"existing":"long-pointer"}\n'
+    note = (tmp_path / "notes/acl-2026-findings-overview.md").read_text()
+    assert "ACL 2026 Findings" in note
+    assert "主题分布" not in note
 
 
 def test_collect_icml_persists_sources_and_reconciled_records(
