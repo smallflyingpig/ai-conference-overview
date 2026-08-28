@@ -349,6 +349,90 @@ def _collect_small_icml_2025(root: Path) -> VenueRequest:
     return request
 
 
+def _collect_small_acl_2026_findings(root: Path) -> VenueRequest:
+    fixture_root = Path(__file__).parent / "fixtures/acl"
+    request = normalize_request("ACL", 2026, "findings")
+    payloads = {
+        str(request.bibtex_url): (
+            fixture_root / "2026-findings-sample.bib"
+        ).read_bytes(),
+        str(request.volume_url): (
+            fixture_root / "2026-findings-sample.html"
+        ).read_bytes(),
+    }
+
+    def handler(incoming: httpx.Request) -> httpx.Response:
+        payload = payloads[str(incoming.url)]
+        return httpx.Response(
+            200,
+            content=payload,
+            headers={"content-length": str(len(payload))},
+            request=incoming,
+        )
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        collect_scope(request, root, client=client)
+    return request
+
+
+def test_findings_semantic_import_requires_ai_assisted_rows_and_binds_corpus(
+    tmp_path: Path,
+) -> None:
+    request = _collect_small_acl_2026_findings(tmp_path)
+    source = _write_assignment_source(
+        tmp_path / "findings-review.jsonl",
+        ("acl:2026.findings-acl.1", "acl:2026.findings-acl.2"),
+    )
+    rows = [json.loads(line) for line in source.read_text().splitlines()]
+    for row in rows:
+        row["review_status"] = "ai_assisted"
+    source.write_text(
+        "".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8"
+    )
+
+    import_semantic_assignments_scope(request, tmp_path, [source])
+
+    classification = tmp_path / "data/classification/acl/2026-findings"
+    manifest = json.loads(
+        (classification / "classification-manifest.json").read_text()
+    )
+    collection_manifest = json.loads(
+        (
+            tmp_path
+            / "data/manifests/acl/2026-findings.json"
+        ).read_text()
+    )
+    assert manifest["semantic_labeling"]["input_review_status"] == "ai_assisted"
+    assert manifest["semantic_labeling"]["record_set_sha256"] == (
+        collection_manifest["normalized"]["record_set_sha256"]
+    )
+
+
+@pytest.mark.parametrize("review_status", [None, "human_reviewed", "pending"])
+def test_findings_semantic_import_rejects_rows_without_ai_assisted_status(
+    tmp_path: Path, review_status: str | None
+) -> None:
+    request = _collect_small_acl_2026_findings(tmp_path)
+    source = _write_assignment_source(
+        tmp_path / "findings-review.jsonl",
+        ("acl:2026.findings-acl.1", "acl:2026.findings-acl.2"),
+    )
+    rows = [json.loads(line) for line in source.read_text().splitlines()]
+    if review_status is not None:
+        for row in rows:
+            row["review_status"] = review_status
+    source.write_text(
+        "".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8"
+    )
+
+    with pytest.raises(ValueError, match="review_status=ai_assisted"):
+        import_semantic_assignments_scope(request, tmp_path, [source])
+
+    assert not (
+        tmp_path / "data/classification/acl/2026-findings/assignments.jsonl"
+    ).exists()
+
+
 def test_import_semantic_assignments_accepts_exact_icml_membership_and_is_stable(
     tmp_path: Path,
 ) -> None:

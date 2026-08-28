@@ -737,6 +737,24 @@ def import_semantic_assignments_scope(
     source_batches: list[dict[str, object]] = []
     for partition, path in ordered_inputs:
         raw_bytes = path.read_bytes()
+        if request.venue == "ACL" and request.year == 2026 and request.track == "findings":
+            try:
+                raw_rows = [
+                    json.loads(line)
+                    for line in raw_bytes.decode("utf-8").splitlines()
+                    if line.strip()
+                ]
+            except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise ValueError(f"invalid semantic assignment source: {path}") from exc
+            if any(
+                not isinstance(row, Mapping)
+                or row.get("review_status") != "ai_assisted"
+                for row in raw_rows
+            ):
+                raise ValueError(
+                    "ACL 2026 Findings semantic rows require "
+                    "review_status=ai_assisted"
+                )
         source_assignments = load_assignments(path, taxonomy)
         for assignment in source_assignments:
             if partition is not None:
@@ -801,6 +819,17 @@ def import_semantic_assignments_scope(
         assignments_sha256=assignments_sha256,
         reset_decisions=True,
     )
+    semantic_labeling: dict[str, object] = {
+        "method": labeling_method,
+        "record_set_sha256": report.record_set_sha256,
+        "source_batches": source_batches,
+    }
+    if (
+        request.venue == "ACL"
+        and request.year == 2026
+        and request.track == "findings"
+    ):
+        semantic_labeling["input_review_status"] = "ai_assisted"
     _write_classification_manifest(
         paths,
         assignments=assignments,
@@ -808,10 +837,7 @@ def import_semantic_assignments_scope(
         review_status=review_status,
         queue_sha256=queue_sha256,
         classifier=classifiers[labeling_method],
-        semantic_labeling={
-            "method": labeling_method,
-            "source_batches": source_batches,
-        },
+        semantic_labeling=semantic_labeling,
     )
     _write_audit_samples(
         paths,
