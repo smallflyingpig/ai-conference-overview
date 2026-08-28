@@ -74,10 +74,12 @@ test("会议概览菜单进入会议列表而不是单个会议", async ({ page 
 
   await expect(page).toHaveURL(`${basePath}conferences/`);
   await expect(page.getByRole("heading", { name: "选择会议和年份" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "ACL 2026" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "ICML 2025" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "查看 ACL 2026" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "查看 ICML 2025" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "ACL 2026 长论文", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "ACL 2026 Findings", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "ICML 2025 主会论文", exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: /查看 ACL 2026 长论文/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /查看 ACL 2026 Findings/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /查看 ICML 2025 主会论文/ })).toBeVisible();
   expect(consoleErrors).toEqual([]);
 });
 
@@ -101,7 +103,7 @@ test("研究进展页面按会议分开浏览并保留可分享地址", async ({
   await expect(page.getByRole("heading", { name: "ICML 2025", exact: true })).toBeVisible();
   await expect(page.locator(".advance-conference-detail:visible")).toHaveCount(0);
   await page.getByRole("link", { name: "ICML 2025 · 5 条主线", exact: true }).click();
-  await expect(page).toHaveURL(/\/advances\/\?venue=ICML&year=2025#advance-ICML-2025$/);
+  await expect(page).toHaveURL(/\/advances\/\?venue=ICML&year=2025&track=main#advance-ICML-2025-main$/);
   await expect(page.getByRole("link", { name: "ICML 2025 · 5 条主线", exact: true })).toHaveAttribute(
     "aria-current",
     "page",
@@ -178,7 +180,7 @@ test("ICML 2025 概览可以直接进入本届研究进展", async ({ page }) =>
 
   await expect(page.getByRole("link", { name: "查看 ICML 2025 研究进展" })).toHaveAttribute(
     "href",
-    `${basePath}advances/?venue=ICML&year=2025#advance-ICML-2025`,
+    `${basePath}advances/?venue=ICML&year=2025&track=main#advance-ICML-2025-main`,
   );
 });
 
