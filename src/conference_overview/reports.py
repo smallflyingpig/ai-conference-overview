@@ -690,13 +690,13 @@ def _validate_preliminary_bundle(bundle: ReleaseBundle) -> None:
         return
     availability = context.analysis_availability
     if availability.distribution:
-        if availability.model_dump() != {
-            "papers": True,
-            "distribution": True,
-            "trends": False,
-            "advances": True,
-            "awards": True,
-        }:
+        if (
+            not availability.papers
+            or not availability.distribution
+            or availability.trends
+            or not availability.advances
+            or availability.awards != bool(bundle.awards)
+        ):
             raise PublicationBlocked(
                 "publication blocked: single-year analysis availability is invalid"
             )

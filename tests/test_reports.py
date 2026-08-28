@@ -130,7 +130,9 @@ def test_preliminary_release_rejects_analysis_payload(tmp_path: Path) -> None:
         write_release(bundle, tmp_path)
 
 
-def analyzed_single_year_context(*, trends: bool = False) -> PublicationContext:
+def analyzed_single_year_context(
+    *, trends: bool = False, awards: bool = True
+) -> PublicationContext:
     return PublicationContext(
         status="final_proceedings",
         final_source_status="available",
@@ -141,7 +143,7 @@ def analyzed_single_year_context(*, trends: bool = False) -> PublicationContext:
             distribution=True,
             trends=trends,
             advances=True,
-            awards=True,
+            awards=awards,
         ),
     )
 
@@ -168,6 +170,26 @@ def test_analyzed_single_year_release_keeps_context_without_trend_metrics(
         "trends": False,
     }
     assert overview["metrics"] == {"topic_share:Foundation Models": "1"}
+
+
+def test_analyzed_single_year_release_allows_registered_scope_without_awards(
+    tmp_path: Path,
+) -> None:
+    bundle = replace(
+        publishable_bundle(),
+        awards=(),
+        award_deep_reads=(),
+        metrics={"topic_share:Foundation Models": Decimal(1)},
+        publication_context=analyzed_single_year_context(awards=False),
+    )
+
+    write_release(bundle, tmp_path)
+
+    overview = json.loads(
+        (resolve_current_release(tmp_path) / "overview.json").read_text()
+    )
+    assert overview["publication_context"]["analysis_availability"]["awards"] is False
+    assert overview["awards"] == []
 
 
 def test_release_accepts_a_perfect_small_theme_population_review(tmp_path: Path) -> None:

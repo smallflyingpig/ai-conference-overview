@@ -2015,6 +2015,7 @@ def _load_theme_audits(
     decisions_path = paths.classification / "audit-decisions.json"
     raw_themes: Mapping[str, object] = {}
     audit_method = "no completed semantic reviews; themes retained as experimental"
+    audit_status = "pending_semantic_review"
     if decisions_path.exists():
         try:
             decisions = json.loads(decisions_path.read_text(encoding="utf-8"))
@@ -2030,6 +2031,7 @@ def _load_theme_audits(
             "completed_semantic_review",
         }:
             raise ValueError("audit decision schema or status mismatch")
+        audit_status = str(status)
         if decisions.get("taxonomy_version") != _TAXONOMY_VERSION:
             raise ValueError("audit decision taxonomy version mismatch")
         provenance = decisions.get("provenance")
@@ -2082,7 +2084,10 @@ def _load_theme_audits(
     audits: dict[str, ThemeAudit] = {}
     review_counts: dict[str, int] = {}
     disclosures: list[ThemeDisclosure] = []
-    volume_url = "https://aclanthology.org/volumes/2026.acl-long/"
+    volume_url = records[0].source.url if records else "https://aclanthology.org/"
+    decision_locator = str(
+        (paths.classification / "audit-decisions.json").relative_to(paths.root)
+    )
     for theme in themes:
         raw_reviews = raw_themes.get(theme, [])
         if not isinstance(raw_reviews, list):
@@ -2129,7 +2134,11 @@ def _load_theme_audits(
             disclosures.append(
                 ThemeDisclosure(
                     theme=theme,
-                    status=ThemeDisclosureStatus.EXPERIMENTAL,
+                    status=(
+                        ThemeDisclosureStatus.WITHHELD
+                        if audit_status == "completed_semantic_review"
+                        else ThemeDisclosureStatus.EXPERIMENTAL
+                    ),
                     reason=EvidenceClaim(
                         claim=(
                             "This assisted primary theme does not satisfy every "
@@ -2138,9 +2147,7 @@ def _load_theme_audits(
                         ),
                         evidence_type=EvidenceType.INFERENCE,
                         source_urls=[volume_url],
-                        locator=(
-                            "data/classification/acl/2026-long/audit-decisions.json"
-                        ),
+                        locator=decision_locator,
                     ),
                 )
             )

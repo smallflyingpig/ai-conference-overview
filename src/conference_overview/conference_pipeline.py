@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from collections import Counter
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import asdict
 from datetime import UTC, datetime
 from decimal import Decimal
@@ -27,10 +27,11 @@ from conference_overview.adapters.pmlr import (
     pmlr_volume_paper_ids,
     reconcile_pmlr_records,
 )
-from conference_overview.classification import assert_theme_publishable, load_taxonomy
+from conference_overview.classification import Assignment, load_taxonomy
 from conference_overview.fetch import fetch_bytes
 from conference_overview.metrics import topic_share
 from conference_overview.models import (
+    AdvanceRecord,
     AnalysisAvailability,
     EvidenceClaim,
     EvidenceType,
@@ -38,6 +39,7 @@ from conference_overview.models import (
     PublicationContext,
     RecordStatus,
     SourceRef,
+    ThemeDisclosure,
     VenueRequest,
 )
 from conference_overview.pipeline import (
@@ -75,6 +77,29 @@ from conference_overview.validate import (
     assert_publishable,
     validate_records,
 )
+
+
+def _assert_advances_use_publishable_themes(
+    advances: Sequence[AdvanceRecord],
+    assignments: Sequence[Assignment],
+    disclosures: Sequence[ThemeDisclosure],
+) -> None:
+    topic_by_paper_id = {
+        assignment.paper_id: assignment.primary_topic
+        for assignment in assignments
+    }
+    unavailable = {disclosure.theme for disclosure in disclosures}
+    unsupported = {
+        paper_id
+        for advance in advances
+        for paper_id in advance.supporting_paper_ids
+        if topic_by_paper_id.get(paper_id) in unavailable
+    }
+    if unsupported:
+        raise PublicationBlocked(
+            "publication blocked: curated advances include papers from themes "
+            "that did not pass the classification audit"
+        )
 
 
 def collect_scope(
@@ -602,17 +627,9 @@ def analyze_classified_scope(
     audits, disclosures, audit_summary = _load_theme_audits(
         paths, records, assignments, low_status
     )
-    population_counts = Counter(item.primary_topic for item in assignments)
-    for theme, audit in audits.items():
-        assert_theme_publishable(
-            audit,
-            low_confidence_review_complete=True,
-            rejected_low_confidence_count=0,
-            complete_population_review=(audit.sample_size == population_counts[theme]),
-        )
-    if disclosures:
+    if len(disclosures) == len(audits):
         raise PublicationBlocked(
-            "publication blocked: one or more primary themes failed the audit"
+            "publication blocked: no primary theme passed the classification audit"
         )
     taxonomy = load_taxonomy()
     taxonomy_topics = {
@@ -660,6 +677,7 @@ def analyze_classified_scope(
         assignments_sha256=assignments_sha256,
         scope_key=f"{request.venue.lower()}-{request.year}-{request.track}",
     )
+    _assert_advances_use_publishable_themes(advances, assignments, disclosures)
     if len(advances) != 5:
         raise PublicationBlocked(
             "publication blocked: single-year synthesis requires five research lanes"
@@ -704,6 +722,7 @@ def analyze_classified_scope(
         awards=awards,
         award_deep_reads=deep_reads,
         advances=advances,
+        theme_disclosures=disclosures,
         claims=(
             EvidenceClaim(
                 claim=(

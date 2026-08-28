@@ -1,6 +1,7 @@
 import hashlib
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import httpx
 import pytest
@@ -810,3 +811,20 @@ def test_findings_assignments_route_to_generic_classified_analysis(
 
     assert result == {"status": "classified"}
     assert called == ["classified"]
+
+
+def test_curated_advances_must_exclude_topics_that_failed_audit() -> None:
+    advances = [SimpleNamespace(supporting_paper_ids=("paper-1",))]
+    assignments = [
+        SimpleNamespace(paper_id="paper-1", primary_topic="Multimodal Models")
+    ]
+    disclosures = [SimpleNamespace(theme="Multimodal Models")]
+
+    with pytest.raises(PublicationBlocked, match="did not pass"):
+        conference_pipeline._assert_advances_use_publishable_themes(
+            advances, assignments, disclosures
+        )
+
+    conference_pipeline._assert_advances_use_publishable_themes(
+        advances, assignments, []
+    )
