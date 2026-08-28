@@ -1,0 +1,587 @@
+{
+  "batch_index": 9,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Machine Unlearning (MU) enables Large Language Models (LLMs) to remove unsafe or outdated information. However, existing work assumes that all facts are equally forgettable and largely ignores whether the forgotten knowledge originates from pretraining or supervised fine-tuning (SFT). In this paper, we introduce DUAL (Dual Unlearning Evaluation across Training Stages), a benchmark of 28.6k Wikidata-derived triplets annotated with fact popularity using Wikipedia link counts and LLM-based salience scores. Our experiments show that pretrained and SFT models respond differently to unlearning. An SFT step on the forget data yields smoother forgetting, more stable tuning, and 10–50% higher retention, while direct unlearning on pretrained models remains unstable and prone to relearning or catastrophic forgetting.",
+      "paper_id": "acl:2026.findings-acl.1287",
+      "title": "Anatomy of Unlearning: The Dual Impact of Fact Salience and Model Fine-Tuning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "ASR errors are typically analysed at the phoneme level, treating phonemes as atomic symbols. In this work, we instead adopt a featural representation of phonemes, grounded in phonological theory, which models speech sounds as structured bundles of distinctive articulatory and acoustic properties. This perspective allows us to analyse recognition errors at a finer granularity and to investigate whether certain phonological features are more vulnerable than others. Across multiple languages, we show that phoneme confusions are strongly structured in phonological feature space: errors are predominantly local and exhibit systematic asymmetries that reveal a small set of weakly modelled features. These findings have direct implications both for the design and diagnosis of ASR systems and for cognitive models of human speech perception, where similar feature-level asymmetries have long been observed.",
+      "paper_id": "acl:2026.findings-acl.1288",
+      "title": "What Do Neural Speech Models Know About Phonology? Evidence from Structured Phoneme Confusions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Deep research agents rely on iterative retrieval and reasoning to answer complex queries, but scaling test-time computation raises significant efficiency concerns. We study how to allocate reasoning budget in deep search pipelines, focusing on the role of listwise reranking. Using the BrowseComp-Plus benchmark, we analyze tradeoffs between model scale, reasoning effort, reranking depth, and total token cost via a novel effective token cost (ETC) metric. Our results show that reranking consistently improves retrieval and end-to-end accuracy, and that moderate reranking often yields larger gains than increasing search-time reasoning, achieving comparable accuracy at substantially lower cost. All our code is available at https://github.com/sahel-sh/DeepHone.",
+      "paper_id": "acl:2026.findings-acl.1289",
+      "title": "Rerank Before You Reason: Analyzing Reranking Tradeoffs through Effective Token Cost in Deep Search Agents",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Existing benchmarks treat multi-turn conversation and reasoning-intensive retrieval separately, yet real-world information seeking requires both. To bridge this gap, we present a benchmark for reasoning-based conversational information retrieval comprising 707 conversations (2,971 turns) across eleven domains. To ensure quality, our Decomposition-and-Verification framework transforms complex queries into fact-grounded multi-turn dialogues through multi-level validation, where atomic facts are verified against sources and explicit retrieval reasoning is generated for each turn. Comprehensive evaluation reveals that combining conversation history with reasoning doubles retrieval performance (Baseline .236 → History+Reasoning .479 nDCG@10), while reasoning-specialized models substantially outperform dense encoders. Despite these gains, further analysis highlights that implicit reasoning remains challenging, particularly when logical connections are not explicitly stated in the text. [https://github.com/RECOR-Benchmark/RECOR]",
+      "paper_id": "acl:2026.findings-acl.129",
+      "title": "RECOR: Reasoning-focused Multi-turn Conversational Retrieval Benchmark",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Despite progress in watermarking algorithms for large language models (LLMs), real-world deployment remains limited. We argue that this gap stems from misaligned incentives among LLM providers, platforms, and end users, which manifest as three key barriers: competitive risk, detection-tool governance, and attribution issues. We revisit three classes of watermarking through this lens. Model watermarking naturally aligns with LLM provider interests, yet faces new challenges in open-source ecosystems. LLM text watermarking offers modest provider benefit when framed solely as an anti-misuse tool, but can gain traction in narrowly scoped settings such as dataset de-contamination or user-controlled provenance. In-context watermarking (ICW) is tailored for trusted parties, such as conference organizers or educators, who embed hidden watermarking instructions into documents. If a dishonest reviewer or student submits this text to an LLM, the output carries a detectable watermark indicating misuse. This setup aligns incentives: users experience no quality loss, trusted parties gain a detection tool, and LLM providers remain neutral by simply following watermark instructions. We advocate for a broader exploration of incentive-aligned methods, with ICW as an example, in domains where trusted parties need reliable tools to detect misuse. More broadly, we distill design principles for incentive-aligned, domain-specific watermarking and outline future research directions. Our position is that the practical adoption of LLM watermarking requires aligning stakeholder incentives in targeted application domains and fostering active community engagement.",
+      "paper_id": "acl:2026.findings-acl.1290",
+      "title": "Position: LLM Watermarking Should Align Stakeholders' Incentives for Practical Adoption",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Test-time scaling (TTS) has gained widespread attention for enhancing LLM reasoning. Existing approaches such as Best-of-N and majority voting are limited as their performance depends on the quality of candidate responses, making them unable to produce a correct solution when all candidates are incorrect. Parallel self-refinement, generating multiple candidates and synthesizing a refined answer conditioned on them, offers a promising alternative, but the underlying mechanism driving its effectiveness remains obscure. To bridge this gap in understanding, we introduce a new metric, the Refinement Gap, designed to quantify the relative improvement of self-refinement beyond majority voting. We show that the Refinement Gap exhibits a clear scaling trend with model size and is only weakly correlated with the base capability. Based on this discovery, we propose Generative Self-Refinement (GSR), a parallel test-time scaling framework that transfers the refinement policy from larger teacher models with higher refinement gap into smaller students. Crucially, GSR jointly trains a single model to generate strong candidates and refine a better final answer based on these candidates. Experimental results demonstrate that our method achieves state-of-the-art performance across five mathematical benchmarks over other parallel aggregation methods, while the learned refinement skill transfers across multiple model scales and families and exhibits robust generalization to an out-of-distribution domain.",
+      "paper_id": "acl:2026.findings-acl.1291",
+      "title": "Learning to Refine: Self-Refinement of Parallel Reasoning in LLMs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Existing audio question answering benchmarks largely emphasize sound event classification or caption-grounded queries, often enabling models to succeed through shortcut strategies, short-duration cues, lexical priors, dataset-specific biases, or even bypassing audio via metadata and captions rather than genuine reasoning Thus, we present AUDITA (Audio Understanding from Diverse Internet Trivia Authors), a large-scale, real-world benchmark to rigorously evaluate audio reasoning beyond surface-level acoustic recognition. AUDITA comprises carefully curated, human-authored trivia questions grounded in real-world audio, designed to stress robust auditory reasoning through challenging distractors and long-range temporal dependencies, using probing queries that cannot be answered from isolated text or sound cues alone. Human average accuracy of 32.13% shows both the challenge of the task while demonstrating meaningful comprehension of the audio. In stark contrast, state-of-the- art audio question answering models perform poorly, with average accuracy below 8.86%. Beyond raw accuracy, we apply Item Response Theory (IRT) to estimate latent proficiency, question difficulty, and expose systematic deficiencies of the models and data.",
+      "paper_id": "acl:2026.findings-acl.1292",
+      "title": "AUDITA: A New Dataset to Audit Humans vs. AI Skill at Audio QA",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "We present NeoAraBERT, a state-of-the-art open-source Arabic text-embedding model built on the NeoBERT architecture. We pre-train NeoAraBERT on diverse open-source and internal datasets covering modern standard, classical, and dialectal Arabic. We guided our design choices with Arabic tailored ablation studies including text normalization, light stemming, and diacritics-aware tokenization handling. We also performed more general POS-aware token masking and learning-rate scheduling ablation studies. We benchmarked NeoAraBERT against five top-performing Arabic models on 23 tasks, including a novel synonym-based task, “Muradif”, that directly assesses embedding quality with no additional fine-tuning. NeoAraBERT variants (MSA, dialectal, and mixed) rank first in 18 tasks, second in two, third in two, and fourth in one task. They show strong performance on classical and modern standard Arabic, substantial margins of improvement (>7%) in two tasks, and a +2.75% improvement on average across all tasks. Our code and links to checkpoints for our model variants are available on our website: https://acr.ps/neoarabert.",
+      "paper_id": "acl:2026.findings-acl.1293",
+      "title": "NeoAraBERT: A Modern Foundation Model for Arabic Embeddings with Diacritics-Aware Tokenization and POS-Targeted Masking",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Investigating black-box jailbreak attacks is crucial for revealing the actual security risks faced by operational Large Language Models (LLMs). The primary challenge in black-box jailbreak attack is the absence of direct optimization signals, such as gradients, to guide the refinement of adversarial prompts. While current mainstream methods like PAIR and TAP attempt to leverage the model’s textual output as feedback, facing a critical limitation when models consistently generate static refusal responses, depriving the attacker of any actionable signal to distinguish better prompts. To overcome the bottleneck and reveal whether there is potential risk to open access to partial logprobs information, we investigate LLM output distribution. Our empirical analysis reveals that refusal responses exhibit a highly consistent distributional pattern at the first generated token, suggesting that the deviation from this standard pattern can serve as a quantifiable metric for LLM generating refusal response. Based on this insight, we propose Distribution Jailbreak (DJ), an attack method that select effective jailbreak templates and then iteratively optimizes adversarial suffixes by maximizing the KL divergence from the standard refusal distribution. Extensive experiments demonstrate that DJ achieves state-of-the-art Attack Success Rate(ASR). Notably, DJ achieves over 90% ASR on all tested open-source models, and delivers over 94% ASR on GPT-4.1. Our code is publicly available at https://github.com/Zed630/DistributionJailbreak.",
+      "paper_id": "acl:2026.findings-acl.1294",
+      "title": "Steering Away from Refusal: A Black-box Jailbreak Method Based on First-Token Distribution",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Bangladesh’s low-income population faces major barriers to affordable legal advice due to complex legal language, procedural opacity, and high costs. Existing AI legal assistants lack Bengali-language support and jurisdiction-specific adaptation, limiting their effectiveness. To address this, we developed Mina, a multilingual LLM-based legal assistant tailored for the Bangladeshi context. It employs multilingual embeddings and a RAG-based chain-of-tools framework for retrieval, reasoning, translation, and document generation, delivering context-aware legal drafts, citations, and plain-language explanations via an interactive chat interface. Evaluated by law faculty from leading Bangladeshi universities across all stages of the 2022 and 2023 Bangladesh Bar Council examinations, Mina achieved scores of 75–80% in the preliminary MCQs, written, and simulated viva voce components. These results matched or surpassed average human performance, demonstrating strong clarity, contextual understanding, and sound legal reasoning, while operating at approximately 0.1-0.6% of the cost of human lawyers. These results confirm its potential as a low-cost, multilingual AI assistant that automates key legal tasks and scales access to justice, offering a real-world details on building domain-specific, low-resource systems and addressing challenges of multilingual adaptation, efficiency, and sustainable public-service AI deployment.",
+      "paper_id": "acl:2026.findings-acl.1295",
+      "title": "Mina: A Multilingual LLM-Powered Legal Assistant Agent for Empowering Access to Justice in Bangladesh",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Zero-shot ASR for Arabic remains challenging: while multilingual models perform well on Modern Standard Arabic (MSA), error rates rise sharply on dialectal and accented speech due to linguistic mismatch and scarce labeled data. We study context-aware decoding as a lightweight test-time adaptation paradigm that conditions inference on external side information without parameter updates. For promptable encoder–decoder ASR (e.g., Whisper), we incorporate context through (i) decoder prompting with first-pass hypotheses and (ii) encoder/decoder prefixing with retrieved speech-text exemplars, complemented by simple prompt reordering and optional speaker-matched synthetic exemplars to improve robustness in informal and multi-speaker settings. To extend contextual adaptation beyond promptable architectures, we introduce proxy-guided n-best selection for CTC ASR: given one or more external proxy hypotheses, we select from a model’s n-best list by minimizing text-level distance to the proxies, enabling contextual inference without direct prompting. Across ten Arabic conditions spanning MSA, accented MSA, and multiple dialects, the best-performing context-aware variants yield average relative WER reductions of 22.29% on MSA, 20.54% on accented MSA, and 9.15% on dialectal Arabic. For CTC ASR on our Common Voice MSA testbed, proxy-guided selection reduces WER by 15.6% relative and recovers a substantial fraction of oracle n-best gains, showing that external-context guidance can also benefit non-promptable ASR.",
+      "paper_id": "acl:2026.findings-acl.1296",
+      "title": "Zero-Shot Context-Aware ASR for Diverse Arabic Varieties",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Geo-localization aims to infer the geographic origin of a given signal. In computer vision, geo-localization has served as a demanding benchmark for compositional reasoning and is relevant to public safety. In contrast, progress on audio geo-localization has been constrained by the lack of high-quality audio-location pairs. To address this gap, we introduce AGL1K, the first audio geo-localization benchmark for audio language models (ALMs), spanning 72 countries and territories. To extract reliably localizable samples from a crowd-sourced platform, we propose the Audio Localizability metric that quantifies the informativeness of each recording, yielding 1,444 curated audio clips. Evaluations on 16 ALMs show that ALMs have emerged with audio geo-localization capability. We find that closed-source models substantially outperform open-source models, and that linguistic clues often dominate as a scaffold for prediction. We further analyze ALMs’ reasoning traces, regional bias, error causes, and the interpretability of the localizability metric. Overall, AGL1K establishes a benchmark for audio geo-localization and may advance ALMs with better geospatial reasoning capability.",
+      "paper_id": "acl:2026.findings-acl.1297",
+      "title": "The Sonar Moment: An Audio Geo-Localization Benchmark for Audio-Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) remain vulnerable to optimization-based jailbreak attacks that exploit internal gradient structure. While Sparse Autoencoders (SAEs) are widely used for interpretability, their robustness implications remain underexplored. We present a study of integrating pretrained SAEs into transformer residual streams at inference time, without modifying model weights or blocking gradients. Across four model families (Gemma, LLaMA, Mistral, Qwen) and two strong white-box attacks (GCG, BEAST) plus three black-box benchmarks, SAE-augmented models achieve up to a 5x reduction in jailbreak success rate relative to the undefended baseline and reduce cross-model attack transferability. Parametric ablations reveal (i) a monotonic dose-response relationship between L0 sparsity and attack success rate, and (ii) a layer-dependent defense-utility tradeoff, where intermediate layers balance robustness and clean performance. These findings are consistent with a representational bottleneck hypothesis: sparse projection reshapes the optimization geometry exploited by jailbreak attacks.",
+      "paper_id": "acl:2026.findings-acl.1298",
+      "title": "Towards Understanding the Robustness of Sparse Autoencoders",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Cloud-hosted Large Language Models (LLMs) offer unmatched reasoning capabilities and dynamic knowledge, yet submitting raw queries to these external services risks exposing sensitive user intent. Conversely, relying exclusively on trusted local models preserves privacy but often compromises answer quality due to limited parameter scale and knowledge. To resolve this dilemma, we propose Game-theoretic Trustworthy Knowledge Acquisition (GTKA), a framework that formulates the trade-off between knowledge utility and privacy as a strategic game. GTKA consists of three components: (i) a privacy-aware sub-query generator that decomposes sensitive intent into generalized, low-risk fragments; (ii) an adversarial reconstruction attacker that attempts to infer the original query from these fragments, providing adaptive leakage signals; and (iii) a trusted local integrator that synthesizes external responses within a secure boundary. By training the generator and attacker in an alternating adversarial manner, GTKA optimizes the sub-query generation policy to maximize knowledge acquisition accuracy while minimizing the reconstructability of the original sensitive intent. To validate our approach, we construct two sensitive-domain benchmarks in the biomedical and legal fields. Extensive experiments demonstrate that GTKA significantly reduces intent leakage compared to state-of-the-art baselines while maintaining high-fidelity answer quality.",
+      "paper_id": "acl:2026.findings-acl.1299",
+      "title": "Beyond Local vs. External: A Game-Theoretic Framework for Trustworthy Knowledge Acquisition",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Multi-agent systems (MAS) are increasingly used for open-ended idea generation, driven by the expectation that collective interaction will broaden the exploration diversity. However, when and why such collaboration truly expands the solution space remains unclear. We present a systematic empirical study of diversity in MAS-based ideation across three bottom-up levels: model intelligence, agent cognition, and system dynamics. At the model level, we identify a compute efficiency paradox, where stronger, highly aligned models yield diminishing marginal diversity despite higher per-sample quality. At the cognition level, authority-driven dynamics suppress semantic diversity compared to junior-dominated groups. At the system level, group-size scaling yields diminishing returns and dense communication topologies accelerate premature convergence. We characterize these outcomes as collective failures emerging from structural coupling, a process where interaction inadvertently contracts agent exploration and triggers diversity collapse. Our analysis shows that this collapse arises primarily from the interaction structure rather than inherent model insufficiency, highlighting the importance of preserving independence and disagreement when designing MAS for creative tasks. Our code is available at https://github.com/Xtra-Computing/MAS_Diversity.",
+      "paper_id": "acl:2026.findings-acl.13",
+      "title": "Diversity Collapse in Multi-Agent LLM Systems: Structural Coupling and Collective Failure in Open-Ended Idea Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Instruction-tuned language models increasingly rely on large multi-turn dialogue corpora, but these datasets are often noisy and structurally inconsistent, with topic drift, repetitive chitchat, and mismatched answer formats across turns. We address this from a data selection perspective and propose MDS (Multi-turn Dialogue Selection), a dialogue-level framework that scores whole conversations rather than isolated turns. MDS combines a global coverage stage that performs bin-wise selection in the user-query trajectory space to retain representative yet non-redundant dialogues, with a local structural stage that evaluates within-dialogue reliability through entity-grounded topic grounding and information progress, together with query-answer form consistency for functional alignment. MDS outperforms strong single-turn selectors, dialogue-level LLM scorers, and heuristic baselines on three multi-turn benchmarks and an in-domain Banking test set, achieving the best overall rank across reference-free and reference-based metrics, and is more robust on long conversations under the same training budget. Code and resources are included in the supplementary materials.",
+      "paper_id": "acl:2026.findings-acl.130",
+      "title": "Data Selection for Multi-turn Dialogue Instruction Tuning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) can comply with harmful instructions, raising serious safety concerns despite their impressive capabilities. Recent work has leveraged probing-based approaches to study the separability of malicious and benign inputs in LLMs’ internal representations, and researchers have proposed using such probing methods for safety detection. We systematically re-examine this paradigm. Motivated by poor out-of-distribution performance, we hypothesize that probes learn superficial patterns rather than semantic harmfulness. Through controlled experiments, we confirm this hypothesis and identify the specific patterns learned: instructional patterns and trigger words. Our investigation follows a systematic approach, progressing from demonstrating comparable performance of simple n-gram methods, to controlled experiments with semantically cleaned datasets, to detailed analysis of pattern dependencies. These results reveal a false sense of security around current probing-based approaches and highlight the need to redesign both models and evaluation protocols, for which we provide further discussions in the hope of suggesting responsible further research in this direction.",
+      "paper_id": "acl:2026.findings-acl.1300",
+      "title": "False Sense of Security: Why Probing-based Malicious Input Detection Fails to Generalize",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Recent theory suggests Transformers are inherently succinct, capable of representing recursive algorithms like binary counting over exponential state spaces using constant-size circuits, unlike the exponential bottleneck of RNNs. However, it remains unclear under what conditions gradient-trained Transformers converge to these predicted succinct circuits, or whether they settle for heuristics. We bridge this gap by rigorously testing the Succinctness Hypothesis via mechanistic interpretability on the LargeCounter task. We report a striking dichotomy: shallow Transformers (d=64) generalize perfectly, whereas massive LSTM baselines (d=2048) fail completely (<6% accuracy), empirically validating the succinctness gap. This dichotomy extends to modern state-space models: Mamba and Mamba-2 fail even more catastrophically (<1.1%), confirming the hierarchy Transformer ≫ LSTM > SSM predicted by formal complexity results. We show this capability is acquired via a grokking phase transition driven by a weight-norm “complexity collapse”. Mechanistic analysis reveals the learned circuit aligns precisely with Boolean RASP theory: attention heads utilize Rotary Positional Embeddings (RoPE) for “Same-Bit Lookup”, while MLPs act as exact XOR/AND logic gates. Furthermore, we detect analogous “Arithmetic Heads” in pre-trained LLMs (Pythia), suggesting that succinctness is a representational inductive bias that, when activated by sufficient regularization, governs how models learn algorithmic reasoning.",
+      "paper_id": "acl:2026.findings-acl.1301",
+      "title": "Do Transformers Grok Succinct Algorithms? Mechanistic Evidence for Counting Circuits",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Conversational Large Language Models are post-trained on language that expresses specific behavioural traits, such as curiosity, open-mindedness, and empathy, and values, such as helpfulness, harmlessness, and honesty. This is done to increase utility, ensure safety, and improve the user experience of the people interacting with the model. However, values are complex and inter-related - incorporating one can modify behaviour on another. Further, incorporating certain values can make models more addictive or sycophantic, potentially having a detrimental effect on the user interacting with it. We investigate these and other unintended effects of value incorporation into models. We fine-tune models using value subsets of existing preference datasets, measuring the effect of value induction of 15 values on safety, anthropomorphism, and various QA benchmarks. We find that i) inducing values also leads to expression of other related, and sometimes contrastive values, ii) inducing positive values increases safety, and iii) all values increase anthropomorphic language use by models, making them more validating and sycophantic.",
+      "paper_id": "acl:2026.findings-acl.1302",
+      "title": "How Value Induction Reshapes LLM Behavior",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "VLMs provide visual information alongside their predictions, but it remains unclear whether consistency in such information implies consistent decisions. We study this question in a controlled medical-imaging setting using brain MRI with pathology-confirmed labels and expert lesion annotations. For each human subject and modality, we construct configurations that retain the lesion content while varying surrounding context and scale and measure decision flips together with consistency in model-reported influential slices. Across four diverse VLMs (including proprietary, open-source, and domain-specific models), flip rates reach up to 75% across lesion-containing presentations, often despite high overlap in reported evidence. When lesion-related content is removed, proprietary models rarely produce a categorical diagnosis, with abstention rates ranging from 63% to 99%. These results reveal a mismatch between reported evidence and decisions, motivating evaluation beyond accuracy. Our evaluation dataset is publicly available on Hugging Face.",
+      "paper_id": "acl:2026.findings-acl.1303",
+      "title": "Stable Evidence, Unstable Decisions: An Empirical Analysis of Model Decision Stability in Vision--Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Long-form audio understanding poses significant challenges for large audio language models (LALMs) due to the extreme length of audio sequences and the need to reason over heterogeneous acoustic cues distributed over time, such as speech content, speaker identity, emotion, and sound events. To address these challenges, we propose PlanRAG-Audio, a planning-based retrieval-augmented generation framework for scalable long-form audio understanding. Rather than having audio LALMs process entire recordings directly, PlanRAG-Audio explicitly plans which modalities and temporal spans are required for a given query, and retrieves only query-relevant information from a structured text and audio database. This retrieval planning enables effective reasoning over complex, cross-domain audio queries while substantially reducing the input length passed to the large language models. Experiments across a wide range of speech/audio retrieval demonstrate that PlanRAG-Audio improves reasoning accuracy and stabilizes performance as audio duration increases by decoupling inference cost from raw audio length.",
+      "paper_id": "acl:2026.findings-acl.1304",
+      "title": "PlanRAG-Audio: Planning and Retrieval Augmented Generation for Long-form Audio Understanding",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "A standard technique for scaling inference-time reasoning is Self-Consistency, whereby multiple candidate answers are sampled from an LLM and the most common answer is selected. More recently, it has been shown that weighted majority voting (e.g. Confidence-Informed Self Consistency (CISC)), which assigns a confidence value to each candidate answer and chooses the answer with the largest accumulated score, tends to be more accurate on a wide range of popular benchmarks. In practice, weighted majority voting necessitates calling a critic LLM on each candidate’s reasoning trace to produce the answer’s confidence score. This secondary series of LLM calls greatly increases the overhead and cost of weighted majority voting, despite its potential performance benefits. To reduce this expense, we propose VecCISC, a lightweight, adaptive framework that uses a measure of semantic similarity to filter reasoning traces that are semantically equivalent to others, degenerate, or hallucinated, thus decreasing the number of candidate answers that must be evaluated by the critic. To ensure adequate experimental thoroughness, we evaluated VecCISC on five challenging, widely-adopted datasets spanning the domains of mathematics, chemistry, biology, commonsense reasoning, and the humanities. Our results demonstrate that VecCISC reduces the total token usage by 47%, while maintaining or exceeding the accuracy of CISC.",
+      "paper_id": "acl:2026.findings-acl.1305",
+      "title": "VecCISC: Improving Confidence-Informed Self-Consistency with Reasoning Trace Clustering and Candidate Answer Selection",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Reinforcement Learning with Verifiable Rewards (RLVR) has proven effective in enhancing LLMs’ short-context reasoning but falters in long-context scenarios requiring precise grounding and multi-hop reasoning. We identify the “almost-there” phenomenon—trajectories that are largely correct but fail at the final step—in long-context reasoning RL and attribute this failure to two factors: (1) the lack of high reasoning density in long-context QA data, and (2) indiscriminate penalization of partially correct trajectories during long-context RL. To overcome this bottleneck, we propose DeepReasonQA, a KG-driven synthesis framework that controllably constructs high-difficulty, multi-hop long-context QA pairs with inherent reasoning chains. Building on this, we introduce Long-context Process Advantage Shaping (LongPAS), a simple yet effective method that performs fine-grained credit assignment by measuring reasoning steps along Validity and Relevance dimensions, which captures critical signals from “almost-there” trajectories. Experiments on three long-context reasoning benchmarks show that our approach substantially outperforms RLVR baselines and matches frontier LLMs while using far fewer parameters. Further analysis confirms the effectiveness of our methods in strengthening long-context reasoning while maintaining stable RL training.",
+      "paper_id": "acl:2026.findings-acl.1306",
+      "title": "Incentivizing In-depth Reasoning over Long Contexts with Process Advantage Shaping",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Recent works on large language models (LLMs) have demonstrated the impact of prompting strategies and fine-tuning techniques on their reasoning capabilities. Yet, their effectiveness on clinical natural language inference (CTNLI) remains underexplored. This study presents the first controlled evaluation of how prompt structure and efficient fine-tuning jointly shape model performance in CTNLI.We inspect four classes of prompting strategies to elicit reasoning in LLMs at different levels of abstraction, and evaluate their impact on a range of clinically motivated reasoning types. For each prompting strategy, we construct high-quality demonstrations using a frontier model to distil multi-step reasoning capabilities into smaller models (≤ 4B parameters) via Low-Rank Adaptation (LoRA). Across different LLMs fine-tuned on the NLI4CT benchmark, we found that prompt type alone accounts for up to 44% of the variance in macro-F1. Moreover, LoRA fine-tuning yields consistent gains of +8 to 12 F1, raises output alignment above 97%, and narrows the performance gap to GPT-4o-mini to within 7.1%. Additional experiments on reasoning generalisation reveal that LoRA improves performance in 75% of the models on MedNLI and TREC Clinical Trials.Overall, these findings demonstrate that (i) prompt structure is a primary driver of clinical NLI reasoning performance, (ii) compact models equipped with strong prompts and LoRA can rival frontier-scale systems, and (iii) reasoning-type-aware evaluation is essential to uncover prompt-induced trade-offs. Our results highlight the promise of combining prompt design and lightweight adaptation for more efficient and trustworthy clinical NLP systems, providing insights on the strengths and limitations of widely adopted prompting and parameter-efficient techniques in specialised domains. All code, annotations, prompts, demonstrations, and checkpoints will be released upon publication.",
+      "paper_id": "acl:2026.findings-acl.1307",
+      "title": "Dissecting Clinical Reasoning in Natural Language Inference for Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Neural audio codecs are widely used as tokenizers for spoken language models, but they are optimized for waveform reconstruction rather than autoregressive prediction.This mismatch injects acoustically driven uncertainty into the discrete token space and increases language-model perplexity.We propose , which augments codec training with language-model-facing objectives while keeping both codec and LLM architectures unchanged.introduces (i) future token prediction with Medusa-style multi-step heads to encourage multi-step predictability, and (ii) semantic alignment that matches audio and text representations via a memory-bank contrastive loss.A differentiable Gumbel bridge enables end-to-end gradients from these objectives to the codec encoder.On SALMon speech coherence, token LMs trained on reach 61.6% accuracy (+12.1 points over AUV) while reducing perplexity 35×.On Codec-SUPERB-tiny, improves speech Mel distance by 5.0% over AUV while simultaneously achieving the learnability gains, demonstrating that reconstruction fidelity and token predictability can be improved together.",
+      "paper_id": "acl:2026.findings-acl.1308",
+      "title": "LLM-Codec: Neural Audio Codec Meets Language Model Objectives",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) perform well on well-posed questions, yet standard question-answering (QA) benchmarks remain far from solved. We argue that this gap is partly due to underspecified questions, that are queries whose interpretation cannot be uniquely determined without additional context. We introduce an LLM-based classifier to identify underspecified questions and apply it to several widely used QA datasets, finding that 16% to over 60% of benchmark questions are underspecified and that LLMs perform significantly worse on them. To isolate the effect of underspecification, we conduct a controlled rewriting experiment that serves as an upper-bound analysis, rewriting underspecified questions into fully specified variants while holding gold answers fixed. QA performance consistently improves under this setting, indicating that many apparent QA failures stem from question underspecification rather than model limitations. Our findings highlight underspecification as an important confound in QA evaluation and motivate greater attention to question clarity in benchmark design.",
+      "paper_id": "acl:2026.findings-acl.1309",
+      "title": "Who is the richest club in the championship? Detecting and Rewriting Underspecified Questions Improve QA Performance",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Lossless compression has made significant advancements in Genomics Data (GD) storage, sharing and management. Current learning-based methods are non-evolvable with problems of low-level compression modeling, limited adaptability, and user-unfriendly interface. To this end, we propose AgentGC, the first evolutionary Agent-based GD Compressor, consisting of 3 layers with multi-agent named Leader and Worker. Specifically, the 1) User layer provides a user-friendly interface via Leader combined with LLM; 2) Cognitive layer, driven by the Leader, integrates LLM to consider joint optimization of algorithm-dataset-system, addressing the issues of low-level modeling and limited adaptability; and 3) Compression layer, headed by Worker, performs compression decompression via a automated multi-knowledge learning-based compression framework. On top of AgentGC, we design 3 modes to support diverse scenarios: CP for compression-ratio priority, TP for throughput priority, and BM for balanced mode. Compared with 14 baselines on 9 datasets, the average compression ratios gains are 16.66%, 16.11%, and 16.33%, the throughput gains are 4.73x, 9.23x, and 9.15x, respectively.",
+      "paper_id": "acl:2026.findings-acl.131",
+      "title": "AgentGC: Evolutionary Learning-based Lossless Compression for Genomics Data with LLM-driven Multiple Agent",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Retrieval-augmented generation (RAG) is critical for reducing hallucinations and incorporating external knowledge into Large Language Models (LLMs). However, advanced RAG systems face a trade-off between performance and efficiency. Multi-round RAG approaches achieve strong reasoning but incur excessive LLM calls and token costs, while Graph RAG methods suffer from computationally expensive, error-prone graph construction and retrieval redundancy. To address these challenges, we propose T2RAG, a novel framework that operates on a simple, graph-free knowledge base of atomic triplets. T2RAG leverages an LLM to decompose questions into searchable triplets with placeholders, which it then iteratively resolves by retrieving evidence from the triplet database. Empirical results show that T2RAG significantly outperforms state-of-the-art multi-round and Graph RAG methods, achieving an average performance gain of up to 11% across six datasets while reducing retrieval costs by up to 45%.",
+      "paper_id": "acl:2026.findings-acl.1310",
+      "title": "Beyond Chunks and Graphs: Retrieval-Augmented Generation through Triplet-Driven Thinking",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "While LLMs demonstrate impressive reasoning capabilities, they remain fragile in multi-step logic deduction, where a single transition error can propagate through the entire reasoning chain, leading to unstable performance. In this work, we identify logical connectives as primary points of this structural fragility. Through empirical analysis, we show that logical connective tokens function as high entropy forking points, at which models frequently struggle to determine the correct logical direction. Motivated by this observation, we hypothesize that intervening in logical connective selection can guide LLMs towards the correct logical direction, thereby improving the overall reasoning chain. To validate this hypothesis, we propose a multi-layered framework that intervenes specifically at these logic-critical junctions in the reasoning process. Specifically, we introduce (1) Gradient-based Logical Steering to guide LLMs internal representations towards valid reasoning subspaces, (2) Localized Branching to resolve ambiguity via targeted look-ahead search, and (3) Targeted Transition Preference Optimization, a surgical reinforcement learning objective that selectively optimizes single-token preferences at logical pivots. Crucially, by concentrating intervention solely on logic-critical transitions, our framework achieves a favorable accuracy–efficiency trade-off compared to global inference time scaling methods like beam search and self-consistency.",
+      "paper_id": "acl:2026.findings-acl.1311",
+      "title": "Where Reasoning Breaks: Logic-Aware Path Selection by Controlling Logical Connectives in LLMs Reasoning Chains",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Neologisms and emerging slang are central to daily conversation, yet challenging for non-native speakers (NNS) to interpret and use appropriately in cross-cultural communication with native speakers (NS). NNS increasingly make use of Artificial Intelligence (AI) tools to learn these words. We study the utility of such tools in mediating an informal communication scenario through a human-subjects study (N=234): NNS participants learn English neologisms with AI support, write messages using the learned word to an NS friend, and judge contextual appropriateness of the neologism in two provided writing samples. Using both NS evaluator-rated communicative competence of NNS-produced writing and NNS’ contextual appropriateness judgments, we compare three AI-based support conditions: AI Definition, AI Rewrite into simpler English, AI Explanation of meaning and usage, and Non-AI Dictionary for comparison. We show that AI Explanation yields the largest gains over no support in NS-rated competence, while contextual appropriateness judgments show indifference across support. NNS participants’ self-reported perceptions tend to overestimate NS ratings, revealing a mismatch between perceived and actual competence. We further observe a significant gap between NNS- and NS-produced writing, highlighting the limitations of current AI tools and informing design for future tools.",
+      "paper_id": "acl:2026.findings-acl.1312",
+      "title": "Reheat Nachos for Dinner? Evaluating AI Support for Cross-Cultural Communication of Neologisms",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Multimodal clinical records contain structured measurements and clinical notes recorded over time, offering rich temporal information about the evolution of patient health. Yet these observations are sparse, and whether they are recorded depends on the patient’s latent condition. Observation patterns also differ across modalities, as structured measurements and clinical notes arise under distinct recording processes. While prior work has developed methods that accommodate missingness in clinical time series, how to extract and use the information carried by the observation process itself remains underexplored. We therefore propose a patient representation learning framework for multimodal clinical time series that explicitly leverages informative missingness. The framework combines (1) a multimodal encoder that captures signals from structured and textual data together with their observation patterns, (2) a Bayesian filtering module that updates a latent patient state over time from observed multimodal signals, and (3) downstream modules for offline treatment policy learning and patient outcome prediction based on the learned patient state. We evaluate the framework on ICU sepsis cohorts from MIMIC-III, MIMIC-IV, and eICU. It improves both offline treatment policy learning and adverse outcome prediction, achieving FQE 0.679 versus 0.528 for clinician behavior and AUROC 0.886 for post-72-hour mortality prediction on MIMIC-III.",
+      "paper_id": "acl:2026.findings-acl.1313",
+      "title": "Learning Dynamic Representations and Policies from Multimodal Clinical Time-Series with Informative Missingness",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) suffer inference-time memory bottlenecks dominated by the attention Key-Value (KV) cache, which scales with model size and context length. While KV-cache quantization alleviates this cost, bit allocation between keys and values is often tuned heuristically, lacking theoretical grounding and generalizability. This paper proposes two theorems that anchor mixed-precision KV quantization in the intrinsic geometry of Transformer models. First, key weight matrices systematically have larger spectral and Frobenius norms than value matrices, implying higher information density along the key path. Second, for any given memory budget, prioritizing precision for keys over values strictly reduces quantization error and better preserves accuracy. Empirical evaluations across various prominent LLMs and benchmarks show that key-favored allocations (e.g., 4-bit keys, 2-bit values) retain up to 98.3% accuracy compared to uniform allocations (e.g., 4-bit for both), while conserving memory. These results transform bit allocation from ad hoc tuning into a theoretically grounded, geometry-driven design principle for efficient LLM inference. Source code is available at https://github.com/mohsenhariri/spectral-kv.",
+      "paper_id": "acl:2026.findings-acl.1314",
+      "title": "Quantize What Counts: More for Keys, Less for Values",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Language Model (LLM) empowered agents have recently emerged as advanced paradigms that exhibit impressive capabilities in a wide range of domains and tasks. Despite their potential, current LLM agents often adopt a one-size-fits-all approach, lacking the flexibility to respond to users’ varying needs and preferences. This limitation motivates us to develop PersonaAgent, the first personalized LLM agent framework designed to address versatile personalization tasks. Specifically, PersonaAgent integrates two complementary components: a personalized memory module that includes episodic and semantic memory mechanisms; a personalized action module that enables the agent to perform tool actions tailored to the user. At the core, the persona (defined as unique system prompt for each user) functions as an intermediary: it leverages insights from personalized memory to control agent actions, while the outcomes of these actions in turn refine the memory. Based on the framework, we propose a test-time user-preference alignment strategy that simulate the latest n interactions to optimize the persona prompt, ensuring real-time user preference alignment through textual loss feedback between simulated and ground-truth responses. Experimental evaluations demonstrate that PersonaAgent significantly outperforms other baseline methods by not only personalizing the action space effectively but also scaling during test-time real-world applications. These results underscore the feasibility and potential of our approach in delivering tailored, dynamic user experiences.",
+      "paper_id": "acl:2026.findings-acl.1315",
+      "title": "PersonaAgent: Bridging Memory and Action for Personalized LLM Agents",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "User interactions with language models vary due to static properties of the user (trait) and the specific context of the interaction (state). However, existing persona datasets (like PersonaChat, PANDORA etc.) capture only trait, and ignore the impact of state. We introduce Chameleon, a dataset of 5,001 contextual psychological profiles from 1,667 Reddit users, each measured across multiple contexts. Using the Chameleon dataset, we present three key findings. First, inspired by Latent State-Trait theory, we decompose variance and find that 74% is within-person (state) while only 26% is between-person (trait). Second, we find that LLMs are state-blind: they focus on trait only, and produce similar responses regardless of state. Third, we find that reward models react to user state, but inconsistently: different models favor or penalize the same users in opposite directions. We release Chameleon to support research on affective computing, personalized dialogue, and RLHF alignment.",
+      "paper_id": "acl:2026.findings-acl.1316",
+      "title": "Beyond Fixed Psychological Personas: State Beats Trait, but Language Models are State-Blind",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) are increasingly used for Islamic question answering, where ungrounded responses may carry serious religious consequences. Yet standard MCQ/MRC-style evaluations do not capture key real-world failure modes, notably free-form hallucinations and the ability to abstain when evidence is insufficient. To address this gap, we introduce IslamicFaithQA, a 3,810-item bilingual (Arabic/English) generative benchmark with atomic single-gold answers, which enables direct measurement of hallucination and abstention. We additionally developed an end-to-end grounded Islamic modeling suite consisting of (i) 25K Arabic text-grounded SFT reasoning pairs, (ii) 5K bilingual preference samples for reward-guided alignment, and (iii) a verse-level Qur’an retrieval corpus of ∼6k atomic verses (ayat). Building on these resources, we develop an agentic Quran-grounding framework (agentic RAG) that uses structured tool calls for iterative evidence seeking and answer revision. Experiments across Arabic-centric and multilingual LLMs show that retrieval improves correctness and that agentic RAG yields the largest gains beyond standard RAG, achieving state-of-the-art performance and stronger Arabic–English robustness even with a small model (i.e., Qwen3 4B). We made the datasets are publicly available (https://huggingface.co/datasets/QCRI/IslamicFaithQA).",
+      "paper_id": "acl:2026.findings-acl.1317",
+      "title": "From RAG to Agentic RAG for Faithful Islamic Question Answering",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Cooking recipes are complex procedures that require not only a fluent and factual text, but also accurate timing, temperature, and procedural coherence, as well as the correct composition of ingredients. Standard training procedures are primarily based on cross-entropy and focus solely on fluency. Building on RECIPE-NLG, we investigate the use of several composite objectives and present a new topological loss that represents ingredient lists as point clouds in embedding space, minimizing the divergence between predicted and gold ingredients. Using both standard NLG metrics and recipe-specific metrics, we find that our loss significantly improves ingredient- and action-level metrics. Meanwhile, the Dice loss excels in time/temperature precision, and the mixed loss yields competitive trade-offs with synergistic gains in quantity and time. A human preference analysis supports our finding, showing our model is preferred in 62% of the cases.",
+      "paper_id": "acl:2026.findings-acl.1318",
+      "title": "Losses that Cook: Topological Optimal Transport for Structured Recipe Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "We propose Concept Tokens, a lightweight method that adds a new special token to a pretrained LLM and learns only its embedding from multiple natural language definitions of a target concept, where occurrences of the concept are replaced by the new token. The LLM is kept frozen and the embedding is optimized with the standard language-modeling objective. We evaluate Concept Tokens in three settings. First, we study hallucinations in closed-book question answering on HotpotQA and find a directional effect: negating the hallucination token reduces hallucinated answers mainly by increasing abstentions, whereas asserting it increases hallucinations and lowers precision. Second, we induce recasting, a pedagogical feedback strategy for second language teaching, and observe the same directional effect. Moreover, compared to providing the full definitional corpus in-context, concept tokens better preserve compliance with other instructions (e.g., asking follow-up questions). Finally, we include a qualitative study with the Eiffel Tower and a fictional “Austral Tower” to illustrate what information the learned embeddings capture and where their limitations emerge. Overall, Concept Tokens provide a compact control signal learned from definitions that can steer behavior in frozen LLMs.",
+      "paper_id": "acl:2026.findings-acl.1319",
+      "title": "Concept Tokens: Learning Behavioral Embeddings Through Concept Definitions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Existing Reinforcement Learning from Verifiable Rewards (RLVR) methods, such as Group Relative Policy Optimization (GRPO), have achieved remarkable progress in improving the reasoning capabilities of Large Reasoning Models (LRMs). However, they exhibit limited exploration due to reliance on on-policy rollouts which are confined to the current policy’s distribution, resulting in narrow trajectory diversity. Recent approaches attempt to expand policy coverage by incorporating trajectories generated from stronger expert models, yet this reliance increases computational cost and such advanced models are often inaccessible. To address these issues, we propose In-Context Steered Policy Optimization (ICPO), a unified framework that leverages the inherent in-context learning capability of LRMs to provide expert guidance using existing datasets. ICPO introduces mixed-policy GRPO with implicit expert forcing, which expands exploration beyond the current policy distribution without requiring advanced LRM trajectories. To further stabilize optimization, ICPO integrates expert region reject sampling to filter unreliable off-policy trajectories and annealed expert-bonus reward shaping to balance early expert guidance with later autonomous improvement. Results demonstrate that ICPO consistently enhances RLVR performance and training stability on mathematical reasoning benchmarks, revealing a scalable and effective RLVR paradigm for LRMs. Our code is available at https://github.com/Celine-hxy/ICPO.",
+      "paper_id": "acl:2026.findings-acl.132",
+      "title": "Think Outside the Policy: In-Context Steered Policy Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Reinforcement learning optimization policies have traditionally relied on a single reward mechanism, most commonly a model-based reward. Such monolithic rewards often lack confidence calibration across domain-specific tasks and fail to capture diverse aspects of model responses. This approach requires extensive data annotation and reward model training, which is particularly challenging for multimodal models. In this work, we propose and provide a thorough study of hybrid reward and multi-aspect reward modeling. For accuracy and confidence calibration, we introduce a hybrid reward modeling framework that integrates complementary reward paradigms: model-based rewards, in which a learned reward model predicts scalar or vector scores, and rule-based reward, in which domain-specific heuristics provide explicit correctness signals with confidence. Beyond accuracy, we further incorporate multi-aspect rewards to enforce instruction adherence and introduce a generalized length-penalty reward to stabilize training and improve performance. Experiments demonstrate that this approach significantly enhances reasoning capabilities: our best-performing 3B model achieves an average improvement of ~9.5% across multimodal benchmarks, with a notable ~16% gain in mathematical reasoning tasks.",
+      "paper_id": "acl:2026.findings-acl.1320",
+      "title": "Beyond Monolithic Rewards: Hybrid Multi-Aspect Reward Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Vision-Language Models (LVLMs) frequently hallucinate, limiting their safe deployment in real-world applications. Existing LLM self-evaluation methods rely on a model’s ability to estimate the correctness of its own outputs, which can improve deployment reliability; however, they depend heavily on language priors and are therefore ill-suited for evaluating vision-conditioned predictions. We propose VAUQ, a vision-aware uncertainty quantification framework for LVLM self-evaluation that explicitly measures how strongly a model’s output depends on visual evidence. VAUQ introduces the Image-Information Score (IS), which captures the reduction in predictive uncertainty attributable to visual input, and an unsupervised core-region masking strategy that amplifies the influence of salient regions. Combining predictive entropy with this core-masked IS yields a training-free scoring function that reliably reflects answer correctness. Comprehensive experiments show that VAUQ consistently outperforms existing self-evaluation methods across multiple datasets.",
+      "paper_id": "acl:2026.findings-acl.1321",
+      "title": "VAUQ: Vision-Aware Uncertainty Quantification for LVLM Self-Evaluation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

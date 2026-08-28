@@ -1,0 +1,587 @@
+{
+  "batch_index": 51,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Low-Rank Adaptation (LoRA) is a widely adopted approach for parameter-efficient fine-tuning of large language models, enabling effective adaptation with a small number of trainable parameters. However, its reliance on linear low-rank projections restricts adaptation to linear subspaces, which can limit flexibility on complex downstream tasks. To address this, we propose RanLoRA, a Residual-aware nonlinear Low-Rank Adaptation approach that leverages the decomposition structure of pretrained weights. We used Singular Value Decomposition (SVD) to decompose pretrained weights into principal components that are kept frozen and residual components that are used for task-specific adaptation. To enhance the expressiveness of linear low-rank updates, RanLoRA incorporates a nonlinear activation layer together with a Hadamard-product-based vector modulation. This design supports an implicit progressive adaptation behavior, where optimization evolves from coarse approximation of dominant components toward residual alignment and fine-grained nonlinear refinement. Experiments on benchmarks covering commonsense reasoning, natural language understanding, image classification, and mathematical reasoning show that RanLoRA consistently outperforms vanilla LoRA and representative variants under comparable parameter budgets. These results suggest that incorporating structured nonlinearity into adapter design can enhance representational flexibility and generalization across tasks in large models.",
+      "paper_id": "acl:2026.findings-acl.852",
+      "title": "RanLoRA: Residual-aware Nonlinear Low-Rank Adaptation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Knowledge within large language models (LLMs) inevitably lags behind an evolving world, motivating knowledge editing methods that update facts without expensive retraining. In multi-hop knowledge editing, models must not only recall updated facts but also correctly propagate them through multi-step reasoning chains. However, most existing approaches rely on unidirectional, feed-forward pipelines, decomposing questions and retrieving edited facts in a rigid hop-wise sequence. This design is brittle: a minor retrieval error or logical mismatch at an early hop can become a silent failure that cascades to the final answer without an explicit recovery mechanism. To address this limitation, we propose Critic-Guided Multi-Agent Reasoning for Knowledge Editing (CARE), a framework for closed-loop post-edit reasoning. A Critic agent performs chain-level verification by checking both global coherence and step-wise correctness, and triggers bounded backtracking for iterative self-correction, while a Selector agent supplies high-fidelity, low-noise candidate pools from the edit store to enable effective revision. Experiments on MQuAKE-2002 and MQuAKE-hard demonstrate that CARE effectively mitigates error propagation, achieving a new state-of-the-art.",
+      "paper_id": "acl:2026.findings-acl.853",
+      "title": "Multi-Hop Knowledge Editing via Critic-Guided Multi-Agent Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Vision-Language Models (LVLMs) can recognize individuals in images and disclose sensitive personal information about them, raising critical privacy concerns. Machine unlearning aims to remove such knowledge from the model. However, existing methods rarely prescribe what the model should output in place of the forgotten content, leading to Unlearning Aftermaths: degenerate, hallucinated, or excessively refused responses. We argue that, especially for generative LVLMs, it is crucial to consider the quality and informativeness of post-unlearning responses rather than relying solely on naive suppression. To address this, we introduce a new unlearning task for LVLMs that requires models to provide privacy-preserving yet informative and visually grounded responses. We also propose PUBG, a novel unlearning method that explicitly guides post-unlearning behavior toward a desirable output distribution. Experiments show that, while existing methods suffer from Unlearning Aftermaths despite successfully preventing privacy violations, PUBG effectively mitigates these issues, generating visually grounded and informative responses without privacy leakage for forgotten targets.",
+      "paper_id": "acl:2026.findings-acl.854",
+      "title": "Rethinking Post-Unlearning Behavior of Large Vision-Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Despite the importance of open-ended event forecasting for risk management, current LLM-based methods predominantly target only the most probable outcomes, neglecting the intrinsic uncertainty of real-world events. To bridge this gap, we advance open-ended event forecasting from pinpoint forecasting to scatter forecasting by introducing the proxy task of hypothesis generation. This paradigm aims to generate an inclusive and diverse set of hypotheses that broadly cover the space of plausible future events. To this end, we propose SCATTER, a reinforcement learning framework that jointly optimizes inclusiveness and diversity of the hypothesis. Specifically, we design a novel hybrid reward that consists of three components: 1) a validity reward that measures semantic alignment with observed events, 2) an intra-group diversity reward to encourage variation within sampled responses, and 3) an inter-group diversity reward to promote exploration across distinct modes. By integrating the validity-gated score into the overall objective, we confine the exploration of wildly diversified outcomes to contextually plausible futures, preventing the mode collapse issue. Experiments on two real-world benchmark datasets, i.e., OpenForecast and OpenEP, demonstrate that SCATTER significantly outperforms strong baselines. Our code is available at https://github.com/Sambac1/SCATTER .",
+      "paper_id": "acl:2026.findings-acl.855",
+      "title": "Scattered Hypothesis Generation for Open-Ended Event Forecasting",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Multi-step retrieval-augmented generation has attracted increasing attention due to its capacity to improve the factuality of large language models with iterative retrieved knowledge. However, the performance of multi-step RAG systems is susceptible to potential retrieval noise and fabricated documents in real-world scenarios. Current approaches usually utilize supervised fine-tuning on predetermined noisy contexts to enhance the robustness. However, their performance remains inadequate when it comes to more complicated long-context scenarios due to the lack of adaptability. Towards this end, we propose a novel framework named Context-attended Adversarial Reinforcement Learning (CARE) for multi-step RAG systems against attacks. The core of our CARE is to conduct reinforcement learning on adversarial samples which are alternatingly enhanced with text gradients. In particular, our CARE includes a reward model to identify the accuracy of responses, which is minimized for the generation of adversarial samples with text gradients. These context-attended noisy samples are then utilized for reinforcement learning to maximize the rewards. The whole framework is conducted alternatingly from easy to hard samples to ensure the smoothness of the optimization. Extensive experiments on multi-step RAG benchmark datasets are conducted to validate the superiority of our proposed CARE in multiple noisy scenarios. Our code is available at https://github.com/yingtaoren/CARE.",
+      "paper_id": "acl:2026.findings-acl.856",
+      "title": "Context-attended Adversarial Reinforcement Learning for Robust Multi-step Retrieval Augmented Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Mixture-of-Experts (MoE) efficiently trains large models by using sparse activation to lower costs, selecting a few experts based on data characteristics. For MoE, an unbalanced expert load will lead to inefficient expert utilization and routing collapse. Existing methods commonly achieve an expert-centered balancing strategy to solve it, prioritizing equal utilization of experts over semantic alignment between tokens and experts. However, this can lead to a pseudo-balance phenomenon: To ensure expert load balancing, the same input is randomly routed to different experts across training steps instead of the most matching one. It introduces two critical issues: (1) Severe knowledge overlap among experts, resulting in redundant representations and inefficient parameter utilization. (2) Difficulty in forming and stabilizing expert specialization. These issues limit the scalability of models, especially large language models (LLM). To address these limitations, we introduce Memory-Aware Routing (MAR), a training-phase approach that enhances existing load-balancing strategies. By equipping each expert with a memory buffer, our method explicitly models their long-term preferences, allowing historical experience to guide routing. This ensures that tokens are routed more consistently to compatible experts, mitigating the pseudo-balance problem while maintaining global load balance and fostering expert specialization. Experimental results show that MAR improves expert specialization by 35% and downstream accuracy by 2%-25%, doubles parameter efficiency, and matches baseline performance with only half the experts.",
+      "paper_id": "acl:2026.findings-acl.857",
+      "title": "From Pseudo-Balancing to True Specialization: Memory-Aware Routing for Mixture-of-Experts",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Estimating the persuasiveness of messages is critical in various applications, from recommender systems to safety assessment of LLMs. While it is imperative to consider the target persuadee’s characteristics, such as their values, experiences, and reasoning styles, there is currently no established systematic framework to optimize leveraging a persuadee’s past activities (e.g., conversations) to the benefit of a persuasiveness prediction model. To address this problem, we propose a context-aware user profiling framework with two trainable components: a query generator that generates optimal queries to retrieve persuasion-relevant records from a user’s history, and a profiler that summarizes these records into a profile to effectively inform the persuasiveness prediction model.Our evaluation on the ChangeMyView Reddit dataset shows consistent improvements over existing methods across multiple predictor models, raising F1 from 33% to 47% on Llama-3.3-70B-Instruct. Further analysis shows that effective user profiles are context-dependent and predictor-specific, rather than relying on static attributes or surface-level similarity. Together, these results highlight the importance of task-oriented, context-dependent user profiling for personalized persuasiveness prediction.",
+      "paper_id": "acl:2026.findings-acl.858",
+      "title": "Learning to Retrieve User History and Generate User Profiles for Personalized Persuasiveness Prediction",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Reasoning has substantially improved Large Language Models (LLMs) on analytical tasks such as mathematics and code generation, but its value for abstractive summarization remains unclear. To address this gap, we adapt general reasoning strategies to the summarization setting and conduct a large-scale comparative study of 8 reasoning strategies and 3 Large Reasoning Models (LRMs) across 8 diverse datasets, evaluating both summary quality and factual faithfulness. Our results show that reasoning is not a universal solution and its effectiveness depends strongly on the strategy and the summarization setting. In particular, we find a trade-off between summary quality and factual faithfulness. Explicit reasoning strategies often improve reference-based quality, but may weaken factual grounding, whereas implicit reasoning in LRMs shows the opposite tendency. We further find that increasing an LRM’s internal reasoning budget does not reliably improve summarization and can even reduce factual consistency. These findings suggest that, for summarization, more reasoning is not always better. Effective reasoning should preserve faithful compression rather than induce over-elaboration.",
+      "paper_id": "acl:2026.findings-acl.859",
+      "title": "Understanding LLM Reasoning for Abstractive Summarization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) increasingly rely on external tools to complete complex tasks, yet their ability to recognize and correct their own tool-use mistakes remains underexplored. Existing benchmarks primarily evaluate planning and execution success, overlooking the self-reflective dimension of tool use. To address this gap, we present ReflecTool-Bench, the first benchmark designed to assess LLMs’ self-reflective reasoning in tool-augmented multi-turn dialogues. ReflecTool-Bench covers 10 domains with 88 distinct APIs and 968 annotated dialogues, systematically injecting diverse error types arising from both user and assistant behavior. The benchmark defines two complementary evaluation setups: the Critique task, where models diagnose errors in third-party dialogues, and the Self-Reflection Task, where models must detect and repair their own prior tool-use mistakes. We introduce fine-grained metrics for error detection, error classification, correction accuracy, and explanation quality, enabling a holistic assessment of reflective reasoning. Evaluations across 12 state-of-the-art models, including both API-based closed source models and open source models, reveal that while models can reliably identify user-originated errors, they struggle with assistant-originated ones, and performance drops sharply when moving from critique to self-reflection.",
+      "paper_id": "acl:2026.findings-acl.86",
+      "title": "Do LLMs Catch Their Own Mistakes? A Comprehensive Benchmark for Reflective Tool Use LLMs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Tool graphs (TG) model dependencies among tools and resources, enabling more structured organization and management of large toolsets. However, existing methods and benchmarks often formulate tool learning (TL) as a single-solution setting, overlooking the fact that many tasks admit multiple valid tool combinations and therefore require optimal solution selection. Moreover, exploring large-scale TG is computationally expensive, especially under constrained context budgets. To address these challenges, we propose TOPT, an efficient framework for learning optimal TL policies over large TG, as well as construct MultiSoTLBench, a large-scale Multi-Solution TL Benchmark, where each task admits multiple valid solutions. Specifically, to improve search efficiency in large action spaces, TOPT adopts a progressive graph expansion strategy: we train a reinforcement learning (RL) agent to acquire transferable expansion skills and construct, on demand, a compact solvable subgraph that preserves only task-relevant links. This reduces the size of the candidate space and the context usage from the outset. To enable optimal selection, we further propose a progressive graph reasoning framework. It performs RL-driven optimality analysis and scheduling on the expanded subgraph to generate an optimal tool chain that balances path length and tool cost. Comprehensive experiments on MultiSoTLBench demonstrate that TOPT generalizes effectively, improving task success and solution optimality by 46.21% and 66.34%, respectively.",
+      "paper_id": "acl:2026.findings-acl.860",
+      "title": "Feasible is Not Enough: Cost-Aware Optimal Tool-Chain Planning on Multi-Solution Tool Graphs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Masked diffusion language models (MDLMs) have recently emerged as a new paradigm in language modeling, offering flexible generation dynamics and enabling efficient parallel decoding. However, existing decoding strategies for pre-trained MDLMs predominantly rely on token-level uncertainty criteria, while largely overlooking sequence-level information and inter-token dependencies. To address this limitation, we propose Dependency-Oriented Sampler (DOS), a training-free decoding strategy that leverages inter-token dependencies to inform token updates during generation. Specifically, DOS exploits attention matrices from transformer blocks to approximate inter-token dependencies, emphasizing information from unmasked tokens when updating masked positions. Empirical results demonstrate that DOS consistently achieves superior performance on both code generation and mathematical reasoning tasks. Moreover, DOS can be seamlessly integrated with existing parallel sampling methods, leading to improved generation efficiency without sacrificing generation quality.",
+      "paper_id": "acl:2026.findings-acl.861",
+      "title": "DOS: Dependency-Oriented Sampler for Masked Diffusion Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) are increasingly used to generate narrative content, including children’s stories, which play an important role in social and cultural learning. Despite growing interest in AI safety and alignment, most existing evaluations focus primarily on English, leaving the cross-lingual generalization of aligned behavior underexplored. In this work, we introduce BiasedTales-ML, a large-scale parallel corpus of approximately 350,000 children’s stories generated across eight typologically and culturally diverse languages using a full-permutation prompting design. We propose a structured generator-extractor pipeline and a multi-dimensional distributional analysis framework to examine how narrative attributes vary across languages, models, and social conditions.Our analysis reveals substantial cross-lingual variability in narrative generation patterns, indicating that distributions observed in English do not always exhibit similar characteristics in other languages, particularly in lower-resource settings. At the narrative level, we identify recurring structural patterns involving character roles, settings, and thematic emphasis, which manifest differently across linguistic contexts.These findings highlight the limitations of English-centric evaluation for characterizing socially grounded narrative generation in multilingual settings. We release the dataset, code, and an interactive visualization tool to support future research on multilingual narrative analysis and evaluation.",
+      "paper_id": "acl:2026.findings-acl.862",
+      "title": "BIASEDTALES-ML: A Multilingual Dataset for Analyzing Narrative Attribute Distributions in LLM-Generated Stories",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "With the rise of advanced reasoning capabilities, large language models (LLMs) are receiving increasing attention. While reasoning enhances LLMs’ performance on downstream tasks, it also introduces new threat vectors, as adversaries can leverage these capabilities to conduct backdoor attacks. Prior surveys provide broad overviews of backdoor attacks and reasoning security; however, a systematic survey focused on backdoor attacks and defenses against LLM reasoning is still absent. In this paper, we take the first step toward providing a comprehensive review of reasoning-based backdoor attacks in LLMs by analyzing their underlying mechanisms, methodological frameworks, and unresolved challenges. Specifically, we introduce a new taxonomy that offers a unified perspective for summarizing existing approaches, categorizing reasoning-based backdoor attacks into associative, passive, and active. We also summarize defenses against such attacks and discuss current challenges alongside future research directions.",
+      "paper_id": "acl:2026.findings-acl.863",
+      "title": "Rethinking Reasoning: A Survey on Reasoning-based Backdoors in LLMs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Speculative decoding (SD) accelerates large language model inference by allowing a lightweight draft model to propose outputs that a stronger target model verifies. However, its token-centric nature allows erroneous steps to propagate. Prior approaches mitigate this using external reward models, but incur additional latency, computational overhead, and limit generalizability. We propose SpecGuard, a verification-aware speculative decoding framework that performs step-level verification using only model-internal signals. At each step, SpecGuard samples multiple draft candidates and selects the most consistent step, which is then validated using an ensemble of two lightweight model-internal signals: (i) an attention-based grounding score that measures attribution to the input and previously accepted steps, and (ii) a log-probability-based score that captures token-level confidence. These signals jointly determine whether a step is accepted or recomputed using the target, allocating compute selectively. Experiments across a range of reasoning benchmarks show that SpecGuard improves accuracy by 3.6% while reducing latency by ~11%, outperforming both SD and reward-guided SD.",
+      "paper_id": "acl:2026.findings-acl.864",
+      "title": "From Tokens to Steps: Verification-Aware Speculative Decoding for Efficient Multi-Step Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Reinforcement learning (RL) has emerged as a promising paradigm for training reasoning-oriented models by leveraging rule-based reward signals. However, RL training typically tends to improve single-sample success rates (i.e., Pass@1) while offering limited exploration of diverse reasoning trajectories, which is crucial for multi-sample performance (i.e., Pass@k). Our preliminary analysis reveals that this limitation stems from a fundamental squeezing effect, whereby probability mass is excessively concentrated on a narrow subset of high-reward trajectories, restricting genuine exploration and constraining attainable performance under RL training. To address this issue, in this work, we propose Steering Probability Squeezing (SPS), a training paradigm that interleaves conventional RL with inverse reinforcement learning (IRL). SPS treats on-policy rollouts as demonstrations and employs IRL to explicitly reshape the induced trajectory distribution, thereby enhancing exploration without introducing external supervision. Experiments on five commonly used reasoning benchmarks demonstrate that SPS can enable better exploration and improve Pass@k. Beyond algorithmic contributions, we provide an analysis of RL learning dynamics and identify an empirical upper bound on Pass@k, shedding light on intrinsic exploration limits in RL-based reasoning models. Our findings suggest that alternating between RL and IRL offers an effective pathway toward extending the exploration capacity of reasoning-oriented large language models.",
+      "paper_id": "acl:2026.findings-acl.865",
+      "title": "SPS: Steering Probability Squeezing for Better Exploration in Reinforcement Learning for Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) based agents excel at diverse tasks, yet they suffer from brittle procedural memory that is manually engineered or entangled in static parameters. In this work, we investigate strategies to endow agents with a learnable, updatable, and lifelong procedural memory. We propose a procedural-memory repository that distills past agent trajectories into both fine-grained, step-by-step instructions and higher-level, script-like abstractions. Coupled with a dynamic regimen that continuously updates, corrects, and deprecates its contents, this repository evolves in lockstep with new experience. Empirical evaluation on TravelPlanner and Alfworld shows that as the memory repository is refined, agents achieve steadily higher success rates and greater efficiency on analogous tasks. Moreover, procedural memory built from a stronger model retains its value: migrating the procedural memory to a weaker model yields substantial performance gains.",
+      "paper_id": "acl:2026.findings-acl.866",
+      "title": "Memp: Exploring Agent Procedural Memory",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "The integration of large language models (LLMs) with external tools has significantly expanded the capabilities of AI agents. However, as the diversity of both LLMs and tools increases, selecting the optimal model-tool combination becomes a high-dimensional optimization challenge. Existing approaches often rely on a single model or fixed tool-calling logic, failing to exploit the performance variations across heterogeneous model-tool pairs. In this paper, we present ATLAS (Adaptive Tool-LLM Alignment and Synergistic Invocation), a dual-path framework for dynamic tool usage in cross-domain complex reasoning. ATLAS operates via a dual-path approach: (1) training-free cluster-based routing that exploits empirical priors for domain-specific alignment, and (2) RL-based multi-step routing that explores autonomous trajectories for out-of-distribution generalization. Extensive experiments across 15 benchmarks demonstrate that our method outperforms closed-source models like GPT-4o as well as existing routing methods on both in-distribution (+10.1%) and out-of-distribution (+13.1%) tasks. Furthermore, our framework shows significant gains in visual reasoning by orchestrating specialized multi-modal tools.",
+      "paper_id": "acl:2026.findings-acl.867",
+      "title": "ATLAS: Orchestrating Heterogeneous Models and Tools for Multi-Domain Complex Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Prior representative ReAct-style approaches in autonomous Software Engineering (SWE) typically lack the explicit System-2 reasoning required for deep analysis and handling complex edge cases. While recent reasoning models demonstrate the potential of extended Chain-of-Thought (CoT), applying them to the multi-turn SWE task creates a fundamental dilemma: retaining full reasoning history leads to context explosion and “Lost-in-the-Middle” degradation, while discarding it would force the agent to redundantly re-reason at every step. To address these challenges, we propose SWE-AGILE, a novel software agent framework designed to bridge the gap between reasoning depth, efficiency, and context constraints. SWE-AGILE introduces a Dynamic Reasoning Context strategy, maintaining a “sliding window” of detailed reasoning for immediate continuity to prevent redundant re-analyzing, while compressing historical reasoning content into concise Reasoning Digests. Empirically, SWE-AGILE sets a new standard for 7B-8B models on SWE-Bench-Verified using only 2.2k trajectories and 896 tasks. Code is available at https://github.com/KDEGroup/SWE-AGILE.",
+      "paper_id": "acl:2026.findings-acl.868",
+      "title": "SWE-AGILE: A Software Agent Framework for Efficiently Managing Dynamic Reasoning Context",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "While current LLM agents utilizing paradigms like ReAct or Plan-and-Solve have established a strong foundation for step-by-step reasoning, they remain brittle in open-ended environments due to two intrinsic limitations: (1) A closed action space: These frameworks are confined to static, pre-defined toolsets, rendering them unable to adapt when required tools are missing or obsolete. (2) Myopic error recovery: Existing agents often get trapped in repetitive local retries, failing to diagnose and rectify root causes within the high-level plan. To overcome these limitations, we introduce CAR (Create And Replan), a novel architecture that incorporates a meta-tool synthesizer to dynamically augment the action space and a reflective replanning mechanism to revise global strategies. To rigorously evaluate our approach, we release ToolHop-Pro, a diagnostic benchmark with systematically pruned toolsets to simulate tool scarcity. Experiments demonstrate that CAR significantly outperforms representative baselines, validating its superior robustness where static agents fail. Code and data are available at https://github.com/Zaiz-77/car.",
+      "paper_id": "acl:2026.findings-acl.869",
+      "title": "CAR: Empowering Agents with Dynamic Tool Synthesis and Global Trajectory Rectification",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Role-playing models (RPMs) are widely used in real-world applications but underperform when deployed in the wild. This degradation can be attributed to distribution shifts, including user, character, and dialogue compositional shifts. Existing methods like LLM-as-a-judge fall short in providing a fine-grained diagnosis of how these shifts affect RPM generalization, and thus there lack formal frameworks to characterize RPM generalization behaviors. To bridge these gaps, we introduce an information-theoretic metric, named reasoning-based effective mutual information difference (R-EMID), to measure RPM performance degradation in an interpretable way. We also derive an upper bound on R-EMID to predict the worst-case generalization performance of RPMs and theoretically reveal how various shifts contribute to the RPM performance degradation. Moreover, we propose a co-evolving reinforcement learning framework to adaptively model the connection among user, character, and dialogue context and thus enhance the estimation of dialogue response generation probability, which is critical for calculating R-EMID. Finally, we evaluate the generalization performance of various RPMs using R-EMID, finding that user shift poses the highest risk among all shifts and reinforcement learning is the most effective approach for enhancing RPM generalization. Code and data are available at https://github.com/AlibabaResearch/DAMO-ConvAI/tree/main/RPM-Generalization.",
+      "paper_id": "acl:2026.findings-acl.87",
+      "title": "Understanding Generalization in Role-Playing Models via Information Theory",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Self-conditioning has been central to the success of continuous diffusion language models, as it allows models to correct previous errors. Yet its ability degrades precisely in the regime where diffusion is most attractive for deployment: few-step sampling for fast inference. In this study, we show that when models only have a few denoising steps, inaccurate self-conditioning induces a substantial approximation gap; this mistake compounds across denoising steps and ultimately dominate the sample quality. To address this, we propose a novel training framework that handles these errors during learning by perturbing the self-conditioning signal to match inference noise, improving robustness to prior estimation errors. In addition, we introduce a token-level noise-awareness mechanism that prevents training from saturation, hence improving optimization. Extensive experiments across conditional generation benchmarks demonstrate that our framework surpasses standard continuous diffusion models while providing up to 400x faster inference speed, and remains competitive against other one-step diffusion frameworks.",
+      "paper_id": "acl:2026.findings-acl.870",
+      "title": "FastDiSS: Few-step Match Many-step Diffusion Language Model on Sequence-to-Sequence Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Automatic instruction generation offers a low-cost, high-efficiency pathway for fine-tuning large language models (LLMs). However, existing methods struggle in knowledge-intensive domains and complex reasoning tasks due to their dependence on high-quality seed data, limited coverage of single-document knowledge, and repetitive content. To overcome these limitations, this paper presents GCIG, a GraphRAG-based Cross-document Instruction Generation framework. We begin by constructing an enhanced knowledge graph to provide a structural representation of the raw corpus, followed by LLM-driven selection of reliable subgraph-text pairs based on factuality and logical complementarity. Subsequently, we adaptively generate diverse questions through task-aware prompts and context-sensitive retrieval. Finally, we employ Chain-of-Thought reasoning to anchor entity paths and integrate scattered evidence, thereby closing logical gaps and improving answer coherence. Experiments on knowledge-intensive and multi-hop question-answering tasks demonstrate that GCIG outperforms existing methods, producing instruction data with stronger logical consistency and broader knowledge coverage for effective LLM fine-tuning. The code and data are publicly available at https://github.com/WhitEiller/GCIG.",
+      "paper_id": "acl:2026.findings-acl.871",
+      "title": "GCIG: GraphRAG-based Cross-document Instruction Generation for Boosting LLM Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Advanced agentic intelligence is a prerequisite for deploying Large Language Models in practical, real-world applications. Diverse real-world APIs demand precise, robust function-calling intelligence, which needs agents to develop these capabilities through interaction in varied environments. The breadth of function-calling competence is closely tied to the diversity of environments in which agents are trained. In this work, we scale up environments as a step towards advancing general agentic intelligence. This gives rise to two central challenges: (i) how to scale environments in a principled manner, and (ii) how to effectively train agentic capabilities from experiences derived through interactions with these environments. To address these, we design a scalable framework that automatically constructs heterogeneous environments that are fully simulated, broadening the space of function-calling scenarios. We further adapt a two-phase agent fine-tuning strategy: first endowing agents with fundamental agentic capabilities, then specializing them for domain-specific contexts. Extensive experiments on agentic benchmarks, -bench, -Bench, and ACEBench, demonstrate that our trained model, AgentScaler, significantly enhances the models’ function-calling capability.",
+      "paper_id": "acl:2026.findings-acl.872",
+      "title": "Towards General Agentic Intelligence via Environment Scaling",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Existing in-context editing (ICE) methods for multi-hop knowledge editing commonly suffer from paraphrase sensitivity, which refers to the phenomenon where these methods are not sufficiently robust to paraphrased multi-hop questions. To improve retrieval accuracy and knowledge routing to address paraphrase sensitivity, this paper proposes a novel entity-aware inference-time knowledge routing method, referred to as EAIR, which consists of four major steps: 1) Entity-referential query decomposition, which decomposes the original question into multiple entity-referential sub-question instructions; 2) Entity-aware retrieval, which leverages the previously reference-resolved topic entity in the retrieval step; 3) Evidence-conditioned contrastive decoding, which discourages the model from relying on its parametric knowledge and steers the model toward following retrieved edits; 4) Reflection-based knowledge routing, which additionally filters decoding results using refusal-style reflection to mitigate the risk introduced by contrastive decoding. Experimental results across the MQuAKE benchmark family and model scales show that EAIR achieves the highest strict case accuracy in 11 of 12 settings, substantially reducing paraphrase sensitivity.",
+      "paper_id": "acl:2026.findings-acl.873",
+      "title": "EAIR: Entity-aware Inference-Time Knowledge Routing for Multi-Hop Knowledge Editing",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Safety alignment in Large Language Models (LLMs) remains highly fragile during fine-tuning, where even benign adaptation can degrade pre-trained refusal behaviors and enable harmful responses. Existing defenses typically constrain either weights or activations in isolation, without considering their coupled effects on safety. In this paper, we first theoretically demonstrate that constraining either weights or activations alone is insufficient for safety preservation. To robustly preserve safety alignment, we propose Coupled Weight and Activation Constraints (CWAC), a novel approach that simultaneously enforces a precomputed safety subspace on weight updates and applies targeted regularization to safety-critical features identified by sparse autoencoders. Extensive experiments across four widely used LLMs and diverse downstream tasks show that CWAC consistently achieves the lowest harmful scores with minimal impact on fine-tuning accuracy, substantially outperforming strong baselines even under high harmful data ratios.",
+      "paper_id": "acl:2026.findings-acl.874",
+      "title": "Preventing Safety Drift in Large Language Models via Coupled Weight and Activation Constraints",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Reinforcement learning (RL) is widely used for post-training large language models (LLMs) in code editing, where group-relative methods, such as GRPO, are popular due to their critic-free and normalized advantage estimation. However, in real-world code-editing scenarios, reward distributions are often skewed with unpredictable noise, leading to distorted advantage computation and increased rollout outliers. To address this issue, we propose Group Adaptive Policy Optimization (GAPO), which adaptively finds an interval with the highest SNR (Signal to Noise Ratio) per prompt and uses the median of that interval as an adaptive Q to replace the group mean in advantage calculation to reduce noise further. This adaptive Q robustly handles rollout noise while remaining plug-and-play and efficient. We evaluate GAPO on nine instruction-tuned LLMs (3B–14B) using a collected large dataset of 51,844 real-world, history-aware code-editing tasks spanning 10 programming languages. GAPO yields up to 4.35 in-domain (ID) and 5.30 out-of-domain (OOD) exact-match improvements over GRPO and its variant DAPO, while achieving lower clipping ratios and higher GPU throughput. Code: https://github.com/TsingZ0/verl-GAPO",
+      "paper_id": "acl:2026.findings-acl.875",
+      "title": "GAPO: Robust Advantage Estimation for Real-World Code LLMs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Existing Graphical User Interface (GUI) reasoning tasks remain challenging, particularly in UI understanding. Current methods typically rely on direct screen-based decision-making, which lacks interpretability and overlooks a comprehensive understanding of UI elements, ultimately leading to task failure. To enhance the understanding and interaction with UIs, we propose an innovative GUI reasoning paradigm called UI-in-the-Loop (UILoop). Our approach treats the GUI reasoning task as a cyclic Screen-UI elements-Action process. By enabling Multimodal Large Language Models (MLLMs) to explicitly learn the localization, semantic functions, and practical usage of key UI elements, UILoop achieves precise element discovery and performs interpretable reasoning. Furthermore, we introduce a more challenging UI Comprehension task centered on UI elements with three evaluation metrics. Correspondingly, we contribute a benchmark of 26K samples (UI Comprehension-Bench) to comprehensively evaluate existing methods’ mastery of UI elements. Extensive experiments demonstrate that UILoop achieves state-of-the-art UI understanding performance while yielding superior results in GUI reasoning tasks.",
+      "paper_id": "acl:2026.findings-acl.876",
+      "title": "What's Missing in Screen-to-Action? Towards a UI-in-the-Loop Paradigm for Multimodal GUI Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large reasoning models (LRMs) have achieved strong performance enhancement through scaling test time computation, but due to the inherent limitations of the underlying language models, they still have shortcomings in tasks that require precise computation and extensive knowledge reserves. Tool-Integrated Reasoning (TIR) has emerged as a promising paradigm that incorporates tool call and execution within the reasoning trajectory. Although recent works have released some powerful open-source TIR models, our analysis reveals that these models still suffer from critical deficiencies. We find that when the reasoning of the model conflicts with the tool results, the model tends to believe in its own reasoning. And there are cases where the tool results are correct but are ignored by the model, resulting in incorrect answers, which we define as “Tool Ignored”. This indicates that the model does not know when to trust or ignore the tool. To overcome these limitations, We introduce Adaptive Tool Trust Calibration (ATTC), a novel framework that guides the model to adaptively choose to trust or ignore the tool results based on the confidence score of generated code blocks. The experimental results from various open-source TIR models of different sizes and across multiple datasets demonstrate that ATTC effectively reduces the “Tool Ignored” issue, resulting in a performance increase of 4.1% to 7.5%.",
+      "paper_id": "acl:2026.findings-acl.877",
+      "title": "When to Trust Tools? Adaptive Tool Trust Calibration For Tool-Integrated Math Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Recent advancements in Multimodal Large Language Models (MLLMs) have demonstrated impressive capabilities in visual-text processing. However, existing static image-text benchmarks are insufficient for evaluating their dynamic perception and interactive reasoning abilities. We introduce Vision-centric Multiple Abilities Game Evaluation (V-MAGE), a novel game-based evaluation framework designed to systematically assess MLLMs’ visual reasoning in interactive, continuous-space environments. V-MAGE features five distinct video games comprising over 30 carefully constructed evaluation scenarios. These scenarios are set in free-form, visually complex environments that require models to interpret dynamic game states and make decisions based solely on visual input, thereby closely reflecting the conditions encountered by human players. To ensure robust and interpretable comparisons across models, V-MAGE employs a dynamic ELO-based ranking system that accounts for varying difficulty levels and task diversity. Benchmarking state-of-the-art MLLMs against human baselines reveals that while leading models approach human-level performance in simple tasks, their performance drops significantly in complex scenarios requiring advanced reasoning and task orchestration. This persistent performance gap highlights fundamental limitations in current MLLMs’ ability to perform vision-grounded, interactive frame-by-frame control in simulated continuous-time environments. Through extensive analyses, we demonstrate the utility of V-MAGE in uncovering these limitations and providing actionable insights for improving the visual and reasoning capabilities of MLLMs in dynamic, interactive settings. Code is publicly available at https://github.com/CSU-JPG/V-MAGE.",
+      "paper_id": "acl:2026.findings-acl.878",
+      "title": "V-MAGE: A Game Evaluation Framework for Assessing Vision-Centric Capabilities in Multimodal Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Reinforcement learning with verifiable rewards (RLVR) has become an effective paradigm for improving the reasoning ability of large language models. However, widely used RLVR algorithms, such as GRPO, often suffer from entropy collapse, leading to premature determinism and unstable optimization. Existing remedies, including entropy regularization and ratio-based clipping heuristics, either control entropy in a coarse-grained manner or rely on approximate on-policy training. In this paper, we revisit entropy collapse from a token-level entropy flow perspective. Our analysis reveals that entropy-decreasing tokens consistently outweigh entropy-increasing ones, resulting in a severely imbalanced entropy flow. This perspective provides a unified explanation of entropy collapse in existing RLVR algorithms and highlights the importance of balancing entropy dynamics. Motivated by this analysis, we propose On-Policy Entropy Flow Optimization (OPEFO), an adaptive entropy flow balancing mechanism that rescales entropy-increasing and entropy-decreasing updates according to their contributions to entropy change, while remaining strict on-policy. Experiments on six mathematical reasoning benchmarks demonstrate that OPEFO improves training stability and final performance. We will release the code and models upon publication.",
+      "paper_id": "acl:2026.findings-acl.879",
+      "title": "Understanding and Preventing Entropy Collapse in RLVR with On-Policy Entropy Flow Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "The Mutual Reinforcement Effect (MRE) describes a phenomenon in information extraction where word-level and sentence-level tasks can mutually improve each other when jointly modeled. While prior work has reported MRE in Japanese, its generality across languages and task settings has not been empirically validated, largely due to the lack of multilingual MRE datasets. To address this limitation, we introduce the Multilingual MRE Mix dataset (MMM), which consists of 21 sub-datasets covering English, Japanese, and Chinese. We propose an LLM-assisted dataset translation and alignment framework that significantly reduces manual annotation effort while preserving the structural requirements of MRE tasks. Building on MMM, we adopt a unified input-output framework to train an open-domain information extraction model and conduct extensive empirical studies, including full fine-tuning ablations and the construction of knowledgeable verbalizers based on MRE-mix data. Experimental results show that 76 percent of the MMM sub-datasets consistently exhibit the Mutual Reinforcement Effect across languages. These findings provide systematic empirical validation of MRE in multilingual settings and demonstrate its practical value for information extraction.",
+      "paper_id": "acl:2026.findings-acl.88",
+      "title": "A Multilingual Dataset and Empirical Validation for the Mutual Reinforcement Effect in Information Extraction",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Extending large language models (LLMs) to low-resource languages often incurs an “align- ment tax”: improvements in the target lan- guage come at the cost of catastrophic forget- ting in general capabilities. We argue that this trade-off arises from the rigidity of supervised fine-tuning (SFT), which enforces token-level surface imitation on narrow and biased data distributions. To address this limitation, we propose a semantic-space alignment paradigm powered by Group Relative Policy Optimiza- tion (GRPO), where the model is optimized us- ing embedding-level semantic rewards rather than likelihood maximization. This objective encourages meaning preservation through flex- ible realizations, enabling controlled updates that reduce destructive interference with pre- trained knowledge. We evaluate our approach on Tibetan–Chinese machine translation and Ti- betan headline generation. Experiments show that our method acquires low-resource capa- bilities while markedly mitigating alignment tax, preserving general competence more effec- tively than SFT. Despite producing less rigid surface overlap, semantic RL yields higher se- mantic quality and preference in open-ended generation, and few-shot transfer results indi- cate that it learns more transferable and ro- bust representations under limited supervision. Overall, our study demonstrates that reinforce- ment learning with semantic rewards provides a safer and more reliable pathway for inclusive low-resource language expansion.",
+      "paper_id": "acl:2026.findings-acl.880",
+      "title": "Reinforcement Learning with Semantic Rewards Enables Low-Resource Language Expansion without Alignment Tax",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "In the era of large language models (LLMs), supervised neural methods remain the state-of-the-art (SOTA) for Coreference Resolution. Yet, their full potential is underexplored, particularly in incremental clustering, which faces the critical challenge of balancing efficiency with performance for long texts. To address the limitation, we propose MEIC-DT, a novel dual-threshold, memory-efficient incremental clustering approach based on a lightweight Transformer. MEIC-DT features a dual-threshold constraint mechanism designed to precisely control the Transformer’s input scale within a predefined memory budget. This mechanism incorporates two key components: a Statistics-Aware Eviction Strategy (SAES) and an Internal Regularization Policy (IRP). The SAES utilizes distinct statistical profiles from the training and inference phases for intelligent cache management. The IRP strategically condenses clusters by selecting the most representative mentions, thereby preserving semantic integrity. Extensive experiments on common benchmarks demonstrate that MEIC-DT achieves highly competitive coreference performance under stringent memory constraints.",
+      "paper_id": "acl:2026.findings-acl.881",
+      "title": "MEIC-DT: Memory-Efficient Incremental Clustering for Long-Text Coreference Resolution with Dual-Threshold Constraints",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "While Diffusion Large Language Models (dLLMs) have emerged as a promising non-autoregressive paradigm comparable to auto-regressive (AR) models, their faithfulness, specifically regarding hallucination, remains largely underexplored. To bridge this gap, we present the first controlled comparative study to evaluate hallucination patterns in dLLMs. Our results demonstrate that current dLLMs exhibit a higher propensity for hallucination than AR counterparts controlled for architecture, scale, and pre-training weights. Furthermore, an analysis of inference-time compute reveals divergent dynamics: while quasi-autoregressive generation suffers from early saturation, non-sequential decoding unlocks potential for continuous refinement. Finally, we identify distinct failure modes unique to the diffusion process, including premature termination, incomplete denoising, and context intrusion. Our findings underscore that although dLLMs have narrowed the performance gap on general tasks, their distinct hallucination mechanisms pose a critical challenge to model reliability.",
+      "paper_id": "acl:2026.findings-acl.882",
+      "title": "Lost in Diffusion: Uncovering Hallucination Patterns and Failure Modes in Diffusion Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Parameter-efficient fine-tuning (PEFT) has become a prevalent approach for adapting large language models (LLMs). However, low-rank adaptation methods face an inherent trade-off: improving target task performance can compromise pre-trained world knowledge, while aggressively constraining updates to preserve world knowledge may hinder improvements in the target task. Furthermore, most current methods fail to account for layer-wise differences in adaptation sensitivity, resulting in suboptimal preservation of world knowledge and task adaptation. To address these challenge, we propose Fisher-Optimized Adaptive Low Rank and Singular-VectorSelection (FARSS), an effective framework for knowledge-preserving fine-tuning. This framework introduces two key innovations. First, we propose a Fisher-guided adaptive rank allocation strategy, which assigns smaller ranks to shallow layers that are critical for preserving world knowledge, and larger ranks to deep layers that are essential for task adaptation. Second, we introduce a task-aware initialization method that integrates singular value information with layer-specific second-order statistics estimated from activation and gradient covariances, enabling efficient and task-sensitive low-rank updates. We evaluated several models across various tasks, and the experimental results show that our approach outperforms existing PEFT methods, including LoRA, Corda, and KaSA, achieving a balance between preserving world knowledge and enhancing target task performance. The code is available at https://github.com/chenyehuang/FARSS.",
+      "paper_id": "acl:2026.findings-acl.883",
+      "title": "FARSS: Fisher-Optimized Adaptive Low-Rank and Singular-Vector Selection for Knowledge-Preserving Fine-Tuning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Retrieval-Augmented Generation (RAG) enhances the factuality of Large Language Models (LLMs) by incorporating retrieved documents and/or generated context. However, LLMs often exhibit a stylistic bias when presented with mixed contexts, favoring fluent but hallucinated generated content over factually grounded yet disorganized retrieved evidence. This phenomenon reveals that the utility of retrieved information is bottlenecked by its presentation. To bridge this gap, we propose QREAM, a style-controlled rewriter that aligns retrieved documents with a question-oriented style while preserving facts, better for LLM readers to utilize. Our framework consists of two stages: (1) QREAM-ICL, which uses stylistic seeds to guide iterative rewriting exploration; and (2) QREAM-FT, a lightweight student model distilled from denoised ICL outputs. QREAM-FT employs dual-criteria rejection sampling, filtering based on answer correctness and factual consistency to ensure high-quality supervision. QREAM seamlessly integrates into existing RAG pipelines as a plug-and-play module. Experiments demonstrate that QREAM consistently enhances advanced RAG pipelines, yielding up to 8% relative improvement with negligible latency overhead, effectively balancing question relevance with factual grounding.",
+      "paper_id": "acl:2026.findings-acl.884",
+      "title": "Align Documents to Questions: Question-Oriented Document Rewriting for Retrieval-Augmented Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Reasoning Models (LRMs) achieve remarkable performance by explicitly generating multi-step chains of thought, but this capability incurs substantial inference latency and computational cost. Collaborative inference offers a promising solution by selectively allocating work between lightweight and large models, yet a fundamental challenge remains: determining when a reasoning step requires the capacity of a large model or the efficiency of a small model. Existing routing strategies either rely on local token probabilities or post-hoc verification, introducing significant inference overhead. In this work, we propose a novel perspective on step-wise collaboration: the difficulty of a reasoning step can be inferred from its very first token. Inspired by the “Aha Moment” phenomenon in LRMs, we show that the entropy of the initial token serves as a strong predictor of step difficulty. Building on this insight, we introduce GlimpRouter, a training-free step-wise collaboration framework. GlimpRouter employs a lightweight model to generate only the first token of each reasoning step and routes the step to a larger model only when the initial token entropy exceeds a threshold. Experiments on multiple benchmarks demonstrate that our approach significantly reduces inference latency while preserving accuracy. For instance, GlimpRouter attains a substantial 10.7% improvement in accuracy while reducing inference latency by 25.9% compared to a standalone large model on AIME25. These results suggest a simple yet effective mechanism for reasoning: allocating computation based on a glimpse of thought rather than full-step evaluation.",
+      "paper_id": "acl:2026.findings-acl.885",
+      "title": "GlimpRouter: Efficient Collaborative Inference by Glimpsing One Token of Thoughts",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Reinforcement learning (RL) is effective for improving code generation but suffers from data scarcity. While experience replay mitigates this, existing approaches rely on static, in-epoch metrics that overlook training dynamics, often introducing low-utility or outdated data. Analyzing RL dynamics via dataset cartography, we observe that “ambiguous” samples, which are vital for model generalization, rapidly migrate to “easy-to-learn” regions, diminishing their training value. To address this, we propose Adaptive Ambiguity Replay (A2R) for RL, a plug-and-play module that prioritizes cross-epoch ambiguous samples. To neutralize the noise from stale experiences, A2R incorporates an adaptive importance mechanism based on policy divergence to weigh replayed rollouts. Extensive experiments on nine LLMs (3B–14B) demonstrate that A2R outperforms state-of-the-art baselines on real-world code editing tasks across both unseen and learned domains. Our results highlight cross-epoch ambiguity as a key factor for effective replay in RL. Code: https://github.com/TsingZ0/verl-A2R",
+      "paper_id": "acl:2026.findings-acl.886",
+      "title": "Plug-and-Play Data Module for Code RL: Adaptive Ambiguity Replay",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "The rise of Human-AI collaboration can effectively speed up the research process for experts and allow anyone with critical thinking skills to conduct innovative work. A key part of this collaboration is the AI’s ability to improve a paper with human feedback—updating both the text and experiments to meet high standards. To evaluate this skill, we introduce ReviseBench, an extensible benchmark built on real academic data that can be easily scaled via agent-driven automated data collection. It tests the skills of Large Language Models (LLMs) on paper interpretation, experimental implementation, and paper formulation, using authors’ camera-ready versions as natural human baselines. To facilitate a fine-grained assessment, we further propose ReviseArena, a platform supporting pair-wise comparisons between different AI-revised papers. Our initial evaluation results on ReviseBench reveal that even state-of-the-art foundation LLMs struggle significantly in this domain, achieving a win rate of less than 10% against human experts, and facing issues like incremental revision, unprofessional revision, and potential data fabrication. Our code and data are released publicly at: https://github.com/CGCL-codes/ReviseBench.",
+      "paper_id": "acl:2026.findings-acl.887",
+      "title": "Can AI Revise Research Papers with Human Review Feedback? An Empirical Study and Benchmark",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Dunhuang art, a cornerstone of global heritage, demands fine-grained visual perception anchored by specialized cultural knowledge. Given the strong performance of multimodal large language models (MLLMs) on generic multimodal benchmarks, to what extent can they understand artifacts from Dunhuang art that are grounded in cultural context? To this end, we construct Dunhuang-Bench, a large-scale benchmark comprising 486 images and 22,970 QA pairs. It incorporates diverse task formats to evaluate MLLMs’ cultural understanding: Question Answering with Text Description, Multi-turn Dialogue, and Question Answering with Choices. Guided by Panofsky’s theory of iconology, we design two tasks including visual perception and knowledge reasoning for the evaluation of content understanding. In addition, we follow the theory of formal analytic tradition to design another task of artistic appreciation in our Dunhuang-Bench. Extensive evaluations of 20 mainstream MLLMs on Dunhuang-Bench reveal a consistent performance drop from perception and appreciation to reasoning. Moreover, CoT and few-shot prompting show marginal or negative impact, highlighting the limits of prompting-based improvements. Dunhuang-Bench thus provides a challenging benchmark for advancing multimodal cultural understanding. Data and code will be publicly available.",
+      "paper_id": "acl:2026.findings-acl.888",
+      "title": "Dunhuang-Bench: How Well Do MLLMs Understand Cultural Heritage?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

@@ -1,0 +1,587 @@
+{
+  "batch_index": 18,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "While large language models (LLMs) excel at handling long-context sequences, they require substantial prefill computation and key-value (KV) cache, which can heavily burden computational efficiency and memory usage in both prefill and decoding stages.Recent works that compress KV caches with prefill acceleration reduce this cost but inadvertently tie the prefill compute reduction to the decoding KV budget. This coupling arises from overlooking the layer-dependent variation of critical context, often leading to accuracy degradation. To address this issue, we introduce FastKV, a KV cache compression framework designed to reduce latency in both prefill and decoding by leveraging the stabilization of token importance in later layers.FastKV performs full-context computation until a Token-Selective Propagation (TSP) layer, which forwards only the most informative tokens to subsequent layers.From these propagated tokens, FastKV independently selects salient KV entries for caching, thereby decoupling KV budget from the prefill compute reduction based on the TSP decision.This independent control of the TSP rate and KV retention rate enables flexible optimization of efficiency and accuracy.Experimental results show that FastKV achieves speedups of up to 1.82× in prefill and 2.87× in decoding compared to the full-context baseline, while matching the accuracy of the decoding-only baselines.Our code is available at https://github.com/dongwonjo/FastKV.",
+      "paper_id": "acl:2026.findings-acl.1610",
+      "title": "FastKV: Decoupling of Context Reduction and KV Cache Compression for Prefill-Decoding Acceleration",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Recent work on reinforcement learning with verifiable rewards (RLVR) has shown that large language models (LLMs) can be substantially improved using outcome-level verification signals, such as unit tests for code or exact-match checks for mathematics. In parallel, process supervision has long been explored as a way to shape the intermediate reasoning behaviour of LLMs, but existing approaches rely on neural judges to score chain-of-thought steps, leaving them vulnerable to opacity, bias, and reward hacking. To address this gap, we introduce Verifiable Process Reward Models (VPRMs), a reinforcement-learning framework in which intermediate reasoning steps are checked by deterministic, rule-based verifiers. We apply VPRMs to risk-of-bias assessment for medical evidence synthesis, a domain where guideline-defined criteria and rule-based decision paths enable programmatic verification of reasoning traces. Across multiple datasets, we find that VPRMs generate reasoning that adheres closely to domain rules and achieve substantially higher coherence between step-level decisions and final labels. Results show that VPRMs achieve up to 20% higher F1 than state-of-the-art models and 6.5% higher than verifiable outcome rewards, with substantial gains in evidence grounding and logical coherence.",
+      "paper_id": "acl:2026.findings-acl.1611",
+      "title": "Beyond Outcome Verification: Verifiable Process Reward Models for Structured Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "With the rapid progress of LLMs, high quality generative text has become widely available as a cover for text steganography. However, prevailing methods rely on hand-crafted or pre-specified strategies and struggle to balance efficiency, imperceptibility, and security, particularly at high embedding rates. Accordingly, we propose Auto-Stega, an agent-driven self-evolving framework that is the first to realize self-evolving steganographic strategies by automatically discovering, composing, and adapting strategies at inference time; the framework operates as a closed loop of generating, evaluating, summarizing, and updating that continually curates a structured strategy library and adapts across corpora, styles, and task constraints. A decoding LLM recovers the information under the shared strategy. To handle high embedding rates, we introduce PC-DNTE, a plug-and-play algorithm that maintains alignment with the base model’s conditional distribution at high embedding rates, preserving imperceptibility while enhancing security. Experimental results demonstrate that at higher embedding rates Auto-Stega achieves superior performance with gains of 42.2% in perplexity and 1.6% in anti-steganalysis performance over SOTA methods.",
+      "paper_id": "acl:2026.findings-acl.1612",
+      "title": "Auto-Stega: An Agent-Driven System for Lifelong Strategy Evolution in LLM-Based Text Steganography",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "The evolving realism of AI-generated Videos (AIGC-V) is rapidly rendering traditional artifact-centric detection insufficient, necessitating a paradigm shift from low-level inspection to high-level semantic verification. This paper presents a comprehensive survey of AIGC-V detection, reframing the task as Factual Fidelity Verification, which asks whether the events, entities, and physical processes depicted in a video are consistent with real-world facts. To systematize this rapidly evolving field, we propose a Vision–Language Dual-View taxonomy that organizes existing methods into a hierarchical, four-layer landscape, spanning intrinsic cue analysis, spatiotemporal consistency modeling, cross-modal consistency reasoning, and language-guided world-level reasoning. This dual-view framing highlights a fundamental transition from artifact matching to evidence-based semantic verification enabled by vision–language models and agentic reasoning pipelines. Based on a systematic review of 195 papers, we synthesize AIGC-V generation paradigms, survey the landscape of detection methods, and review evaluation metrics and benchmarks in line with proposed views. Finally, we discuss current challenges and identify promising directions toward robust, explainable, and trustworthy detection.",
+      "paper_id": "acl:2026.findings-acl.1613",
+      "title": "Detecting AI-Generated Video: A Vision--Language Dual-View Survey",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Unsupervised domain adaptation generalizes neural retrievers to an unseen domain by generating pseudo queries on target domain documents. The quality and efficiency of this adaptation critically depend on which documents are selected for pseudo query generation. The existing document sampling method focuses on diversity but fails to capture model uncertainty. In contrast, we propose Uncertainty-based Iterative Document Sampling (UnIte), addressing these limitations by (1) filtering documents with high aleatoric uncertainty and (2) prioritizing those with high epistemic uncertainty, maximizing the learning utility of the current model. We conducted extensive experiments on a large corpus of BEIR with small and large models, showing significant gains of +2.45 and +3.49 nDCG@10 with a smaller training sample size, 4k on average.",
+      "paper_id": "acl:2026.findings-acl.1614",
+      "title": "UnIte: Uncertainty-based Iterative Document Sampling for Domain Adaptation in Information Retrieval",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "We introduce a self-play framework for semantic equivalence in Haskell, utilizing formal verification to guide adversarial training between a generator and an evaluator. The framework leverages Liquid Haskell proofs for validating equivalence and execution-based counterexamples for inequivalence, organized via a difficulty-aware curriculum. To facilitate this, we release OpInstruct-HSx, a synthetic dataset of ≈ 28k validated Haskell programs. Empirical experiments show that our evaluator transfers effectively to downstream tasks, achieving up to 13.3pp accuracy gain on EquiBench and consistent gains on PySecDB. Ablation studies on the SEQ-SINQ regimes indicate that while inequivalence supervision provides data volume, equivalence proofs are uniquely responsible for the model’s reasoning capabilities. The entire training pipeline and dataset are publicly released on GitHub and Hugging Face respectively.",
+      "paper_id": "acl:2026.findings-acl.1615",
+      "title": "Improving LLM Code Reasoning via Semantic Equivalence Self-Play with Formal Verification",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Ensuring Large Language Model (LLM) safety is crucial, yet the lack of a clear understanding about safety mechanisms hinders the development of precise and reliable methodologies for safety intervention across diverse tasks. To better understand and control LLM safety, we propose the Expected Safety Impact (ESI) framework for quantifying how different parameters affect LLM safety. Based on ESI, we reveal distinct safety-critical patterns across different LLM architectures: In dense LLMs, many safety-critical parameters are located in value matrices (V) and MLPs in middle layers, whereas in Mixture-of-Experts (MoE) models, they shift to late-layer MLPs. Leveraging ESI, we further introduce two targeted intervention paradigms for safety enhancement and preservation, i.e., Safety Enhancement Tuning (SET) and Safety Preserving Adaptation (SPA). SET can align unsafe LLMs by updating only a few safety-critical parameters, effectively enhancing safety while preserving original performance. SPA safeguards well-aligned LLMs during capability-oriented intervention (e.g., instruction tuning) by preventing disruption of safety-critical weights, allowing the LLM to acquire new abilities while maintaining safety capabilities. Extensive evaluations on different LLMs demonstrate that SET can reduce the attack success rates of unaligned LLMs by over 50% with only a 100-iteration update on 1% of model weights. SPA can limit the safety degradation of aligned LLMs within 1% after a 1,000-iteration instruction fine-tuning on different tasks. Our code is available at: https://github.com/ZJU-LLM-Safety/SafeWeights-ACL",
+      "paper_id": "acl:2026.findings-acl.1616",
+      "title": "Towards Identification and Intervention of Safety-Critical Parameters in Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Scientific opinion classification based on discourse functions provides a structured semantic basis for analytical tasks such as gap identification and hypothesis generation. However, this task is uniquely challenged by the multi-label nature of scientific expressions and AIMRaD structural constraints. Existing LLM-based methods typically rely on direct label generation, which obscures decision logic, or treat discourse information as passive context rather than a structural prior. We propose OPINE, a multi-stage framework that reformulates classification as a controllable scoring-calibration-refinement pipeline. By decoupling textual evidence from decision logic, OPINE generates independent label-wise affinity scores calibrated by AIMRaD priors. To resolve the multi-label challenge, we introduce a quantile-based decoding rule to naturally capture co-existing roles, alongside a pairwise refinement mechanism to mitigate confusion between similar categories. We contribute a new benchmark of 18 discourse functions across diverse sections. Experimental results show that OPINE generally outperforms strong baselines, reaching F1 scores of 63.20%, 53.68%, and 63.22% under Micro, Macro, and Example settings, respectively. Our analysis reveals that integrating discourse structures as explicit priors is superior to conventional passive context integration, while pairwise refinement successfully mitigates confusion between functionally similar categories. The code and dataset are available at https://github.com/znoodle63/OPINE.",
+      "paper_id": "acl:2026.findings-acl.1617",
+      "title": "OPINE: A Prior-calibrated Scoring Framework for LLM-based Multi-label Scientific Opinion Classification",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) often encode word-form variation (e.g., walk vs. walked) as linear directions in the embedding space. However, standard tokenization algorithms treat such variants as distinct words with different vocabulary entries—quickly filling the size-capped token vocabulary with surface-form variation (e.g., walk, walking, Walk), at the expense of diversity and multilingual coverage. We show that many of these variations can be captured by transformation vectors—additive offsets that yield the appropriate word representation when applied to a base form embedding, in both the input and output spaces. Building on this, we propose a compact reshaping of the vocabulary: instead of assigning unique tokens to each surface form, we compose them from shared base form and transformation vectors (e.g., walked is walk+past tense). Our approach is lightweight—keeping the pretrained backbone frozen and only training small adaptation modules. We apply it across five languages and multiple LLMs in both pretraining and post-hoc adaptation, freeing 10-40% of vocabulary slots to be reallocated where tokenization is inefficient. Importantly, we do so while also expanding vocabulary coverage to out-of-vocabulary words, and with minimal impact on downstream performance. Our findings motivate a rethinking of vocabulary design, towards a representation that better matches the underlying structure of language and the practical needs of multilingual coverage.",
+      "paper_id": "acl:2026.findings-acl.1618",
+      "title": "Vocab Diet: Reshaping the Vocabulary of LLMs via Vector Arithmetic",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Memory systems often organize user-agent interactions as retrievable external memory and are crucial for long-running agents by overcoming the limited context windows of LLMs. However, existing memory systems invoke LLMs to process every incoming interaction for memory extraction, and such an eager memory consolidation scheme leads to substantial token consumption. To tackle this problem, we propose RecMem by rethinking when memory consolidation should be conducted. RecMem stores incoming interactions in a subconscious memory layer and encode them using lightweight embedding models for retrieval. LLMs are only invoked to extract episodic and semantic memory when sustained recurrence are observed for semantically similar interactions. Such recurrence-based consolidation works because these interactions correspond to a semantic cluster with rich information and thus are worth extraction and summarization. To improve accuracy, RecMem also incorporates a semantic refinement mechanism that recovers the fine-grained facts omitted by memory extraction. Experiments show that RecMem reduces the memory construction token cost of three SOTA memory systems by up to 87% while exceeding their accuracy.",
+      "paper_id": "acl:2026.findings-acl.1619",
+      "title": "RecMem: Recurrence-based Memory Consolidation for Efficient and Effective Long-Running LLM Agents",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Vision-Language Models (VLMs) encode images and videos into abundant tokens, which contain substantial redundancy and computation cost. While visual token pruning mitigates the issue, most existing methods lack insight into the intrinsic property of the vision encoder itself. In this work, we dive into the vision encoder and prove that the middle layers pay more attention to the main objects of the image qualitatively and quantitatively, while the deep layers to tokens with rich global information. Utilizing this Hierarchical attention pattern, we propose HiPrune, a training-free and model-agnostic token Pruning method. HiPrune identifies three types of visual tokens according to their attention in different phases of the vision encoder, which preserves different levels of information. By coupling with the similarity of text tokens, we propose a prompt-aware variance, HiPrune++, which further improves instruction following performance under a very low token budget. Extensive experiments across four representative VLMs show that HiPrune achieves up to 99.3% of task accuracy with only 1/3 of the tokens, while reducing inference FLOPs by 58.7%. HiPrune++ maintains up to 99.9% accuracy with 2/9 tokens, highlighting robustness under high-resolution.",
+      "paper_id": "acl:2026.findings-acl.162",
+      "title": "HiPrune: Hierarchical Attention for Efficient Token Pruning in Vision-Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Code refactoring is essential for software maintainability, yet current Large Language Model (LLM) based frameworks primarily focus on syntax and neglect the vital semantic signals in code comments. As pointed out in Fowler’s refactoring theory, explanatory comments function as semantic anchors that provide necessary guidance for method extraction. Moreover, research reports show that more than 84 percent of codebases lack appropriate code comments, which hinders the leverage of such guidance. To bridge this gap, we propose MACOR, a Multi-Agent framework for COmment-guided code Refactoring. In specific, MACOR populates original code with precise comments to provide necessary semantic guidance for the subsequent refactoring process. These generated signals are employed to retrieve expert examples. An iterative feedback is incorporated loop for validation. Experiments are conducted on three benchmarks using three base LLMs. Experimental results show that MACOR significantly optimizes code quality and achieves higher developer acceptance compared to the representative baselines.",
+      "paper_id": "acl:2026.findings-acl.1620",
+      "title": "Let the Comments Speak: A Multi-Agent Framework based on Large Language Model for Comment-Guided Code Refactoring",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models have demonstrated strong reasoning capabilities in general knowledge question answering. However, their ability to handle temporal information remains limited. To address this limitation, existing approaches often design time-sensitive reasoning pipelines that rely on external tools or manual verification and are tailored to specific scenarios, leading to poor generalizability. Moreover, these methods apply a fixed pipeline to all questions, overlooking the fact that different types of temporal questions often require distinct reasoning strategies, which leads to unnecessary processing for simple cases and inadequate reasoning for more complex ones. To this end, we propose AdapTime, an adaptive temporal reasoning method that dynamically executes reasoning steps based on the input context and task requirements. Specifically, it involves three temporal reasoning actions: reformulate, rewrite and review, with an LLM planner guiding the reasoning process. AdapTime integrates seamlessly with state-of-the-art LLMs and significantly enhances their temporal reasoning capabilities without relying on external support. Extensive experiments on two temporal QA benchmarks demonstrate the effectiveness of our approach.",
+      "paper_id": "acl:2026.findings-acl.1621",
+      "title": "AdapTime: Enabling Adaptive Temporal Reasoning in Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Despite recent progress in diffusion and conditional flow matching (CFM) models for low-resolution domains such as latent representations, their application to high-resolution data like raw waveform signals remains underexplored. Generative adversarial networks (GANs) have been the dominant approach in neural vocoder and neural audio codecs for realistic waveform generation. However, under low-bitrate conditions, these models suffer from degraded performance due to information loss caused by heavy compression and quantization, often resulting in mispronunciations. To address the aforementioned problem, we first leverage CFM to iteratively generate raw waveform in an extremely low-bitrate scenario. We then introduce hierarchical representation alignment learning (REPA-H) to enable efficient and robust CFM training. Furthermore, we propose dense vector quantization (DVQ), a novel factorized quantization method using a single quantizer. Our model, FlowTokenizer, outperforms state-of-the-art neural audio codecs in audio quality and semantic intelligibility under low-bitrate conditions, using only 25 tokens per second for 24 kHz waveform generation.",
+      "paper_id": "acl:2026.findings-acl.1622",
+      "title": "Hierarchical Representation Alignment Learning of Diffusion Transformers for Neural Audio Codec",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Embodied question answering (EQA) in 3D environments often requires collecting context that is distributed across multiple viewpoints and partially occluded. However, most recent vision–language models (VLMs) are constrained to a fixed and finite set of input views, which limits their ability to acquire question-relevant context at inference time and hinders complex spatial reasoning. We propose Chain-of-View (CoV) prompting, a training-free, test-time reasoning framework that transforms a VLM into an active viewpoint reasoner through a coarse-to-fine exploration process. CoV first employs a View Selection agent to filter redundant frames and identify question-aligned anchor views. It then performs fine-grained view adjustment by interleaving iterative reasoning with discrete camera actions, obtaining new observations from the underlying 3D scene representation until sufficient context is gathered or a step budget is reached. We evaluate CoV on OpenEQA across four mainstream VLMs and obtain an average 11.98% improvement in LLM-Match, with a maximum gain of 13.62% on Qwen3-VL-Flash. CoV further exhibits test-time scaling: increasing the minimum action budget yields an additional 2.54% average improvement, peaking at 3.73% on Gemini-2.5-Flash. On ScanQA and SQA3D, CoV delivers strong performance (e.g., 116 CIDEr 31.9 EM@1 on ScanQA and 51.1 EM@1 on SQA3D). Overall, these results suggest that question-aligned view selection coupled with open-view search is an effective, model-agnostic strategy for improving spatial reasoning in 3D EQA without additional training.",
+      "paper_id": "acl:2026.findings-acl.1623",
+      "title": "CoV: Chain-of-View Prompting for Spatial Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Recent research has extensively explored the graph-reasoning capabilities of Large Language Models (LLMs) through textual descriptions. However, benchmarks specifically designed for Graph-Language Models (GLMs), which integrate Graph Neural Networks (GNNs) with LLMs, remain significantly underdeveloped. In this work, we first demonstrate that existing GLM evaluations, largely repurposed from unimodal node and edge level tasks, fail to assess true multimodal integration. Our analysis reveals that strong performance on these benchmarks is achievable using textual or structural features in isolation, bypassing the need for joint reasoning. To bridge this gap, we introduce CLEGR (Compositional Language-Graph Reasoning), a benchmark explicitly designed to evaluate multimodal reasoning over graph topology and textual semantics. Evaluation of representative GLMs on CLEGR shows that they exhibit significant performance degradation on CLEGR tasks and unimodal soft-prompted LLMs perform on par with complex multimodal GLMs. These findings collectively highlight limitations in the graph reasoning capabilities of existing GLMs and provide a foundation for advancing the community toward explicit multimodal reasoning involving graph structure and language.",
+      "paper_id": "acl:2026.findings-acl.1624",
+      "title": "A Graph Talks, But Who's Listening? Rethinking Evaluations for Graph-Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Model editing-based jailbreak backdoor attacks against LLMs have gained attention for being lightweight, enabling vulnerability discovery in LLMs. Existing methods are implemented by binding backdoors to predefined phrases as first few output tokens, inducing the LLM’s next-token prediction to produce continuous responses. However, their effectiveness is heavily dependent on the number of bound phrases, with attack costs rising as this number increases. In this work, we propose JEST, which achieves jailbreak backdoor attacks by hijacking LLM representations into a acceptance domain rather than binding to a few output tokens. Specifically, we propose a representation transition-guided model editing to inject jailbreak backdoors into LLMs. The activated backdoor transitions the LLM from rejection domain to acceptance domain, causing it to accept and generate jailbreak behavior. To clearly distinguish between rejection and acceptance domains within LLMs, we also design a domain modeling strategy for JEST that models these two opposing domains within the representation space. Additionally, JEST-hijacked LLMs exhibit greater vulnerability to direct prompt attacks. Experimental results show that JEST outperforms existing model editing methods, demonstrating stronger jailbreak capabilities across various LLMs and datasets. We also provide analysis to explore the safety boundary of LLM.",
+      "paper_id": "acl:2026.findings-acl.1625",
+      "title": "Rejection-to-Acceptance Transition: Model Editing-Based Jailbreak Backdoor Injection Not Limited to Few Output Tokens",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Humanitarian reports are long, noisy, and multi-topic, making it difficult to consolidate decision-relevant causal evidence. We present a ReliefWeb study (2000–2024) and a two-stage Large Language Model (LLM) pipeline that extracts structured intervention-outcome records with direction and strength attributes. Query-conditioned extraction restricts output to a specified intervention class, reducing retrieval-induced over-extraction, while snippet grounding links each relation to supporting text for auditability and classification. In an expert-annotated dataset of 100 reports, the best closed-source LLM achieved a weighted F1 score of 90.73% with strong cost-efficiency, while Llama-3.1-8B with supervised fine-tuning reached 94.15% weighted F1 score. We further propose context-preserving triangulation that aggregates strength-weighted evidence within disaster×source cells, applies Laplace smoothing and equally weights cells to quantify cross-context convergence via a Level-of-Evidence score. Applied to cash assistance, food-related outcomes show strong positive convergence (LoE=0.865) and stable long-horizon trajectories.",
+      "paper_id": "acl:2026.findings-acl.1626",
+      "title": "Causal Evidence Extraction and Triangulation in Crisis Reports using Large Language Models: A ReliefWeb-based Study",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) have been shown to exhibit sycophancy, a tendency to align with user assertions even when they conflict with facts. We frame sycophancy as a sociolinguistic phenomenon, disentangling two distinct drivers of credibility: explicit authority (credentials) and implicit authority (linguistic register). We introduce the Sycophancy Matrix, an adversarial evaluation framework that isolates these variables. Using a controlled subset of TruthfulQA, we evaluate open-weight models across English, Spanish, and Portuguese variants. Our findings reveal that models often conflate high register with truthfulness: for some architectures, sophisticated tone triggers deference more effectively than explicit expertise. Furthermore, we observe statistically significant variability across cultural variants of Spanish and Portuguese, supporting the hypothesis that LLMs internalise language-specific sociolinguistic norms and that sycophancy is not a purely technical deficit but an emergent property of multilingual training and alignment. Finally, we identify stable sycophancy fingerprints–domain-specific vulnerability profiles that persist across languages–suggesting that alignment artefacts are intrinsic to model families rather than linguistic context.",
+      "paper_id": "acl:2026.findings-acl.1627",
+      "title": "Sounding vs. Being an Expert: Disentangling Authority, Register and Cultural Impact in Sycophantic LLMs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Data marketplaces analyze strategic data exchanges among users, platforms, and buyers. However, most existing studies model static equilibria and complete information, which limits their realism. In this work, we study whether large language model (LLM)-driven agents can make equilibrium-consistent decisions in analytically tractable data marketplaces with evolving and incomplete-information. Specifically, we introduce EvoDM, an agent-based modeling framework that extends the static data marketplace to dynamic and incomplete-information settings while providing tractable equilibrium benchmarks for evaluating agent decisions. Building upon EvoDM, we propose Datamart-Agent, an LLM-driven game-theoretic agent that improves equilibrium-consistent decision execution through dynamic game tree memory and mechanism-guided reflection, without requiring parameter updates. Experiments demonstrate that Datamart-Agent closely matches equilibrium-consistent decision-making, achieving the lowest utility gap and over 20% higher Pass@𝜖 than strong baselines. After validating its effectiveness, we employ EvoDM with Datamart-Agent to analyze competition and regulation in assumption-relaxed settings where closed-form ground truth is unavailable, providing exploratory simulation-based insights into market dynamics and regulatory effects.",
+      "paper_id": "acl:2026.findings-acl.1628",
+      "title": "Datamart-Agent: LLM-Driven Game-Theoretic Agent for Data Marketplace Modeling",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Speculative decoding (SD) accelerates large language model (LLM) inference by using a smaller model to draft future tokens, which are then verified by the target LLM. This preserves generation quality by accepting only aligned tokens. However, individual drafters, often trained for specific tasks or domains, exhibit limited effectiveness across diverse applications. To address this, we introduce MetaSD, a unified framework that integrates multiple drafters into the SD process. MetaSD dynamically allocates computational resources to heterogeneous drafters by leveraging alignment feedback and framing drafter selection as a multi-armed bandit problem. Extensive experiments show MetaSD consistently outperforms single-drafter approaches.",
+      "paper_id": "acl:2026.findings-acl.1629",
+      "title": "Multi-Drafter Speculative Decoding with Alignment Feedback",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Reasoning large language models (LLMs) have recently made much progress in complex problem-solving, leveraging internal reasoning (or thought) to guide their solution generation. However, existing LLM-based counseling agents, including those using Motivational Interviewing (MI), generate responses without explicitly aligning thoughts with counseling techniques, limiting their effectiveness. We propose MIThinker, a lightweight thinking model that generates therapeutic thoughts to guide MI counseling agents in strategy selection and response generation. To overcome the lack of annotated thought data, we introduce AugR1-MI, an automated pipeline that reverse-engineers counselor’s thoughts from observed responses. Through two-stage training combining supervised fine-tuning and reinforcement learning, MIThinker demonstrates improved theory-of-mind assessment and strategy alignment. Comprehensive evaluations show that MindfulMI, our agent leveraging MIThinker, achieves MI competency comparable to state-of-the-art systems with an order of magnitude less computation.",
+      "paper_id": "acl:2026.findings-acl.163",
+      "title": "MIThinker: A Plug-and-Play Policy-Optimized Thinker For Motivational Interviewing Counseling",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Accurate and interpretable predictions of depression severity are essential for clinical decision support, yet existing models often lack uncertainty estimates and temporal interpretability. We propose PTTSD, a Probabilistic framework for Depression Detection from clinical interview utterance sequences that predicts PHQ-8 scores while modeling calibrated uncertainty. PTTSD includes sequence-to-sequence and sequence-to-one variants, both combining LSTMs, self-attention, and residual connections with Gaussian or Student’s-t output heads trained via negative log-likelihood. The sequence-to-sequence variant enables temporal analysis of how predictive confidence evolves over an interview, despite the target being a single session-level score. Evaluated on E-DAIC and DAIC-WOZ, PTTSD achieves competitive performance among text-only systems (e.g., MAE = 3.85 on E-DAIC, 3.55 on DAIC) and produces well-calibrated prediction intervals. Ablations confirm the value of attention and probabilistic modeling, while a three-part calibration analysis and qualitative case studies highlight the clinical relevance of uncertainty-aware prediction.",
+      "paper_id": "acl:2026.findings-acl.1630",
+      "title": "Probabilistic Depression Detection from Textual Time Series",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "In-context learning (ICL) is the standard method for low-resource classification, yet its efficacy in specialized domains remains largely unexplored. We address the challenge of classifying semantically complex, multi-party B2B conversations, where traditional ICL encounters significant limitations, especially as context length increases due to the concatenation of multiple few-shot examples. We introduce the Call Playbook dataset, featuring five classification tasks derived from real-world B2B conversations targeting core sales concepts. To bridge the gap between performance and practical utility, we propose novel knowledge extraction methods that distill verbose examples into compact, interpretable representations of structured classification criteria and precise task descriptions. Our approach achieves a 99% reduction in token usage and improves macro-averaged AUC by up to 7% over traditional ICL. Notably, it remains robust as context grows, unlike advanced token compression baselines which degrade by over 9 F1 points. Importantly, our framework enables direct refinement of classification logic, addressing critical needs for transparency, efficiency, and user interaction in real-world NLP applications.",
+      "paper_id": "acl:2026.findings-acl.1631",
+      "title": "Distilling Examples into Task Instructions: Enhanced In-Context Learning for Real-World B2B Conversations",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Tokenization plays a pivotal role in NLP and is fundamental to training language models. However, existing tokenizers are often skewed towards high-resource languages, limiting their effectiveness for linguistically diverse and morphologically rich languages such as those in the Indian subcontinent. In this work, we present a comprehensive empirical study of multilingual tokenization across 17 Indic languages spanning 11 scripts and two language families. We systematically evaluate the effects of (i) widely used subword algorithms: BPE (CITATION) and Unigram LM (CITATION), (ii) script and orthography-aware normalization, (iii) vocabulary size, and (iv) multilingual vocabulary construction strategies. We use a combination of intrinsic and extrinsic evaluations to obtain the following observations: (i) script-specific normalization improves tokenization quality, (ii) Unigram LM better preserves morphological boundaries than BPE, (iii) cluster-based vocabulary construction shows improvement in downstream tasks compared to the joint method. Our findings highlight the importance of linguistically informed design choices in multilingual tokenization and offer practical guidance for building effective tokenizers for low-resource and morphologically complex languages.",
+      "paper_id": "acl:2026.findings-acl.1632",
+      "title": "Multilingual Tokenization through the Lens of Indian Languages: Challenges and Insights",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Multimodal Models (LMMs) have achieved significant success across various tasks. These models usually encode visual inputs into dense token sequences, which are then concatenated with textual tokens and jointly processed by a language model. However, the increased token count substantially raises computational and memory costs during inference. Token pruning has emerged as a promising approach to address this issue. Existing token pruning methods often rely on costly calibration or suboptimal importance metrics, leading to redundant retained tokens. In this paper, we analyze the redundancy differences between visual and textual tokens and propose pruning exclusively on visual tokens. Based on this, we propose a visual token pruning strategy that explicitly preserves both cross-modal alignment and intra-modal informational diversity. We introduce a mutual information-based token pruning strategy that removes visual tokens semantically misaligned with textual tokens, effectively preserving the alignment between the visual and textual modalities. We further refine the retained tokens by maximizing their expected pairwise distances in the latent space to enhance representational quality and reduce redundancy. which is solved efficiently with a greedy algorithm. Extensive experiments demonstrate that our method maintains strong performance while reducing tokens by 88.9% on models such as LLaVA-1.5-7B and LLaVA-NEXT-7B, resulting in a 56.7% improvement in inference speed.",
+      "paper_id": "acl:2026.findings-acl.1633",
+      "title": "TrimTokenator: Towards Adaptive Visual Token Pruning for Large Multimodal Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Despite significant advances in Large Reasoning Models (LRMs) driven by reinforcement learning with verifiable rewards (RLVR), this paradigm is fundamentally limited in specialized or novel domains where such supervision is prohibitively expensive or unavailable, posing a key challenge for test-time adaptation. While existing test-time methods offer a potential solution, they are constrained by learning from static query sets, risking overfitting to textual patterns. To address this gap, we introduce Test-Time Variational Synthesis (TTVS), a novel framework that enables LRMs to self-evolve by dynamically augmenting the training stream from unlabeled test queries. TTVS comprises two synergistic modules: (1) Online Variational Synthesis, which transforms static test queries into a dynamic stream of diverse, semantically-equivalent variations, enforcing the model to learn underlying problem logic rather than superficial patterns; (2) Test-time Hybrid Exploration, which balances accuracy-driven exploitation with consistency-driven exploration across synthetic variants. Extensive experiments show TTVS yields superior performance across eight model architectures. Notably, using only unlabeled test-time data, TTVS not only surpasses other test-time adaptation methods but also outperforms state-of-the-art supervised RL-based techniques trained on vast, high-quality labeled data.",
+      "paper_id": "acl:2026.findings-acl.1634",
+      "title": "TTVS: Boosting Self-Exploring Reinforcement Learning via Test-time Variational Synthesis",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Retrieval Augmented Generation faces a trade-off: concatenating documents in a long prompt enables multi-document reasoning but creates prefill bottlenecks, while encoding document KV caches separately offers speed but breaks cross-document interaction. We propose Parallel Context-of-Experts Decoding (PCED), a training-free framework that shifts evidence aggregation from the attention mechanism to the decoding. PCED treats retrieved documents as isolated “experts”, synchronizing their predictions via a retrieval-aware extension of context-aware decoding. This approach recovers cross-document reasoning capabilities without constructing a shared attention across documents.",
+      "paper_id": "acl:2026.findings-acl.1635",
+      "title": "Parallel Context-of-Experts Decoding for Retrieval Augmented Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Comprehensive understanding of time series remains a significant challenge for Large Language Models (LLMs). Current research is hindered by fragmented task definitions and benchmarks with inherent ambiguities, precluding rigorous evaluation and the development of unified Time Series Reasoning Models (TSRMs). To bridge this gap, we formalize Time Series Reasoning (TSR) via a four-level taxonomy of increasing cognitive complexity. We introduce HiTSR, a hierarchical time series reasoning dataset comprising 83k samples with diverse task combinations and verified Chain-of-Thought (CoT) trajectories. Leveraging HiTSR, we propose LLaTiSA, a strong TSRM that integrates visualized patterns with precision-calibrated numerical tables to enhance the temporal perception of Vision-Language Models (VLMs). Through a multi-stage curriculum fine-tuning strategy, LLaTiSA achieves superior performance and exhibits robust out-of-distribution generalization across diverse TSR tasks and real-world scenarios. We will publicly release the code, dataset, and model weights.",
+      "paper_id": "acl:2026.findings-acl.1636",
+      "title": "LLaTiSA: Towards Difficulty-Stratified Time Series Reasoning from Visual Perception to Semantics",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Recent reports suggest that LLMs can handle increasingly long contexts. However, many existing benchmarks for context understanding embed substantial query-irrelevant content, which shifts evaluation toward retrieving relevant snippets rather than fully integrating all provided information. Under this setting, we view that current benchmarks can overestimate true context-understanding ability of LLMs. In particular, we demonstrate that when the context consists entirely of query-relevant text, even advanced models such as GPT-4o fail to reliably integrate inputs as short as 200 tokens. To evaluate this capability more rigorously, we introduce NeedleChain, a benchmark designed to test whether models can faithfully incorporate all given evidence. NeedleChain includes three variants that differ in the required order of comprehension, along with a parallel benchmark based on the needle-in-a-haystack(NIAH) paradigm. By comparing these variants, NeedleChain enables a more comprehensive assessment of context understanding. We further propose a training-free strategy that encourages models to reflect all available information, ROPE contraction, highlighting the importance of full-context integration and pointing to new directions for improving reliable reasoning over context.",
+      "paper_id": "acl:2026.findings-acl.1637",
+      "title": "NeedleChain: Measuring Intact Context Comprehension Capability of Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Speech quality assessment (SQA) is typically formulated as a score regression task based on subjective ratings, such as the Mean Opinion Score (MOS), which inherently suffer from inconsistent standards and limit cross-dataset training and evaluation. To address these limitations, we reformulate SQA as a preference-based comparison paradigm and construct MOS-Pref, a large-scale MOS-derived preference dataset. Building on MOS-Pref, we systematically implement and evaluate three reward modeling paradigms: scalar, semi-scalar, and generative reward models, alongside existing SQA approaches. Our experiments reveal three key findings: (1) scalar models achieve the strongest overall performance, consistently exceeding 74% accuracy; (2) score regression-based approaches generally underperform preference-based methods in both overall performance and generalization; and (3) all reward models struggle on pairs with very small MOS gap. Motivated by these observations, we propose a MOS-aware GRM design that incorporates MOS gap into the reward function during reinforcement learning. Experimental results show that the MOS-aware GRM significantly improves fine-grained speech quality discrimination. We hope this work fosters more rigorous and scalable research in SQA.",
+      "paper_id": "acl:2026.findings-acl.1638",
+      "title": "From Scores to Preferences: Redefining Evaluation Paradigm for Speech Quality Reward Modeling",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Financial decision-making in multilingual settings demands accurate numerical reasoning grounded in diverse modalities, yet existing benchmarks largely overlook this high-stakes, real-world challenge, especially for Indic languages. We introduce FinVQA, a benchmark for evaluating financial numerical and multimodal reasoning in multilingual Indic contexts. FinVQA spans English, Hindi, Bengali, Marathi, Gujarati, and Tamil, and comprises 18,900 samples across 14 financial domains. The dataset captures diverse reasoning paradigms under realistic constraints, and is structured across three difficulty levels (easy, moderate, hard) and four question formats: multiple choice, fill-in-the-blank, table matching, and true/false. To address these challenges, we propose FIND, a framework that combines supervised fine-tuning with constraint-aware decoding to promote faithful numerical reasoning, robust multimodal grounding, and structured decision-making. Together, FinVQA and FIND establish a rigorous evaluation and modeling paradigm for high-stakes multilingual multimodal financial reasoning.",
+      "paper_id": "acl:2026.findings-acl.1639",
+      "title": "FIND: Toward Multimodal Financial Reasoning and Question Answering for Indic Languages",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "The deployment of large language models (LLMs) raises significant ethical and safety concerns. While LLM alignment techniques are adopted to improve model safety and trustworthiness, adversaries can exploit these techniques to undermine safety for malicious purposes, resulting in misalignment. Misaligned LLMs may be published on open platforms to magnify harm. To address this, additional safety alignment, referred to as realignment, is necessary before deploying untrusted third-party LLMs. This study explores the efficacy of fine-tuning methods in terms of misalignment, realignment, and the effects of their interplay. By evaluating four Supervised Fine-Tuning (SFT) and two Preference Fine-Tuning (PFT) methods across four popular safety-aligned LLMs, we reveal a mechanism asymmetry between attack and defense. While Odds Ratio Preference Optimization (ORPO) is most effective for misalignment, Direct Preference Optimization (DPO) excels in realignment, albeit at the expense of model utility. Additionally, we identify model-specific resistance, residual effects of multi-round adversarial dynamics, and other noteworthy findings. These findings highlight the need for robust safeguards and customized safety alignment strategies to mitigate potential risks in the deployment of LLMs.",
+      "paper_id": "acl:2026.findings-acl.164",
+      "title": "The Art of (Mis)alignment: How Fine-Tuning Methods Effectively Misalign and Realign LLMs in Post-Training",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Audio Language Models (LALMs) employing the Chain-of-Thought paradigm have demonstrated remarkable reasoning capabilities. Though different problems naturally require varying depths of reasoning, existing methods often determine whether to perform reasoning, lacking fine-grained mechanisms to adapt reasoning length to problem complexity. As a result, LALMs often adopt a one-size-fits-all reasoning strategy, leading to redundant overthinking for simple tasks and insufficient reasoning for complex ones. In this paper, we conduct an in-depth analysis of LALM reasoning behavior and argue that effective and efficient reasoning should be adaptively aligned with task difficulty. To this end, we propose a difficulty-adaptive reasoning method for LALMs. Specifically, we introduce a reward function that dynamically links reasoning length to the model’s perceived problem difficulty, encouraging shorter reasoning for easy tasks and longer reasoning for more complex ones. Extensive experiments on three datasets demonstrate that our method consistently improves performance while reducing average reasoning length by at least 50%, achieving higher efficiency without sacrificing accuracy.",
+      "paper_id": "acl:2026.findings-acl.1640",
+      "title": "Think Smart, Not Hard: Difficulty Adaptive Reasoning for Large Audio Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Humans are able to predict each other’s actions by reasoning about the others’ underlying goals, preferences, and motives, such as greed and risk-aversion. Game theory provides a framework for studying human behaviors through incentivized games that simulate social situations. We utilized two validated games from the cognitive science literature—the Social Prediction Game (SPG) and the Inspection Game (IG)—to systematically study how well several recent open- and closed-source LLMs predict player actions and whether they can leverage and generalize the players’ motives learned from the iterated games. Our results indicate that state-of-the-art LLMs can achieve accuracy close to human levels in predicting players’ actions with underlying human motives in SPGs. However, unlike humans, who rely on reasoning about players’ motives to inform their predictions, LLMs failed to recognize statistical patterns in players’ actions. As a result, LLM prediction accuracy did not improve over multiple rounds. Our results in the IG further demonstrate that, unlike humans, LLMs were unable to recognize a player’s underlying motives and to generalize their understanding of the same player to a new context. This suggests that LLMs may lack reasoning capabilities. Our findings offer insights into differences in human and LLM reasoning mechanisms, suggesting that further research into human-AI alignment is needed before utilizing LLMs for human behavior modeling and simulation in this and related contexts.",
+      "paper_id": "acl:2026.findings-acl.1641",
+      "title": "Can Large Language Models Infer Human Actions and Motives? Evaluation in Social Prediction and Inspection Games",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Self-consistency (SC) is a popular technique for improving the reasoning accuracy of large language models by aggregating multiple sampled outputs, but it comes at a high computational cost due to extensive sampling. We introduce a hybrid ensembling approach that leverages the complementary strengths of two distinct modes of reasoning: Chain-of-Thought (CoT) and Program-of-Thought (PoT). We describe a general framework for combining these two forms of reasoning in self-consistency, as well as particular strategies for both full sampling and early-stopping. We show that CoT-PoT ensembling not only improves overall accuracy, but also drastically reduces the number of samples required for SC by a factor of 9.3x. In particular, the majority of tasks (78.6%) can be addressed with only two samples, which has not been possible with any prior SC methods.",
+      "paper_id": "acl:2026.findings-acl.1642",
+      "title": "Self-Consistency from Only Two Samples: CoT--PoT Ensembling for Efficient LLM Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Retrieval-Augmented Generation is a powerful tool for NLP applications. Yet, it is challenging to encode large knowledge bases as compact offline structures while simultaneously achieving accurate, low-latency online retrieval. We propose ZoomRAG, a coarse-to-fine, hierarchical graph inference method to tackle the challenges. ZoomRAG formulates the retrieval task as random walks across multi-scale relational graphs. At the coarse level, it constructs a global relational graph and performs a query-initiated random walk to quickly locate a few relevant documents over the entire corpus. At the finer level, it “zooms into” the selected documents to capture fine-grained semantic and temporal relations, and conducts a second random walk to pinpoint salient evidence chunks for generation. This coarse-to-fine strategy substantially reduces offline indexing costs and accelerates online retrieval. Moreover, random-walk based topological reasoning over rich, multi-scale relational structures enables ZoomRAG to effectively aggregate multi-hop evidence while suppressing noise. Finally, we address the difficulty of handling concurrent RAG queries by algorithm-parallel ZoomRAG. Overall, ZoomRAG avoids building expensive knowledge graphs while achieving 2.2% – 4.9% absolute gains in accuracy over SOTA RAG models, with an average online retrieval latency per-query as low as 0.019 secs by processing hundreds of queries concurrently.",
+      "paper_id": "acl:2026.findings-acl.1643",
+      "title": "ZoomRAG: Hierarchical Random-walk Zooming across Multi-scale Information Graphs for Fast and Accurate RAG",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Language models frequently produce plausible yet incorrect reasoning traces that are difficult to verify. We investigate fine-tuning models to use Prolog as an external symbolic reasoning tool, training Qwen2.5-3B-Instruct with Group Relative Policy Optimization (GRPO) on a cleaned version of GSM8K (which we release as gsm8k-prolog-prover). We systematically vary prompt structure, reward composition (execution, syntax, semantics, structure), and inference protocol (single-try, multiple-try, and two agentic modes). Our reinforcement learning approach outperforms supervised fine-tuning on GSM8K, and the resulting 3B model achieves zero-shot performance on MMLU-STEM and MMLU-Pro competitive with 7B few-shot baselines. Most importantly, we identify an accuracy–auditability trade-off: configurations tuned for correctness alone learn to delegate reasoning to natural language and use Prolog only for the final computation, while configurations rewarded for symbolic structure produce fully auditable programs at a cost in accuracy. We interpret this trade-off as a form of reward hacking and discuss its implications for deploying neurosymbolic systems in safety-critical domains.",
+      "paper_id": "acl:2026.findings-acl.1644",
+      "title": "Training Language Models to Use Prolog as a Tool",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Common ground plays a critical role in situated spoken dialogues, where interlocutors must establish and maintain shared references to entities, events, and relations to sustain coherent interaction. For dialog systems, the ability to correctly ground conversational content in order to refer back to it later is particularly important. Prior studies have demonstrated that LLMs are capable of performing grounding acts such as requesting clarification or producing acknowledgments, yet relatively little work has investigated how common ground can be explicitly represented and stored for later use. Without such mechanisms, it remains unclear whether acknowledgment or clarification behaviors truly reflect a grounded understanding. In this work, we evaluate a model’s ability to establish and exploit common ground through relational references to entities within the shared context in a situational dialogue. We test multiple methods for representing common ground in situated dialogues and further propose approaches to improve both the establishment of common ground and its subsequent use in the conversation.",
+      "paper_id": "acl:2026.findings-acl.1645",
+      "title": "Frame of Reference: Addressing the Challenges of Common Ground Representation in Situational Dialogs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Diagnostic prediction and clinical reasoning are critical tasks in healthcare applications. While large language models have shown strong capabilities in commonsense reasoning, they still struggle with diagnostic reasoning due to limited domain knowledge. Existing approaches often rely on internal model knowledge or static knowledge bases, which are insufficient to support the knowledge demands of diagnostic reasoning. Moreover, these methods focus solely on the accuracy of final predictions, overlooking alignment with standard clinical reasoning trajectories. To this end, we propose MultiDx, a two-stage diagnostic reasoning framework that performs differential diagnosis by analyzing evidence collected from multiple knowledge sources. Specifically, it first generates suspected diagnoses and reasoning traces by leveraging knowledge from web search, SOAP-formatted case, and clinical case database. Then it integrates multi-perspective evidence through matching, voting, and differential diagnosis to generate the final prediction. Extensive experiments demonstrate the effectiveness of our approach.",
+      "paper_id": "acl:2026.findings-acl.1646",
+      "title": "MultiDx: A Multi-Source Knowledge Integration Framework towards Diagnostic Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

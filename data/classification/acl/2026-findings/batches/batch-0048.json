@@ -1,0 +1,587 @@
+{
+  "batch_index": 48,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Evaluation is important for multimodal generation tasks, while traditional multimodal evaluation metrics suffer from several limitations. With the rapid progress of MLLMs, there is growing interest in applying MLLMs to build general evaluation systems. However, existing researches often simply collect large-scale evaluation data for training, while overlooking the quality of evaluation data. What’s more, current proposed evaluation models often struggle to achieve consistently strong performance across both image-to-text (I2T) and text-to-image (T2I) tasks. In this paper, through rigorous quality control strategies, we construct a comprehensive multimodal evaluation dataset, Minos-57K, with evaluation samples across 15 datasets, for developing the multimodal evaluation model Minos with SFT and preference alignment training strategies. Notably, despite using less than half the scale of the training data of prior work, our model achieves state-of-the-art evaluation performance across 16 out-of-domain datasets covering both I2T and T2I tasks among all open-source multimodal evaluation models and remain competitive with closed-source models. Extensive experiments demonstrate the importance of leveraging quality control process, jointly training on evaluation data from both I2T and T2I generation tasks and further preference alignment.",
+      "paper_id": "acl:2026.findings-acl.744",
+      "title": "Minos: A Multimodal Evaluation Model for Bidirectional Generation Between Image and Text",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large vision–language models (LVLMs) excel at multimodal reasoning but still suffer from object-existence hallucinations when multi-step deliberation decouples from visual evidence. Think-with-Images (TwI) attempts to counter this by generating auxiliary observations (e.g., zoomed crops or highlighted views), yet it is not reliably beneficial. We identify two coupled failure modes: (1) a granularity–context trade-off of common operators, where zoom-in improves local detail but breaks global relations, while highlighting preserves topology but lacks fine evidence; and (2) an over-trust issue in tool-guided region proposals, where mislocalized evidence can dominate reasoning and even underperform standard prompting. We propose Active-Look, a training-free, plug-and-play TwI framework that allocates visual computation by uncertainty. Active-Look runs two heterogeneous grounding experts in parallel and uses their disagreement as a proxy for uncertainty, spending the budget only to verify disputed regions. It further mitigates the operator trade-off with conflict-aware hybrid rendering: highlighting retains global context, while selective zoom-in performs local verification. Experiments on hallucination-focused and general benchmarks (POPE, MME, and CHAIR) across multiple LVLM backbones show consistent gains.",
+      "paper_id": "acl:2026.findings-acl.745",
+      "title": "Global Context or Local Detail? Adaptive Visual Grounding for Hallucination Mitigation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Tool-use capabilities are vital for Large Language Models (LLMs) in finance, a domain characterized by massive investment targets and data-intensive inquiries. However, existing data synthesis methods typically rely on a reverse synthesis paradigm, generating user queries from pre-sampled tools. This approach inevitably introduces artificial explicitness, yielding queries that fail to capture the implicit, event-driven nature of real-world needs. Moreover, its reliance on static tool sets overlooks the dynamic retrieval process required to navigate massive tool spaces. To address these challenges, we introduce FinToolSyn, a forward synthesis framework designed to generate high-quality financial dialogues. Progressing from persona instruction and atomic tool synthesis to dynamic retrieval dialogue generation, our pipeline constructs a repository of 43,066 tools and synthesizes over 148k dialogue instances, incorporating dynamic retrieval to emulate the noisy candidate sets typical of massive tool spaces. We also establish a dedicated benchmark to evaluate tool-calling capabilities in realistic financial scenarios. Extensive experiments demonstrate that models trained on FinToolSyn achieve a 21.06% improvement, providing a robust foundation for tool learning in financial scenarios.",
+      "paper_id": "acl:2026.findings-acl.746",
+      "title": "FinToolSyn: A forward synthesis Framework for Financial Tool-Use Dialogue Data with Dynamic Tool Retrieval",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "With the rapid development of Large Language Models (LLMs), In-Context Learning (ICL) has emerged as one of the universal paradigms for unleashing the capabilities of LLMs. However, LLMs are generally plagued by various biases in context example selection, which can distort the model’s predictions. Although extensive research has focused on designing heuristic sample selection methods to mitigate biases in ICL, these approaches often struggle to adapt to highly biased out-of-distribution (OOD) scenarios with significant shifts between test samples and context samples. To overcome the aforementioned issue, this paper proposes a LLM-driven iterative derivation method for OOD data pseudo-labeling (named LPL), aiming to mitigate the risk of performance degradation caused by OOD bias by avoiding direct use of source data. To mitigate the misleading effects of noise in pseudo-labels, we propose a filtering metric that integrates model confidence and perturbation perplexity to enhance the quality of pseudo-labels. Subsequently, in each iteration, LPL utilizes this metric to expand new pseudo-labeled data as contextual demonstrations and ultimately adopts a voting mechanism to ensure the stability of the predictions. A series of experiments conducted on various LLMs have confirmed that our proposed method can effectively reduce OOD biases, thereby opening up new avenues for research in ICL biases.",
+      "paper_id": "acl:2026.findings-acl.747",
+      "title": "From Fake to Real: Mitigating Out-of-Distribution Bias in In-Context Learning via Feedback Supervision from Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "LVLMs have achieved strong multimodal reasoning capabilities but remain prone to hallucinations, producing outputs inconsistent with visual inputs or user instructions. Existing training-free methods, including contrastive decoding and auxiliary expert models, which incur several times more computational overhead and may introduce potential interference, as well as static internal signal enhancement, are often vulnerable to the attention sink phenomenon. We find that internal Positive Attention Dynamics (PAD) in LVLMs naturally reveal semantically core visual regions under the distortions of attention sinks. Based on this, we propose Positive Attention Dynamics Enhancement (PADE), a training-free attention intervention that constructs a PAD map to identify semantically core visual regions, applies per-head Median Absolute Deviation Scaling to adaptively control the intervention strength, and leverages System-Token Compensation to maintain attention to complex user instructions and support long-term output consistency. Experiments on multiple LVLMs and benchmarks show that PADE improves visual grounding and reduces hallucinations, validating the effectiveness of leveraging internal attention dynamics for reliable multimodal reasoning.",
+      "paper_id": "acl:2026.findings-acl.748",
+      "title": "Revealing and Enhancing Core Visual Regions: Harnessing Internal Attention Dynamics for Hallucination Mitigation in LVLMs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Chain-of-Thought (CoT) prompting has been shown to be effective in eliciting structured reasoning (i.e., CoT reasoning) from large language models (LLMs). Regardless of its popularity, recent studies expose its failures in some reasoning tasks, raising fundamental questions about the nature of CoT reasoning. In this work, we propose a data distribution lens to understand when and why CoT reasoning succeeds or fails. We hypothesize that CoT reasoning reflects a structured inductive bias learned from in-distribution data, enabling models to conditionally generate reasoning trajectories that approximate those observed during training. As such, the effectiveness of CoT reasoning is fundamentally governed by the nature and degree of distribution discrepancy between training data and test queries. Guided by this lens, we dissect CoT reasoning via three dimensions: task, length, and format. To test the hypothesis, we introduce DataAlchemy, an abstract and fully controllable environment that trains LLMs from scratch and systematically probes them under various distribution conditions. Through rigorous controlled experiments, we reveal that CoT reasoning is a brittle mirage when it is pushed beyond training distributions, emphasizing the ongoing challenge of achieving genuine and generalizable reasoning.",
+      "paper_id": "acl:2026.findings-acl.749",
+      "title": "Is Chain-of-Thought Reasoning of LLMs a Mirage? A Data Distribution Lens",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) require continual updates to rectify outdated or erroneous knowledge. Model editing has emerged as a compelling paradigm for introducing targeted modifications without the computational burden of full retraining. Existing approaches are mainly based on a locate-then-edit framework. However, in sequential editing contexts, where multiple updates are applied over time, they exhibit significant limitations and suffer from catastrophic interference, i.e., new edits compromise previously integrated updates and degrade preserved knowledge. To address these challenges, we introduce EvoEdit, a novel editing strategy that mitigates catastrophic interference through sequential null-space alignment, enabling stable and efficient model editing. By performing sequential null-space alignment for each incoming edit, EvoEdit preserves both original and previously modified knowledge representations and maintains output invariance on preserved knowledge even across long edit sequences, effectively mitigating interference. Evaluations on real-world sequential knowledge-editing benchmarks show that EvoEdit achieves better or comparable performance than prior state-of-the-art locate-then-edit techniques, with up to 3.53× speedup. Overall, these results underscore the necessity of developing more principled approaches for designing LLMs in dynamically evolving information settings, while providing a simple yet effective solution with strong theoretical guarantees.",
+      "paper_id": "acl:2026.findings-acl.75",
+      "title": "EvoEdit: Evolving Null-space Alignment for Robust and Efficient Knowledge Editing",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "While GUI agents have shown impressive capabilities in common computer-use tasks such as OSWorld, current benchmarks mainly focus on isolated and single-application tasks. This overlooks a critical real-world requirement of coordinating across multiple applications to accomplish complex profession-specific workflows. To bridge this gap, we present a computer-use benchmark in cross-application workflows, named WindowsWorld, designed to systematically assess GUI Agents on complex multi-step tasks that mirror real-world professional activities. Our methodology uses a multi-agent framework steered by 16 occupations to generate four difficulty-level tasks with intermediate inspection, which are then refined by human review and executed in a simulated environment. The resulting benchmark contains 181 tasks with an average of 5.0 sub-goals across 17 common desktop applications, of which 78% are inherently multi-application. Experimental results of leading large models and agents show that: 1) All computer-use agents perform poorly on multi-application tasks (< 21% success rate), far below the performance of simple single-app tasks; 2) They largely fail at tasks requiring conditional judgment and reasoning across ≥3 applications, stalling at early sub-goals; 3) Low execution efficiency, where tasks often fail despite far exceeding human step limits. Code, benchmark data, and evaluation resources are available at github.com/HITsz-TMG/WindowsWorld.",
+      "paper_id": "acl:2026.findings-acl.750",
+      "title": "WindowsWorld: A Process-Centric Benchmark of Autonomous GUI Agents in Professional Cross-Application Environments",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Multimodal Large Language Models (MLLMs) hold significant promise for revolutionizing traditional education and reducing teachers’ workload. However, accurately interpreting unconstrained STEM student handwritten solutions with intertwined mathematical formulas, diagrams, and textual reasoning poses a significant challenge due to the lack of authentic and domain-specific benchmarks. Additionally, current evaluation paradigms predominantly rely on the outcomes of downstream tasks (e.g., auto-grading), which often probe only a subset of the recognized content, thereby failing to capture the MLLMs’ understanding of complex handwritten logic as a whole. To bridge this gap, we release EDU-CIRCUIT-HW, a dataset consisting of 1,300+ authentic student handwritten solutions from a university-level STEM course. Utilizing the expert-verified verbatim transcriptions and grading reports of student solutions, we simultaneously evaluate various MLLMs’ upstream recognition fidelity and downstream auto-grading performance. Our evaluation uncovers an astonishing scale of latent failures within MLLM-recognized student handwritten content, highlighting the models’ insufficient reliability for auto-grading and other understanding-oriented applications in high-stakes educational settings. In response, we present a case study demonstrating that leveraging identified error patterns to preemptively detect and rectify recognition errors, with only minimal human intervention (e.g., with 3.3% assignments routed to human graders while the rest to GPT-5.1 grader), can effectively enhance the robustness of the deployed AI-enabled grading system on unseen student solutions.",
+      "paper_id": "acl:2026.findings-acl.751",
+      "title": "EDU-CIRCUIT-HW: Evaluating Multimodal Large Language Models on Real-World University-Level STEM Student Handwritten Solutions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Recently, large language models (LLMs) and reasoning large language models (RLLMs) have gained considerable attention from many researchers. RLLMs enhance the reasoning capabilities of LLMs through Long Chain-of-Thought (Long CoT) processes, significantly improving the performance of LLMs in addressing complex problems. However, there are few works that systematically explore what methods can fully unlock the performance of LLMs and RLLMs within the financial domain. To investigate the impact of various methods on LLMs and RLLMs, we utilize five LLMs and four RLLMs to assess the effects of prompting methods, agentic frameworks, and multilingual alignment methods on financial question-answering tasks. Our research findings indicate: (1) Current prompting methods and agent frameworks enhance the performance of LLMs in financial question answering by simulating Long CoT; (2) RLLMs possess inherent Long CoT capabilities, which limits the effectiveness of conventional methods in further enhancing their performance; (3) Current advanced multilingual alignment methods primarily improve the multilingual performance of LLMs by extending the reasoning length, which yields minimal benefits for RLLMs. Additionally, we discuss strategies for enhancing the performance of LLMs and RLLMs in financial question answering, which may serve as a inspiration for future improvements. We hope that this study can serve as an important reference for LLMs and RLLMs in the field of financial question answering.",
+      "paper_id": "acl:2026.findings-acl.752",
+      "title": "What Factors Affect LLMs and RLLMs in Financial Question Answering?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Adaptive multi-agent systems (MAS) are increasingly adopted as solutions to complex problems. However, their optimization for narrow task ranges leaves it unclear whether they can function as general-purpose systems. To fill this gap, we conduct an extensive empirical study on adaptive MAS, revealing two key findings: (1) they are prone to topological overfitting, defined as failures in domain transfer; and (2) they exhibit illusory coordination, where surface-level accuracy is high but underlying agent coordination deviates from ideal MAS behavior, raising concerns about their practical effectiveness. These observations highlight the urgent need to prioritize generalization in MAS development and motivate more thorough evaluation beyond correctness of the final answer.",
+      "paper_id": "acl:2026.findings-acl.753",
+      "title": "Superficial Success vs. Internal Breakdown: An Empirical Study of Generalization in Adaptive Multi-Agent Systems",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Retrieval-Augmented Generation (RAG) mitigates hallucinations in large language models by incorporating external knowledge. However, retrieval does not always return relevant documents and may return noisy ones. Indiscriminately retrieving and utilizing this external knowledge can interfere with the model’s originally correct reasoning. In this work, we propose Dual-Decision Retrieval-Augmented Generation (D2-RAG), which integrates multi-dimensional uncertainty estimation to decide whether to retrieve and employs adaptive contrastive decoding to handle retrieved contexts of varying quality. Specifically, we first integrate uncertainty estimation scores that assess model uncertainty from multiple perspectives, construct them into a comprehensive feature vector, and train a lightweight retrieval decision model to accurately identify the model’s knowledge boundaries and determine whether to retrieve. Subsequently, we dynamically adjust the contrastive decoding strategy based on the utility of retrieved contexts to enhance the utilization of relevant contexts while suppressing interference from noisy contexts. Extensive experiments on four medical question-answering datasets demonstrate that D2-RAG significantly outperforms baselines, enabling retrieval-augmented Llama3.1-8B to surpass non-retrieval-augmented Llama3.1-70B on the MedMCQA dataset. The source code is available on https://github.com/zakelawen/d--rag.",
+      "paper_id": "acl:2026.findings-acl.754",
+      "title": "D$^2$-RAG: Dual-Decision Retrieval-Augmented Generation via Multi-Dimensional Uncertainty and Utility-Aware Decoding",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Supervised fine-tuning (SFT) is a fundamental post-training strategy to align Large Language Models (LLMs) with human intent. However, traditional SFT often ignores the one-to-many nature of language by forcing alignment with a single reference answer, leading to the model overfitting to non-core expressions. Although our empirical analysis suggests that introducing multiple reference answers can mitigate this issue, the prohibitive data and computational costs necessitate a strategic shift: prioritizing the mitigation of single-reference overfitting over the costly pursuit of answer diversity. To achieve this, we reveal the intrinsic connection between token probability and semantic importance: high-probability tokens carry the core logical framework, while low-probability tokens are mostly replaceable expressions. Based on this insight, we propose ProFit, which selectively masks low-probability tokens to prevent surface-level overfitting. Extensive experiments confirm that ProFit consistently outperforms traditional SFT baselines on general reasoning and mathematical benchmarks",
+      "paper_id": "acl:2026.findings-acl.755",
+      "title": "ProFit: Leveraging High-Value Signals in SFT via Probability-Guided Token Selection",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Accurate question answering (QA) in disaster management requires reasoning over uncertain and conflicting information, a setting poorly captured by existing benchmarks built on clean evidence. We introduce DisastQA, a rigorously verified benchmark of 3,000 expert-annotated questions (2,000 multiple-choice and 1,000 open-ended) spanning eight disaster types. The benchmark is constructed via a human-LLM collaboration pipeline with stratified sampling to ensure balanced coverage. Models are evaluated under varying evidence conditions, from closed-book to noisy evidence integration, enabling separation of internal knowledge from reasoning under imperfect information. For open-ended QA, we propose a human-verified keypoint-based evaluation protocol emphasizing factual completeness over verbosity. Experiments with 20 models reveal substantial divergences from general-purpose leaderboards such as MMLU-Pro. While recent open-weight models approach proprietary systems in clean settings, performance degrades sharply under realistic noise, exposing critical reliability gaps for disaster response. All code, data, and evaluation resources are available at https://github.com/TamuChen18/DisastQA",
+      "paper_id": "acl:2026.findings-acl.756",
+      "title": "DisastQA: A Comprehensive Benchmark for Evaluating Question Answering in Disaster Management",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Recent advances such as Chain-of-Thought prompting have significantly improved large language models (LLMs) in zero-shot medical reasoning. However, prompting-based methods often remain shallow and unstable, while fine-tuned medical LLMs suffer from poor generalization under distribution shifts and limited adaptability to unseen clinical scenarios. To address these limitations, we present TAGS, a test-time framework that combines a broadly capable generalist with a domain-specific specialist to offer complementary perspectives without any model fine-tuning or parameter updates. To support this generalist–specialist reasoning process, we introduce two auxiliary modules: a hierarchical retrieval mechanism that provides multi-scale exemplars by selecting examples based on both semantic and rationale-level similarity, and a reliability scorer that evaluates reasoning consistency to guide final answer aggregation. TAGS achieves strong performance across nine MedQA benchmarks, boosting GPT-4o accuracy by 13.8%, DeepSeek-R1 by 16.8%, and improving a vanilla 7B model from 14.1% to 23.9%. These results surpass several fine-tuned medical LLMs, without any parameter updates.",
+      "paper_id": "acl:2026.findings-acl.757",
+      "title": "TAGS: A Test-Time Generalist--Specialist Framework with Retrieval-Augmented Reasoning and Verification",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Retrieval-augmented generation (RAG) enhances large language models (LLMs) by conditioning generation on retrieved external documents, but the effect of retrieved context is often non-trivial. In realistic retrieval settings, the retrieved document set often contains a mixture of documents that vary in relevance and usefulness. While prior work has largely examined these phenomena through output behavior, little is known about how retrieved context shapes the internal representations that mediate information integration in RAG. In this work, we study RAG through the lens of latent representations. We systematically analyze how different types of retrieved documents affect the hidden states of LLMs, and how these internal representation shifts relate to downstream generation behavior. Across four question-answering datasets and three LLMs, we analyze internal representations under controlled single- and multi-document settings. Our results reveal how context relevancy and layer-wise processing influence internal representations, providing explanations of LLMs’ output behaviors and insights for RAG system design.",
+      "paper_id": "acl:2026.findings-acl.758",
+      "title": "How Retrieved Context Shapes Internal Representations in RAG",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Mathematical reasoning has long been a key benchmark for evaluating large language models. Although substantial progress has been made on math word problems, the need for reasoning over tabular data in real-world applications has been overlooked. For instance, applications such as business intelligence demand not only multi-step numerical reasoning with tables but also robustness to incomplete or inconsistent information. However, comprehensive evaluation in this area is severely limited, constrained by the reliance on manually collected tables that are difficult to scale and the lack of coverage for potential traps encountered in real-world scenarios. To address this problem, we propose AutoT2T, a neuro-symbolic framework that controllably transforms math word problems into scalable and verified tabular reasoning tasks. Building on this pipeline, we develop TabularMath, a benchmark comprising four subsets that include both text-based and image-based tables, covering table complexity, table quality, and table representation dimensions. Our study reveals three key observations: (1) Table complexity and reasoning difficulty impact reasoning performance jointly; (2) Low-quality tables pose severe risks to reliable reasoning in current LLMs; (3) Different table modalities show similar trends, with text-based tables typically being easier for models to reason over. In-depth analyses are conducted for each observation to guide future research.",
+      "paper_id": "acl:2026.findings-acl.759",
+      "title": "TabularMath: Understanding Math Reasoning over Tables with Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large reasoning language models such as OpenAI-o1 and Deepseek-R1 have recently attracted widespread attention due to their impressive task-solving abilities. However, the enormous model size and the generation of lengthy thought chains introduce significant reasoning costs and response latency. Existing methods for efficient reasoning mainly focus on reducing the number of model parameters or shortening the chain-of-thought length. In this paper, we introduce Speculative Chain-of-Thought (SCoT), which reduces reasoning latency from another perspective by accelerated average reasoning speed through large and small model collaboration. SCoT conducts thought-level drafting using a lightweight draft model. Then it selects the best CoT draft and corrects the error cases with the target model. The proposed thinking behavior alignment improves the efficiency of drafting and the draft selection strategy maintains the prediction accuracy of the target model for complex tasks. Experimental results on GSM8K, MATH, GaoKao, CollegeMath and Olympiad datasets show that SCoT reduces reasoning latency by 48%∼66% and 21%∼49% for Deepseek-R1-Distill-Qwen-32B and Deepseek-R1-Distill-Llama-70B while achieving near-target-model-level performance.",
+      "paper_id": "acl:2026.findings-acl.76",
+      "title": "Efficient Reasoning for LLMs through Speculative Chain-of-Thought",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Daily scenarios are characterized by visual richness, requiring Multimodal Large Language Models (MLLMs) to filter noise and identify decisive visual clues for accurate reasoning. Yet, current benchmarks predominantly aim at evaluating MLLMs’ pre-existing knowledge or perceptual understanding, often neglecting the critical capability of reasoning. To bridge this gap, we introduce DailyClue, a benchmark designed for visual clue-driven reasoning in daily scenarios. Our construction is guided by two core principles: (1) strict grounding in authentic daily activities, and (2) challenging query design that necessitates more than surface-level perception. Instead of simple recognition, our questions compel MLLMs to actively explore suitable visual clues and leverage them for subsequent reasoning. To this end, we curate a comprehensive dataset spanning four major daily domains and 16 distinct subtasks. Comprehensive evaluation across MLLMs and agentic models underscores the formidable challenge posed by our benchmark. Our analysis reveals several critical insights, emphasizing that the accurate identification of visual clues is essential for robust reasoning.",
+      "paper_id": "acl:2026.findings-acl.760",
+      "title": "Seek-and-Solve: Benchmarking MLLMs for Visual Clue-Driven Reasoning in Daily Scenarios",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Understanding and reasoning with abstractive information from the visual modality presents significant challenges for current multi-modal large language models (MLLMs). Among the various forms of abstractive information, Multi-Modal Relational Knowledge (MMRK), which represents abstract relational structures between multi-modal entities using node-edge formats, remains largely under-explored. In particular, STructured and Abstractive Reasoning (STAR) on such data has received little attention from the research community. To bridge the dual gaps in large-scale high-quality data and capability enhancement methodologies, this paper makes the following key contributions: (i). An automatic STAR data engine to synthesize images with MMRK to build multi-modal instructions with reliable chain-of-thought thinking for various STAR tasks and (ii). A comprehsive two-stage training framework, accompanied by knowledge-informed GRPO and a suite of evaluation protocols tailored to different STAR tasks. Based upon these contributions, we introduce STAR-64K, a dataset comprising 64K high-quality multi-modal instruction samples, and conduct experiments across 8 open-source MLLMs. Experimental results show that our two-stage enhancement framework enables smaller 3B/7B models to significantly outperform GPT-4o in STAR. Additionally, we provide in-depth analysis regarding the effectiveness of various designs, data transferability, and scalability.",
+      "paper_id": "acl:2026.findings-acl.761",
+      "title": "Structured and Abstractive Reasoning on Multi-modal Relational Knowledge Images",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "While recent studies have increasingly emphasized the role of reflection in code repair tasks, existing benchmarks still target the repair generation capability of LLMs, lacking fine-grained evaluation of reflection generation capability. To this end, we propose Code Reffix, a benchmark featuring an automated pipeline with oracle reflections and a dual-task protocol to decouple the evaluation of reflection from repair. Through extensive experiments on 14 LLMs and fine-tuning analysis, we aim to pinpoint performance bottlenecks of code repair, quantify reflection quality, and verify the value of reflection optimization. Evaluations reveal that underperforming reflection capabilities of small-scale LLMs remain a major bottleneck for code repair. By quantifying this gap, Code Reffix provides a critical foundation for optimizing LLMs to achieve superior repair performance.",
+      "paper_id": "acl:2026.findings-acl.762",
+      "title": "Code Reffix: A Benchmark for Reflection-Guided Code Repair with Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Designing proteins that satisfy natural language functional requirements is a central goal in protein engineering. A straightforward baseline is to fine-tune generic instruction-tuned LLMs as direct text-to-sequence generators, but this is data- and compute-hungry. With limited supervision, LLMs can produce coherent plans in text yet fail to reliably realize them as sequences. This plan–execute gap motivates ProtoCycle, an agentic framework for protein design that uses LLMs primarily to drive a multi-round, feedback-driven decision cycle. ProtoCycle couples an LLM planner with a lightweight tool environment designed to emulate the iterative workflow of human protein engineers and uses LLM-driven reflection on tool feedback to revise plans. Trained with supervised trajectories and online reinforcement learning, ProtoCycle achieves strong language alignment while maintaining competitive foldability, and ablations show that reflection substantially improves sequence quality.",
+      "paper_id": "acl:2026.findings-acl.763",
+      "title": "ProtoCycle: Reflective Tool-Augmented Planning for Text-Guided Protein Design",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) are increasingly deployed in high-stakes domains reliant on tabular data (e.g., financial reporting), where undetected logical inconsistencies such as mismatched totals and components can lead to critical errors. Yet, the ability of LLMs to identify such inconsistencies remains poorly understood, hindered by the absence of standardized evaluation frameworks and cell-level annotated datasets. To bridge this gap, we propose a comprehensive benchmark SEC-Fintables comprising 103,395 real-world and error-injected table instances, alongside a novel evaluation protocol that decomposes inconsistency detection into granular sub-tasks. Through evaluating both proprietary and open-source LLMs on SEC-Fintables, we find that contemporary LLMs exhibit only partial competence in detecting logical inconsistencies. Our study reveals key limitations and improvement opportunities for LLMs. We believe SEC-Fintables and our evaluation protocol can serve as a practical resource for advancing reliable inconsistency detection of LLMs in tabular reasoning. We release SEC-Fintables at https://github.com/XIEFOX/SEC-Fintables.",
+      "paper_id": "acl:2026.findings-acl.764",
+      "title": "SEC-FinTables: Evaluating Large Language Models for Detecting Logical Inconsistencies on Tabular Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Retrieval-Augmented Generation (RAG) systems are widely used to mitigate the stateless nature of Large Language Models (LLMs) in long-term and personalized interactions by incorporating external memory. However, existing approaches often prioritize memory organization, such as knowledge graphs, while overlooking a critical semantic gap between implicit, intent-driven queries and explicit, narrative-based memories. To bridge this gap, we propose QueryLink, a novel framework that leverages Query-Memory Alignment to project both queries and memories into a shared semantic space. It significantly boosts recall by facilitating multi-grained retrieval of semantically relevant information. To further enhance memory retrieval, we leverage Coherent Memory Chunking, a mechanism that processes memories in multi-turn dialogue units, preserving semantic integrity, rather than relying on fixed-size segments. Extensive experiments on the LoCoMo and LongMemEval benchmark demonstrate that QueryLink significantly outperforms SOTA methods, achieving at least a 7% improvement in reasoning accuracy (measured by LLM). Additionally, QueryLink can be integrated as a plug-and-play component to boost existing vector-based systems like A-MEM, leading to improvements of over 6% in both F1 and B1 scores.The code is available at https://github.com/Dontplay0112/querylink.",
+      "paper_id": "acl:2026.findings-acl.765",
+      "title": "QueryLink: Leveraging Query-Memory Alignment for Long-Term Reasoning in LLM Agents",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Product attribute extraction in e-commerce is bottlenecked by ontologies that are inconsistent, incomplete, and costly to maintain. We present AutoPKG, a multi-agent Large Language Model (LLM) framework that automatically constructs a Product-attribute Knowledge Graph (PKG) from multimodal product content. AutoPKG induces product types and type-specific attribute keys on demand, extracts attribute values from text and images, and consolidates updates through a centralized decision agent that maintains a globally consistent canonical graph. We also propose an evaluation protocol for dynamic PKGs that measures type/key validity and consolidation quality, as well as edge-level accuracy for value assertions after canonicalization. On a large real-world marketplace catalog dataset from Lazada (Alibaba), AutoPKG achieves up to 0.953 Weighted Knowledge Efficiency (WKE) for product types, 0.724 WKE for attribute keys, and 0.531 edge-level F1 for multimodal value extraction. Across three public benchmarks, we improve edge-level exact-match F1 by 0.152 and yield a 0.208 precision gain on the attribute extraction application. Online A/B tests show that AutoPKG-derived attributes increase Gross Merchandise Value (GMV) in Badge (+3.81%), Search (+5.32%), and Recommendation (+7.89%), supporting AutoPKG’s practical value in production.",
+      "paper_id": "acl:2026.findings-acl.766",
+      "title": "AutoPKG: An Automated Framework for Dynamic E-commerce Product-Attribute Knowledge Graph Construction",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "In recent years, large language models (LLMs) have demonstrated remarkable capabilities in the medical domain. However, existing medical benchmarks suffer from performance saturation and are predominantly derived from medical exam questions, which fail to reflect the complexity of real-world clinical scenarios.To bridge this gap, we introduce ClinBench, a challenging benchmark based on authentic clinical cases sourced from authoritative medical journals. Each question retains the complete patient information and clinical test results from the original case, effectively simulating real-world clinical practice. Additionally, we implement a rigorous human review process involving medical experts to ensure the quality and reliability of the benchmark. ClinBench supports both textual and multimodal evaluation formats, covering 11 medical specialties with over 2,000 questions, including a dedicated rare disease track, providing a comprehensive resource for assessing the medical reasoning capabilities of LLMs. We evaluate the performance of over 20 open-source and proprietary LLMs and benchmark them against human medical experts. Our findings reveal that human experts still retain an advantage within their specialized fields, while LLMs demonstrate superior overall performance on a broader range of medical specialties.",
+      "paper_id": "acl:2026.findings-acl.767",
+      "title": "Benchmarking LLMs on Authentic Cases from Medical Journals",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "As code large language models (LLMs) evolve into tool-interactive agents via the Model Context Protocol (MCP), their generalization is increasingly limited by low-quality synthetic data and the diminishing returns of quantity scaling; moreover, quantity-centric scaling exhibits an early bottleneck that underutilizes trajectory data. We propose TDScaling, a Trajectory Diversity Scaling-based data synthesis framework for code agents that scales performance through diversity rather than raw volume. Moreover, TDScaling is more data-efficient: under a fixed training budget, increasing trajectory diversity yields larger gains than adding more trajectories, improving the performance-cost trade-off for agent training. TDScaling integrates four innovations: (1) a Business Cluster mechanism that captures real-service logical dependencies; (2) a Blueprint-driven multi-agent paradigm that enforces trajectory coherence; (3) an adaptive evolution mechanism that steers synthesis toward long-tail scenarios using Domain Entropy, Reasoning Mode Entropy, and Cumulative Action Complexity to prevent mode collapse; and (4) a sandboxed code tool that mitigates catastrophic forgetting of intrinsic coding capabilities. Experiments on general tool-use benchmarks (BFCL, 𝜏2-Bench) and code agent tasks (RebenchT, CodeCI, BIRD) demonstrate a win-win outcome: TDScaling improves both tool-use generalization and inherent coding proficiency. Crucially, we show that trajectory diversity scaling attains a substantially higher performance ceiling than quantity scaling, establishing a resource-efficient paradigm for training robust code agents under data bottlenecks.",
+      "paper_id": "acl:2026.findings-acl.768",
+      "title": "Beyond Quantity: Trajectory Diversity Scaling for Code Agents",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Current benchmarks are inadequate for evaluating progress in reinforcement learning (RL) for large language models (LLMs). Despite recent benchmark gains reported for RL, we find that training on these benchmarks’ training sets achieves nearly the same performance as training directly on the test sets, suggesting that the benchmarks cannot reliably separate further progress. To study this phenomenon, we introduce a diagnostic suite and the Oracle Performance Gap (OPG) metric that quantifies the performance difference between training on the train split versus the test split of a benchmark. We further analyze this phenomenon with stress tests and find that, despite strong benchmark scores, existing RL methods struggle to generalize across distribution shifts, varying levels of difficulty, and counterfactual scenarios: shortcomings that current benchmarks fail to reveal. We conclude that current benchmarks are insufficient for evaluating generalization and propose three core principles for designing more faithful benchmarks: sufficient difficulty, balanced evaluation, and distributional robustness.",
+      "paper_id": "acl:2026.findings-acl.769",
+      "title": "Rethinking RL Evaluation: Can Benchmarks Truly Reveal Failures of RL Methods?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language model-based agents have recently emerged as powerful approaches for solving dynamic and multi-step tasks. Most existing agents employ planning mechanisms to guide long-term actions in dynamic environments. However, current planning approaches face a fundamental limitation that they operate at a fixed granularity level. Specifically, they either provide excessive detail for simple tasks or insufficient detail for complex ones, failing to achieve an optimal balance between simplicity and complexity. Drawing inspiration from the principle of progressive refinement in cognitive science, we propose AdaPlan-H, a self-adaptive hierarchical planning mechanism that mimics human planning strategies. Our method initiates with a coarse-grained macro plan and progressively refines it based on task complexity. It generates self-adaptive hierarchical plans tailored to the varying difficulty levels of different tasks, which can be optimized by imitation learning and capability enhancement. Experimental results demonstrate that our method significantly improves task execution success rates while mitigating overthinking at the planning level, providing a flexible and efficient solution for multi-step complex decision-making tasks. To contribute to the community, our code and data will be made publicly available at https://github.com/import-myself/AHP.",
+      "paper_id": "acl:2026.findings-acl.77",
+      "title": "From Coarse to Fine: Self-Adaptive Hierarchical Planning for LLM Agents",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Lifelong knowledge editing (LKE) aims to incrementally correct factual inaccuracies in large language models (LLMs), but sequential edits can lead to substantial degradation of capabilities. Existing approaches primarily rely on static parameter regularization, which restricts knowledge integration and fails to prevent cumulative capability degradation. We argue that an important source of this degradation lies in the temporal mismatch between locally editable factual knowledge and procedural knowledge, which is gradually acquired, guides task execution, and cannot be reliably updated by rapid edits. To this end, we formulate LKE as a dual-timescale process, explicitly decoupling fast-updating factual knowledge from slow-evolving procedural knowledge. Based on this formulation, we propose CaPEdit, a framework that preserves model capabilities under LKE. It first synthesizes procedural knowledge across successive edits, and subsequently performs parameter updates guided jointly by factual supervision and the synthesized procedural signal. To ensure stability under long edit sequences, CaPEdit is trained via a hybrid optimization scheme, combining step-wise updates for rapid factual correction with trajectory-level optimization to facilitate gradual procedural adaptation. Experiments demonstrate that CaPEdit improves capability preservation across all fundamental capabilities by 49.78%, achieves superior editing performance, and requires only 18.07% of the editing time of most existing methods.",
+      "paper_id": "acl:2026.findings-acl.770",
+      "title": "CaPEdit: Capability-Preserving Lifelong Knowledge Editing For Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models with billions of parameters are often over-provisioned: many layers contribute little unique information yet dominate the memory and energy footprint during inference. We present LieQ (Layer-wise information effectiveness Quantization), a hardware-native, metric-driven post-training quantization framework that addresses the critical challenge of maintaining accuracy in sub-8B models, model parameters less than 8B, under extreme low-bit compression. LieQ keeps uniform bit-width within each layer while mixing precision across layers, preserving standard multiplication kernels and avoiding irregular memory access, codebooks, or irregular formats at inference time. Our method uncovers a strong correlation between layer-wise functional saliency and representational compactness, revealing that layers with higher training-induced energy concentration are functionally irreplaceable. Leveraging this insight, we propose a purely geometry-driven sensitivity proxy that enables automatic bit-width allocation under a target average-bit budget without expensive gradient updates or inference-based perplexity probing. Under an average weight bit-width approaching two bits per parameter, LieQ consistently reduces the large accuracy gap typically observed for naive uniform 2-bit baselines on Qwen3 and LLaMA3.x families, while retaining standard-kernel efficiency. These properties make LieQ a practical path toward deploying small language models on resource-constrained edge devices. Code will be available at: https://github.com/HeXiao-55/LieQ-official.git.",
+      "paper_id": "acl:2026.findings-acl.771",
+      "title": "Exploring Layer-wise Information Effectiveness for Post-Training Quantization in Small Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Multimodal Models (LMMs) have demonstrated significant potential in the medical domain, achieving impressive performance on tasks ranging from report generation to visual question answering. However, existing benchmarks predominantly focus on static evaluation, assessing models on isolated data points. This approach neglects a critical aspect of clinical practice: longitudinal analysis, where physicians interpret patient data as a dynamic trajectory to track disease progression and treatment response. To address this gap, we introduce ELTLM, the first benchmark specifically tailored to assess the temporal perception and reasoning capabilities of medical LMMs. Constructed from temporal chest X-rays, ELTLM features a hierarchical task taxonomy comprising Temporal Perception QA and Temporal Reasoning QA, requiring models to detect fine-grained visual changes and infer high-level clinical trends. Our evaluation of state-of-the-art models reveals that while they excel in static scenarios, they struggle significantly with temporal grounding and consistency. ELTLM serves as a vital resource to identify these limitations and guide the development of future time-aware medical AI systems. Our data is available at ELTLM.",
+      "paper_id": "acl:2026.findings-acl.772",
+      "title": "ELTLM: Evaluation of Longitudinal Temporal Large Multimodal Models in Clinical Scenarios",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Previous LLMs-based RL studies typically follow either supervised learning with high annotation costs, or unsupervised paradigms using voting or entropy-based rewards. However, their performance remains far from satisfactory due to the substantial annotation cost and issues such as model collapse or reward hacking. To address these issues, we introduce a new perspective inspired by cognitive learning theory and propose a novel approach called EasyRL. The core of EasyRL is to simulate the human cognitive acquisition curve by integrating reliable knowledge transfer from easy labeled data with a progressive divide-and-conquer strategy that tackles increasingly difficult unlabeled data. Specifically, we initialize a warm-up model using supervised RL with few-shot labeled data. This is followed by a divide-and-conquer pseudo-labeling strategy on difficult unlabeled data, combining consistency-based selection for low-uncertainty cases and reflection-based resolution for medium-uncertainty cases. Finally, difficulty-progressive self-training with iterative pseudo-labeling and RL further strengthens the model’s reasoning capability. EasyRL provides a unified self-evolving framework that facilitates data-efficient post-training of LLMs. Experimental results on mathematical and scientific benchmarks demonstrate that EasyRL, using only 10% of easy labeled data, consistently outperforms state-of-the-art baselines.",
+      "paper_id": "acl:2026.findings-acl.773",
+      "title": "Easy Samples Are All You Need: Self-Evolving LLMs via Data-Efficient Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Vision-language models (VLMs) have shown impressive capabilities in perceptual tasks, yet they degrade in complex multi-hop reasoning under multi-player game settings with imperfect and deceptive information. In this paper, we pick up a representative multi-player task, Murder Mystery Games, which require to infer hidden truths based on partial clues provided by the roles of different intentions. To address this challenge, we propose a collaborative multi-agent framework for evaluating and synthesizing high-quality, role-driven multi-player game scripts, enabling fine-grained interaction patterns tailored to character identities (i.e., murderer vs. innocent). Our system generates rich multimodal contexts—including character backstories, visual/textual clues, and multi-hop reasoning chains—through coordinated agent interactions. We design a two-stage agent-monitored training strategy to enhance the reasoning ability of VLM: (1) Chain-of-Thought based fine-tuning on curated and synthetic datasets that model uncertainty and deception; (2) GRPO-based Reinforcement Learning with agent-monitored reward shaping, encouraging the model to develop character-specific reasoning behaviors and effective multi-modal multi-hop inference. Extensive experiments demonstrate that our method significantly boosts the performance of VLM in narrative reasoning, hidden fact extraction, and deception-resilient understanding. Our contributions offer a scalable solution for training and evaluating VLMs under uncertain, adversarial, and socially complex conditions, laying the groundwork for future benchmarks in multimodal multi-hop reasoning under imperfect information.",
+      "paper_id": "acl:2026.findings-acl.774",
+      "title": "Collaborative Multi-Agent Scripts Generation for Enhancing Imperfect-Information Reasoning in Murder Mystery Games",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Visual RAG has offered an alternative to traditional RAG. It treats documents as images and uses vision encoders to obtain vision patch tokens. However, hundreds of patch tokens per document create retrieval and storage challenges in a vector database. Practical deployment requires aggregating them into a single vector. This raises a critical question: does single-vector aggregation lose key information in financial documents? We develop a diagnostic benchmark using financial documents where changes in single digits can lead to significant semantic shifts. Our experiments show that single-vector aggregation collapses different documents with almost identical vectors. Metrics show that the patch level detects semantic changes, and confirm that aggregation obscures these details. We identify global texture dominance as the root cause. Our findings are consistent across model scales, retrieval-optimized embeddings, and multiple mitigation strategies, highlighting significant risks for single-vector visual document retrieval in financial applications.",
+      "paper_id": "acl:2026.findings-acl.775",
+      "title": "A Picture is Worth a Thousand Words? An Empirical Study of Aggregation Strategies for Visual Financial Document Retrieval",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Autonomous agents powered by large language models (LLM-based agents) are capable of using off-the-shelf tools to interact with the environment, solve real-world problems, and boost work efficiency. However, current approaches to enhancing tool use for LLM-based agents primarily focus on post-training fine-tuning or test-time context extension. These methods overlook the fundamental tool knowledge acquisition during the early training phase, where models actually learn and internalize core knowledge representations, restricting model performance on out-of-distribution tool usage. To solve such a problem, we introduce enhancing tool knowledge for LLM-based agents during continuous pre-training (ToolCPT). We identify and bridge a key gap in current LLM training by shifting focus from tool-calling patterns to deep internalization of core tool-knowledge representations. We begin by curating 5.1 million code artifacts from large-scale, high-quality code repositories. These artifacts are selected based on a set of criteria that defines a usable “proxy agent tool”, thereby forming a comprehensive agent tool library. For each proxy tool, we then create a detailed playbook covering implementation specifications, core functionalities, interaction protocols with other tools, and illustrative positive and negative examples. This process yields a large-scale tool knowledge corpus comprising 18 billion tokens, which is used to continuously pre-train our model. Experiments show our playbook-enhanced corpus catalyzes deep knowledge internalization, driving the model to notable performance gains on multiple standard benchmarks.",
+      "paper_id": "acl:2026.findings-acl.776",
+      "title": "ToolCPT: Improving Tool Utilization in LLM Agents via Continuous Pre-training",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Modern generative models still lack human-level creativity, particularly in multi-branch diversity. Prior approaches to address this problem often incur heavy computation or strong dependency on model architecture. Therefore, we introduce UAG(Universal Avoidance Generation), a model-agnostic and computationally efficient generation strategy that penalizes similarity among previously generated outputs. Thus, UAG can enhance multi-branch diversity across both diffusion and transformer models, with minimal additional computation. In experiments, our method achieves up to 1.9 times higher diversity, runs 4.4 times faster, and requires only 1/64 of the FLOPs compared to state-of-the-art methods.",
+      "paper_id": "acl:2026.findings-acl.777",
+      "title": "A Universal Avoidance Method for Diverse Multi-branch Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Qualitative analysis is essential for studying complex social and behavioral phenomena, yet existing large language model (LLM) approaches face key limitations. Fully automated pipelines often compromise methodological rigor, while fully manual coding remains costly and labor-intensive. Although recent work emphasizes human–AI collaboration, existing multi-agent systems focus primarily on theme-level outputs, provide limited human oversight, and overlook fine-grained, data-level coding quality.We introduce CentaurTA, an iterative, self-improving human–agent framework for scalable thematic analysis. CentaurTA places humans in the loop to oversee and guide analysis, using expert feedback as a persistent learning signal to drive prompt-level refinement. By combining structured human feedback with rubric-based evaluation, CentaurTA provides fine-grained supervision for both open coding and theme construction while preserving methodological rigor. Experiments across multiple datasets, baselines, and LLM families show that CentaurTA improves coding alignment and transparency, highlighting the central role of human feedback in reliable qualitative analysis. Our code and data are available at https://github.com/Tom-Owl/CentaurTA.",
+      "paper_id": "acl:2026.findings-acl.778",
+      "title": "CentaurTA: A Self-Improving Human-Agents Collaboration Framework for Thematic Analysis",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Deploying and fine-tuning Large Language Models (LLMs) on resource-constrained edge devices requires navigating a strict trade-off between memory footprint and task performance. Existing quantization-aware fine-tuning methods typically decouple weight precision and adapter capacity, overlooking that a layer’s ability to adapt is constrained by the information preserved in its frozen weights. Layers that are highly sensitive to quantization—whether due to representational specialization or accumulated error propagation—can become bottlenecks that adapter rank alone cannot recover. To address this issue, we introduce QR-Adaptor, a unified framework that jointly optimizes per-layer quantization bit-width and LoRA rank. We formulate resource allocation as a multi-objective discrete search guided by empirical layer-wise sensitivity, and implement it with a three-stage pipeline comprising KL-based sensitivity profiling, evolutionary exploration, and Bayesian refinement. Extensive experiments across LLaMA and Qwen models, including modern instruction tuning on OpenOrca and comparisons with strong PEFT baselines such as QDoRA, show that QR-Adaptor establishes a strong Pareto frontier: under a strict 4-bit memory budget, it matches or approaches 16-bit baselines while using substantially less memory.",
+      "paper_id": "acl:2026.findings-acl.779",
+      "title": "Balancing Fidelity and Plasticity: Aligning Mixed-Precision Fine-Tuning with Linguistic Hierarchies",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) excel at natural language understanding and generation, yet their reliance on static pre-training corpora may lead to outdated knowledge, hallucinations, and limited adaptability. Retrieval-Augmented Generation (RAG) mitigates these issues by grounding model outputs with external retrieval, but conventional RAG remains constrained by a fixed retrieve-then-generate routine and struggles with multi-step reasoning and tool calls. Agentic RAG addresses these limitations by enabling LLM agents to actively decompose tasks, issue exploratory queries, and refine evidence through iterative retrieval. Despite growing interest, the development of Agentic RAG is impeded by data scarcity: unlike traditional RAG, it requires challenging tasks that require planning, retrieval, and multiple reasoning decisions, and corresponding rich, interactive agent trajectories. This survey presents the first data-centric overview of Agentic RAG, framing its data lifecycle—data collecting, data preprocessing and task formulation, task construction, data for evaluation, and data enhancement for training—and cataloging representative training datasets and benchmarks in different domains (e.g. question answering, web, software engineering). From data perspectives, we aim to guide the creation of scalable, high-quality datasets for the next generation of adaptive, knowledge-seeking LLM agents. The project page is at https://github.com/fatty-belly/Awesome-AgenticRAG-Data/.",
+      "paper_id": "acl:2026.findings-acl.78",
+      "title": "Data-Centric Perspectives on Agentic Retrieval-Augmented Generation: A Survey",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

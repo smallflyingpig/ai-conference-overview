@@ -1,0 +1,587 @@
+{
+  "batch_index": 32,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "A key challenge for large language models is token cost per query and overall deployment cost. Clinical inputs are long, heterogeneous, and often redundant, while downstream tasks are short and high stakes. We study budgeted context selection, where a subset of document units is chosen under a strict token budget so an off-the-shelf generator can meet fixed cost and latency constraints. We cast this as a knapsack-constrained subset selection problem with two design choices, unitization that defines document segmentation and selection that determines which units are kept.We propose RCD, a monotone submodular objective that balances relevance, coverage, and diversity. We compare sentence, section, window, and cluster-based unitization, and introduce a routing heuristic that adapts to the budget regime. Experiments on MIMIC discharge notes, Cochrane abstracts, and L-Eval show that optimal strategies depend on the evaluation setting. Positional heuristics perform best at low budgets in extractive tasks, while diversity-aware methods such as MMR improve LLM generation. Selector choice matters more than unitization, with cluster-based grouping reducing performance and other schemes behaving similarly. ROUGE saturates for LLM summaries, while BERTScore better reflects quality differences.",
+      "paper_id": "acl:2026.findings-acl.2114",
+      "title": "Budget-Aware Routing for Long Clinical Text",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) often struggle with complex reasoning tasks due to their limitations in addressing the vast reasoning space and inherent ambiguities of natural language. We propose the Mixture-of-Search-Agents (MOSA) paradigm, a novel approach leveraging the collective expertise of multiple LLMs to enhance search-based reasoning. MOSA integrates diverse reasoning pathways by combining independent exploration with iterative refinement among LLMs, mitigating the limitations of single-model approaches. Using Monte Carlo Tree Search (MCTS) as a backbone, MOSA enables multiple agents to propose and aggregate reasoning steps, resulting in improved accuracy. Our comprehensive evaluation across four reasoning benchmarks demonstrates MOSA’s consistent performance improvements over single-agent and other multi-agent baselines, particularly in complex mathematical and commonsense reasoning tasks.",
+      "paper_id": "acl:2026.findings-acl.2115",
+      "title": "Multi-LLM Collaborative Search for Complex Problem Solving",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Synthesizing an editable 3D scene from a single RGB image is central to content creation, embodied-agent data generation, and AR/VR, yet remains challenging to achieve both high-fidelity reconstruction and convenient interactive editing. Existing geometry-based pipelines produce high-quality 3D results but are typically hard to refine without rerunning the full process, while LLM-driven procedural systems enable interactive tool use but are mostly text-driven and lack precise metric 3D understanding from images. We present SceneLM, a language-model-based framework that grounds 3D scene synthesis in visual evidence by recovering an executable metric 3D layout directly from a single image. Given an RGB image (and camera intrinsics when available), SceneLM outputs a JSON-form layout specifying each object’s category, 3D center, size, and discretized yaw, and then deterministically executes this layout with a tool suite to instantiate, place, and edit objects for iterative refinement. To train metric layout recovery at scale, we curate five datasets covering diverse indoor, outdoor, and tabletop scenes and convert heterogeneous 3D annotations into a unified instruction-tuning format. To improve numerical stability and metric accuracy while preserving the text interface, we augment autoregressive JSON generation with a lightweight geometry prediction branch and dual supervision. Experiments show that SceneLM substantially improves single-image 3D layout estimation over strong open and proprietary MLLM baselines, and yields higher-quality end-to-end scene generation in geometric consistency, physical plausibility, semantic alignment, and realism.",
+      "paper_id": "acl:2026.findings-acl.2116",
+      "title": "SceneLM: 3D-Aware Language Models for Editable 3D Scene Synthesis",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "We present a discrete diffusion-based generative model for text generation using Glauber dynamics from statistical physics. Our main insight is that instead of trying to train a discrete state space diffusion model using Glauber dynamics with a uniform transition kernel as the forward process, one can set up an “energy function” based on pretrained causal/masked language models, which, when viewed as the stationary distribution, allows us to significantly improve the quality of the generated text. Using UL2 as our pretrained models and modifying and incorporating it into our diffusion pipeline, we obtain significantly better perplexities than prior diffusion-based text generative models and are competitive with the perplexities of GPT-2-medium and GPT-2-large for comparable model sizes. Furthermore, our models outperform prior diffusion models and GPT-2 style auto-regressive models on some zero-shot common sense reasoning tasks as well as some planning/search tasks.",
+      "paper_id": "acl:2026.findings-acl.2117",
+      "title": "Leveraging Pretrained Language Models as Energy Functions for Glauber Dynamics Text Diffusion",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Text-embedding models frequently inherit societal biases, yet the influence of socio-economic markers remains largely unexplored. This paper identifies Currency Bias as a systemic representational limitation in financial AI, where models exhibit associative sensitivity to economic hierarchies. We analyze this through three dimensions: (1) the Syntax Gap, where models fail to align currency names, symbols, and acronyms; (2) Associative Sensitivity, where embeddings disproportionately link specific currency identifiers to narratives of risk or poverty; and (3) Downstream volatility, where currency substitutions induce predictive entropy, sentence misunderstanding, sentiment shifts, and credit default prediction flips in downstream tasks. Benchmarking 14 state-of-the-art architectures reveals a pervasive phenomenon of representational disparity, affecting several currencies. These findings suggest that current embedding practices inadvertently encode inequalities, posing significant risks for the fairness and reliability of global financial NLP applications.",
+      "paper_id": "acl:2026.findings-acl.2118",
+      "title": "Uncovering Currency Bias and Syntax Gap in Text Embedding Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Recently, large language models (LLMs) are capable of generating highly fluent textual content. While they offer significant convenience to humans, they also introduce various risks, like phishing and academic dishonesty. Numerous research efforts have been dedicated to developing algorithms for detecting AI-generated text and constructing relevant datasets. However, in the domain of Chinese corpora, challenges remain, including limited model diversity and data homogeneity. To address these issues, we propose C-ReD: a comprehensive Chinese Real-prompt AI-generated text Detection benchmark. Experiments demonstrate that C-ReD not only enables reliable in-domain detection but also supports strong generalization to unseen LLMs and external Chinese datasets—addressing critical gaps in model diversity, domain coverage, and prompt realism that have limited prior Chinese detection benchmarks. We release our resources at https://github.com/HeraldofLight/C-ReD.",
+      "paper_id": "acl:2026.findings-acl.2119",
+      "title": "C-ReD: A Comprehensive Chinese Benchmark for AI-Generated Text Detection Derived from Real-World Prompts",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Diffusion-based Large Language Models (dLLMs) are emerging as a powerful alternative to traditional autoregressive models. These models learn to generate text by iteratively denoising masked sequences. In this work, we identify a critical problem in dLLMs: the model’s attention is wastefully expended on uninformative mask tokens, diluting its focus on meaningful context. We term this phenomenon “attention dilution”. We further show that this artifact is amplified by token-level noising, whereas models employing sequence-level noise exhibit a reduced effect. To resolve this problem, we introduce Truncated Block Generation, a novel sampling algorithm that not only mitigates attention dilution but also enables faster inference and flexible-length sequence generation. Extensive experiments validate our analysis and demonstrate the marked effectiveness of our proposed method in enhancing both the performance and efficiency of dLLMs.",
+      "paper_id": "acl:2026.findings-acl.212",
+      "title": "Diffusion with Truncated Blocks: Fast and High-Quality Text Generation using Truncated Block Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Test-time scaling improves the inference performance of Large Language Models (LLMs) but also incurs substantial computational costs. Although recent studies have reduced token consumption through dynamic self-consistency, they remain constrained by the high latency of sequential requests. In this paper, we propose SeerSC, a dynamic self-consistency framework that simultaneously improves token efficiency and latency by integrating System 1 and System 2 reasoning. Specifically, we utilize the rapid System 1 to compute the answer entropy for given queries. This score is then used to evaluate the potential of samples for scaling, enabling dynamic self-consistency under System 2. Benefiting from the advance and accurate estimation provided by System 1, the proposed method can reduce token usage while simultaneously achieving a significant decrease in latency through parallel generation. It outperforms existing methods, achieving up to a 47% reduction in token consumption and a 43% reduction in inference latency without significant performance loss.",
+      "paper_id": "acl:2026.findings-acl.2120",
+      "title": "Seer Self-Consistency: Advance Budget Estimation for Adaptive Test-Time Scaling",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) often produce content that contradicts or overlooks information provided in the input context, a phenomenon known as faithfulness hallucination. In this paper, we propose Context-Fidelity Boosting (CFB), a lightweight and general decoding-time framework that effectively reduces such hallucinations by boosting the generation probability of context-relevant tokens. Motivated by logit-shaping principles in watermarking techniques, CFB leverages token-level logit adjustments based on their presence or salience in the input context. Specifically, we develop three boosting strategies, static, context-aware, and token-aware that progressively incorporate distributional divergence, attention scores, and semantic similarity. Notably, CFB requires no retraining or architectural changes, making it compatible with a wide range of LLMs. Experiments on summarization and question answering tasks across multiple open-source LLMs show that CFB consistently improves faithfulness metrics, with minimal generation overhead. Our implementation is fully open-sourced.",
+      "paper_id": "acl:2026.findings-acl.2121",
+      "title": "Context-Fidelity Boosting: Enhancing Faithful Generation through Watermark-Inspired Decoding",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Illustrating figurative language remains challenging due to its non-literal semantics, and existing text-to-image frameworks rely heavily on proprietary models or human supervision to achieve adequate alignment. We introduce CaRVE, a lightweight and fully open-source critique-driven framework that employs VLM feedback to refine visual elaborations for figurative image generation. CaRVE bridges the semantic alignment gap even in sub-4B models by correcting visual and conceptual misalignments, reducing over-literalization, and improving robustness to complex figurative expressions. Using only open-source models, CaRVE achieves a 6.49% improvement over prior baselines on intrinsic automatic evaluations and a +0.37 average rank gain in human preference. We further release MetaCaRVE, an enhanced figurative image dataset constructed by refining HAIVMet using CaRVE.",
+      "paper_id": "acl:2026.findings-acl.2122",
+      "title": "CaRVE: Critiquing and Refining Visual Elaborations for Figurative Language Illustrations",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "State-of-the-art large language models (LLMs) have achieved impressive results on various tasks. However, these architectures are vulnerable to jailbreak attacks, such as GCG and AutoDAN. Several defense strategies have been proposed to protect LLMs from generating harmful content, with most methods focusing on model fine-tuning or heuristic defense designs. These methods are often time-consuming or less effective. To fill this gap, this paper proposes a novel defense solution by taking the advances of online In-Context Learning (ICL) and an offline defensive suffix. Specifically, we first optimize the offline defensive suffix using an iterative algorithm. Second, an online stochastic random search is conducted to identify the most effective ICL demonstrations. Finally, the original user instruction, the selected ICL demonstrations, and the defensive suffix are assembled into a structured input prompt using a carefully designed template, which is then fed into the LLM for response generation. Experimental results show that our method is effective against both advanced white-box and black-box attacks, reducing the attack success rate to nearly 0%, while maintaining the model’s utility on the benign tasks and incurring only negligible computational overhead. Our code is available on https://github.com/Trusted-LLM/DSICL.",
+      "paper_id": "acl:2026.findings-acl.2123",
+      "title": "Defending LLMs against Jailbreak Attacks via Template-Based ICL with a Defensive Suffix",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Although large language models (LLMs) are increasingly used as annotators at scale, they are typically treated as a pragmatic fallback rather than a faithful estimator of human perspectives. This work challenges that presumption. By framing perspective-taking as the estimation of a latent group-level judgment, we characterize the conditions under which modern LLMs can outperform human annotators, including in-group humans, when predicting aggregate subgroup opinions on subjective tasks, and show that these conditions are common in practice. This advantage arises from structural properties of LLMs as estimators, including low variance and reduced coupling between representation and processing biases, rather than any claim of lived experience. Our analysis identifies clear regimes where LLMs act as statistically superior frontline estimators, as well as principled limits where human judgment remains essential. These findings reposition LLMs from a cost-saving compromise to a principled tool for estimating collective human perspectives.",
+      "paper_id": "acl:2026.findings-acl.2124",
+      "title": "From Fallback to Frontline: When Can LLMs be Superior Annotators of Human Perspectives?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Improving the Theory of Mind (ToM) capability of Large Language Models (LLMs) is crucial for effective social interactions between these AI models and humans. However, the existing benchmarks often measure ToM capability improvement through story-reading, multiple-choice questions from a third-person perspective, while ignoring the first-person, dynamic, and open-ended nature of human-AI (HAI) interactions. To directly examine how ToM improvement techniques benefit HAI interactions, we first proposed the new paradigm of interactive ToM evaluation with both perspective and metric shifts. Next, following the paradigm, we conducted a systematic study of four representative ToM enhancement techniques using both four real-world datasets and a user study, covering both goal-oriented tasks (e.g., coding, math) and experience-oriented tasks (e.g., counseling). Our findings reveal that improvements on static benchmarks do not always translate to better performance in dynamic HAI interactions. This paper offers critical insights into ToM evaluation, showing the necessity of interaction-based assessments in developing next-generation, socially aware LLMs for HAI symbiosis.",
+      "paper_id": "acl:2026.findings-acl.2125",
+      "title": "Does Theory of Mind Improvement Really Benefit Human-AI Interactions? Empirical Findings from Interactive Evaluations",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Event Causality Identification (ECI) requires models to determine whether a given pair of events in a context exhibits a causal relationship. While Large Language Models (LLMs) have demonstrated strong performance across various NLP tasks, their effectiveness in ECI remains limited due to biases in causal reasoning, often leading to overprediction of causal relationships (causal hallucination). To mitigate these issues and enhance LLM performance in ECI, we propose SERE, a structural example retrieval framework that leverages LLMs’ few-shot learning capabilities. SERE introduces an innovative retrieval mechanism based on three structural concepts: (i) Conceptual Path Metric, which measures the conceptual relationship between events using edit distance in ConceptNet; (ii) Syntactic Metric, which quantifies structural similarity through tree edit distance on syntactic trees; and (iii) Causal Pattern Filtering, which filters examples based on predefined causal structures using LLMs. By integrating these structural retrieval strategies, SERE selects more relevant examples to guide LLMs in causal reasoning, mitigating bias and improving accuracy in ECI tasks. Extensive experiments on multiple ECI datasets validate the effectiveness of SERE.",
+      "paper_id": "acl:2026.findings-acl.2126",
+      "title": "SERE: Structural Example Retrieval for Enhancing LLMs in Event Causality Identification",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Emotional support conversation (ESC) aims to alleviate users’ psychological stress. Selecting the appropriate strategy is crucial for effective emotional support. Current strategy planner-based methods prioritize immediate responses while neglecting users’ future reactions. Some studies retrieve historical examples with similar emotions to the current utterance, then anticipating future emotions based on next-turn emotions of historical examples. However, their retrievals focus on the current emotion (i.e. a single-turn emotion state), while they ignore the evolution of user’s emotion before the current state. We argue that retrievals considering the whole emotional trajectories enables models to capture the dynamic emotional needs, thereby enhancing the anticipation of future emotions. To this end, we propose Markov-driven emotion anticipation framework with emotion trajectory-aware retrieval for LLM-based ESC, which anticipates future emotion states to guide strategy planning and achieve sustained emotional support. First, we construct a dynamic emotion memory and perform hierarchical retrieval that combines semantic matching and emotion trajectory alignment. Then, we model emotional transitions as Markov chains, leveraging trajectory-aware retrieval to estimate future emotion. Finally, we use the anticipated emotion to steer LLMs in generating candidate strategies and introduce active online learning to optimize the planner, boosting its robustness on diverse users. Experiments on two datasets with two models shows that our method excels all baselines.",
+      "paper_id": "acl:2026.findings-acl.2127",
+      "title": "Emotion Trajectory-aware Retrieval for Markov-driven Emotion Anticipation in LLM-based Emotional Support Conversation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Fine-tuning large language models (LLMs) remains resource-intensive due to their sheer scale. While zeroth-order (ZO) optimization provides a memory-efficient alternative by eliminating backward passes, its application to multi-hundred-billion-parameter models is constrained by GPU memory and compute throughput. The ZO2 framework addresses the memory bottleneck by offloading model parameters to CPU memory and overlapping transformer block transfer with dual forward computation on a single GPU. However, ZO2 remains limited by its single-device execution and achieves modest throughput. In this work, we present DistZO2 (Distributed Zeroth-Order Offloading), a high-throughput, memory-efficient framework for distributed zeroth-order fine-tuning of LLMs. DistZO2 introduces three parallel strategies: (1) Perturbation Parallelism (PertP), which parallelizes the two perturbed forward passes across devices; (2) Distributed Data Parallelism (DDP), adapted to the scalar-gradient nature of ZO training; and (3) a unified 2D Parallelism design that combines PertP and DDP. To further mitigate communication bottlenecks introduced by parameter offloading, we propose a hardware-aware communication strategy that slices parameter blocks and redistributes them across GPUs via high-speed interconnects such as NVLink. DistZO2 scales zeroth-order fine-tuning to modern multi-GPU systems, preserving ZO2’s memory efficiency while substantially improving training throughput. In our experiments on OPT-175B, DistZO2 achieves a 3x speedup over ZO2 with distributed computing.",
+      "paper_id": "acl:2026.findings-acl.2128",
+      "title": "High-Throughput and Memory-Efficient Zeroth-Order Fine-tuning LLMs with Distributed Parallel Computing",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Language Model (LLM) Agents have demonstrated remarkable capabilities in task automation and intelligent decision-making, driving the widespread adoption of agent development frameworks such as LangChain and AutoGen. However, these frameworks predominantly serve developers with extensive technical expertise—a significant limitation considering that only 0.03% of the global population possesses the necessary programming skills. This stark accessibility gap raises a fundamental question: Can we enable everyone, regardless of technical background, to build their own LLM agents using natural language alone? To address this challenge, we introduce AutoAgent - a Fully-Automated and highly Self-Developing framework that enables users to create and deploy LLM agents through Natural Language Alone. Operating as an autonomous Agent Operating System, AutoAgent comprises four key components: i) Agentic System Utilities, ii) LLM-powered Actionable Engine, iii) Self-Managing File System, and iv) Self-Play Agent Customization module. This lightweight yet powerful system enables efficient and dynamic creation and modification of tools, agents, and workflows without coding requirements or manual intervention. Beyond its code-free agent development capabilities, AutoAgent also serves as a versatile multi-agent system for General AI Assistants. Comprehensive evaluations on the GAIA benchmark demonstrate AutoAgent’s effectiveness in generalist multi-agent tasks, surpassing existing state-of-the-art methods. Furthermore, AutoAgent’s Retrieval-Augmented Generation (RAG)-related capabilities have shown consistently superior performance compared to many alternative LLM-based solutions.",
+      "paper_id": "acl:2026.findings-acl.2129",
+      "title": "AutoAgent: A Fully-Automated and Zero-Code Framework for LLM Agents",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "With the increasing quality and spread of LLM assistants, the amount of generated content is growing rapidly. In many cases and tasks, such texts are already indistinguishable from those written by humans, and the quality of generation continues to increase. At the same time, detection methods are advancing more slowly than generation models, making it challenging to prevent misuse of generative AI technologies. We propose GigaCheck, a dual-strategy framework for AI-generated text detection. At the document level, we leverage the representation learning of fine-tuned LLMs to discern authorship with high data efficiency. At the span level, we introduce a novel structural adaptation that treats generated text segments as “objects.” By integrating a DETR-like vision model with linguistic encoders, we achieve precise localization of AI intervals, effectively transferring the robustness of visual object detection to the textual domain. Experimental results across three classification and three localization benchmarks confirm the robustness of our approach. The shared fine-tuned backbone delivers strong accuracy in both scenarios, highlighting the generalization power of the learned embeddings. Moreover, we successfully demonstrate that visual detection architectures like DETR are not limited to pixel space, effectively generalizing to the localization of generated text spans. To ensure reproducibility and foster further research, we publicly release our source code.",
+      "paper_id": "acl:2026.findings-acl.213",
+      "title": "GigaCheck: Detecting LLM-generated Content via Object-Centric Span Localization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Harmful memes convey offensive intent through implicit associations between visual symbols and text, requiring a broad understanding of cultural stereotypes and visual metaphors. Small-scale Multimodal Large Language Models (MLLMs) often lack the knowledge required to identify such implicit hate, whereas Large-scale MLLMs, despite their broader knowledge, exhibit systematic labeling bias. To address these challenges, we propose DR-HM, a Distill-then-Reinforce training framework with cognition-aware data synthesis for harmful meme detection, which aims to transfer knowledge from closed-source models while mitigating their biases. DR-HM introduces a six-step structured data synthesis scheme with self-refinement that decomposes meme analysis into a progressive, human-inspired reasoning process from entity recognition to harmfulness judgment. Based on the synthesized reasoning data, we further adopt a Distill-then-Reinforce training strategy. This approach combines a two-stage Supervised Fine-Tuning (SFT) with an Adaptive Group Relative Policy Optimization (A-GRPO) algorithm, which incorporates class-ratio-aware reward weighting and dynamic KL coefficients. Experiments on three benchmark datasets show that the proposed approach consistently outperforms existing methods and achieves an accuracy of 84.7% on the FHM dataset, approaching the reported performance of human annotators.",
+      "paper_id": "acl:2026.findings-acl.2130",
+      "title": "DR-HM: Distill-then-Reinforce Training with Cognition-Aware Data Synthesis for Harmful Meme Detection",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Contrastive vision-language models (VLMs) have made significant progress in binding visual and textual information, yet understanding long, compositional captions remains an open challenge. While these capabilities are often assumed to be closely related, the conditions under which they reinforce each other remain unclear. In this paper, we empirically analyze when compositional reasoning and long-caption understanding transfer across tasks, and when this relationship fails. Through controlled experiments across diverse training objectives, datasets, and architectural designs, we find a bidirectional but sensitive relationship between the two capabilities. Models trained on poorly grounded captions or with limited parameter updates fail to generalize, while high-quality long-caption data with strong visual grounding promotes both capabilities simultaneously. We further show that architectural choices aimed at preserving general alignment, such as frozen positional embeddings, can inadvertently limit compositional learning. Our analysis provides actionable guidelines for data selection and model design to improve VLM generalization.",
+      "paper_id": "acl:2026.findings-acl.2131",
+      "title": "Long Story Short: Disentangling Compositionality and Long-Caption Understanding in Contrastive VLMs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Automated analysis of customer feedback on social media is hindered by three challenges: the high cost of annotated training data, the scarcity of evaluation sets, especially in multilingual settings, and privacy concerns that prevent data sharing and reproducibility. We address these issues by developing a generalizable synthetic data generation pipeline applied to a case study on customer distress detection in French public transportation. Our approach utilizes backtranslation with fine-tuned models to generate 1.7 million synthetic tweets from a small seed corpus, complemented by synthetic reasoning traces. We train 600M-parameter reasoners with English and French reasoning that achieve 77-79% accuracy on human-annotated evaluation data, matching or exceeding SOTA proprietary LLMs and specialized encoders. Beyond reducing annotation costs, our pipeline preserves privacy by eliminating the exposure of sensitive user data. Our methodology can be adopted for other use cases and languages.",
+      "paper_id": "acl:2026.findings-acl.2132",
+      "title": "Model in Distress: Sentiment Analysis on French Synthetic Social Media",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "We investigate the integration of human-like working memory constraints into the Transformer architecture and implement several cognitively inspired attention variants, including fixed-width windows based and temporal decay based attention mechanisms. Our modified GPT-2 models are trained from scratch on developmentally plausible datasets (10M and 100M words). Performance is evaluated on grammatical judgment tasks (BLiMP) and alignment with human reading time data. Our results indicate that these cognitively-inspired constraints, particularly fixed-width attention, can significantly improve grammatical accuracy especially when training data is scarce. These constrained models also tend to show a stronger alignment with human processing metrics. The findings suggest that such constraints may serve as a beneficial inductive bias, guiding models towards more robust linguistic representations, especially in data-limited settings.",
+      "paper_id": "acl:2026.findings-acl.2133",
+      "title": "Working Memory Constraints Scaffold Learning in Transformers under Data Scarcity",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) are reshaping recommender systems by leveraging extensive world knowledge and semantic reasoning to interpret user intent. However, effectively integrating these capabilities with collaborative signals while avoiding prohibitive inference latency remains a critical bottleneck. To address this, we propose a trajectory-driven internalization framework to develop a Single-agent Trajectory-Aligned Recommender (STAR). Specifically, to internalize complex reasoning capabilities into a single efficient model, we first design a multi-agent teacher system capable of multi-turn tool usage and reflection. This teacher utilizes a Collaborative Signal Translation mechanism to explicitly convert latent behavioral patterns into descriptive natural language evidence to enhance reasoning accuracy. Subsequently, a trajectory-driven distillation pipeline transfers this agentic logic, including planning, tool usage, and self-reflection, into the compact STAR model. Extensive experiments demonstrate that STAR surpasses its teacher by 8.7% to 39.5% while eliminating iterative latency, paving the way for real-time, reasoning-enhanced recommendation.",
+      "paper_id": "acl:2026.findings-acl.2134",
+      "title": "Internalizing Multi-Agent Reasoning for Accurate and Efficient LLM-based Recommendation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Resolving anaphora requires integrating syntactic, semantic, and discourse information. Mandarin Chinese offers a particularly revealing case through the reflexive ziji, whose interpretation permits long-distance binding licensed by logophoric cues (i.e., cues relevant to discourse perspective). While these cues have been extensively studied in linguistic theory and psycholinguistic experiments, it remains an open question to what extent such cues are captured by computational models.We investigate this question by probing large language models’ sensitivity to four logophoric cues known to license long-distance binding of ziji: predicate type, perspective marking, discourse topicality, and discourse relation. Using minimal pairs and surprisal-based measures, we assess whether models exhibit systematic biases toward non-local antecedents in logophoric contexts.Across two model families, we find that (i) models exhibit above-chance sensitivity to all four cues; (ii) lexically anchored cues are more robustly captured than discourse-level cues; and (iii) some cues generalize cross-lingually, whereas others appear to depend on language-specific training data. Taken together, these findings provide non-English evidence that large language models capture certain aspects of logophoricity, yet continue to struggle with discourse-level representations that are central to human anaphora resolution. Code and data are available at: https://github.com/yunfang-dong/mandarin-logophoricity-llm",
+      "paper_id": "acl:2026.findings-acl.2135",
+      "title": "Do Language Models Use Logophoric Cues? Evidence from Mandarin Chinese Long-Distance Reflexive",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Despite the rapid progress of large vision-language models (LVLMs), fine-grained, state-conditioned GUI interaction remains challenging. Current evaluations offer limited coverage, imprecise target-state definitions, and an overreliance on final-task success, obscuring where and why agents fail.To address this gap, we introduce FineState-Bench, a benchmark that evaluates whether an agent can correctly ground an instruction to the intended UI control and reach the exact target state.FineState-Bench comprises 2,209 instances across desktop, web, and mobile platforms, spanning four interaction families and 23 UI component types, with each instance explicitly specifying an exact target state for fine-grained state setting.We further propose FineState-Metrics, a four-stage diagnostic pipeline with stage-wise success rates: Localization Success Rate (SR@Loc), Interaction Success Rate (SR@Int), Exact State Success Rate at Locate (ES-SR@Loc), and Exact State Success Rate at Interact (ES-SR@Int), and a plug-and-play Visual Diagnostic Assistant (VDA) that generates a Description and a bounding-box Localization Hint to diagnose visual grounding reason via controlled w/ vs. w/o comparisons.On FineState-Bench, exact goal-state success remains low: ES-SR@Int peaks at 32.8% on Web and 22.8% on average across platforms. With VDA localization hints, Gemini-2.5-Flash gains +14.9 ES-SR@Int points, suggesting substantial headroom from improved visual grounding, yet overall accuracy is still insufficient for reliable fine-grained state-conditioned interaction Github.",
+      "paper_id": "acl:2026.findings-acl.2136",
+      "title": "FineState-Bench: Benchmarking State-Conditioned Grounding for Fine-grained GUI State Setting",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Although Large Language Models undergo rigorous safety alignment, they remain vulnerable to adversarial attacks. Existing methods, particularly gradient-based prompt optimization, suffer from high computational costs and produce uninterpretable, high-perplexity inputs. While recent logit-space attacks improve efficiency, they often rely on cumbersome auxiliary models or complex pipelines. In this work, we propose Sparse Index-Based Intervention (SIBI), a white-box, inference-time jailbreak that bypasses guardrails via lightweight, sparse logit editing. SIBI operates without gradients or auxiliary models, modifying pre-softmax logits using a compact, tokenizer-aligned dictionary of penalty and reward tokens. By incorporating temperature-consistent scaling and a mixed-norm trust region, the method ensures attack effectiveness while preserving generation fluency. On standard benchmarks, SIBI achieves high attack success rates while reducing computational overhead and space overhead compared to optimization baselines.",
+      "paper_id": "acl:2026.findings-acl.2137",
+      "title": "Dictionary Guided Sparse Logit Editing for Reliable Jailbreak Attacks",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Knowledge graph question answering (KGQA) serves as an essential benchmark for KG-enhanced large language models. Among various approaches, agent-based methods have emerged as an effective solution.Existing methods adopt entity-centric exploration that incrementally constructs reasoning paths by selecting and connecting intermediate entities. However, they face two critical limitations. (1) Entity incompleteness vulnerability arises when some intermediate entities lack semantic information beyond opaque IDs, preventing relevance evaluation and leading to discarding valid reasoning paths.(2) Premature entity pruning occurs because beam search retains only top-ranked entities at each step, eliminating candidates before their relevance can be verified.To address these challenges, this paper proposes Chain-of-Relations (CoR) with relation-centric exploration and global entity filtering, reducing dependence on entity completeness and ensuring complete candidate retrieval before constraint validation.Experiments on three benchmark datasets show that CoR consistently outperforms strong baselines in both F1 score and KG-grounded Rate.",
+      "paper_id": "acl:2026.findings-acl.2138",
+      "title": "Chain-of-Relations: Faithful and Efficient LLM Reasoning over Knowledge Graphs via Relation-Centric Exploration",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Medical report generation from medical images is a vital AI task that helps doctors with diagnosis and marks a significant step toward creating general AI-powered medical systems. However, previous methods either fail to optimize factual accuracy or heavily depend on expert preference data. To overcome these challenges, we propose MedQPA, an automatic and generalizable report evaluation technique that uses question proposing and answering to enable controllable, structured reasoning grounded in medical domain knowledge and the factual correctness of the report. Additionally, we design MedQPA-Gen, a medical report generation pipeline that maximizes the MedQPA score through prompt engineering and reinforcement learning with MedQPA as a reward signal. We demonstrate that MedQPA is an accurate evaluation metric that closely correlates with human preferences. More importantly, MedQPA-Gen achieves higher human preference scores and better performance on downstream tasks. We open-source code at this repo https://github.com/MedQPA-gen/MedQPA-gen.",
+      "paper_id": "acl:2026.findings-acl.2139",
+      "title": "MedQPA-Gen: Medical Question Proposing and Answering for Report Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Test-time scaling improves large language models (LLMs) on long-horizon reasoning tasks by allocating more compute at inference. LLM inference via tree search (LITS) achieves strong performance but is highly inefficient. We propose Chain-in-Tree (CiT), a plug-in framework that decides when to branch during search instead of expanding at every step. CiT introduces lightweight Branching Necessity (BN) evaluations, including BN-DP (direct prompting) and BN-SC (self-consistency). Integrated into Tree of Thoughts, ReST-MCTS, and RAP, BN-DP reduces token generation, model calls, and runtime by 75-85% on GSM8K and Math500, with often negligible or no accuracy loss. BN-SC typically yields substantial savings (up to 80%) generally but shows instability in 1-4 out of 14 settings, caused by a small subset of examples that produce extremely long reasoning steps. We theoretically prove that BN-DP never increases policy invocations and release unified implementations applicable across LITS frameworks. The full codebase is publicly available at https://github.com/xinzhel/chain_in_tree.",
+      "paper_id": "acl:2026.findings-acl.214",
+      "title": "Chain-in-Tree: Back to Sequential Reasoning in LLM Tree Search",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "In fine-grained sparse Mixture-of-Experts (MoE) models, a large pool of specialized experts replaces a small homogeneous set, shifting performance and throughput to be governed by inference-time expert activation. Yet most existing optimization recipes implicitly assume a fixed activation budget (e.g., a constant Top-k per layer), whose behavior in fine-grained MoEs is poorly understood. We first characterize runtime skipping strategies, quantifying the accuracy–efficiency trade-off of (i) uniform fixed activation and (ii) static layer-wise Top-k allocation found by search. Our analysis reveals that static skipping can already provide substantial throughput gains, but optimal static schedules vary significantly across models and routing mechanisms. We therefore introduce Adaptive Skipping with Entropy-Penalized Thresholding (ASET), a training-free policy that adapts token-level activation using router confidence and entropy while remaining within the model’s original budget. Across the fine-grained MoEs we study, static skipping policies yield 10–78% throughput gains with minimal performance degradation, including ≥10% improvement on DeepSeek-V3 without measurable loss. On the OLMoE testbed, ASET yields a Pareto frontier between average activation and task quality. Overall, these results identify expert skipping as a practical lever for faster fine-grained MoE inference, with adaptive activation helping when fixed budgets are too rigid.",
+      "paper_id": "acl:2026.findings-acl.2140",
+      "title": "Faster MoE LLM Inference for Extremely Large Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs), like human language learners, show patterns influenced by their dominant training language. Just as humans display language patterns influenced by their native tongue (semantic accents) when learning new languages, LLMs often default to English-centric responses even when generating in other languages. However, we observe that explicitly providing cultural context in prompts significantly improves the models’ ability to generate culturally localized responses. We term this phenomenon the explicit-implicit localization gap, indicating that while cultural knowledge exists within LLMs, it may not naturally surface in multilingual interaction without explicitly including cultural context. In this paper, we (1) quantify this gap in multiple LLMs using a new cultural localization benchmark and find large (>10%) gaps in the majority of investigated models. (2) Demonstrate a fundamental trade-off between localization accuracy and output diversity. (3) Through mechanistic interpretability, we identify the underlying localization mechanisms within LLMs and show that these mechanisms are both language and task agnostic, with individual steering vectors effectively generalizing across different languages and culturally-relevant tasks.",
+      "paper_id": "acl:2026.findings-acl.2141",
+      "title": "Localized Cultural Knowledge is Conserved and Controllable in Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Diffusion large language models (DLLMs) have emerged as a promising alternative to autoregressive (AR) generation, uniquely offering token-level probabilities under bidirectional context. However, the semantics of their native uncertainty estimates remain underexplored. In this work, we uncover a calibration paradox inherent to the bidirectional generation mechanism of state-of-the-art DLLMs. Concretely, we demonstrate that diffusion confidence is structurally distinct from AR likelihood. Notably, LLaDA-8B is highly miscalibrated (31.2% ECE) on mathematical reasoning benchmarks, yet possesses superior discriminative power (0.826 AUROC), significantly outperforming comparable AR baselines in single-pass settings (0.611 AUROC). We diagnose that this paradox arises because diffusion confidence functions less like a probability of correctness and more like a proxy for structural consistency enabled by the model’s bidirectional access to the entire solution path. We further show that lightweight post-hoc calibration can reconcile this gap, reducing ECE by over 60% while preserving the strong ranking signal. Our findings suggest that DLLMs offer a unique, cost-efficient uncertainty signal for reasoning tasks that complements expensive AR approaches.",
+      "paper_id": "acl:2026.findings-acl.2142",
+      "title": "The Confidence Paradox: Unveiling the Latent Discriminative Power of Diffusion Large Language Models in Mathematical Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) frequently produce source code that seems correct and well-formed, yet includes hallucinated elements that cause downstream test failures. In this study, we benchmark state-of-the-art uncertainty quantification methods and existing baselines for the task of hallucination detection in source code and introduce a diff-based pipeline to construct a code dataset annotated with line-level hallucinations. Building on this, we train a lightweight Transformer-based detector that uses LLM internal representations to identify hallucinations, substantially outperforming existing methods across several code generation domains. The detector also shows particular promise for enabling self-correction in LLM-based coding agents. We release the first publicly available dataset of line-level code hallucinations, along with the corresponding source code and trained hallucination detectors https://github.com/datapaf/CodeHallucinationDetection",
+      "paper_id": "acl:2026.findings-acl.2143",
+      "title": "Efficient Hallucination Detection in Automatic Code Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "This work addresses test output prediction, a key challenge in test case generation. To improve the reliability of predicted outputs by LLMs, prior approaches generate code first to ground predictions. One grounding strategy is direct execution of generated code, but even minor errors can cause failures. To address this, we introduce LLM-based pseudocode execution, which grounds prediction on more error-resilient pseudocode and simulates execution via LLM reasoning. We further propose DUET, a dual-execution framework that combines both approaches by functional majority voting. Our analysis shows the two approaches are complementary in overcoming the limitations of direct execution suffering from code errors, and pseudocode reasoning from hallucination. On LiveCodeBench, DUET achieves the state-of-the-art performance, improving Pass@1 by 13.6 pp. For filtering candidates in code generation, DUET shows the best Pass@1 on LiveCodeBenchEasy, BigCodeBench-Hard, DevEval and HumanEval(+).",
+      "paper_id": "acl:2026.findings-acl.2144",
+      "title": "DuET: Dual Execution for Test Output Prediction with Generated Code and Pseudocode",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Masked Diffusion Language Models (DLMs) have recently emerged as a promising alternative to traditional Autoregressive Models (ARMs). DLMs employ transformer encoders with bidirectional attention, enabling parallel token generation while maintaining competitive performance. Although their efficiency and effectiveness have been extensively studied, the internal mechanisms that govern DLMs remain largely unexplored. In this work, we conduct an empirical analysis of DLM attention patterns, focusing on the attention sinking phenomenon, an effect previously observed in various transformer-based architectures. Our findings reveal that DLMs also exhibit attention sinks, but with distinct characteristics. First, unlike in ARMs, the sink positions in DLMs tend to shift throughout the generation process, displaying a dynamic behaviour. Second, while ARMs are highly sensitive to the removal of attention sinks, DLMs remain robust: masking sinks leads to only a minor degradation in performance. These results provide new insights into the inner workings of diffusion-based language models and highlight fundamental differences in how they allocate and utilize attention compared to autoregressive models.",
+      "paper_id": "acl:2026.findings-acl.2145",
+      "title": "Attention Sinks in Diffusion Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Modern Text-to-SQL systems generate multiple candidate SQL queries and rank them to judge a final prediction. However, existing methods face two limitations. First, they often score functionally equivalent SQL queries inconsistently despite identical execution results. Second, ranking cannot recover when the correct SQL is absent from the candidate pool. We propose R3 -SQL, a Text-to-SQL framework that addresses both issues through unified reward for ranking and resampling. R3 -SQL first groups candidates by execution result and ranks groups for consistency. To score each group, it combines a pairwise preference across groups with a pointwise utility from the best group rank and size, capturing relative preference, consistency, and candidate quality. To improve candidate recall, R3 -SQL introduces agentic resampling, which judges the generated candidate pool and selectively resamples when the correct SQL is likely absent. R3 -SQL achieves 75.03 execution accuracy on BIRD-dev, a new state of the art among methods using models with disclosed sizes, with consistent gains across five benchmarks.",
+      "paper_id": "acl:2026.findings-acl.2146",
+      "title": "R$^3$-SQL: Ranking Reward and Resampling for Text-to-SQL",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Hallucinations in Speech Large Language Models (SpeechLLMs) pose significant risks, yet existing detection methods typically rely on gold-standard outputs that are costly or impractical to obtain. Moreover, hallucination detection methods developed for text-based LLMs do not directly capture audio-specific signals. We investigate four attention-derived metrics: AudioRatio, AudioConsistency, AudioEntropy, and TextEntropy, designed to capture pathological attention patterns associated with hallucination, and train lightweight logistic regression classifiers on these features for efficient inference-time detection. Across automatic speech recognition and speech-to-text translation tasks, evaluations on Qwen-2-Audio and Voxtral-3B show that our approach outperforms uncertainty-based and prior attention-based baselines on in-domain data, achieving improvements of up to +0.23 PR-AUC, and generalises to out-of-domain ASR settings. We further find that strong performance can be achieved with approximately 100 attention heads, improving out-of-domain generalisation compared to using all heads. While effectiveness is model-dependent and task-specific training is required, our results demonstrate that attention patterns provide a valuable tool for hallucination detection in SpeechLLMs",
+      "paper_id": "acl:2026.findings-acl.2147",
+      "title": "Detecting Hallucinations in SpeechLLMs at Inference Time Using Attention Maps",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Historical documents act as invaluable knowledge archives but often suffer from illegibility due to physical deterioration and damage. While existing restoration methods based on masked language modeling effectively utilize local context, they struggle to restore named entities that require external historical knowledge. To address this limitation, we introduce a novel framework for historical document restoration that leverages large language models with retrieval-augmented generation (RAG). By combining the implicit knowledge of pre-trained LLMs with explicitly retrieved external context, our model ARI effectively mitigates the challenge of inferring context-dependent proper nouns. Extensive experiments on Korean historical documents demonstrate that our approach significantly outperforms baselines, achieving substantial gains in restoring both general characters and named entities. Furthermore, comprehensive evaluations including expert assessments confirm that ARI serves as a practical tool for domain experts, promising to accelerate the analysis of historical records.",
+      "paper_id": "acl:2026.findings-acl.2148",
+      "title": "Leveraging External Knowledge for Historical Document Restoration via Retrieval-Augmented Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Generative engines (GEs) are reshaping information access by replacing ranked links with citation-grounded answers, yet current Generative Engine Optimization (GEO) methods optimize each instance in isolation, unable to accumulate or transfer effective strategies across tasks and engines. We reframe GEO as a strategy learning problem and propose MAGEO, a multi-agent framework in which coordinated planning, editing, and fidelity-aware evaluation serve as the execution layer, while validated editing patterns are progressively distilled into reusable, engine-specific optimization skills. To enable controlled assessment, we introduce a Twin Branch Evaluation Protocol for causal attribution of content edits and DSV-CF, a dual-axis metric that unifies semantic visibility with attribution accuracy. We further release MSME-GEO-Bench, a multi-scenario, multi-engine benchmark grounded in real-world queries. Experiments on three mainstream engines show that MAGEO substantially outperforms heuristic baselines in both visibility and citation fidelity, with ablations confirming that engine-specific preference modeling and strategy reuse are central to these gains, suggesting a scalable learning-driven paradigm for trustworthy GEO. Code is available at https://github.com/Wu-beining/MAGEO.",
+      "paper_id": "acl:2026.findings-acl.2149",
+      "title": "From Experience to Skill: Multi-Agent Generative Engine Optimization via Reusable Strategy Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Vision-Language Models (LVLMs) have exhibited strong reasoning capabilities through chain-of-thought mechanisms that generate step-by-step rationales. However, such slow-thinking approaches often lead to overthinking, where models produce excessively verbose responses even for simple queries, resulting in test-time inefficiency and even degraded accuracy. Prior work has attempted to mitigate this issue via adaptive reasoning strategies, but these methods largely overlook a fundamental bottleneck: visual perception failures. We argue that stable reasoning critically depends on low-level visual grounding, and that reasoning errors often originate from imperfect perception rather than insufficient deliberation. To address this limitation, we propose Gated Perception-Reasoning Optimization (GPRO), a meta-reasoning controller that dynamically routes computation among three decision paths at each generation step: a lightweight fast path, a slow perception path for re-examining visual inputs, and a slow reasoning path for internal self-reflection. To learn this distinction, we derive large-scale failure attribution supervision from approximately 790k samples, using teacher models to distinguish perceptual hallucinations from reasoning errors. We then train the controller with multi-objective reinforcement learning to optimize the trade-off between task accuracy and computational cost under uncertainty. Experiments on five benchmarks demonstrate that GPRO substantially improves both accuracy and efficiency, outperforming recent slow-thinking methods while generating significantly shorter responses.",
+      "paper_id": "acl:2026.findings-acl.215",
+      "title": "Addressing Overthinking in Large Vision-Language Models via Gated Perception-Reasoning Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}

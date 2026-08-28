@@ -1,0 +1,587 @@
+{
+  "batch_index": 52,
+  "evidence_label_instructions": {
+    "cross_paper_synthesis": "Mark comparisons synthesized across papers.",
+    "inference": "Mark interpretations that go beyond reported facts.",
+    "official_metadata": "Use only official venue metadata for this label.",
+    "paper_reported": "Use claims explicitly reported by the paper."
+  },
+  "papers": [
+    {
+      "abstract": "Automated environment configuration is a critical bottleneck in scaling software engineering (SWE) automation. To provide a reliable evaluation standard for this task, we present Multi-Docker-Eval benchmark. It includes 40 real-world repositories spanning 9 programming languages and measures both success in achieving executable states and efficiency under realistic constraints. Our extensive evaluation of state-of-the-art LLMs and agent frameworks reveals key insights: (1) the overall success rate of current models is low (F2P at most 37.7%), with environment construction being the primary bottleneck; (2) model size and reasoning length are not decisive factors, and open-source models like DeepSeek-V3.1 and Kimi-K2 are competitive in both efficiency and effectiveness; (3) agent framework and programming language also have significantly influence on success rate. These findings provide actionable guidelines for building scalable, fully automated SWE pipelines.",
+      "paper_id": "acl:2026.findings-acl.889",
+      "title": "Multi-Docker-Eval: A `Shovel of the Gold Rush' Benchmark on Automatic Environment Building for Software Engineering",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Multi-hop Knowledge Graph Question Answering (KGQA) requires coherent reasoning across relational paths, yet existing methods often treat each reasoning step independently and fail to effectively leverage experience from prior explorations, leading to fragmented reasoning and redundant exploration. To address these challenges, we propose Trajectoryaware Reasoning with Adaptive Context and Exploration priors (TRACE), an experiential framework that unifies LLM-driven contextual reasoning with exploration prior integration to enhance the coherence and robustness of multihop KGQA. Specifically, TRACE dynamically translates evolving reasoning paths into natural language narratives to maintain semantic continuity, while abstracting prior exploration trajectories into reusable experiential priors that capture recurring exploration patterns. A dualfeedback re-ranking mechanism further integrates contextual narratives with exploration priors to guide relation selection during reasoning. Extensive experiments on multiple KGQA benchmarks demonstrate that TRACE consistently outperforms state-of-the-art baselines.",
+      "paper_id": "acl:2026.findings-acl.89",
+      "title": "TRACE: An Experiential Framework for Coherent Multi-hop Knowledge Graph Question Answering",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Multi-modal Knowledge Graph Completion (MKGC) aims to infer missing links in multimodal knowledge graphs by leveraging structured triples together with auxiliary modalities such as text and images. Existing MKGC methods typically train with all modalities available, implicitly assuming consistent complementarity; however, this practice often induces modality dependence and modality competition under heterogeneous noise, which can hinder robust multi-modal fusion and limit overall performance.To address these issues, we propose MDBGF, a Modality Dropout and Bidirectional Gated Fusion framework for MKGC. MDBGF introduces a dynamic, probability-based modality dropout schedule. When the dropout is activated, MDBGF drops either the textual or visual modality during training while always preserving the structural information, encouraging the model to reduce over-reliance on any single auxiliary modality and to learn complementary cues under missing-modality conditions. When the dropout is not activated (i.e., all modalities are present), we further design a bidirectional gated fusion mechanism that enables mutual modulation between textual and visual modalities, enhancing cross-modal interaction and flexible fusion. In addition, we propose an adaptive proportional hybrid negative sampling strategy to strengthen MDBGF’s discriminative ability on hard negatives. Experiments on three benchmarks show that MDBGF consistently outperforms existing baselines and achieves new state-of-the-art results. Our code is available at https://anonymous.4open.science/r/MDBGF-AHNS.",
+      "paper_id": "acl:2026.findings-acl.890",
+      "title": "Not All Modalities at Once: Dynamic Dropout and Bidirectional Fusion for Robust Multi-modal Knowledge Graph Completion",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Continuous glucose monitors (CGMs) used in diabetes care collect rich personal health data that could improve day-to-day self-management. However, current patient platforms only offer static summaries which do not support inquisitive user queries. Large language models (LLMs) could enable free-form inquiries about continuous glucose data, but deploying them over sensitive health records raises privacy and accuracy concerns. In this paper, we present CGM-Agent, a privacy-preserving framework for question answering over personal glucose data. In our design, the LLM serves purely as a reasoning engine that selects analytical functions. All computation occurs locally, and personal health data never leaves the user’s device. For evaluation, we construct a benchmark of 4,180 questions combining parameterized question templates with real user queries and ground truth derived from deterministic program execution. Evaluating 6 leading LLMs, we find that top models achieve 94% value accuracy on synthetic queries and 88% on ambiguous real-world queries. Errors stem primarily from intent and temporal ambiguity rather than computational failures. Additionally, lightweight models achieve competitive performance in our agent design, suggesting opportunities for low-cost deployment. We release our code and benchmark to support future work on trustworthy health agents.",
+      "paper_id": "acl:2026.findings-acl.891",
+      "title": "If Only My CGM Could Speak: A Privacy-Preserving Agent for Question Answering over Continuous Glucose Data",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Aspect-Based Sentiment Analysis (ABSA) is critical for extracting actionable product insights from e-commerce reviews. However, most public ABSA benchmarks are restricted to short texts and a limited range of domains, and therefore underrepresent the challenges posed by real-world reviews—where multiple aspects co-occur, colloquial and noisy expressions are common, and evidence must often be aggregated across sentences in long contexts.We introduce E-ABSA20K, a multi-domain dataset of 20K reviews from four product categories (Women’s Bags, Dresses, Cosmetics, and Furniture), annotated with review-level sentiment quads. Compared to existing benchmarks, E-ABSA20K contains substantially longer and more aspect-dense reviews, averaging 63.9 words and 6.0 quads per review. We further propose a two-stage propose-and-verify framework for review-level quadruple extraction (target, aspect, opinion, sentiment). The first stage generates high-recall candidates under strict schema constraints, while the second stage conducts explicit grounding, scope, and modality verification, followed by review-level consolidation to mitigate hallucinations and scope leakage in long reviews. Experiments across multiple Qwen3 model sizes demonstrate that our approach consistently outperforms single-stage prompting (with and without chain-of-thought) as well as competitive ABSA extraction baselines, improving quad-level micro-F1 and robustness on discourse-hard cases such as comparisons and conditionals.",
+      "paper_id": "acl:2026.findings-acl.892",
+      "title": "E-ABSA20K: A Dataset and Propose-and-Verify for Aspect-Based Sentiment Analysis in Long E-commerce Reviews",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Visual Language Models (LVLMs) achieve superior multimodal reasoning but inevitably expand the safety attack surface. While recent studies have explored emoji-based vulnerabilities, they predominantly focus on textual tokenization artifacts and neglect the model’s intrinsic capability to interpret visual semantics. In this paper, we reveal a critical systemic vulnerability termed the Mismatch between Implicit Semantic Reconstruction and Explicit Safety Alignment. We observe that LVLMs can implicitly synthesize holistic malicious semantics from fragmented visual cues, whereas existing guardrails fail to intercept such latent intent. To exploit this, we propose the Emoji Chain Hinting Attack (ECHA), a visual typography framework that decouples sensitive concepts into semantically related emoji chains and structural text masks. By utilizing benign scenario-based prompts to guide the decoding process, ECHA induces the model to internally reconstruct prohibited intent from abstract visual symbols, effectively bypassing surface-level safety detection. We conduct extensive red-teaming evaluations on seven state-of-the-art (SOTA) LVLMs, comprising proprietary systems such as GPT-4.1-Nano, GPT-4o-Mini, and Gemini-2.5-Flash, alongside open-source models including Qwen2.5-VL, Qwen3-VL, InternVL-3.5, and LLaVA-NeXT. Experimental results demonstrate that ECHA significantly outperforms existing baselines, successfully bypassing safety guardrails in over 81% of instances with a single attempt. Our code is available at https://github.com/KerryZack/ECHA.",
+      "paper_id": "acl:2026.findings-acl.893",
+      "title": "ECHA: Jailbreaking LVLMs via the Mismatch between Implicit Semantic Reconstruction and Explicit Safety Alignment",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "The image geolocalization task aims to predict the location where an image was taken anywhere on Earth using visual clues.Existing large vision-language model (LVLM) approaches leverage world knowledge, chain-of-thought reasoning, and agentic capabilities, but overlook a common strategy used by humans — using maps.In this work, we first equip the model Thinking with Map ability and formulate it as an agent-in-the-map loop.We develop a two-stage optimization scheme for it, including agentic reinforcement learning (RL) followed by parallel test-time scaling (TTS).The RL strengthens the agentic capability of model to improve sampling efficiency, and the parallel TTS enables the model to explore multiple candidate paths before making the final prediction, which is crucial for geolocalization.To evaluate our method on up-to-date and in-the-wild images, we further present MAPBench, a comprehensive geolocalization training and evaluation benchmark composed entirely of real-world images.Experimental results show that our method outperforms existing open- and closed-source models on most metrics, specifically improving Acc@500m from 8.0% to 22.1% compared to Gemini-3-Pro with Google Search/Map grounded mode.",
+      "paper_id": "acl:2026.findings-acl.894",
+      "title": "Thinking with Map: Reinforced Parallel Map-Augmented Agent for Geolocalization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Reasoning ability has become a defining capability of Large Language Models (LLMs), with Reinforcement Learning with Verifiable Rewards (RLVR) emerging as a key paradigm to enhance it. However, RLVR training often suffers from policy entropy collapse, where the policy becomes overly deterministic, hindering exploration and limiting reasoning performance. While entropy regularization is a common remedy, its effectiveness is highly sensitive to the fixed coefficient, making it unstable across tasks and models. In this work, we revisit entropy regularization in RLVR and argue that its potential has been largely underestimated. Our analysis shows that (i) tasks of varying difficulty demand distinct exploration intensities, and (ii) balanced exploration may require the policy entropy to be maintained within a moderate range below its initial level. Therefore, we propose Adaptive Entropy Regularization (AER) — a framework that dynamically balances exploration and exploitation via three components: difficulty-aware coefficient allocation, initial-anchored target entropy, and dynamic global coefficient adjustment. Experiments on multiple mathematical reasoning benchmarks show that AER consistently outperforms baselines, improving both reasoning accuracy and exploration capability. Codes are available at https://anonymous.4open.science/r/AER-ACL .",
+      "paper_id": "acl:2026.findings-acl.895",
+      "title": "Revisiting Entropy Regularization: Adaptive Coefficient Unlocks Its Potential for LLM Reinforcement Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Customized Large Language Model (LLM) agents face a critical security threat from black-box instruction backdoors, where malicious behaviors are covertly injected through hidden system instructions. Although existing prompt-based defenses can often detect poisoned inputs, they generally fail to recover correct outputs once the backdoor is activated. In this paper, we first conduct a mechanistic analysis of LLM behavior under instruction backdoors and reveal two pivotal phenomena: (1) cognitive override, in which backdoor triggers dominate the reasoning process and suppress task-relevant context, and (2) abnormal semantic correlation, where triggers establish excessively strong semantic associations with attacker-specified target labels. Based on these insights, we propose a Soft Label mechanism and key-extraction-guided CoT-based defense against Instruction backdoors in APIs (SLIP). To counteract the cognitive override, the key-extraction-guided Chain-of-Thought (KCOT) explicitly guides the model to extract task-relevant keywords and phrases rather than only considering the single trigger or overall text semantics. To neutralize the trigger’s abnormal semantic correlation, the soft label mechanism (SLM) quantifies semantic correlations and employs statistical clustering to filter anomalous phrases before aggregating reliable keywords and phrases for prediction. Extensive experiments show that SLIP reduces the average attack success rate to 25.13%, improves clean accuracy to 87.15%, and outperforms state-of-the-art black-box defenses.",
+      "paper_id": "acl:2026.findings-acl.896",
+      "title": "SLIP: Soft Label Mechanism and Key-Extraction-Guided CoT-based Defense Against Instruction Backdoor in APIs",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language model (LLM)-based agents have been successfully deployed in many tool-augmented settings, but their scalability is fundamentally constrained by context length. Existing context-folding methods mitigate this issue by summarizing past interactions, yet they are typically designed for single-query or single-intent scenarios. In more realistic user-centric dialogues, we identify two major failure modes: (i) they irreversibly discard fine-grained constraints and intermediate facts that are crucial for later decisions, and (ii) their summaries fail to track evolving user intent, leading to omissions and erroneous actions. To address these limitations, we propose U-Fold, a dynamic context-folding framework tailored to user-centric tasks. U-Fold retains the full user–agent dialogue and tool-call history but, at each turn, uses two core components to produce an intent-aware, evolving dialogue summary and a compact, task-relevant tool log. Extensive experiments on 𝜏-bench, 𝜏2-bench, VitaBench, and harder context-inflated settings show that U-Fold consistently outperforms ReAct (achieving a 71.4% win rate in long-context settings) and prior folding baselines (with improvements of up to 27.0%), particularly on long, noisy, multi-turn tasks. Our study demonstrates that U-Fold is a promising step toward transferring context-management techniques from single-query benchmarks to realistic user-centric applications.",
+      "paper_id": "acl:2026.findings-acl.897",
+      "title": "U-Fold: Dynamic Intent-Aware Context Folding for User-Centric Agents",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Recent advances have shown that multimodal large language models (MLLMs) benefit from multimodal interleaved chain-of-thought (CoT) with vision tool interactions. However, existing open-source models often exhibit blind tool-use reasoning patterns, invoking vision tools even when they are unnecessary, which significantly increases inference overhead and degrades model performance. To this end, we propose AdaTooler-V, an MLLM that performs adaptive tool-use by determining whether a visual problem truly requires tools. First, we introduce AT-GRPO, a reinforcement learning algorithm that adaptively adjusts reward scales based on the Tool Benefit Score of each sample, encouraging the model to invoke tools only when they provide genuine improvements. Moreover, we construct two datasets to support training: AdaTooler-V-CoT-100k for SFT cold start and AdaTooler-V-300k for RL with verifiable rewards across single-image, multi-image, and video data. Experiments across twelve benchmarks demonstrate the strong reasoning capability of AdaTooler-V, outperforming existing methods in diverse visual reasoning tasks. Notably, AdaTooler-V-7B achieves an accuracy of 89.8% on the high-resolution benchmark V*, surpassing the commercial proprietary model GPT-4o and Gemini 1.5 Pro.",
+      "paper_id": "acl:2026.findings-acl.898",
+      "title": "AdaTooler-V: Adaptive Tool-Use for Images and Videos",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Retrieval-Augmented Generation (RAG) is a powerful technique for enhancing Large Language Models (LLMs) with external, up-to-date knowledge. Graph RAG has emerged as an advanced paradigm that leverages graph-based knowledge structures to provide more coherent and contextually rich answers. However, the move from plain document retrieval to structured graph traversal introduces new, under-explored privacy risks. This paper investigates the data extraction vulnerabilities of the Graph RAG systems. We design and execute tailored data extraction attacks to probe their susceptibility to leaking both raw text and structured data, such as entities and their relationships. Our findings reveal a critical trade-off: while Graph RAG systems may reduce raw text leakage, they are significantly more vulnerable to the extraction of structured entity and relationship information. We also explore potential defense mechanisms to mitigate these novel attack surfaces. This work provides a foundational analysis of the unique privacy challenges in Graph RAG and offers insights for building more secure systems.",
+      "paper_id": "acl:2026.findings-acl.899",
+      "title": "Exposing Privacy Risks in Graph Retrieval-Augmented Generation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "As large language models (LLMs) continue to advance, significant effort is spent on manually crafting prompts to unlock their full potential. While existing prompt optimization methods automate this process, they often underperform due to their reliance on learning exclusively from incorrect samples. We propose the Learning from Contrastive Prompts (LCP) framework, which leverages contrastive prompts to distinguish between high- and low-performing cases. By identifying and amplifying the differences that make prompts effective, LCP systematically extracts principles underlying successful prompt design. On the Big-Bench Hard benchmark, LCP achieves an 87.5% win rate on Claude-3-Sonnet and 75.7% on Claude-4-Sonnet. Experiments on DeepSeek-R1 (88.2% win rate) and SuperGLUE further confirm that LCP generalizes across both proprietary and open-source models and diverse NLU benchmarks.The framework offers a principled and scalable foundation for automated prompt engineering, reducing manual intervention in adapting LLMs to diverse applications.",
+      "paper_id": "acl:2026.findings-acl.9",
+      "title": "Learning from Contrastive Prompts: An Automated Prompt Optimization Framework",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Recent advancements in Spatial Intelligence (SI) have predominantly relied on Vision-Language Models (VLMs), yet a critical question remains: does spatial understanding originate from visual encoders or the fundamental reasoning backbone? Inspired by this question, we introduce SiT-Bench, a novel benchmark designed to evaluate the SI performance of Large Language Models (LLMs) without pixel-level input, comprises over 3,800 expert-annotated items across five primary categories and 17 subtasks, ranging from egocentric navigation and perspective transformation to fine-grained robotic manipulation. By converting single/multi-view scenes into high-fidelity, coordinate-aware textual descriptions, we challenge LLMs to perform symbolic textual reasoning rather than visual pattern matching. Evaluation results of state-of-the-art (SOTA) LLMs reveals that while models achieve proficiency in localized semantic tasks, a significant “spatial gap” remains in global consistency. Notably, we find that explicit spatial reasoning significantly boosts performance, suggesting that LLMs possess latent world-modeling potential. Our proposed dataset SiT-Bench serves as a foundational resource to foster the development of spatially-grounded LLM backbones for future VLMs and embodied agents.",
+      "paper_id": "acl:2026.findings-acl.90",
+      "title": "Can LLMs See Without Pixels? Benchmarking Spatial Intelligence from Textual Descriptions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "While Supervised Fine-Tuning (SFT) is the prevailing method for equipping Large Language Models (LLMs) with function calling capabilities, its effectiveness is often compromised by two critical challenges: 1) Imbalanced Training Signals, where lengthy Chain-of-Thought (CoT) reasoning tokens dominate the training signals over concise function calls in the learning objective, and 2) Imbalanced Data Hardness, characterized by a scarcity of hard training examples. To overcome these limitations, we propose Balanced Supervised Fine-tuning (BalanceSFT), a novel framework that incorporates two key components: a Self-adjusted Signal Balancing (SSB) loss that employs a learnable hyperparameter to dynamically adjust the token contributions of CoT reasoning and function calls, together with a Hard Data Re-sampling (HDR) strategy that establishes a feedback loop to selectively generate new, high-quality complex data guided by model errors. Extensive experiments demonstrate the effectiveness of our proposed BalanceSFT framework. With BalanceSFT, a 7B model achieves function calling performance that surpasses state-of-the-art models like GPT-5. Our code, models, and dataset are open-sourced.",
+      "paper_id": "acl:2026.findings-acl.900",
+      "title": "BalanceSFT: Improving LLM Function Calling with Balanced Training Signals and Data Hardness",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Language Models (LLMs) are increasingly being explored for clinical question answering and decision support, yet safe deployment critically requires reliable handling of patient measurements in heterogeneous clinical notes. Existing evaluations of LLMs for clinical numerical reasoning provide limited operation-level coverage, restricted primarily to arithmetic computation, and rarely assess the robustness of numerical understanding across clinical note formats. We introduce ClinicNumRobBench, a benchmark of 1,624 context-question instances with ground-truth answers that evaluates four main types of clinical numeracy: value retrieval, arithmetic computation, relational comparison, and aggregation. To stress-test robustness, ClinicNumRobBench presents longitudinal MIMIC-IV vital-sign records in three semantically equivalent representations, including a real-world note-style variant derived from the Open Patients dataset, and instantiates queries using 42 question templates. Experiments on 17 LLMs show that value retrieval is generally strong, with most models exceeding 85% accuracy, while relational comparison and aggregation remain challenging, with some models scoring below 15%. Fine-tuning on medical data can reduce numeracy relative to base models by over 30%, and performance drops under note-style variation indicate LLM sensitivity to format. ClinicNumRobBench offers a rigorous testbed for clinically reliable numerical reasoning. Code and data URL are available on https://github.com/MinhVuong2000/ClinicNumRobBench.",
+      "paper_id": "acl:2026.findings-acl.901",
+      "title": "How Robust Are Large Language Models for Clinical Numeracy? An Empirical Study on Numerical Reasoning Abilities in Clinical Contexts",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Clinical dialogue systems are increasingly vital for patient education and follow-up care; however, effective responses often depend on the clinical context that patients often fail to provide in detail. Responding directly to vague messages can therefore lead to generic or clinically misaligned advice, a challenge that is particularly pronounced in post-op oral cancer (OC) care due to speech impairment and functional limitations. Moreover, post-op OC patients often experience psychological distress, making safety-aware language more likely to arise in dialogue. Dialogue systems in this setting must therefore address both clarifying missing clinical context and ensuring psychological safety. We propose a safety-aware dialogue system that applies information-gain guided clarification before RAG-based response generation and screens user utterances for emotional distress and suicidal ideation. Expert evaluations show that the proposed system improves the quality and clinical appropriateness of generated responses relative to strong baselines, while the safety module closely aligns with expert judgments on clinically concerning utterances. Furthermore, we release a clinically curated Chinese post-op OC QA dataset with expert-validated annotations, which we use throughout our experiments.",
+      "paper_id": "acl:2026.findings-acl.902",
+      "title": "Safety-Aware Dialogue System for Postoperative Oral Cancer Care with Structured Clarification and a Clinically Curated Dataset",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Vision–language models (VLMs) have progressed rapidly, but Tibetan remains largely underserved due to the lack of infrastructure for reproducible training and evaluation. To help address this gap, we introduce FTibSuite, a resource-centric foundation for Tibetan VLM research that provides an end-to-end training-and-evaluation workflow and includes human-verified multimodal annotations, partially filling a long-standing shortage of Tibetan multimodal resources. FTibSuite comprises FTibData, FTibBench, and a reproducible baseline model, FTibVLM, built on Qwen3-VL-8B-Instruct. FTibVLM adopts a three-stage adaptation pipeline consisting of Tibetan continual pretraining, image–text alignment, and multimodal instruction tuning. For systematic evaluation, FTibBench adapts five established multimodal benchmarks to Tibetan and offers a reproducible evaluation protocol to support consistent comparisons across models. Specifically, FTibBench includes Tibetan versions of MMBench, MME, POPE, BinaryVQA, and COREVQA. Experiments on FTibBench demonstrate that FTibVLM consistently improves Tibetan multimodal performance. For instance, FTibVLM attains 76.01 accuracy on BinaryVQA, indicating that Tibetan performance can be competitive with high-resource settings on this diagnostic task. We also observe substantial gains on other benchmarks, including an improvement on MMBench (dev) from 42.97 to 67.78 and an increase in POPE-random accuracy from 47.53 to 80.56, underscoring the practical value of the proposed workflow and resources.",
+      "paper_id": "acl:2026.findings-acl.903",
+      "title": "FTibSuite: A Comprehensive Resource Suite for Tibetan Vision--Language Modeling",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Medical reasoning models remain constrained by parametric knowledge and are thus susceptible to forgetting and hallucinations. DeepResearch (DR) models ground outputs in verifiable evidence from tools and perform strongly in general domains, but their direct transfer to medical field yields relatively limited gains. We attribute this to two gaps: task characteristic and tool-use scaling. Medical questions require evidence interpretation in a knowledge-intensive clinical context; while general DR models can retrieve information, they often lack clinical-context reasoning and thus “find it but fail to use it,” leaving performance limited by medical abilities. Moreover, in medical scenarios, blindly scaling tool-call can inject noisy context, derailing sensitive medical reasoning and prompting repetitive evidence-seeking along incorrect paths. Therefore, we propose DeepMed. For data, we deploy a multi-hop med-search QA synthesis method supporting the model to apply the DR paradigm in medical contexts. For training, we introduce a difficulty-aware turn-penalty to suppress excessive tool-call growth. For inference, we bring a monitor to help validate hypotheses within a controlled number of steps and avoid context rot. Overall, on seven medical benchmarks, DeepMed improves its base model by 9.79% on average and outperforms larger medical reasoning and DR models.",
+      "paper_id": "acl:2026.findings-acl.904",
+      "title": "DeepMed: Building a Medical DeepResearch Agent via Multi-hop Med-Search Data and Turn-Controlled Agentic Training \\& Inference",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "We introduce softpick, a rectified, not sum-to-one, drop-in replacement for softmax in transformer attention mechanisms that eliminates attention sink and massive activations. Our experiments with 340M and 1.8B parameter models demonstrate that softpick achieves 0% sink rate consistently. The softpick transformers produce hidden states with significantly lower kurtosis and creates sparse attention maps. Quantized models using softpick outperform softmax on standard benchmarks, with a particularly pronounced advantage at lower bit precisions. Our analysis and discussion shows how softpick has the potential to open new possibilities for quantization, low-precision training, sparsity optimization, pruning, and interpretability. Our code: https://github.com/zaydzuhri/softpick-attention.",
+      "paper_id": "acl:2026.findings-acl.905",
+      "title": "Softpick: No Attention Sink, No Massive Activations with Rectified Softmax",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Consistency models (CMs) have shown promise in the efficient generation of both image and text. This raises the natural question of whether we can learn a unified CM for efficient multimodal generation (e.g., text-to-image) and understanding (e.g., image-to-text). Intuitively, such a model could be acquired by applying the consistency distillation (CD) to existing unified multimodal models. However, the key challenge is establishing a unified denoising perspective for both image and text generation, which is essential for establishing the consistency mapping. To tackle this, at the representation level, we advocate for discrete tokens for both modalities to best preserve language modeling capabilities. Critically, instead of defining the text denoising trajectory via recent discrete diffusion language modeling principles, we specify it using the parallel decoding trace of an autoregressive language model, benefiting from the latter’s superior performance in general text generation tasks. The denoising trajectory of image tokens adheres to standard discrete diffusion. We train our unified consistency models (UniCMs) on these combined multimodal trajectories simultaneously with a unified objective. We introduce a trajectory segmentation strategy to improve the training convergence. Empirically, in text-to-image generation, UniCMs outperform SD3 on GenEval and Image Reward, while requiring only approximately 1/8 of the sampling time. Meanwhile, in image-to-text generation, UniCMs surpass Show-o on the MMMU benchmark while being 1.5 × faster at long-sequence generating speed.",
+      "paper_id": "acl:2026.findings-acl.906",
+      "title": "UniCM: A Unified Consistency Model For Efficient Multimodal Generation and Understanding",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs)-based multi-agent systems have recently shown strong potential for machine translation (MT). However, their application to multi-domain translation (MDT) remains under-explored, particularly in addressing cross-domain word ambiguity. To investigate whether multi-agent approaches can help disambiguation in MDT, we propose a multi-agent collaborative disambiguation framework for MDT (MACD), which leverages the collaborative capabilities of LLMs for disambiguation. MACD consists of four cooperating agents responsible for domain allocation, general translation, domain disambiguation, and translation fusion. Experimental results show that MACD significantly improves translation performance across multiple domains and enhances disambiguation accuracy. Our approach reveals several findings on multi-agent collaboration in resolving word ambiguities.",
+      "paper_id": "acl:2026.findings-acl.907",
+      "title": "Can Multi-agent Help Disambiguation in Multi-domain Translation?",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large Language Model (LLM)-based agents significantly extend the utility of LLMs by interacting with dynamic environments. However, enabling agents to continually learn new tasks without catastrophic forgetting remains a critical challenge, known as the stability–plasticity dilemma.In this work, we argue that this dilemma fundamentally arises from the failure to explicitly distinguish between common knowledge shared across tasks and conflicting knowledge introduced by task-specific interference. To address this, we propose Agent-Dice, a parameter fusion framework based on directional consensus evaluation.Concretely, Agent-Dice disentangles knowledge updates through a two-stage process: geometric consensus filtering to prune conflicting gradients, and curvature-based importance weighting to amplify shared semantics.We provide a rigorous theoretical analysis that establishes the validity of the proposed fusion scheme and offers insight into the origins of the stability–plasticity dilemma. Extensive experiments on GUI agents and tool-use agent domains demonstrate that Agent-Dice exhibits outstanding continual learning performance with minimal computational overhead and parameter updates.",
+      "paper_id": "acl:2026.findings-acl.908",
+      "title": "Agent-Dice: Disentangling Knowledge Updates via Geometric Consensus for Agent Continual Learning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Presentation slides are a primary medium for data-driven reporting, yet keeping complex, analytics-style decks up to date remains labor-intensive. Existing automation methods mostly follow fixed template filling and cannot support dynamic updates for diverse, user-authored slide decks. We therefore define “Dynamic Slide Update via Natural Language Instructions on User-provided Templates” and introduce DynaSlide, a large-scale benchmark with 20,036 real-world instruction–execution triples (source slide, user instruction, target slide) grounded in a shared external database and built from business reporting slides under bring-your-own-template (BYO-template) conditions. To tackle this task, we propose SlideAgent, an agent-based framework that combines multimodal slide parsing, natural language instruction grounding, and tool-augmented reasoning for tables, charts, and textual conclusions. SlideAgent updates content while preserving layout and style, providing a strong reference baseline on DynaSlide. We further design end-to-end and component-level evaluation protocols that reveal key challenges and opportunities for future research. The dataset and code are available at https://anonymous.4open.science/r/604E/.",
+      "paper_id": "acl:2026.findings-acl.909",
+      "title": "Automatic Slide Updating with User-Defined Dynamic Templates and Natural Language Instructions",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs) demonstrate strong capabilities across a wide range of complex tasks and are increasingly deployed at scale, placing significant demands on inference efficiency. Prior work typically decomposes inference into prefill and decode stages, with the decode stage dominating total latency. To reduce time and memory complexity in the decode stage, a line of work introduces sparse-attention algorithms. In this paper, we show, both empirically and theoretically, that sparse attention can paradoxically increase end-to-end complexity: information loss often induces significantly longer sequences, a phenomenon we term “Less is Less” (Lil). To mitigate the Lil problem, we propose an early-stopping algorithm that detects the threshold where information loss exceeds information gain during sparse decoding. Our early-stopping algorithm reduces token consumption by up to 90% with a marginal accuracy degradation of less than 2% across reasoning-intensive benchmarks.",
+      "paper_id": "acl:2026.findings-acl.91",
+      "title": "Lil: Less is Less When Applying Post-Training Sparse-Attention Algorithms in Long-Decode Stage",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models (LLMs), despite their powerful capabilities, suffer from factual hallucinations where they generate verifiable falsehoods. We identify a root of this issue: the imbalanced data distribution in the pretraining corpus, which leads to a state of “low-probability truth” and “high-probability falsehood”. Recent approaches, such as teaching models to say “I don’t know” or post-hoc knowledge editing, either evade the problem or face catastrophic forgetting. To address this issue from its root, we propose PretrainRL, a novel framework that integrates reinforcement learning into the pretraining phase to consolidate factual knowledge. The core principle of PretrainRL is “debiasing then learning.” It actively reshapes the model’s probability distribution by down-weighting high-probability falsehoods, thereby making “room” for low-probability truths to be learned effectively. To enable this, we design an efficient negative sampling strategy to discover these high-probability falsehoods and introduce novel metrics to evaluate the model’s probabilistic state concerning factual knowledge. Extensive experiments on three public benchmarks demonstrate that PretrainRL significantly alleviates factual hallucinations and outperforms state-of-the-art methods.",
+      "paper_id": "acl:2026.findings-acl.910",
+      "title": "PretrainRL: Alleviating Factuality Hallucination of Large Language Models at the Beginning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Multimodal Large Language Models (MLLMs) have increasingly supported omni-modal processing across text, vision, and speech. However, existing evaluation frameworks for such models suffer from critical limitations, including modality shortcuts and biased reasoning paths. To address these challenges, we propose OMHBench, a novel benchmark designed to rigorously evaluate omni-modal multi-hop reasoning. It consists of 6,144 questions with balanced reasoning paths that are jointly grounded across all three modalities. Extensive evaluation of 13 state-of-the-art models reveals that (1) a large performance gap exists between proprietary and open-source MLLMs and (2) even proprietary models exhibit high sensitivity to reasoning path variations, resulting in asymmetric omni-modal grounding. Notably, models struggle when processing the speech modality, underscoring the need for balanced, multi-hop evaluation of omni-modal intelligence.",
+      "paper_id": "acl:2026.findings-acl.911",
+      "title": "OMHBench: Benchmarking Balanced and Grounded Omni-Modal Multi-Hop Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Low-rank decomposition, particularly Singular Value Decomposition (SVD), is a pivotal technique for mitigating the storage and computational demands of Large Language Models (LLMs). However, prevalent SVD-based approaches overlook the critical phenomenon that decomposition errors exhibit significant disparity across different components of the parameter matrix, often leading to suboptimal approximation. Furthermore, existing methods lack a direct metric to evaluate the importance of individual weight matrices. To address these limitations, we propose Duo-SVD (Dual-level Optimization SVD), a novel training-free framework that synergizes optimization at both the column and the module levels. First, Duo-SVD incorporates a Column-Preserving Strategy that explicitly retains columns exhibiting high decomposition errors, while applying low-rank approximation solely to those with lower errors. Second, at the module level, we employ a Module-Adaptive Allocation Strategy that formulates ratio allocation as a global constrained optimization problem based on perturbation-induced model deviation. Extensive experiments demonstrate that Duo-SVD consistently outperforms state-of-the-art SVD-based baselines and structured pruning methods, establishing it as a superior paradigm for efficient LLM compression.",
+      "paper_id": "acl:2026.findings-acl.912",
+      "title": "Beyond Uniform SVD: Dual-Level Optimization across Columns and Modules for LLM Compression",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "While Audio Large Models (ALLMs) have achieved remarkable proficiency, their robustness remains brittle in real-world deployment. Existing evaluations largely rely on synthetic Gaussian noise or simplistic single-source interference, failing to capture the intricate, multi-layered acoustic dynamics—or “Acoustic Ecology”—that characterize authentic physical environments. To bridge this ecological gap, we introduce RSA-Bench, a comprehensive robustness benchmark designed to stress-test ALLMs through high-fidelity auditory scene simulations. Unlike traditional methods, we construct evaluation samples by naturally superimposing diverse environmental soundscapes—spanning Pasture, Extreme Weather, Classroom, and Outdoors—onto clean speech signals across a spectrum of interference intensities. By evaluating models on six core tasks ranging from fundamental perception to complex reasoning, our study unveils three macro-level insights: (I) The Perception-Cognition Gap: Models maintain relative resilience in low-level recognition but suffer a functional collapse in high-order reasoning tasks under stress; (II) Scenario Sensitivity: “Vocal-like” interference (e.g., children playing) proves significantly more destructive than mechanical noise, challenging the model’s auditory attention mechanisms; and (III) The Denoising Paradox: Standard speech enhancement often exacerbates performance degradation, as ALLMs prove highly sensitive to the semantic distortions introduced by denoising artifacts.",
+      "paper_id": "acl:2026.findings-acl.913",
+      "title": "RSA-Bench: Benchmarking Audio Large Models in Real-World Acoustic Scenarios",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Medical Vision-Language Models (Med-VLMs) have achieved expert-level proficiency in interpreting diagnostic imaging. However, current models are predominantly trained on professional literature, limiting their ability to communicate findings in the lay register required for patient-centered care. While text-centric research has actively developed resources for simplifying medical jargon, there is a critical absence of large-scale multimodal benchmarks designed to facilitate lay-accessible medical image understanding. To bridge this resource gap, we introduce MedLayBench-V, the first large-scale multimodal benchmark dedicated to expert-lay semantic alignment. Unlike naive simplification approaches that risk hallucination, our dataset is constructed via a Structured Concept-Grounded Refinement (SCGR) pipeline. This method enforces strict semantic equivalence by integrating Unified Medical Language System (UMLS) Concept Unique Identifiers (CUIs) with micro-level entity constraints. MedLayBench-V provides a verified foundation for training and evaluating next-generation Med-VLMs capable of bridging the communication divide between clinical experts and patients.",
+      "paper_id": "acl:2026.findings-acl.914",
+      "title": "MedLayBench-V: A Large-Scale Benchmark for Expert-Lay Semantic Alignment in Medical Vision Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Generative commonsense reasoning (GCR) requires models to synthesize coherent narratives that simultaneously satisfy lexical constraints and commonsense logic. Although ensemble-based LLM strategies are widely adopted to alleviate the fragility of single-chain reasoning, we uncover a counterintuitive homogeneity trap in GCR. Specifically, we observe that increasing the number of reasoning chains can degrade performance, as the generated chains tend to collapse into a narrow semantic region, thereby reinforcing shared biases rather than providing complementary evidence. We posit that escaping this trap requires fundamentally broadening semantic coverage via heterogeneous sources. Our investigation into the nature of diversity reveals that deep semantic diversity, rather than surface-level lexical variation, is the decisive prerequisite for effective integration. Motivated by this insight, we propose an Explore-then-Integrate framework, in which high–semantic-entropy explorers capture diverse concept bindings, and a powerful integrator performs compositional synthesis to merge valid fragments into coherent narratives. Crucially, to ensure that the observed performance gains arise from accurate logical composition rather than trivial best-candidate selection, we introduce a provenance-aware evaluation suite that explicitly quantifies the heterogeneous origins of synthesized outputs. Extensive experiments on multiple benchmarks demonstrate the consistent superiority of our approach across a range of metrics. Notably, our method achieves over 10% improvement in overall accuracy on NoRa and in SPICE score on CommonGen-Lite.",
+      "paper_id": "acl:2026.findings-acl.915",
+      "title": "Divergent Thinking: Escape the Homogeneity Trap in Generative Commonsense Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Multimodal large language models (MLLMs) are gaining increasing attention. Due to the heterogeneity of their input features, they face significant challenges in terms of jailbreak defenses. Current defense methods rely on costly fine-tuning or inefficient post-hoc interventions, limiting their ability to address novel attacks and involving performance trade-offs. To address the above issues, we explore the endogenous safety capabilities within MLLMs and quantify their intrinsic ability to discern harmfulness at both encoding and decoding stages. We observe that 1) MLLMs can distinguish the harmful and harmless inputs during decoding process, 2) Image-based attacks are more stealthy. Based on these insights, we introduce SafeSteer, a decoding-level defense mechanism for MLLMs. Specifically, it employs a lightweight discriminator, based on the MLLM’s own discriminative ability, to iteratively steer the decoding process toward safety. A safety alignment vector is also integrated to handle complex multimodal threats. Experiments on multiple MLLMs demonstrate that our proposed method can improve safety performance by up to 33.40% without fine-tuning.",
+      "paper_id": "acl:2026.findings-acl.916",
+      "title": "SafeSteer: A Decoding-level Defense Mechanism for Multimodal Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Retrieval-Augmented Generation (RAG) is widely employed to mitigate risks such as hallucinations and knowledge obsolescence in medical question answering, yet its predominantly single-round, static retrieval paradigm misaligns with the multi-stage process of clinical reasoning. This compressed workflow induces two structural deficiencies: question-to-query translation often lacks clinically grounded semantic interpretation, and retrieval lacks iterative sufficiency feedback, making it difficult to form reliable evidence chains. We argue that both issues stem from a deeper cause—overloading a single reasoning chain with heterogeneous tasks of interpretation, exploration, and adjudication—and that the remedy is to reconstruct the workflow via task decoupling and dynamic multi-round exploration. To this end, we propose the Self-Evolving Multi-Agent framework SEMA-RAG, which assigns these roles to three specialist agents: Interpreter Agent for clinical schema interpretation, Explorer Agent for sufficiency-driven self-evolving retrieval, and Arbiter Agent for evidence adjudication and answer selection. Across five benchmarks and five LLM backbones, SEMA-RAG improves the strongest baseline by +6.46 accuracy points on average, measured per backbone.",
+      "paper_id": "acl:2026.findings-acl.917",
+      "title": "SEMA-RAG: A Self-Evolving Multi-Agent Retrieval-Augmented Generation Framework for Medical Reasoning",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large reasoning models have recently demonstrated strong performance on complex tasks that require long chain-of-thought reasoning, through supervised fine-tuning on large-scale and high-quality datasets. To construct such datasets, existing pipelines generate long reasoning data from more capable Large Language Models (LLMs) and apply manually heuristic or naturalness-based selection methods to filter high-quality samples. Despite the proven effectiveness of naturalness-based data selection, which ranks data by the average log probability assigned by LLMs, our analysis shows that, when applied to LLM reasoning datasets, it systematically prefers samples with longer reasoning steps (i.e., more tokens per step) rather than higher-quality ones, a phenomenon we term step length confounding. Through quantitative analysis, we attribute this phenomenon to low-probability first tokens in reasoning steps; longer steps dilute their influence, thereby inflating the average log probabilities. To address this issue, we propose two variant methods: ASLEC-DROP, which drops first-token probabilities when computing average log probability, and ASLEC-CASL, which applies a causal debiasing regression to remove the first tokens’ confounding effect. Experiments across four LLMs and five evaluation benchmarks demonstrate the effectiveness of our approach in mitigating the step length confounding problem.",
+      "paper_id": "acl:2026.findings-acl.918",
+      "title": "On the Step Length Confounding in LLM Reasoning Data Selection",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Training data is a critical and often proprietary asset in Large Language Model (LLM) development, motivating the use of data watermarking to embed model-transferable signals for usage verification. We identify low coverage as a vital yet largely overlooked requirement for practicality, as individual data owners typically contribute only a minute fraction of massive training corpora. Prior methods fail to maintain stealthiness, verification feasibility, or robustness when only one or a few sequences can be modified. To address these limitations, we introduce SLIM, a framework enabling per-user data provenance verification under strict black-box access. SLIM leverages intrinsic LLM properties to induce a Latent-Space Confusion Zone by training the model to map semantically similar prefixes to divergent continuations. This manifests as localized generation instability, which can be reliably detected via hypothesis testing. Experiments demonstrate that SLIM achieves ultra-low coverage capability, strong black-box verification performance, and great scalability while preserving both stealthiness and model utility, offering a robust solution for protecting training data in modern LLM pipelines.",
+      "paper_id": "acl:2026.findings-acl.919",
+      "title": "SLIM: Stealthy Low-Coverage Black-Box Watermarking via Latent-Space Confusion Zones",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Large language models are trained on static corpora but deployed in a dynamic world, leading to systematic temporal failures—from mis-anchored expressions and inconsistent timelines to hallucinated future events, stale world knowledge, and related issues. Existing surveys on temporal knowledge graphs, retrieval-augmented generation, hallucination, and knowledge editing cover only isolated fragments of this space: they are typically task-centric and do not offer a holistic theoretical account of how frozen LLMs represent and reason about time. This survey provides a unified perspective on temporal reasoning in LLMs. We formalize temporal queries in an information-theoretic framework based on the parametric reachability of temporal premises and answers, which induces four temporal information regimes corresponding to internal reasoning, answer recency, premise anchoring, and genuine world indeterminacy. Under this lens, we delineate the landscape of temporal failure modes, consolidate methodologies for diagnosing temporal deficiencies, and synthesize mitigation approaches into a coherent design space. Together, these contributions provide a systematic roadmap toward reliable time-aware large language models.",
+      "paper_id": "acl:2026.findings-acl.92",
+      "title": "Static Models, Dynamic World: A Unified Perspective on Temporal Perception in Large Language Models",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Agentic Reinforcement Learning (RL) shows promise for complex tasks, but Text-to-SQL remains mostly restricted to single-turn paradigms. A primary bottleneck is the credit assignment problem. In traditional paradigms, rewards are determined solely by the final-turn feedback, which ignores the intermediate process and leads to ambiguous credit evaluation. To address this, we propose Agentic SQL, a framework featuring a universal two-tiered reward mechanism designed to provide effective trajectory-level evaluation and dense step-level signals. First, we introduce Aggregated Trajectory Reward (ATR) to resolve multi-turn credit assignment. Using an asymmetric transition matrix, ATR aggregates process-oriented scores to incentivize continuous improvement. Leveraging Lyapunov stability theory, we prove ATR acts as an energy dissipation operator, guaranteeing a cycle-free policy and monotonic convergence. Second, Column-Set Matching Reward (CSMR) provides immediate step-level rewards to mitigate sparsity. By executing queries at each turn, CSMR converts binary (0/1) feedback into dense [0,1] signals based on partial correctness. Evaluations on BIRD show a 5% gain over binary-reward GRPO. Notably, our approach outperforms SOTA Arctic-Text2SQL-R1-7B on BIRD and Spider 2.0 using identical models, propelling Text-to-SQL toward a robust multi-turn agent paradigm.",
+      "paper_id": "acl:2026.findings-acl.920",
+      "title": "SQL-ASTRA: Alleviating Sparse Feedback in Agentic SQL via Column-Set Matching and Trajectory Aggregation",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "As Large Language Models (LLMs) become increasingly prevalent, their security vulnerabilities have already drawn attention.Machine unlearning is introduced to seek to mitigate these risks by removing the influence of undesirable data. However, existing methods not only rely on the retained dataset to preserve model utility, but also suffer from cumulative catastrophic utility loss under continuous unlearning requests.To solve this dilemma, we propose a novel method, called Rotation Control Unlearning (RCU), which leverages the rotational salience weight of RCU to quantify and control the unlearning degree in the continuous unlearning process.The skew symmetric loss is designed to construct the existence of the cognitive rotation space, where the changes of rotational angle can simulate the continuous unlearning process.Furthermore, we design an orthogonal rotation axes regularization to enforce mutually perpendicular rotation directions for continuous unlearning requests, effectively minimizing interference and addressing cumulative catastrophic utility loss.Experiments on multiple datasets confirm that our continuous unlearning method without retained dataset achieves SOTA performance.",
+      "paper_id": "acl:2026.findings-acl.921",
+      "title": "Rotation Control Unlearning: Quantifying and Controlling Continuous Unlearning for LLM with The Cognitive Rotation Space",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "Multi-round batch knowledge editing often suffers from performance degradation as edits accumulate. Focusing on the locate-then-edit paradigm, we analyze this phenomenon from a spectral perspective and identify a previously overlooked structural factor: the intrinsic knowledge of the model and historical edit memories exhibit markedly different spectral characteristics and information distributions, yet are naively coupled and jointly inverted during editing. Based on this insight, we propose SpecEdit to improve the model editing from a spectral perspective. SpecEdit performs spectral decoupling to isolate editing-critical directions and reduce destructive coupling, followed by spectral-structure-aware information compensation and spectral fusion to construct a refined closed-form solution. The module integrates seamlessly into existing editing methods without altering their original optimization procedures. Experiments on multiple LLMs and editing methods show that SpecEdit consistently improves performance, demonstrating that modeling spectral structure is an effective, interpretable approach and a promising direction for future research.",
+      "paper_id": "acl:2026.findings-acl.922",
+      "title": "SpecEdit: A Spectral Approach for Multi-Round Knowledge Editing",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    },
+    {
+      "abstract": "The AdamW optimizer, while standard for LLM pretraining, is a critical memory bottleneck, consuming optimizer states equivalent to twice the model’s size. Although light-state optimizers like SinkGD attempt to address this issue, we identify the embedding layer dilemma: these methods fail to handle the sparse, high-variance gradients inherent to embeddings, forcing a hybrid design that reverts to AdamW and partially negates the memory gains. We propose SAGE (Sign Adaptive GradiEnt), a novel optimizer that resolves this dilemma by replacing AdamW in this hybrid structure. SAGE combines a Lion-style update direction with a new, memory-efficient O(d) adaptive scale. This scale acts as a “safe damper,” provably bounded by 1.0, which tames high-variance dimensions more effectively than existing methods. This superior stability allows SAGE to achieve better convergence. On Llama models up to 1.3B parameters, our SAGE-based hybrid achieves new state-of-the-art perplexity, outperforming all baselines, including SinkGD hybrid, while significantly reducing optimizer state memory.",
+      "paper_id": "acl:2026.findings-acl.923",
+      "title": "SAGE: Sign-Adaptive Gradient for Memory-Efficient LLM Optimization",
+      "venue_native_metadata": {
+        "keywords": [],
+        "native_metadata": {},
+        "subject_areas": [],
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026
+      }
+    }
+  ],
+  "taxonomy": {
+    "topics": [
+      {
+        "definition": "General-purpose pretrained language, vision, or multimodal models and their adaptation.",
+        "id": "foundation_models",
+        "name": "Foundation Models"
+      },
+      {
+        "definition": "Deliberation, planning, tool use, autonomous agents, and multi-step problem solving.",
+        "id": "reasoning_and_agents",
+        "name": "Reasoning and Agents"
+      },
+      {
+        "definition": "Data curation, retrieval, knowledge grounding, indexing, and information access.",
+        "id": "data_and_retrieval",
+        "name": "Data and Retrieval"
+      },
+      {
+        "definition": "Learning algorithms, objectives, optimization, adaptation, and training efficiency.",
+        "id": "learning_and_optimization",
+        "name": "Learning and Optimization"
+      },
+      {
+        "definition": "Benchmarks, measurement, diagnostics, and empirical evaluation methodology.",
+        "id": "evaluation",
+        "name": "Evaluation"
+      },
+      {
+        "definition": "Safety, robustness, privacy, fairness, alignment, and responsible AI.",
+        "id": "trustworthiness",
+        "name": "Trustworthiness"
+      },
+      {
+        "definition": "Models and methods that jointly process language, vision, audio, video, or other modalities.",
+        "id": "multimodal_models",
+        "name": "Multimodal Models"
+      },
+      {
+        "definition": "Multilingual, low-resource, dialectal, accessible, and inclusive language technologies.",
+        "id": "multilingual_and_inclusive_nlp",
+        "name": "Multilingual and Inclusive NLP"
+      },
+      {
+        "definition": "Deployed or domain-specific uses of AI and NLP systems.",
+        "id": "applications",
+        "name": "Applications"
+      },
+      {
+        "definition": "Core prediction and generation tasks in natural language processing and computer vision.",
+        "id": "nlp_cv_core_tasks",
+        "name": "NLP/CV Core Tasks"
+      }
+    ],
+    "version": "2026-08-24-v1"
+  },
+  "taxonomy_version": "2026-08-24-v1"
+}
