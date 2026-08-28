@@ -10,6 +10,7 @@ import TrendExplorer from "../src/components/TrendExplorer";
 import { loadOverview, type LoadedOverview } from "../src/lib/data";
 import { filterPapers, paperRouteKey } from "../src/lib/evidence";
 import { advanceFilterHref, parseAdvanceFilter } from "../src/lib/advance-filter";
+import { paperFilterHref, parsePaperScopeFilter } from "../src/lib/paper-filter";
 import { conferenceNavigationHref, projectPath } from "../src/lib/paths";
 import {
   applyTrendFilters,
@@ -264,9 +265,31 @@ describe("conference routes", () => {
       `/ai-conference-overview/papers/${paperRouteKey(icmlPaper.paperId)}/`,
     );
     expect(icmlPaper.theme).toBeNull();
+    expect(icmlPaper.track).toBe("main");
     expect(paperRouteKey(icmlPaper.paperId)).toBe(
       `paper-${createHash("sha256").update(icmlPaper.paperId).digest("hex")}`,
     );
+  });
+
+  it("builds and parses a shareable track-scoped paper link", () => {
+    const href = paperFilterHref("/ai-conference-overview/", "ACL", 2026, "findings");
+    expect(href).toBe(
+      "/ai-conference-overview/papers/?venue=ACL&year=2026&track=findings",
+    );
+    expect(parsePaperScopeFilter(href.split("?")[1])).toEqual({
+      venue: "ACL", year: 2026, track: "findings",
+    });
+    expect(parsePaperScopeFilter("venue=ACL&year=2026&track=../long")).toBeNull();
+  });
+
+  it("filters papers by venue, year, and track without mixing ACL Long and Findings", () => {
+    const findings = findingsRelease();
+    expect(filterPapers([validatedRelease, findings], {
+      query: "", theme: null, venue: "ACL", year: 2026, track: "findings",
+    }).every((paper) => paper.track === "findings")).toBe(true);
+    expect(filterPapers([validatedRelease, findings], {
+      query: "", theme: null, venue: "ACL", year: 2026, track: "long",
+    }).every((paper) => paper.track === "long")).toBe(true);
   });
   it("creates the ACL 2026 conference route from a schema-validated release", () => {
     expect(conferenceRoutes([validatedRelease])[0].params).toEqual({

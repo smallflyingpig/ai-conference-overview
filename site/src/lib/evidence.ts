@@ -214,6 +214,7 @@ export interface PaperIndexRow {
   theme: string | null;
   venue: string;
   year: number;
+  track: string;
   detailUrl: string | null;
   abstract: string | null;
   officialUrl: string;
@@ -225,6 +226,8 @@ export interface PaperFilters {
   query: string;
   theme: string | null;
   venue?: string | null;
+  year?: number | null;
+  track?: string | null;
 }
 
 export function paperRouteKey(paperId: string): string {
@@ -255,6 +258,7 @@ export function filterPapers(
         theme: themeByPaper.get(paper.paper_id) ?? null,
         venue: paper.venue,
         year: paper.year,
+        track: paper.track,
         detailUrl: hasInternalDetails
           ? projectPath("/ai-conference-overview/", `papers/${paperRouteKey(paper.paper_id)}`)
           : null,
@@ -265,6 +269,8 @@ export function filterPapers(
       }));
     })
     .filter((paper) => filters.venue == null || paper.venue === filters.venue)
+    .filter((paper) => filters.year == null || paper.year === filters.year)
+    .filter((paper) => filters.track == null || paper.track === filters.track)
     .filter((paper) => filters.theme == null || paper.theme === filters.theme)
     .filter((paper) => {
       if (!query) return true;

@@ -2,7 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { advanceFilterHref } from "../lib/advance-filter";
 import { awardFilterHref } from "../lib/award-filter";
-import { projectPath } from "../lib/paths";
+import { paperFilterHref } from "../lib/paper-filter";
 import { auditStatusLabel, type ConferenceView } from "../lib/views";
 import DataStatus from "./DataStatus.astro";
 import TopicShareChart from "./TopicShareChart";
@@ -10,7 +10,7 @@ import TopicShareChart from "./TopicShareChart";
 interface Props { view: ConferenceView }
 const { view } = Astro.props;
 const base = import.meta.env.BASE_URL;
-const papersHref = projectPath(base, "papers");
+const papersHref = paperFilterHref(base, view.venue, view.year, view.track);
 ---
 
 <BaseLayout

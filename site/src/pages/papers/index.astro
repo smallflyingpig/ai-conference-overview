@@ -8,6 +8,9 @@ const releases = await loadPublishedOverviews();
 const papers = filterPapers(releases, { query: "", theme: null, venue: null });
 const themes = [...new Set(papers.flatMap((paper) => paper.theme == null ? [] : [paper.theme]))].sort();
 const venues = [...new Set(papers.map((paper) => paper.venue))].sort();
+const years = [...new Set(papers.map((paper) => paper.year))].sort((left, right) => right - left);
+const tracks = [...new Set(papers.map((paper) => paper.track))].sort();
+const trackLabel = (track: string) => track === "long" ? "Long" : track === "main" ? "Main" : track === "findings" ? "Findings" : track;
 ---
 
 <BaseLayout title="论文索引 — AI Conference Overview" description="可搜索、可筛选的会议论文索引。" conferenceAvailable={releases.length > 0}>
@@ -28,14 +31,18 @@ const venues = [...new Set(papers.map((paper) => paper.venue))].sort();
             <input class="research-filter" id="paper-query" type="search" placeholder="标题、作者或 paper ID" />
             <label for="paper-venue">会议</label>
             <select class="research-filter" id="paper-venue"><option value="">全部会议</option>{venues.map((venue) => <option value={venue}>{venue}</option>)}</select>
+            <label for="paper-year">年份</label>
+            <select class="research-filter" id="paper-year"><option value="">全部年份</option>{years.map((year) => <option value={year}>{year}</option>)}</select>
+            <label for="paper-track">论文集</label>
+            <select class="research-filter" id="paper-track"><option value="">全部论文集</option>{tracks.map((track) => <option value={track}>{trackLabel(track)}</option>)}</select>
             <label for="paper-theme">主要主题</label>
             <select class="research-filter" id="paper-theme"><option value="">全部已分类主题</option>{themes.map((theme) => <option value={theme}>{displayTopicLabel(theme)}</option>)}</select>
           </form>
           <p class="data-label" id="paper-count" aria-live="polite">{papers.length} 篇论文</p>
           <ol class="paper-rows" id="paper-rows">
             {papers.map((paper) => (
-              <li data-paper-row data-search={[paper.paperId, paper.title, ...paper.authors].join(" ").toLocaleLowerCase()} data-theme={paper.theme ?? ""} data-venue={paper.venue}>
-                <span class="data-label">{paper.venue} {paper.year} · {paper.theme == null ? "暂未分类" : displayTopicLabel(paper.theme)}</span>
+              <li data-paper-row data-search={[paper.paperId, paper.title, ...paper.authors].join(" ").toLocaleLowerCase()} data-theme={paper.theme ?? ""} data-venue={paper.venue} data-year={paper.year} data-track={paper.track}>
+                <span class="data-label">{paper.venue} {paper.year} · {trackLabel(paper.track)} · {paper.theme == null ? "暂未分类" : displayTopicLabel(paper.theme)}</span>
                 <h3><a data-paper-detail={paper.detailUrl != null} href={paper.detailUrl ?? paper.officialUrl}>{paper.title}</a></h3>
                 <p>{paper.authors.join(", ")}</p>
                 <div class="plate-links"><a href={paper.officialUrl}>官方页面</a>{paper.pdfUrl && <a href={paper.pdfUrl}>PDF</a>}{paper.codeUrl && <a href={paper.codeUrl}>Code</a>}</div>
@@ -52,21 +59,42 @@ const venues = [...new Set(papers.map((paper) => paper.venue))].sort();
   const query = document.querySelector<HTMLInputElement>("#paper-query");
   const theme = document.querySelector<HTMLSelectElement>("#paper-theme");
   const venue = document.querySelector<HTMLSelectElement>("#paper-venue");
+  const year = document.querySelector<HTMLSelectElement>("#paper-year");
+  const track = document.querySelector<HTMLSelectElement>("#paper-track");
   const rows = [...document.querySelectorAll<HTMLElement>("[data-paper-row]")];
   const count = document.querySelector<HTMLElement>("#paper-count");
   function applyFilters() {
     const needle = query?.value.trim().toLocaleLowerCase() ?? "";
     const selectedTheme = theme?.value ?? "";
     const selectedVenue = venue?.value ?? "";
+    const selectedYear = year?.value ?? "";
+    const selectedTrack = track?.value ?? "";
     let visible = 0;
     rows.forEach((row) => {
-      const matches = (row.dataset.search?.includes(needle) ?? false) && (!selectedTheme || row.dataset.theme === selectedTheme) && (!selectedVenue || row.dataset.venue === selectedVenue);
+      const matches = (row.dataset.search?.includes(needle) ?? false) && (!selectedTheme || row.dataset.theme === selectedTheme) && (!selectedVenue || row.dataset.venue === selectedVenue) && (!selectedYear || row.dataset.year === selectedYear) && (!selectedTrack || row.dataset.track === selectedTrack);
       row.hidden = !matches;
       if (matches) visible += 1;
     });
     if (count) count.textContent = `${visible} 篇论文`;
+    const state = new URLSearchParams();
+    if (needle) state.set("query", query?.value.trim() ?? "");
+    if (selectedVenue) state.set("venue", selectedVenue);
+    if (selectedYear) state.set("year", selectedYear);
+    if (selectedTrack) state.set("track", selectedTrack);
+    if (selectedTheme) state.set("theme", selectedTheme);
+    const next = state.size > 0 ? `${location.pathname}?${state}` : location.pathname;
+    history.replaceState(null, "", next);
   }
+  const initial = new URLSearchParams(location.search);
+  if (query) query.value = initial.get("query") ?? "";
+  if (theme) theme.value = initial.get("theme") ?? "";
+  if (venue) venue.value = initial.get("venue") ?? "";
+  if (year) year.value = initial.get("year") ?? "";
+  if (track) track.value = initial.get("track") ?? "";
   query?.addEventListener("input", applyFilters);
   theme?.addEventListener("change", applyFilters);
   venue?.addEventListener("change", applyFilters);
+  year?.addEventListener("change", applyFilters);
+  track?.addEventListener("change", applyFilters);
+  applyFilters();
 </script>
