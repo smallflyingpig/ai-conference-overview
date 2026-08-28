@@ -15,6 +15,9 @@ from conference_overview.chinese_content import (
 )
 from conference_overview.content_pipeline import (
     OfficialPdfSource,
+    _load_release_content_context,
+    _ReleaseContentContext,
+    check_chinese_content_sources_scope,
     export_chinese_content_sources,
     extract_official_pdf_source,
     load_authored_content,
@@ -22,6 +25,7 @@ from conference_overview.content_pipeline import (
     write_chinese_content_bundle,
 )
 from conference_overview.models import PaperRecord, RecordStatus, SourceRef
+from conference_overview.registry import normalize_request
 
 _ABSTRACT = "Official abstract without numbers."
 _ABSTRACT_SHA256 = "01c8e4f38e1b92444f0f93f96a27a950e4cc0eb3d414aee7072afae974a693f6"
@@ -199,6 +203,90 @@ def test_export_supports_stable_pmlr_paper_ids(tmp_path: Path) -> None:
         if "paper-summary-source" in path.name
         for row in read_jsonl(path)
     } == {paper.paper_id for paper in papers}
+
+
+def test_findings_content_context_uses_track_release_and_needs_no_award_file(
+    tmp_path: Path, monkeypatch
+) -> None:
+    request = normalize_request("ACL", 2026, "findings")
+    release_root = tmp_path / "data/releases/ACL/2026/tracks/findings"
+    generation = release_root / "generations" / ("a" * 64)
+    generation.mkdir(parents=True)
+    findings_paper = PaperRecord.model_validate(
+        {
+            **paper(1).model_dump(),
+            "paper_id": "acl:2026.findings-acl.1",
+            "track": "findings",
+            "landing_url": "https://aclanthology.org/2026.findings-acl.1/",
+            "pdf_url": "https://aclanthology.org/2026.findings-acl.1.pdf",
+        }
+    )
+    papers_bytes = json.dumps(
+        [findings_paper.model_dump(mode="json")], sort_keys=True
+    ).encode()
+    (generation / "papers.json").write_bytes(papers_bytes)
+    (generation / "overview.json").write_text(
+        json.dumps({"awards": [], "award_deep_reads": []})
+    )
+    (release_root / "current.json").write_text(
+        json.dumps({"generation": f"generations/{'a' * 64}"})
+    )
+    monkeypatch.setattr(
+        "conference_overview.content_pipeline.resolve_current_release",
+        lambda path: generation if path == release_root else None,
+    )
+
+    context = _load_release_content_context(request, tmp_path)
+
+    assert [item.paper_id for item in context.papers] == [
+        "acl:2026.findings-acl.1"
+    ]
+    assert context.award_ids == frozenset()
+    assert context.award_pdf_provenance == {}
+
+
+def test_findings_source_check_accepts_configured_shard_count_and_rejects_gap(
+    tmp_path: Path, monkeypatch
+) -> None:
+    request = normalize_request("ACL", 2026, "findings")
+    papers = tuple(
+        PaperRecord.model_validate(
+            {
+                **paper(index).model_dump(),
+                "paper_id": f"acl:2026.findings-acl.{index}",
+                "track": "findings",
+                "landing_url": f"https://aclanthology.org/2026.findings-acl.{index}/",
+                "pdf_url": f"https://aclanthology.org/2026.findings-acl.{index}.pdf",
+            }
+        )
+        for index in range(1, 4)
+    )
+    source_root = tmp_path / "data/content/acl/2026-findings/source-batches"
+    export_chinese_content_sources(
+        papers=papers,
+        award_ids=set(),
+        award_deep_reads={},
+        award_pdf_provenance={},
+        output_dir=source_root,
+        shard_count=3,
+    )
+    context = _ReleaseContentContext(
+        papers=papers,
+        award_ids=frozenset(),
+        award_deep_reads={},
+        award_pdf_provenance={},
+        release_generation="generations/" + "a" * 64,
+        papers_sha256="b" * 64,
+    )
+    monkeypatch.setattr(
+        "conference_overview.content_pipeline._load_release_content_context",
+        lambda *_args: context,
+    )
+
+    assert check_chinese_content_sources_scope(request, tmp_path).total_count == 3
+    (source_root / "paper-summary-source-01.jsonl").unlink()
+    with pytest.raises(ContentPublicationBlocked, match="incomplete"):
+        check_chinese_content_sources_scope(request, tmp_path)
 
 
 def test_export_keeps_awards_out_of_ordinary_shards(tmp_path: Path) -> None:

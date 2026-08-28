@@ -31,6 +31,7 @@ from conference_overview.chinese_content import (
 )
 from conference_overview.models import PaperRecord
 from conference_overview.reports import resolve_current_release
+from conference_overview.scope import ScopePaths
 
 _ARTIFACT_NAMES = (
     "paper-summaries.zh.jsonl",
@@ -40,6 +41,7 @@ _ARTIFACT_NAMES = (
 _DATA_ARTIFACT_NAMES = _ARTIFACT_NAMES[:2]
 _SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 _ACL_NUMERIC_SUFFIX = re.compile(r"\.(\d+)$")
+_SUMMARY_SOURCE_NAME = re.compile(r"paper-summary-source-(\d+)\.jsonl$")
 
 
 @dataclass(frozen=True)
@@ -153,19 +155,16 @@ class _ReleaseContentContext:
 
 
 def _require_supported_scope(request) -> None:
-    scope = (request.venue, request.year, request.track, request.source_key)
-    if scope not in {
-        ("ACL", 2026, "long", "2026.acl-long"),
-        ("ICML", 2025, "main", "pmlr-v267"),
-    }:
+    if not request.track or not request.source_key:
         raise ContentPublicationBlocked(
-            "Chinese content is not implemented for this conference scope"
+            "Chinese content requires a registered conference track"
         )
 
 
 def _load_release_content_context(request, root: Path) -> _ReleaseContentContext:
     _require_supported_scope(request)
-    release_root = root / f"data/releases/{request.venue}/{request.year}"
+    paths = ScopePaths.for_request(Path(root), request)
+    release_root = paths.release
     generation = resolve_current_release(release_root)
     pointer = json.loads((release_root / "current.json").read_text(encoding="utf-8"))
     papers_bytes = (generation / "papers.json").read_bytes()
@@ -187,28 +186,30 @@ def _load_release_content_context(request, root: Path) -> _ReleaseContentContext
         for item in deep_reads
         if isinstance(item, Mapping) and isinstance(item.get("paper_id"), str)
     }
-    try:
-        provenance_path = (
-            root / "data/awards/acl/2026-long-deep-read-provenance.json"
-            if request.venue == "ACL"
-            else root / "data/awards/icml/2025-main-deep-read-provenance.json"
-        )
-        provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-        raise ContentPublicationBlocked("award PDF provenance is unavailable") from exc
-    pdfs = provenance.get("pdfs") if isinstance(provenance, Mapping) else None
-    if not isinstance(pdfs, list):
-        raise ContentPublicationBlocked("award PDF provenance is invalid")
     pdf_by_id: dict[str, Mapping[str, object]] = {}
-    for item in pdfs:
-        if not isinstance(item, Mapping) or not isinstance(item.get("paper_id"), str):
+    if award_ids:
+        try:
+            provenance = json.loads(
+                paths.award_deep_read_provenance.read_text(encoding="utf-8")
+            )
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            raise ContentPublicationBlocked(
+                "award PDF provenance is unavailable"
+            ) from exc
+        pdfs = provenance.get("pdfs") if isinstance(provenance, Mapping) else None
+        if not isinstance(pdfs, list):
             raise ContentPublicationBlocked("award PDF provenance is invalid")
-        paper_id = str(item["paper_id"])
-        pdf_by_id[paper_id] = {
-            "byte_size": item.get("byte_size"),
-            "pdf_url": item.get("source_url"),
-            "sha256": item.get("sha256"),
-        }
+        for item in pdfs:
+            if not isinstance(item, Mapping) or not isinstance(
+                item.get("paper_id"), str
+            ):
+                raise ContentPublicationBlocked("award PDF provenance is invalid")
+            paper_id = str(item["paper_id"])
+            pdf_by_id[paper_id] = {
+                "byte_size": item.get("byte_size"),
+                "pdf_url": item.get("source_url"),
+                "sha256": item.get("sha256"),
+            }
     if set(deep_read_by_id) != set(award_ids) or set(pdf_by_id) != set(award_ids):
         raise ContentPublicationBlocked("award source ID coverage is invalid")
     generation_value = pointer.get("generation")
@@ -261,7 +262,17 @@ def check_chinese_content_sources_scope(request, root: Path) -> ContentSourceCov
     source_root = _content_root(root, request) / "source-batches"
     ordinary_paths = sorted(source_root.glob("paper-summary-source-*.jsonl"))
     award_path = source_root / "award-deep-read-source.jsonl"
-    if len(ordinary_paths) != 16 or not award_path.is_file():
+    shard_indices = [
+        int(match.group(1))
+        for path in ordinary_paths
+        if (match := _SUMMARY_SOURCE_NAME.fullmatch(path.name)) is not None
+    ]
+    if (
+        not ordinary_paths
+        or len(shard_indices) != len(ordinary_paths)
+        or shard_indices != list(range(len(ordinary_paths)))
+        or not award_path.is_file()
+    ):
         raise ContentPublicationBlocked("Chinese content source shards are incomplete")
     ordinary_rows = [
         row
