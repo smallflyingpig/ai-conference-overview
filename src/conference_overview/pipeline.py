@@ -25,6 +25,7 @@ from conference_overview.adapters.acl import (
     normalize_title,
     parse_acl_award_badges,
     parse_acl_bibtex,
+    parse_acl_volume_paper_ids,
 )
 from conference_overview.adapters.icml_awards import parse_icml_awards_html
 from conference_overview.awards import (
@@ -72,12 +73,7 @@ from conference_overview.validate import (
     validate_records,
 )
 
-_ACL_SOURCE_KEY = "2026.acl-long"
 _TAXONOMY_VERSION = "2026-08-24-v1"
-_HTML_PAPER_ID_PATTERN = re.compile(
-    rb"href=(?:[\"']?(?:https://aclanthology\.org)?/)?(2026\.acl-long\.\d+)/",
-    re.IGNORECASE,
-)
 _SEMANTIC_PARTITION_PATTERN = re.compile(r"acl2026-reclass-mod([0-7])\.jsonl")
 _DEEP_READ_FIELD_PATTERN = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)(?:\[(\d+)\])?")
 _PDF_PROVENANCE_ID_PATTERN = re.compile(
@@ -113,9 +109,12 @@ class LowConfidenceReviewStatus:
         return tuple(sorted((*self.accepted_ids, *self.rejected_ids)))
 
 
-def _require_acl(request: VenueRequest) -> None:
-    scope = (request.venue, request.year, request.track, request.source_key)
-    if scope != ("ACL", 2026, "long", _ACL_SOURCE_KEY):
+def _require_acl_anthology(request: VenueRequest) -> None:
+    if (
+        request.adapter != "acl_anthology"
+        or request.track is None
+        or request.source_key is None
+    ):
         raise UnsupportedPipelineRoute(
             "unsupported pipeline route: "
             f"{request.venue}/{request.year}/{request.track or '-'}"
@@ -123,6 +122,17 @@ def _require_acl(request: VenueRequest) -> None:
     if request.bibtex_url is None or request.volume_url is None:
         raise UnsupportedPipelineRoute(
             "unsupported pipeline route has no official sources"
+        )
+    expected_bibtex = (
+        f"https://aclanthology.org/volumes/{request.source_key}.bib"
+    )
+    expected_volume = f"https://aclanthology.org/volumes/{request.source_key}/"
+    if (
+        str(request.bibtex_url) != expected_bibtex
+        or str(request.volume_url) != expected_volume
+    ):
+        raise UnsupportedPipelineRoute(
+            "ACL Anthology route differs from its registered source key"
         )
 
 
@@ -185,7 +195,7 @@ def collect_acl_scope(
     client: httpx.Client | None = None,
 ) -> CollectionResult:
     """Fetch, content-check, normalize, and persist the official ACL scope."""
-    _require_acl(request)
+    _require_acl_anthology(request)
     paths = ScopePaths.for_request(Path(root), request)
     owns_client = client is None
     active_client = client or httpx.Client()
@@ -227,9 +237,7 @@ def _normalize_acl_payloads(
     expected_acl_ids = {
         record.paper_id.removeprefix("acl:") for record in (*enriched, *excluded)
     }
-    html_acl_ids = {
-        match.decode("ascii") for match in _HTML_PAPER_ID_PATTERN.findall(html)
-    }
+    html_acl_ids = parse_acl_volume_paper_ids(html, request, html_source)
     missing_html_ids = sorted(expected_acl_ids - html_acl_ids)
     unexpected_html_ids = sorted(html_acl_ids - expected_acl_ids)
     if missing_html_ids or unexpected_html_ids:
@@ -268,7 +276,11 @@ def _normalize_acl_payloads(
             "sha256": hashlib.sha256(normalized_bytes).hexdigest(),
         },
         "schema_version": "acl-collection-manifest-v1",
-        "scope": {"track": "long", "venue": "ACL", "year": 2026},
+        "scope": {
+            "track": request.track,
+            "venue": request.venue,
+            "year": request.year,
+        },
         "sources": [
             _source_manifest(
                 kind="bibtex",
@@ -291,13 +303,18 @@ def _normalize_acl_payloads(
 
 
 def _load_manifest(request: VenueRequest, root: Path) -> dict[str, object]:
-    _require_acl(request)
+    _require_acl_anthology(request)
     paths = ScopePaths.for_request(Path(root), request)
     try:
         manifest = json.loads(paths.manifest.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise ValueError(f"invalid collection manifest: {paths.manifest}") from exc
-    if manifest.get("scope") != {"track": "long", "venue": "ACL", "year": 2026}:
+    expected_scope = {
+        "track": request.track,
+        "venue": request.venue,
+        "year": request.year,
+    }
+    if manifest.get("scope") != expected_scope:
         raise ValueError("collection manifest scope does not match the requested route")
     return manifest
 
@@ -882,7 +899,7 @@ def import_full_theme_reviews_scope(
     input_paths: Sequence[Path],
 ) -> list[Assignment]:
     """Apply exhaustive theme reviews against one hash-bound assignment base."""
-    _require_acl(request)
+    _require_acl_anthology(request)
     paths = ScopePaths.for_request(Path(root), request)
     records, _excluded, _sources = load_scope_records(request, root)
     assignment_path = paths.classification / "assignments.jsonl"
@@ -1136,7 +1153,7 @@ def apply_audit_corrections_scope(
     low_review_path: Path,
 ) -> list[Assignment]:
     """Apply independently reviewed primary-topic corrections with old-value guards."""
-    _require_acl(request)
+    _require_acl_anthology(request)
     paths = ScopePaths.for_request(Path(root), request)
     records, _excluded, _sources = load_scope_records(request, root)
     assignment_path = paths.classification / "assignments.jsonl"

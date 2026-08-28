@@ -57,6 +57,40 @@ def test_collect_scope_preserves_acl_dispatch(tmp_path: Path, monkeypatch) -> No
     assert collect_scope(normalize_request("ACL", 2026, "long"), tmp_path) is expected
 
 
+def test_collect_scope_dispatches_registered_acl_findings(tmp_path: Path) -> None:
+    fixture_root = Path(__file__).parent / "fixtures/acl"
+    request = normalize_request("ACL", 2026, "findings")
+    bibtex = (fixture_root / "2026-findings-sample.bib").read_bytes()
+    html = (fixture_root / "2026-findings-sample.html").read_bytes()
+
+    def handler(incoming: httpx.Request) -> httpx.Response:
+        payload = bibtex if str(incoming.url) == str(request.bibtex_url) else html
+        return httpx.Response(
+            200,
+            content=payload,
+            headers={"content-length": str(len(payload))},
+            request=incoming,
+        )
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        result = collect_scope(request, tmp_path, client=client)
+
+    manifest = json.loads(result.manifest_path.read_text())
+    rows = [
+        json.loads(line)
+        for line in result.normalized_path.read_text().splitlines()
+    ]
+    assert result.validation.included_count == 2
+    assert result.validation.excluded_count == 1
+    assert manifest["scope"] == {
+        "track": "findings",
+        "venue": "ACL",
+        "year": 2026,
+    }
+    assert {row["track"] for row in rows} == {"findings"}
+    assert validate_scope(request, tmp_path).publishable is True
+
+
 def test_collect_icml_persists_sources_and_reconciled_records(
     tmp_path: Path,
 ) -> None:

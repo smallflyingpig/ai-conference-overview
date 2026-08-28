@@ -8,6 +8,7 @@ from conference_overview.adapters.acl import (
     enrich_acl_abstracts,
     parse_acl_award_badges,
     parse_acl_bibtex,
+    parse_acl_volume_paper_ids,
 )
 from conference_overview.models import RecordStatus, SourceRef, VenueRequest
 
@@ -192,3 +193,26 @@ def test_acl_volume_html_keeps_void_elements_inside_one_abstract() -> None:
         "First paragraph.Second paragraph.",
         "Next abstract.",
     ]
+
+
+def test_acl_volume_paper_ids_are_bound_to_the_requested_source_key() -> None:
+    request = VenueRequest(
+        venue="ACL",
+        year=2026,
+        track="findings",
+        adapter="acl_anthology",
+        source_key="2026.findings-acl",
+    )
+    source = SourceRef(
+        name="ACL Anthology volume HTML",
+        url="https://aclanthology.org/volumes/2026.findings-acl/",
+        retrieved_at=datetime(2026, 8, 28, tzinfo=UTC),
+        sha256="f" * 64,
+    )
+    html = (FIXTURE_DIR / "2026-findings-sample.html").read_bytes()
+
+    assert parse_acl_volume_paper_ids(html, request, source) == {
+        "2026.findings-acl.0",
+        "2026.findings-acl.1",
+        "2026.findings-acl.2",
+    }

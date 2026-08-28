@@ -53,7 +53,11 @@ from conference_overview.pipeline import (
     _load_theme_audits,
     analyze_acl_scope,
     collect_acl_scope,
+    rebuild_acl_scope_from_snapshots,
     validate_acl_scope,
+)
+from conference_overview.pipeline import (
+    load_scope_records as load_acl_scope_records,
 )
 from conference_overview.reports import (
     ReleaseBundle,
@@ -83,7 +87,7 @@ def collect_scope(
         return collect_icml_scope(request, root, client=client)
     if request.adapter == "pmlr":
         return collect_pmlr_scope(request, root, client=client)
-    if (request.venue, request.year, request.track) == ("ACL", 2026, "long"):
+    if request.adapter == "acl_anthology":
         return collect_acl_scope(request, root, client=client)
     raise UnsupportedPipelineRoute(
         f"unsupported pipeline route: {request.venue}/{request.year}/{request.track or '-'}"
@@ -388,6 +392,8 @@ def _load_manifest_sources(
 
 
 def rebuild_scope_from_snapshots(request: VenueRequest, root: Path) -> CollectionResult:
+    if request.adapter == "acl_anthology":
+        return rebuild_acl_scope_from_snapshots(request, root)
     if request.adapter not in {"icml_virtual", "pmlr"}:
         raise UnsupportedPipelineRoute(
             "snapshot rebuild is not available for this route"
@@ -409,6 +415,8 @@ def rebuild_scope_from_snapshots(request: VenueRequest, root: Path) -> Collectio
 def load_scope_records(
     request: VenueRequest, root: Path
 ) -> tuple[list[PaperRecord], list[PaperRecord], tuple[SourceRef, ...]]:
+    if request.adapter == "acl_anthology":
+        return load_acl_scope_records(request, root)
     paths, manifest = _load_icml_manifest(request, root)
     sources = _load_manifest_sources(request, paths, manifest)
     normalized = manifest.get("normalized")

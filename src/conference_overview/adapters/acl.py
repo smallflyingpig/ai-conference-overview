@@ -301,6 +301,34 @@ def enrich_acl_abstracts(
     return enriched
 
 
+def parse_acl_volume_paper_ids(
+    html: bytes, request: VenueRequest, source: SourceRef
+) -> set[str]:
+    """Return exact paper IDs belonging to the requested ACL Anthology volume."""
+    if request.source_key is None or re.fullmatch(
+        r"\d{4}\.[a-z0-9-]+", request.source_key, re.IGNORECASE
+    ) is None:
+        raise AclSourceFormatError(
+            source=source, detail="request has no valid ACL Anthology source key"
+        )
+    parser = _VolumeAbstractParser()
+    try:
+        parser.feed(html.decode("utf-8"))
+        parser.close()
+    except (UnicodeDecodeError, ValueError) as exc:
+        raise AclSourceFormatError(source=source, detail="invalid volume HTML") from exc
+    pattern = re.compile(rf"{re.escape(request.source_key)}\.\d+", re.IGNORECASE)
+    paper_ids = {
+        paper_id for paper_id in parser.paper_ids if pattern.fullmatch(paper_id)
+    }
+    if html.strip() and not paper_ids:
+        raise AclSourceFormatError(
+            source=source,
+            detail="nonempty HTML yielded zero IDs for the requested volume",
+        )
+    return paper_ids
+
+
 def parse_acl_award_badges(html: bytes, source: SourceRef) -> list[dict[str, str]]:
     """Return award badges bound to exact ACL IDs from the official volume HTML."""
     parser = _VolumeAbstractParser()
