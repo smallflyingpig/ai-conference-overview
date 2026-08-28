@@ -37,6 +37,9 @@ jobs:
       - name: Test Python
         run: python -m pytest -q
 
+      - name: Check generated release selectors
+        run: python scripts/generate_release_selectors.py --check
+
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:

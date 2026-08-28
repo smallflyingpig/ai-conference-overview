@@ -20,6 +20,7 @@ def test_ci_runs_the_complete_local_acceptance_contract() -> None:
     assert workflow["permissions"] == {"contents": "read"}
     assert "python -m ruff check ." in commands
     assert "python -m pytest -q" in commands
+    assert "python scripts/generate_release_selectors.py --check" in commands
     assert "npm test" in commands
     assert "npm run build" in commands
     assert "npm run test:e2e" in commands
@@ -40,6 +41,7 @@ def test_pages_deploys_only_main_or_manual_after_the_same_validation() -> None:
         "workflow_dispatch": "",
     }
     assert "python -m pytest -q" in commands
+    assert "python scripts/generate_release_selectors.py --check" in commands
     assert "npm test" in commands
     assert "npm run build" in commands
     assert "npm run test:e2e" in commands

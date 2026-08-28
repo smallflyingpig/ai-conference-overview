@@ -5,6 +5,7 @@ import { isAbsolute, join, relative, sep } from "node:path";
 
 import { z } from "zod";
 
+import rawReleaseSelectors from "../generated/release-selectors.json";
 import { configuredAwardHostPolicy, parseRelease, type FullRelease } from "./schema";
 
 const artifactNames = [
@@ -41,17 +42,67 @@ export interface PublishedReleaseSelector {
   venue: string;
   year: number;
   track: string;
+  is_default_track: boolean;
+  release_path: string;
 }
+
+export type PublishedReleaseSelectorInput = Pick<
+  PublishedReleaseSelector,
+  "venue" | "year" | "track"
+> & Partial<Pick<PublishedReleaseSelector, "is_default_track" | "release_path">>;
 
 const defaultReleaseRoot = fileURLToPath(
   new URL("../../../data/releases", import.meta.url),
 );
 
-export const configuredReleaseSelectors: PublishedReleaseSelector[] = [
-  { venue: "ACL", year: 2026, track: "long" },
-  { venue: "ICML", year: 2025, track: "main" },
-  { venue: "ICML", year: 2026, track: "main" },
-];
+const releaseSelectorSchema = z.object({
+  venue: z.string().regex(/^[A-Z0-9-]+$/),
+  year: z.number().int().min(1900).max(3000),
+  track: z.string().regex(/^[a-z0-9-]+$/),
+  is_default_track: z.boolean(),
+  release_path: z.string().min(1),
+}).strict().superRefine((selector, context) => {
+  if (selector.release_path.includes("\\") || selector.release_path.startsWith("/")) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid release selector path" });
+    return;
+  }
+  const segments = selector.release_path.split("/");
+  if (segments.some((segment) => segment === "" || segment === "." || segment === "..")) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid release selector path segment" });
+    return;
+  }
+  const expected = selector.is_default_track
+    ? [selector.venue, String(selector.year)]
+    : [selector.venue, String(selector.year), "tracks", selector.track];
+  if (JSON.stringify(segments) !== JSON.stringify(expected)) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: "Release selector path disagrees with scope" });
+  }
+});
+
+const releaseSelectorRegistrySchema = z.object({
+  schema_version: z.literal("release-selectors-v1"),
+  selectors: z.array(releaseSelectorSchema),
+}).strict();
+
+export const configuredReleaseSelectors: PublishedReleaseSelector[] =
+  releaseSelectorRegistrySchema.parse(rawReleaseSelectors).selectors;
+
+function completeSelector(input: PublishedReleaseSelectorInput): PublishedReleaseSelector {
+  if (input.release_path != null || input.is_default_track != null) {
+    return releaseSelectorSchema.parse(input);
+  }
+  const configured = configuredReleaseSelectors.find(
+    (selector) =>
+      selector.venue === input.venue &&
+      selector.year === input.year &&
+      selector.track === input.track,
+  );
+  return configured ?? releaseSelectorSchema.parse({
+    ...input,
+    is_default_track: true,
+    release_path: `${input.venue}/${input.year}`,
+  });
+}
 
 async function readRegularFile(path: string): Promise<Buffer> {
   const stats = await lstat(path);
@@ -85,6 +136,18 @@ export async function loadOverview(
   releaseRoot = process.env.CONFERENCE_RELEASE_ROOT ?? defaultReleaseRoot,
   track = "long",
 ): Promise<LoadedOverview | null> {
+  return loadOverviewSelector(
+    completeSelector({ venue, year, track }),
+    releaseRoot,
+  );
+}
+
+export async function loadOverviewSelector(
+  input: PublishedReleaseSelector,
+  releaseRoot = process.env.CONFERENCE_RELEASE_ROOT ?? defaultReleaseRoot,
+): Promise<LoadedOverview | null> {
+  const selector = releaseSelectorSchema.parse(input);
+  const { venue, year, track } = selector;
   if (
     !/^[A-Z0-9-]+$/.test(venue) ||
     !Number.isInteger(year) ||
@@ -95,7 +158,7 @@ export async function loadOverview(
     throw new Error("Invalid venue, year, or track release selector");
   }
 
-  const release = join(releaseRoot, venue, String(year));
+  const release = join(releaseRoot, ...selector.release_path.split("/"));
   let canonicalRoot: string;
   let canonicalVenue: string;
   let canonicalRelease: string;
@@ -195,18 +258,16 @@ export async function loadOverview(
 
 export async function loadPublishedOverviews(
   releaseRoot = process.env.CONFERENCE_RELEASE_ROOT ?? defaultReleaseRoot,
-  selectors: PublishedReleaseSelector[] = configuredReleaseSelectors,
+  selectors: PublishedReleaseSelectorInput[] = configuredReleaseSelectors,
 ): Promise<LoadedOverview[]> {
-  const ordered = [...selectors].sort(
+  const ordered = selectors.map(completeSelector).sort(
     (left, right) =>
       left.venue.localeCompare(right.venue) ||
       left.year - right.year ||
       left.track.localeCompare(right.track),
   );
   const releases = await Promise.all(
-    ordered.map(({ venue, year, track }) =>
-      loadOverview(venue, year, releaseRoot, track)
-    ),
+    ordered.map((selector) => loadOverviewSelector(selector, releaseRoot)),
   );
   return releases.filter(
     (release): release is LoadedOverview => release != null,

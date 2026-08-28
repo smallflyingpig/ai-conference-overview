@@ -9,6 +9,7 @@ import { describe, expect, it } from "vitest";
 import {
   configuredReleaseSelectors,
   loadOverview,
+  loadOverviewSelector,
   loadPublishedOverviews,
 } from "../src/lib/data";
 import { parseOverview } from "../src/lib/schema";
@@ -461,10 +462,21 @@ it("accepts a papers-only final PMLR overview and rejects contradictory status",
 
 it("loads ICML 2025 before ICML 2026 from configured release selectors", () => {
   expect(configuredReleaseSelectors).toEqual([
-    { venue: "ACL", year: 2026, track: "long" },
-    { venue: "ICML", year: 2025, track: "main" },
-    { venue: "ICML", year: 2026, track: "main" },
+    { venue: "ACL", year: 2026, track: "findings", is_default_track: false, release_path: "ACL/2026/tracks/findings" },
+    { venue: "ACL", year: 2026, track: "long", is_default_track: true, release_path: "ACL/2026" },
+    { venue: "ICML", year: 2025, track: "main", is_default_track: true, release_path: "ICML/2025" },
+    { venue: "ICML", year: 2026, track: "main", is_default_track: true, release_path: "ICML/2026" },
   ]);
+});
+
+it("rejects a generated release selector that attempts path traversal", async () => {
+  await expect(loadOverviewSelector({
+    venue: "ACL",
+    year: 2026,
+    track: "findings",
+    is_default_track: false,
+    release_path: "ACL/2026/tracks/../findings",
+  }, task9FixtureRoot)).rejects.toThrow(/selector|path|segment/i);
 });
 
 const artifactNames = [
