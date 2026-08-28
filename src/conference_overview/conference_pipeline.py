@@ -560,7 +560,9 @@ def analyze_scope(
     paths = ScopePaths.for_request(Path(root), request)
     assignments_exist = (paths.classification / "assignments.jsonl").exists()
     if assignments_exist:
-        if request.adapter in {"icml_virtual", "pmlr"}:
+        if request.adapter in {"icml_virtual", "pmlr"} or (
+            request.adapter == "acl_anthology" and request.track != "long"
+        ):
             return analyze_classified_scope(request, root, write_release=write_release)
         if request.adapter == "acl_anthology":
             return analyze_acl_scope(request, root, write_release=write_release)
@@ -578,14 +580,12 @@ def analyze_classified_scope(
     write_release: bool,
 ) -> dict[str, object]:
     """Publish an audited single-year distribution without temporal metrics."""
-    if (request.venue, request.year, request.track, request.adapter) != (
-        "ICML",
-        2025,
-        "main",
+    if request.publication_status != "final_proceedings" or request.adapter not in {
+        "acl_anthology",
         "pmlr",
-    ):
+    }:
         raise UnsupportedPipelineRoute(
-            "classified single-year analysis is implemented only for ICML/2025/main"
+            "classified single-year analysis requires registered final proceedings"
         )
     paths, records, assignments, assignments_sha256 = _current_assignment_state(
         request, root
@@ -624,17 +624,26 @@ def analyze_classified_scope(
         raise PublicationBlocked(
             "publication blocked: classified release must cover every taxonomy topic"
         )
-    awards = _load_award_records(paths)
-    deep_reads = _load_award_deep_reads(paths)
-    award_ids = {award.paper_id for award in awards}
-    if (
-        len(awards) != 8
-        or len(deep_reads) != 8
-        or {item.paper_id for item in deep_reads} != award_ids
-    ):
-        raise PublicationBlocked(
-            "publication blocked: eight official ICML awards require eight deep reads"
-        )
+    award_paths = (
+        paths.awards,
+        paths.award_deep_reads,
+        paths.award_deep_read_provenance,
+    )
+    if request.awards_enabled:
+        awards = _load_award_records(paths)
+        deep_reads = _load_award_deep_reads(paths)
+        award_ids = {award.paper_id for award in awards}
+        if not awards or {item.paper_id for item in deep_reads} != award_ids:
+            raise PublicationBlocked(
+                "publication blocked: every official award requires a deep read"
+            )
+    else:
+        if any(path.exists() for path in award_paths):
+            raise PublicationBlocked(
+                "publication blocked: awards are not enabled for this conference scope"
+            )
+        awards = []
+        deep_reads = []
     counts = Counter(item.primary_topic for item in assignments)
     metrics: dict[str, Decimal | int] = {"paper_count": len(records)}
     for theme in sorted(counts):
@@ -658,13 +667,16 @@ def analyze_classified_scope(
         status="final_proceedings",
         final_source_status="available",
         final_source_url=request.final_source_url,
-        notice=("ICML 2025 单年主题分布与研究热点；当前年份不足，暂不判断时间趋势。"),
+        notice=(
+            f"{request.venue} {request.year} {request.track} 单年主题分布与研究热点；"
+            "当前年份不足，暂不判断时间趋势。"
+        ),
         analysis_availability=AnalysisAvailability(
             papers=True,
             distribution=True,
             trends=False,
             advances=True,
-            awards=True,
+            awards=request.awards_enabled,
         ),
     )
     bundle = ReleaseBundle(
@@ -684,17 +696,20 @@ def analyze_classified_scope(
         advances=advances,
         claims=(
             EvidenceClaim(
-                claim=("该主题分布来自 ICML 2025 PMLR Volume 267 的主主题分类。"),
+                claim=(
+                    f"该主题分布来自 {request.venue} {request.year} "
+                    f"{request.track} 论文的主主题分类。"
+                ),
                 evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
                 source_urls=[request.final_source_url],
-                locator="PMLR Volume 267 complete proceedings",
+                locator="complete official proceedings",
             ),
         ),
         sources=sources,
         publication_context=context,
     )
     note_lines = [
-        "# ICML 2025 主会论文分析",
+        f"# {request.venue} {request.year} {request.track} 论文分析",
         "",
         f"- 论文总数：{len(records)}",
         "- 分析范围：单年主题分布与研究热点，不判断时间趋势。",

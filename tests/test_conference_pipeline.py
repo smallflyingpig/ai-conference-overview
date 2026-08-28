@@ -700,3 +700,29 @@ def test_icml_analysis_does_not_replace_papers_only_release_when_reviews_pending
         )
 
     assert pointer.read_bytes() == before
+
+
+def test_findings_assignments_route_to_generic_classified_analysis(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    request = normalize_request("ACL", 2026, "findings")
+    classification = tmp_path / "data/classification/acl/2026-findings"
+    classification.mkdir(parents=True)
+    (classification / "assignments.jsonl").write_text("{}\n", encoding="utf-8")
+    called: list[str] = []
+
+    def classified(*args: object, **kwargs: object) -> dict[str, object]:
+        called.append("classified")
+        return {"status": "classified"}
+
+    def acl_long(*args: object, **kwargs: object) -> dict[str, object]:
+        called.append("acl-long")
+        return {"status": "acl-long"}
+
+    monkeypatch.setattr(conference_pipeline, "analyze_classified_scope", classified)
+    monkeypatch.setattr(conference_pipeline, "analyze_acl_scope", acl_long)
+
+    result = conference_pipeline.analyze_scope(request, tmp_path, write_release=False)
+
+    assert result == {"status": "classified"}
+    assert called == ["classified"]

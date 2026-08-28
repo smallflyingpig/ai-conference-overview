@@ -22,6 +22,7 @@ def test_acl_long_request_uses_official_source_routes() -> None:
         "https://aclanthology.org/volumes/2026.acl-long.bib"
     )
     assert str(request.volume_url) == "https://aclanthology.org/volumes/2026.acl-long/"
+    assert request.awards_enabled is True
 
 
 def test_acl_request_infers_the_only_configured_track() -> None:
@@ -39,6 +40,7 @@ def test_acl_findings_request_is_registered_as_non_default_track() -> None:
     assert request.source_key == "2026.findings-acl"
     assert request.default_track == "long"
     assert request.is_default_track is False
+    assert request.awards_enabled is False
     assert str(request.bibtex_url) == (
         "https://aclanthology.org/volumes/2026.findings-acl.bib"
     )
@@ -91,6 +93,7 @@ def test_icml_2025_defaults_to_final_pmlr_proceedings() -> None:
     assert str(request.source_urls["metadata"]) == (
         "https://proceedings.mlr.press/v267/assets/bib/citeproc.yaml"
     )
+    assert request.awards_enabled is True
 
 
 def test_icml_rejects_acl_track_name() -> None:

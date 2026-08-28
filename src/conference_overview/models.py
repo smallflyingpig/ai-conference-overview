@@ -178,3 +178,4 @@ class VenueRequest(BaseModel):
     bibtex_url: HttpUrl | None = None
     volume_url: HttpUrl | None = None
     official_award_hosts: tuple[str, ...] = Field(default_factory=tuple)
+    awards_enabled: bool = False

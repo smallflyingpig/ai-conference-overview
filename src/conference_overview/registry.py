@@ -104,6 +104,7 @@ def normalize_request(venue: str, year: int, track: str | None) -> VenueRequest:
         official_award_hosts=canonicalize_official_hosts(
             route.get("official_award_hosts", ())
         ),
+        awards_enabled=bool(route.get("awards_enabled", False)),
     )
 
 
