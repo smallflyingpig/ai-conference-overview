@@ -1,0 +1,39 @@
+schema_version: curated-advances-v1
+papers_sha256: ea50cb864b6da434bd2889253c9acbc200cfff8b9259f54fd99584e657a60888
+assignments_sha256: a5cc72838f6a8478c0512516a4a2fd9642aac0b39bfbce6e20e3836306d1135c
+lanes:
+  - lane_id: text_llms
+    title_zh: 文本模型：让扩散生成与自回归解码相互补充
+    question_zh: 如何在保留文本质量的同时，提高语言模型的并行生成能力？
+    summary_zh: 扩散语言模型能够并行生成，但仍面临草稿与自回归验证不一致、整段去噪延迟高以及早期错误难以修改等问题。DiffuSpec 用扩散模型并行起草、再由自回归模型验证；SDAR 将自回归模型转换为块级扩散模型；PURE 则在生成结束后重新打开不稳定片段进行修正。
+    evidence_boundary_zh: 三篇论文研究的是推测解码、块级扩散和生成后修正，模型、任务与速度指标不同，不能把各自报告的提升合并为统一效果。
+    implications_zh: 后续系统可以分别测量草稿接受率、端到端延迟、修正预算和最终质量，更清楚地判断并行解码的收益来自哪里。
+    representative_paper_ids: [acl:2026.findings-acl.1048, acl:2026.findings-acl.1110, acl:2026.findings-acl.1234]
+  - lane_id: multimodal_models
+    title_zh: 多模态模型：在表示空间中直接控制语音输出文字
+    question_zh: 多语种语音模型能否在不重新训练的情况下控制转写所用的文字系统？
+    summary_zh: 一项来自审核通过主题的代表工作发现，Whisper 等多语种语音模型的激活空间中线性编码了文字系统信息。研究通过在推理时修改激活，使同一种语音能够输出指定文字，并测试了非常规的语言与文字组合。这提供了一种无需重新训练的输出控制思路。
+    evidence_boundary_zh: 这一方向在本次可用于总结的论文中只有一篇代表工作，结论限于论文测试的 Whisper 模型和转写任务，不能据此概括整个多模态主题。
+    implications_zh: 语音基础模型的可控性研究可以把语言内容与书写形式分开评估，并进一步检查控制向量对识别准确率和跨语言迁移的影响。
+    representative_paper_ids: [acl:2026.findings-acl.464]
+  - lane_id: reasoning_agents
+    title_zh: 推理与 Agent：把上下文、工具变化和自我检查纳入执行过程
+    question_zh: 长时间运行的 Agent 如何管理上下文、适应工具变化，并在测试时发现和修正自己的错误？
+    summary_zh: Cat 把上下文整理设计成 Agent 可以主动调用的工具，以稳定任务语义并压缩历史轨迹；ContDa 通过持续更新工具文档，让 Agent 在接口变化时学习新能力并尽量保留旧能力；DeepVerifier 使用按失败类型设计的评分标准，在测试时反复检查和改进深度研究结果。
+    evidence_boundary_zh: 三篇论文分别面向软件工程、动态工具环境和深度研究任务，各自的成功率与评测设置不同，不能直接比较总体能力。
+    implications_zh: Agent 评测应拆分长期上下文质量、新旧工具适应程度、检查器准确性和最终任务完成率，避免只用一个成功率掩盖失败原因。
+    representative_paper_ids: [acl:2026.findings-acl.1032, acl:2026.findings-acl.1082, acl:2026.findings-acl.1243]
+  - lane_id: data_training
+    title_zh: 数据与训练：从样本选择扩展到顺序、探索和蒸馏位置
+    question_zh: 除了选择高质量数据，训练过程还应如何安排样本顺序、探索空间和监督位置？
+    summary_zh: FOT 按样本与模型的相关程度，在每个训练周期动态调整数据顺序；Lp-Reg 保护仍有价值的低概率 token，同时过滤极低概率噪声，以减缓强化学习中的探索坍缩；前缀蒸馏只监督推理轨迹的前段，在减少训练计算的同时保留完整蒸馏的主要效果。
+    evidence_boundary_zh: 这些方法分别用于微调调度、可验证奖励强化学习和在线蒸馏，数据规模、模型与计算口径不同，不能推导出通用的最优训练配方。
+    implications_zh: 数据策略实验除了记录样本质量和 token 数，还应保存训练顺序、低概率 token 的保留规则、蒸馏覆盖位置以及对应的计算开销。
+    representative_paper_ids: [acl:2026.findings-acl.1021, acl:2026.findings-acl.1209, acl:2026.findings-acl.1276]
+  - lane_id: evaluation_trust
+    title_zh: 评测与可信：检查推理过程、监控误报和跨领域偏差
+    question_zh: 如何判断模型的推理看似合理却并不可靠，以及监控器和自动指标在新场景中是否仍然可信？
+    summary_zh: FACT-E 通过受控扰动区分真实的推理步骤依赖与模型自我认可偏差；AutoMonitor-Bench 同时测量漏掉不当行为和误伤正常行为，显示两者存在明显取舍；CD-ESA 则指出，翻译指标的跨领域表现必须与人工标注者之间的一致程度一起比较。
+    evidence_boundary_zh: 三篇论文覆盖推理链、行为监控和机器翻译，指标含义与风险场景不同，不能合并成单一的可信度分数。
+    implications_zh: 可信评测应同时报告被检测对象、参照标准、漏检与误报，并把人工意见分歧纳入跨领域比较，避免把表面一致误当成可靠。
+    representative_paper_ids: [acl:2026.findings-acl.1014, acl:2026.findings-acl.116, acl:2026.findings-acl.1145]
