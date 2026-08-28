@@ -31,6 +31,31 @@ def test_acl_request_infers_the_only_configured_track() -> None:
     assert request.source_key == "2026.acl-long"
 
 
+def test_acl_findings_request_is_registered_as_non_default_track() -> None:
+    request = normalize_request("ACL", 2026, "findings")
+
+    assert request.track == "findings"
+    assert request.adapter == "acl_anthology"
+    assert request.source_key == "2026.findings-acl"
+    assert request.default_track == "long"
+    assert request.is_default_track is False
+    assert str(request.bibtex_url) == (
+        "https://aclanthology.org/volumes/2026.findings-acl.bib"
+    )
+    assert str(request.volume_url) == (
+        "https://aclanthology.org/volumes/2026.findings-acl/"
+    )
+
+
+def test_acl_default_request_remains_long_after_findings_registration() -> None:
+    request = normalize_request("ACL", 2026, None)
+
+    assert request.track == "long"
+    assert request.adapter == "acl_anthology"
+    assert request.default_track == "long"
+    assert request.is_default_track is True
+
+
 def test_icml_main_request_uses_official_preliminary_sources() -> None:
     request = normalize_request("icml", 2026, None)
 

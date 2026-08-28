@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from conference_overview.registry import normalize_request
-from conference_overview.scope import ScopePaths
+from conference_overview.scope import ScopePaths, release_relative_parts
 
 
 def test_icml_paths_are_isolated_from_acl(tmp_path: Path) -> None:
@@ -46,3 +46,22 @@ def test_scope_paths_reject_unsafe_segments(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="safe scope segment"):
         ScopePaths.for_request(tmp_path, request)
+
+
+def test_acl_default_and_findings_release_paths_are_isolated(tmp_path: Path) -> None:
+    long_request = normalize_request("ACL", 2026, "long")
+    findings_request = normalize_request("ACL", 2026, "findings")
+
+    assert release_relative_parts(long_request) == ("ACL", "2026")
+    assert release_relative_parts(findings_request) == (
+        "ACL",
+        "2026",
+        "tracks",
+        "findings",
+    )
+    assert ScopePaths.for_request(root=tmp_path, request=long_request).release == (
+        tmp_path / "data/releases/ACL/2026"
+    )
+    assert ScopePaths.for_request(
+        root=tmp_path, request=findings_request
+    ).release == tmp_path / "data/releases/ACL/2026/tracks/findings"

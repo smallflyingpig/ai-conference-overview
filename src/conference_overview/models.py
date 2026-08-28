@@ -168,6 +168,8 @@ class VenueRequest(BaseModel):
     venue: str
     year: int
     track: str | None = None
+    default_track: str | None = None
+    is_default_track: bool = True
     adapter: str | None = None
     source_key: str | None = None
     source_urls: dict[str, HttpUrl] = Field(default_factory=dict)

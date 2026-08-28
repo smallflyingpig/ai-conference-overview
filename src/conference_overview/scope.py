@@ -13,6 +13,18 @@ def _safe_segment(value: str) -> str:
     return value
 
 
+def release_relative_parts(request: VenueRequest) -> tuple[str, ...]:
+    """Return the registry-bound release path below ``data/releases``."""
+    venue = _safe_segment(request.venue)
+    year = _safe_segment(str(request.year))
+    if request.track is None:
+        raise ValueError("track must be configured before building release paths")
+    track = _safe_segment(request.track)
+    if request.is_default_track:
+        return venue, year
+    return venue, year, "tracks", track
+
+
 @dataclass(frozen=True)
 class ScopePaths:
     root: Path
@@ -72,6 +84,6 @@ class ScopePaths:
             / "awards"
             / data_venue
             / f"{scope_name}-deep-read-provenance.json",
-            release=root / "data" / "releases" / venue / year,
+            release=root / "data" / "releases" / Path(*release_relative_parts(request)),
             notes=root / "notes" / note_name,
         )
