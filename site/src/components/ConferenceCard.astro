@@ -2,19 +2,20 @@
 interface Props {
   venue: string;
   year: number;
+  title?: string;
   scope: string;
   paperCount: number;
   href: string;
   retrievedAt: string;
   linkLabel?: string;
 }
-const { venue, year, scope, paperCount, href, retrievedAt, linkLabel = `查看 ${venue} ${year}` } = Astro.props;
+const { venue, year, title = `${venue} ${year}`, scope, paperCount, href, retrievedAt, linkLabel = `查看 ${title}` } = Astro.props;
 ---
 
 <article class="conference-entry">
   <div>
     <p class="eyebrow">已整理的会议数据</p>
-    <h3>{venue} {year}</h3>
+    <h3>{title}</h3>
   </div>
   <dl>
     <div><dt>范围</dt><dd>{scope}</dd></div>

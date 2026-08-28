@@ -17,6 +17,7 @@ import {
   buildConferenceView,
   buildTrendView,
   conferenceRoutes,
+  trackConferenceRoutes,
   parseTrendFilters,
   type TrendFilters,
 } from "../src/lib/views";
@@ -94,6 +95,29 @@ function finalIcml2025Release(): LoadedOverview {
       papers: true, distribution: false, trends: false, advances: false, awards: false,
     },
   };
+  return release;
+}
+
+function findingsRelease(): LoadedOverview {
+  const release = finalIcml2025Release();
+  release.scope = { venue: "ACL", year: 2026, track: "findings" };
+  release.selector = {
+    venue: "ACL",
+    year: 2026,
+    track: "findings",
+    is_default_track: false,
+    release_path: "ACL/2026/tracks/findings",
+  };
+  release.papers.forEach((paper, index) => {
+    paper.paper_id = `acl:2026.findings-acl.${index + 1}`;
+    paper.venue = "ACL";
+    paper.year = 2026;
+    paper.track = "findings";
+  });
+  release.overview.comparison_contract.comparison_scope.venue = "ACL";
+  release.overview.comparison_contract.comparison_scope.track = "findings";
+  release.overview.publication_context!.notice =
+    "来自官方论文集的 ACL 2026 Findings 论文清单。";
   return release;
 }
 
@@ -177,8 +201,22 @@ describe("conference routes", () => {
     expect(view.publicationNotice).toBe(
       "来自 PMLR Volume 267 的 ICML 2025 正式论文集。",
     );
-    expect(conferenceRoutes([finalIcml2025Release()])).toEqual([
-      { params: { venue: "icml", year: "2025" } },
+    expect(conferenceRoutes([finalIcml2025Release()])[0].params).toEqual({
+      venue: "icml", year: "2025",
+    });
+  });
+
+  it("keeps ACL Long on the default route and Findings on a nested route", () => {
+    const findings = findingsRelease();
+    const view = buildConferenceView(findings);
+
+    expect(view.pageHeading).toBe("ACL 2026 Findings");
+    expect(view.scopeLabel).toBe("ACL 2026 · Findings");
+    expect(conferenceRoutes([validatedRelease, findings]).map((route) => route.params)).toEqual([
+      { venue: "acl", year: "2026" },
+    ]);
+    expect(trackConferenceRoutes([validatedRelease, findings]).map((route) => route.params)).toEqual([
+      { venue: "acl", year: "2026", track: "findings" },
     ]);
   });
 
@@ -231,8 +269,8 @@ describe("conference routes", () => {
     );
   });
   it("creates the ACL 2026 conference route from a schema-validated release", () => {
-    expect(conferenceRoutes([validatedRelease])).toContainEqual({
-      params: { venue: "acl", year: "2026" },
+    expect(conferenceRoutes([validatedRelease])[0].params).toEqual({
+      venue: "acl", year: "2026",
     });
   });
 
@@ -464,7 +502,7 @@ describe("typed trend filters", () => {
 describe("distribution presentation", () => {
   it("labels papers as clear topic examples", async () => {
     const page = await readFile(
-      fileURLToPath(new URL("../src/pages/conferences/[venue]/[year].astro", import.meta.url)),
+      fileURLToPath(new URL("../src/components/ConferenceOverview.astro", import.meta.url)),
       "utf8",
     );
     expect(page).toContain("示例论文");

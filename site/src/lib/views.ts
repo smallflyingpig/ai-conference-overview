@@ -59,6 +59,12 @@ export interface ConferenceView {
 
 export interface ConferenceRoute {
   params: { venue: string; year: string };
+  props: { view: ConferenceView };
+}
+
+export interface TrackConferenceRoute {
+  params: { venue: string; year: string; track: string };
+  props: { view: ConferenceView };
 }
 
 export interface TrendFilters {
@@ -81,9 +87,30 @@ export interface TrendView {
 }
 
 export function conferenceRoutes(releases: ConferenceRelease[]): ConferenceRoute[] {
-  return releases.map(({ scope }) => ({
-    params: { venue: scope.venue.toLowerCase(), year: String(scope.year) },
-  }));
+  return releases
+    .filter(({ selector }) => selector.is_default_track)
+    .map((release) => ({
+      params: {
+        venue: release.scope.venue.toLowerCase(),
+        year: String(release.scope.year),
+      },
+      props: { view: buildConferenceView(release) },
+    }));
+}
+
+export function trackConferenceRoutes(
+  releases: ConferenceRelease[],
+): TrackConferenceRoute[] {
+  return releases
+    .filter(({ selector }) => !selector.is_default_track)
+    .map((release) => ({
+      params: {
+        venue: release.scope.venue.toLowerCase(),
+        year: String(release.scope.year),
+        track: release.scope.track,
+      },
+      props: { view: buildConferenceView(release) },
+    }));
 }
 
 function formatCoverage(available: number, denominator: number): string {
@@ -170,7 +197,13 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
   const distributionAvailable =
     publicationContext == null || publicationContext.analysis_availability.distribution;
   const papersOnly = !distributionAvailable;
-  const trackLabel = track === "long" ? "长论文" : track === "main" ? "主会论文" : `${track} 类论文`;
+  const trackLabel = track === "long"
+    ? "长论文"
+    : track === "main"
+      ? "主会论文"
+      : track === "findings"
+        ? "Findings"
+        : `${track} 类论文`;
   const hotspots = papersOnly ? [] : release.overview.advances.map((advance) => {
     const displayed = conferenceAdvanceNarrative(advance.advance_id);
     return {
@@ -209,7 +242,9 @@ export function buildConferenceView(release: ConferenceRelease): ConferenceView 
       denominator - release.validation.missing_abstract_count,
       denominator,
     ),
-    denominatorLabel: `${denominator} 篇纳入统计的${track === "long" ? "长论文" : ` ${track} 类论文`}`,
+    denominatorLabel: `${denominator} 篇纳入统计的${
+      track === "long" ? "长论文" : track === "findings" ? " Findings 论文" : ` ${track} 类论文`
+    }`,
     retrievedAt: source.retrieved_at,
     sourceName: source.name,
     sourceUrl: source.url,

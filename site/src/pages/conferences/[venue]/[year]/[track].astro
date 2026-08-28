@@ -1,0 +1,14 @@
+---
+import ConferenceOverview from "../../../../components/ConferenceOverview.astro";
+import { loadPublishedOverviews } from "../../../../lib/data";
+import { trackConferenceRoutes, type ConferenceView } from "../../../../lib/views";
+
+export async function getStaticPaths() {
+  return trackConferenceRoutes(await loadPublishedOverviews());
+}
+
+interface Props { view: ConferenceView }
+const { view } = Astro.props;
+---
+
+<ConferenceOverview view={view} />

@@ -31,6 +31,7 @@ const pointerSchema = z.object({
 export interface LoadedOverview extends FullRelease {
   generation: string;
   papersSha256: string;
+  selector: PublishedReleaseSelector;
   scope: {
     venue: string;
     year: number;
@@ -252,6 +253,7 @@ export async function loadOverviewSelector(
     ...parsed,
     generation: pointer.generation,
     papersSha256: pointer.artifact_sha256["papers.json"],
+    selector,
     scope: { venue, year, track },
   };
 }
