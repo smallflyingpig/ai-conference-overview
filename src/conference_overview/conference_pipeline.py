@@ -68,7 +68,7 @@ from conference_overview.reports import (
 )
 from conference_overview.scope import ScopePaths
 from conference_overview.storage import store_snapshot
-from conference_overview.synthesis import build_single_year_advances
+from conference_overview.synthesis import load_curated_advances
 from conference_overview.validate import (
     PublicationBlocked,
     ValidationReport,
@@ -649,7 +649,17 @@ def analyze_classified_scope(
     for theme in sorted(counts):
         metrics[f"topic_count:{theme}"] = counts[theme]
         metrics[f"topic_share:{theme}"] = topic_share(counts[theme], len(records))
-    advances = build_single_year_advances(records, assignments, audits)
+    current_generation = resolve_current_release(paths.release)
+    papers_sha256 = hashlib.sha256(
+        (current_generation / "papers.json").read_bytes()
+    ).hexdigest()
+    advances = load_curated_advances(
+        paths.analysis / "advances.zh.yaml",
+        records,
+        papers_sha256=papers_sha256,
+        assignments_sha256=assignments_sha256,
+        scope_key=f"{request.venue.lower()}-{request.year}-{request.track}",
+    )
     if len(advances) != 5:
         raise PublicationBlocked(
             "publication blocked: single-year synthesis requires five research lanes"

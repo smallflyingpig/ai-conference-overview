@@ -1,0 +1,39 @@
+schema_version: curated-advances-v1
+papers_sha256: 799c627fff018b6832a705be6ce932e637ffa42336dfd6a7cf1988b84261703d
+assignments_sha256: 4fb2df6a6aef991133f4686b1381ab6c517e8e2dcf6da40ec153edab288ab117
+lanes:
+  - lane_id: text_llms
+    title_zh: 文本模型：从逐词预测走向灵活生成与长期协作
+    question_zh: 文本模型如何摆脱固定 token 顺序、短视预测和被动应答？
+    summary_zh: next-token prediction 便于扩展，但固定生成顺序、局部奖励与被动交互会限制开放式推理和长期协作。三项工作分别分析 masked diffusion 的任意 token 顺序、用可控任务测量 next-token prediction 的创造性边界，并以长期交互模拟训练 CollabLLM 主动澄清和协作。
+    evidence_boundary_zh: 这些结果来自不同任务和实验设置，不能合并为统一效果量。
+    implications_zh: 文本模型评测应把生成顺序、探索能力和多轮任务完成度拆开测量，而不只看单轮答案得分。
+    representative_paper_ids: [pmlr:v267:kim25ah, pmlr:v267:nagarajan25a, pmlr:v267:wu25i]
+  - lane_id: multimodal_models
+    title_zh: 多模态模型：统一模态接口并加强过程推理
+    question_zh: 多模态模型如何连接空间、时间与语言，同时保留可解释的推理过程？
+    summary_zh: 2D/3D、音视频和时间序列具有不同结构，简单拼接模态难以同时完成对齐、推理和迁移。UniVLG 用共享 language-conditioned decoder 连接 2D 与 3D grounding；video-SALMONN-o1 引入音视频逐步推理数据和 process DPO；ITFormer 以轻量接口连接时间序列编码器与冻结 LLM。
+    evidence_boundary_zh: 各论文使用的模态、任务和指标不同，不能据此直接比较总体优劣。
+    implications_zh: 多模态训练应显式记录模态接口、对齐目标和推理监督，避免把性能提升笼统归因于模型规模。
+    representative_paper_ids: [pmlr:v267:jain25b, pmlr:v267:sun25x, pmlr:v267:wang25av]
+  - lane_id: reasoning_agents
+    title_zh: 推理与 Agent：拆分协作、工具调用与规划能力
+    question_zh: Agent 如何从会调用工具，进一步发展为能协作、规划并根据环境反馈调整行为？
+    summary_zh: Agent 的最终成功率混合了意图澄清、function calling、状态建模和长程规划。CollabLLM 优化长期人机协作；BFCL 用可扩展的 AST 方法评测串行和并行 function calling；DINO-WM 在预训练视觉特征上预测未来状态并进行 zero-shot planning。
+    evidence_boundary_zh: 三项工作分别研究协作、工具调用和视觉规划，不能用单一成功率概括。
+    implications_zh: Agent 基准应分别报告协作质量、工具调用正确性、世界模型误差和规划成功率。
+    representative_paper_ids: [pmlr:v267:wu25i, pmlr:v267:patil25a, pmlr:v267:zhou25t]
+  - lane_id: data_training
+    title_zh: 数据与训练：把缺失机制、数据配比和技能结构纳入优化
+    question_zh: 缺失数据、动态数据混合和领域技能结构应如何进入训练目标？
+    summary_zh: 训练数据存在缺失、领域结构和新增数据带来的混合权重变化。missing data score matching 将 score matching 扩展到任意坐标缺失；Chameleon 用 domain embedding 的 leverage score 计算可迁移的数据配比；MASS 用数学 skill graph 选择预训练数据。
+    evidence_boundary_zh: 这些方法面向不同数据形态和训练目标，不能直接推导出统一的数据配比方案。
+    implications_zh: 数据策略实验应同时记录缺失机制、domain mixture 和技能覆盖，而不是只比较过滤后的 token 数量。
+    representative_paper_ids: [pmlr:v267:givens25a, pmlr:v267:xie25i, pmlr:v267:li25dp]
+  - lane_id: evaluation_trust
+    title_zh: 评测与可信：从平均表现转向群体、不确定性与社会影响
+    question_zh: 高风险决策中，模型评测如何同时覆盖最弱势群体、不确定性和社会影响？
+    summary_zh: 平均指标可能掩盖 worst-off 群体，传统不确定性方法也有适用范围。相关工作分别比较 prediction 对识别 worst-off 的实际价值、把 conformal prediction 重新表述为 Bayesian quadrature，并主张将 future of work 纳入 AI safety 的核心范围。
+    evidence_boundary_zh: 三项论文讨论的任务和论证方式不同，不能把它们合并成单一风险评分。
+    implications_zh: 可信评测需要把平均效果、群体分布、不确定性覆盖率和部署后的社会影响分开报告。
+    representative_paper_ids: [pmlr:v267:fischer-abaigar25a, pmlr:v267:snell25a, pmlr:v267:hazra25a]

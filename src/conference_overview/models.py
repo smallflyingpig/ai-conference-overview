@@ -129,6 +129,60 @@ class AdvanceRecord(BaseModel):
         return normalized
 
 
+class CuratedAdvanceLane(BaseModel):
+    lane_id: AdvanceCategory
+    title_zh: str = Field(min_length=1)
+    question_zh: str = Field(min_length=1)
+    summary_zh: str = Field(min_length=1)
+    evidence_boundary_zh: str = Field(min_length=1)
+    implications_zh: str = Field(min_length=1)
+    representative_paper_ids: tuple[str, ...] = Field(min_length=1)
+
+    @field_validator(
+        "title_zh",
+        "question_zh",
+        "summary_zh",
+        "evidence_boundary_zh",
+        "implications_zh",
+    )
+    @classmethod
+    def normalize_curated_text(cls, value: str) -> str:
+        normalized = " ".join(value.split())
+        if not normalized:
+            raise ValueError("curated advance text must not be blank")
+        return normalized
+
+    @field_validator("representative_paper_ids")
+    @classmethod
+    def validate_representative_ids(cls, values: tuple[str, ...]) -> tuple[str, ...]:
+        normalized = tuple(value.strip() for value in values)
+        if any(not value for value in normalized) or len(normalized) != len(set(normalized)):
+            raise ValueError("representative paper IDs must be nonblank and unique")
+        return normalized
+
+
+class CuratedAdvanceBundle(BaseModel):
+    schema_version: Literal["curated-advances-v1"]
+    papers_sha256: str
+    assignments_sha256: str
+    lanes: tuple[CuratedAdvanceLane, ...]
+
+    @field_validator("papers_sha256", "assignments_sha256")
+    @classmethod
+    def validate_sha256(cls, value: str) -> str:
+        normalized = value.strip().lower()
+        if len(normalized) != 64 or any(character not in "0123456789abcdef" for character in normalized):
+            raise ValueError("curated advance bindings must be lowercase SHA-256")
+        return normalized
+
+    @model_validator(mode="after")
+    def validate_exact_lanes(self) -> "CuratedAdvanceBundle":
+        expected = set(AdvanceCategory)
+        observed = [lane.lane_id for lane in self.lanes]
+        if len(observed) != len(expected) or set(observed) != expected:
+            raise ValueError("curated advances require exactly five unique lanes")
+        return self
+
 class ThemeDisclosure(BaseModel):
     theme: str
     status: ThemeDisclosureStatus

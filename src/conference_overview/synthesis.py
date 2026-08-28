@@ -3,15 +3,90 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
+from pathlib import Path
+
+import yaml
 
 from conference_overview.classification import Assignment, ThemeAudit
 from conference_overview.models import (
     AdvanceCategory,
     AdvanceRecord,
+    CuratedAdvanceBundle,
     EvidenceClaim,
     EvidenceType,
     PaperRecord,
 )
+
+
+def load_curated_advances(
+    source: Path,
+    records: Sequence[PaperRecord],
+    *,
+    papers_sha256: str,
+    assignments_sha256: str,
+    scope_key: str,
+) -> list[AdvanceRecord]:
+    """Load five hash-bound, Track-local research lanes from authored YAML."""
+    bundle = CuratedAdvanceBundle.model_validate(
+        yaml.safe_load(source.read_text(encoding="utf-8"))
+    )
+    if bundle.papers_sha256 != papers_sha256:
+        raise ValueError("curated advances papers SHA-256 is stale")
+    if bundle.assignments_sha256 != assignments_sha256:
+        raise ValueError("curated advances assignments SHA-256 is stale")
+    records_by_id = {record.paper_id: record for record in records}
+    advances: list[AdvanceRecord] = []
+    for lane in bundle.lanes:
+        unknown = set(lane.representative_paper_ids) - records_by_id.keys()
+        if unknown:
+            raise ValueError("representative paper is outside the current conference scope")
+        papers = [records_by_id[paper_id] for paper_id in lane.representative_paper_ids]
+        urls = [paper.landing_url for paper in papers]
+        locator = "Official title and abstract for every linked paper"
+        advances.append(
+            AdvanceRecord(
+                advance_id=f"{scope_key}-{lane.lane_id.value}",
+                title=lane.title_zh,
+                category=lane.lane_id,
+                supporting_paper_ids=lane.representative_paper_ids,
+                claims=(
+                    EvidenceClaim(
+                        claim="代表论文包括：" + "、".join(paper.title for paper in papers) + "。",
+                        evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
+                        source_urls=urls,
+                        locator=locator,
+                    ),
+                ),
+                research_questions=(lane.question_zh,),
+                core_problem=EvidenceClaim(
+                    claim=lane.summary_zh,
+                    evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
+                    source_urls=urls,
+                    locator=locator,
+                ),
+                technical_change=EvidenceClaim(
+                    claim=lane.summary_zh,
+                    evidence_type=EvidenceType.PAPER_REPORTED,
+                    source_urls=urls,
+                    locator=locator,
+                ),
+                evidence_boundary=EvidenceClaim(
+                    claim=lane.evidence_boundary_zh,
+                    evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
+                    source_urls=urls,
+                    locator=locator,
+                ),
+                implications=(
+                    EvidenceClaim(
+                        claim=lane.implications_zh,
+                        evidence_type=EvidenceType.INFERENCE,
+                        source_urls=urls,
+                        locator="Inference from the linked official paper abstracts",
+                    ),
+                ),
+            )
+        )
+    return advances
 
 _LANES: tuple[tuple[AdvanceCategory, tuple[str, ...], str, str], ...] = (
     (
@@ -103,7 +178,7 @@ def build_single_year_advances(
     records_by_id = {record.paper_id: record for record in records}
     advances: list[AdvanceRecord] = []
     for category, topics, question, problem in _LANES:
-        fallback_candidates = sorted(
+        candidates = sorted(
             (
                 assignment
                 for assignment in assignments
@@ -113,27 +188,16 @@ def build_single_year_advances(
             ),
             key=lambda item: (-item.confidence, item.paper_id),
         )[:3]
-        curated = _ICML_2025_CURATED[category]
-        assignments_by_id = {item.paper_id: item for item in assignments}
-        curated_ids = tuple(str(item) for item in curated["paper_ids"])
-        candidates = [
-            assignments_by_id[paper_id]
-            for paper_id in curated_ids
-            if paper_id in assignments_by_id
-        ]
-        if len(candidates) != len(curated_ids):
-            candidates = fallback_candidates
         if not candidates:
             continue
         papers = [records_by_id[item.paper_id] for item in candidates]
         urls = [paper.landing_url for paper in papers]
         titles = "、".join(paper.title for paper in papers)
-        uses_curated = tuple(item.paper_id for item in candidates) == curated_ids
-        locator = "PMLR Volume 267 title and abstract for every linked paper"
+        locator = "Official title and abstract for every linked paper"
         advances.append(
             AdvanceRecord(
-                advance_id=f"icml-2025-{category.value}",
-                title=str(curated["title"]),
+                advance_id=f"single-year-{category.value}",
+                title=f"{category.value} 单年研究主线",
                 category=category,
                 supporting_paper_ids=tuple(item.paper_id for item in candidates),
                 claims=(
@@ -145,20 +209,16 @@ def build_single_year_advances(
                     ),
                 ),
                 research_questions=(
-                    str(curated["question"]) if uses_curated else question,
+                    question,
                 ),
                 core_problem=EvidenceClaim(
-                    claim=str(curated["problem"]) if uses_curated else problem,
+                    claim=problem,
                     evidence_type=EvidenceType.CROSS_PAPER_SYNTHESIS,
                     source_urls=urls,
                     locator=locator,
                 ),
                 technical_change=EvidenceClaim(
-                    claim=(
-                        str(curated["technical"])
-                        if uses_curated
-                        else "这些论文分别从方法结构、训练过程或评测方式提出改进。"
-                    ),
+                    claim="这些论文分别从方法结构、训练过程或评测方式提出改进。",
                     evidence_type=EvidenceType.PAPER_REPORTED,
                     source_urls=urls,
                     locator=locator,
@@ -171,14 +231,10 @@ def build_single_year_advances(
                 ),
                 implications=(
                     EvidenceClaim(
-                        claim=(
-                            str(curated["implication"])
-                            if uses_curated
-                            else "后续研究可沿该问题框架比较方法、数据和评测设置。"
-                        ),
+                        claim="后续研究可沿该问题框架比较方法、数据和评测设置。",
                         evidence_type=EvidenceType.INFERENCE,
                         source_urls=urls,
-                        locator="Inference from the linked PMLR paper abstracts",
+                        locator="Inference from the linked official paper abstracts",
                     ),
                 ),
             )

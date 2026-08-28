@@ -1,9 +1,16 @@
 from datetime import UTC, datetime
 from decimal import Decimal
+from pathlib import Path
+
+import pytest
+import yaml
 
 from conference_overview.classification import Assignment, audit_theme
 from conference_overview.models import PaperRecord, RecordStatus, SourceRef
-from conference_overview.synthesis import build_single_year_advances
+from conference_overview.synthesis import (
+    build_single_year_advances,
+    load_curated_advances,
+)
 
 
 def _paper(index: int, topic: str) -> PaperRecord:
@@ -128,7 +135,6 @@ def test_icml_curated_advances_explain_concrete_technical_changes() -> None:
         ("hazra25a", "Trustworthiness"),
     ]
     records = []
-    assignments = []
     for index, (suffix, topic) in enumerate(curated):
         record = _paper(index, topic).model_copy(
             update={
@@ -140,20 +146,15 @@ def test_icml_curated_advances_explain_concrete_technical_changes() -> None:
             }
         )
         records.append(record)
-        assignments.append(
-            Assignment(
-                paper_id=record.paper_id,
-                primary_topic=topic,
-                secondary_topics=(),
-                confidence=Decimal("0.95"),
-                rationale="Curated ICML 2025 representative.",
-                taxonomy_version="2026-08-24-v1",
-            )
-        )
-    audits = {topic: audit_theme([True] * 50) for _, topic in curated}
-
-    advances = build_single_year_advances(records, assignments, audits)
-    rendered = " ".join(item.technical_change.claim for item in advances)
+    source = Path("data/analysis/icml/2025-main/advances.zh.yaml")
+    advances = load_curated_advances(
+        source,
+        records,
+        papers_sha256="799c627fff018b6832a705be6ce932e637ffa42336dfd6a7cf1988b84261703d",
+        assignments_sha256="4fb2df6a6aef991133f4686b1381ab6c517e8e2dcf6da40ec153edab288ab117",
+        scope_key="icml-2025-main",
+    )
+    rendered = " ".join(item.core_problem.claim for item in advances)
 
     assert len(advances) == 5
     assert "masked diffusion" in rendered
@@ -161,3 +162,59 @@ def test_icml_curated_advances_explain_concrete_technical_changes() -> None:
     assert "function calling" in rendered
     assert "missing data" in rendered
     assert "worst-off" in rendered
+
+
+def test_curated_advances_are_hash_bound_and_reject_cross_scope_papers(
+    tmp_path: Path,
+) -> None:
+    topics = [
+        "Foundation Models",
+        "Multimodal Models",
+        "Reasoning and Agents",
+        "Learning and Optimization",
+        "Evaluation",
+    ]
+    records = [_paper(index, topic) for index, topic in enumerate(topics)]
+    lane_ids = [
+        "text_llms", "multimodal_models", "reasoning_agents",
+        "data_training", "evaluation_trust",
+    ]
+    payload = {
+        "schema_version": "curated-advances-v1",
+        "papers_sha256": "a" * 64,
+        "assignments_sha256": "b" * 64,
+        "lanes": [
+            {
+                "lane_id": lane_id,
+                "title_zh": f"研究方向 {index}",
+                "question_zh": "这个方向解决什么问题？",
+                "summary_zh": "论文提出了可核对的方法变化。",
+                "evidence_boundary_zh": "只概括各论文自行报告的实验。",
+                "implications_zh": "后续可以在统一设置下继续比较。",
+                "representative_paper_ids": [records[index].paper_id],
+            }
+            for index, lane_id in enumerate(lane_ids)
+        ],
+    }
+    source = tmp_path / "advances.zh.yaml"
+    source.write_text(yaml.safe_dump(payload, allow_unicode=True), encoding="utf-8")
+
+    advances = load_curated_advances(
+        source,
+        records,
+        papers_sha256="a" * 64,
+        assignments_sha256=payload["assignments_sha256"],
+        scope_key="acl-2026-findings",
+    )
+    assert len(advances) == 5
+
+    payload["lanes"][0]["representative_paper_ids"] = ["acl:2026.acl-long.1"]
+    source.write_text(yaml.safe_dump(payload, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ValueError, match="current conference scope"):
+        load_curated_advances(
+            source,
+            records,
+            papers_sha256="a" * 64,
+            assignments_sha256=payload["assignments_sha256"],
+            scope_key="acl-2026-findings",
+        )
